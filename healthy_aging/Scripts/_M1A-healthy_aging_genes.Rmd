@@ -1,0 +1,1951 @@
+---
+title:  "Statistical Models according to David A. Freedman"
+#subtitle: ""
+author: "[Francois Collin](https://www.linkedin.com/in/francoisz/)"
+#date: '`r format(Sys.time(), "%a %b %d", tz="America/Los_Angeles")`'
+always_allow_html: yes
+output:
+  html_document:
+    code_folding: hide
+    code_download: true
+    toc: true
+    toc_depth: 2
+    # does this have an effect
+    fig_caption: yes
+    # this has no effect
+    number_sections: yes
+    # css: ['../_css/pandoc3.css', '../_css/myMargins.css']
+bibliography: [../../../_bibFiles/_Freedman.bib, ../../../_bibFiles/_Breiman.bib, ../../../_bibFiles/_Yu.bib]
+csl: ../../../_csl/cell-numeric.csl
+link-citations: true
+---
+
+```{css sidenote, echo = FALSE}
+
+.main-container {
+    margin-left: 250px;
+}
+.sidenote, .marginnote { 
+  float: right;
+  clear: right;
+  margin-right: -40%;
+  width: 37%;         # best between 50% and 60%
+  margin-top: 0;
+  margin-bottom: 0;
+  font-size: 1.1rem;
+  line-height: 1.3;
+  vertical-align: baseline;
+  position: relative;
+  }
+```
+
+
+<style>
+@import url('https://fonts.googleapis.com/css?family=Raleway');
+@import url('https://fonts.googleapis.com/css?family=Oxygen');
+@import url('https://fonts.googleapis.com/css?family=Raleway:bold');
+@import url('https://fonts.googleapis.com/css?family=Oxygen:bold');
+
+.main-container {
+  max-width: 1400px !important;
+}
+
+body{
+  font-family: 'Oxygen', sans-serif;
+  font-size: 16px;
+  line-height: 24px;
+}
+
+h1,h2,h3,h4 {
+  font-family: 'Raleway', sans-serif;
+}
+
+.container { width: 1400px; }
+
+caption {
+  font-size: 20px;
+  caption-side: top;
+  text-indent: 30px;
+  background-color: lightgrey;
+  color: black;
+  margin-top: 5px;
+}
+
+g-table-intro h4 {
+  text-indent: 0px;
+}
+</style>
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(echo = TRUE,
+                      comment = NA,
+                      warning = FALSE,
+                      error = FALSE,
+                      message = FALSE,
+                      cache = FALSE,
+                      fig.width = 8,
+                      fig.height = 4)
+```
+
+```{r m6a-GlobalOptions, results="hide", include=FALSE, cache=FALSE}
+
+knitr::opts_knit$set(stop_on_error = 2L) #really make it stop
+options(knitr.table.format = 'html')
+
+options(stringsAsFactors=F)
+
+ #knitr::dep_auto()
+
+```
+<!-- ######################################################################## -->
+
+
+```{r m6a-Prelims,  include=FALSE, echo=FALSE, results='hide', message=FALSE} 
+
+FN <- "_M6A-DAF_on_modeling"
+if(sum(grepl(FN, list.files()))==0) stop("Check FN")
+
+ suppressMessages(require(rmarkdown))
+ suppressMessages(require(knitr))
+
+ suppressPackageStartupMessages(require(methods))
+ suppressPackageStartupMessages(require(bookdown))
+
+ suppressPackageStartupMessages(require(data.table))
+ options(datatable.fread.datatable=F)
+
+ suppressPackageStartupMessages(require(plyr))
+ suppressPackageStartupMessages(require(dplyr))
+ suppressPackageStartupMessages(require(magrittr))
+
+ # Shotcuts for knitting and rendering while in R session (Invoke interactive R from R/Scripts folder)
+ kk <- function(n='') knitr::knit2html(paste("t", n, sep=''), envir=globalenv(),
+       output=paste(FN,".html", sep=''))
+
+ rr <- function(n='') rmarkdown::render(paste("t", n, sep=''), envir=globalenv(),
+       output_file=paste(FN,".html", sep='')) ##, output_dir='Scripts')
+
+ bb <- function(n='') browseURL(paste(FN,".html", sep=''))
+
+ # The usual shortcuts
+ zz <- function(n='') source(paste("t", n, sep=''))
+
+
+ WRKDIR <- '..'
+ if(!file.exists(WRKDIR)) stop("WRKDIR ERROR", WRKDIR)
+
+ # do once
+
+ # Shotcuts for knitting and rendering while in R session
+ kk <- function(n='') knitr::knit2html(paste("t", n, sep=''), envir=globalenv(),
+       output=paste('',FN,".html", sep=''))
+
+ rr <- function(n='') render(paste("t", n, sep=''), envir=globalenv(),
+       output_file=paste(FN,".html", sep=''), output_dir='Scripts')
+
+ bb <- function(n='') browseURL(paste('',FN,".html", sep=''))
+
+ # The usual shorcuts
+ zz <- function(n='') source(paste('', "t", n, sep=''))
+
+ # file rmarkdown file management options: cache, figures
+ cache_DIR <- file.path(WRKDIR,'Scripts', 'cache/M6A/')
+ suppressMessages(dir.create(cache_DIR, recursive=T))
+ opts_chunk$set(cache.path=cache_DIR)
+
+ figures_DIR <- file.path(WRKDIR,'Scripts', 'figures/M6A/')
+ suppressMessages(dir.create(figures_DIR, recursive=T))
+ opts_chunk$set(fig.path=figures_DIR)
+
+ #tables_DIR <- file.path(WRKDIR,'Scripts', 'tables/M6A/')
+ #suppressMessages(dir.create(table_DIR, recursive=T))
+ #opts_chunk$set(fig.path=table_DIR)
+ 
+ # need a local copy of help_DIR
+ #help_DIR <- file.path(WRKDIR,'Scripts', 'help_files')
+ help_DIR <- file.path('.', 'help_files')
+ suppressMessages(dir.create(help_DIR, recursive=T))
+ 
+ temp_DIR <- file.path(WRKDIR,'Scripts', 'temp_files')
+ suppressMessages(dir.create(temp_DIR, recursive=T))
+
+```
+<!-- ######################################################################## -->
+
+*** 
+
+```{r m6a-utilityFns, echo=FALSE}
+ # Here we define some utility functions
+source('r/utilityFns.r')
+
+```
+
+<!-- ######################################################################## -->
+
+
+<!-- SKIP THIS 
+# Params {#params}
+
+## Input params {-}
+-->
+
+```{r m6a-input-params-all, echo = FALSE, results = "asis", eval=F, echo=F}
+ # print out original input params
+data.frame(
+param_name=names(params),
+param_value=unlist(params),
+param_class=sapply(params, class), row.names=NULL) %>%
+  knitr::kable(caption="Input Parameters")
+```
+
+<br/>
+
+
+<!--
+* Breiman: [@Breiman:1984aa; @Breiman:2001aa]
+* Freedman: [@Freedman:2008aa; @Freedman:2008ad; @Freedman:2008ac; @Freedman:2009ac]
+-->
+
+<!--
+mqc-cov-by-extr-cons-batch-level-tp1-1.png
+-->
+
+`r CAPTION <-
+paste(
+"2024 Gartner Hype Cycle\U2122 for Emerging Technologies"
+)`
+    
+```{r m6a-gartner-hype, fig.cap = CAPTION, include=T, fig.align='center', eval=T}
+
+knitr::include_graphics( "img/Gartner_emerging-technologies-2024.png", dpi=150)
+
+```                   
+
+# Introduction
+
+## Leo Breiman 
+
+* Leo Breiman was critical of statistical practice in general.
+
+* Following a 10 year stint working in industry as a consultant,
+Leo Breiman wrote [@Breiman:1984aa]: 
+
+
+> The thesis of this paper is that many, if not most,
+> statisticians in government and industry are poorly
+> trained for their profession with the result that they 
+> are poor problem solvers ...
+
+
+* Following 15 years in an academic setting
+Leo Breiman wrote [@Breiman:2001aa]: 
+
+> The statistical community has been committed to the almost exclusive 
+> mechanical use of data models and standard analyses.  This has led
+> to irrelevant theory, questionable conclusions, and has kept statisticians 
+> from working on a large range of interesting current problems.
+
+
+> applying standard methods of analysis and goodness-of-fit procedures.
+> ... It is true that many of the analyses done by non-statisticians or
+> by statisticians under severe time constraints are more or less like
+> those Professor Breiman describes.
+
+<p><p/>
+* Professor Cox admits that this automated or mechanical
+process is likely to  be favored when working under severe time constraints
+   - What Sir David Cox doesn't realize is that this is part of the job description
+for a statistician working in industry - must be prepared to work
+under severe time constraints.  I am a witness to the fact that the 
+relatively mechanical process described by Professor Breiman **is** 
+mainstream applied statistics in my industry^[
+I am not prepared to put the blame entirely on the
+lack of preparation statistics graduates might have
+as time on the job does not seem to translate to
+improved behaviours - more careful examination of the
+questions and the development of methods suited to 
+the particulars of the problems.  Some blame has
+to be attributed to the system in place - a system which
+discourages careful analysis in favor of the uncritical
+acceptance of quick answers.].
+
+<p><p/>
+* Professor Cox goes on to forgive the laps in rigor in the application of
+statistical techniques to analyse data  and suggests:
+
+
+> one suspects that quite often the limitations of conclusions lie 
+> more in weakness of data quality and study design than in ineffective analysis
+
+How would an analyst who uncritically applies the common modern day 
+approach ever become aware of the weakness of the data or the design?
+Truth be told, LB has a fairly accurate view of the typical statistician M.O.
+
+ 
+<br/>
+
+## David A. Freedman
+
+
+<!--
+* Freedman: [@Freedman:2008aa; @Freedman:2008ad; @Freedman:2008ac; @Freedman:2009ac]
+-->
+
+* DAF had criticism directed at the application of specific statistical methods in certain
+contexts, typically in the social sciences.  We feel that the mechanical process applied to the
+analysis of data in the biotech industry is worthy of similar criticism.
+
+<br/>
+
+### Randomization [@Freedman:2008aa] 
+
+
+<p><p/> 
+
+* Freedman critiques the use of logistic regression in analyzing experimental data. He argues that randomization does not justify the assumptions underlying logistic regression models. As a result, the usual maximum likelihood estimators (MLEs) can be inconsistent for estimating causal effects.
+
+<p><p/>
+
+**Primary Findings** 
+
+#### Randomization vs. Modeling {-}
+
+* Randomization ensures treatment assignment is independent of potential outcomes but does not validate the logistic model’s assumptions.
+* The logistic model assumes an underlying latent variable structure with a logistic distribution, which is not necessarily justified by randomization alone.
+
+#### Inconsistency of Logistic Regression Estimates {-}
+
+* The conventional log odds ratio estimated from logistic regression is not equivalent to the true differential log odds (causal effect) in a randomized experiment.
+* Freedman presents an alternative consistent estimator based on intention-to-treat (ITT) principles, which aligns with Neyman’s non-parametric framework.
+
+#### Simulation Studies {-}
+
+* Freedman uses simulations to show that logistic regression often overestimates the differential log odds.
+* The plug-in estimator he proposes is shown to be less biased and more consistent than logistic regression estimates.
+
+See Section \@ref(logistic-sim).
+
+####  Practical Recommendations {-}
+
+* Researchers should compare raw treatment and control group success rates before applying models.
+* If logistic regression changes conclusions substantially, this should raise concerns about model validity.
+* Cross-tabulation before regression is a key takeaway: simple comparisons can often provide more reliable insights than complex modeling.
+
+
+#### Theoretical Contribution {-}
+
+* Freedman provides a mathematical proof showing that logistic regression coefficients are biased away from zero in estimating causal effects.
+* He demonstrates that the true treatment effect (log odds ratio) is generally smaller than what logistic regression estimates.
+
+#### Conclusion {-}
+
+* Freedman argues that while logistic regression is widely used, randomization alone does not justify its application in causal inference. He recommends alternative estimation methods based on intention-to-treat analysis and cautions against over-reliance on statistical models without verifying their assumptions.
+
+
+</span>
+
+<br/>
+
+
+### Survival Analysis: A Primer by David A. Freedman   [@Freedman:2008ab]
+
+#### Overview   {-}
+
+<p><p/> 
+
+This paper provides an introduction to survival analysis, covering key methodologies such as life tables, Kaplan–Meier estimators, and proportional-hazards models (Cox models). It critiques the use of Cox models in randomized controlled trials and observational studies, emphasizing the difficulties in justifying their assumptions.
+
+#### Key Concepts and Methods   {-}
+
+<p><p/> 
+
+##### 1. Life Tables  {-}
+- Developed historically to estimate survival probabilities.
+- Cross-sectional life tables assume constant death rates over time, which may introduce bias.
+
+<p><p/> 
+
+##### 2. Hazard Rates {-}
+- Defines the failure rate at a given time.
+- Includes mathematical formulations for survival functions and hazard rates, with examples such as exponential and Weibull distributions.
+- Discusses independence of competing risks and censoring in survival analysis.
+
+<p><p/> 
+
+##### 3. Kaplan–Meier Estimator {-}
+- Estimates survival probabilities over time, accounting for censored data.
+- Applied in clinical trials by comparing treatment and control groups.
+- Highlights potential biases in finite samples.
+
+<p><p/> 
+
+##### 4. Application: Lung Cancer Screening   {-}
+- Evaluates a study claiming an 80% 10-year survival rate for lung cancer patients detected via CT screening.
+- Identifies biases such as length bias and lead-time bias, which may overstate benefits.
+- Critiques the lack of a proper control group in the study.
+
+<p><p/> 
+
+##### 5. Proportional-Hazards (Cox) Model {-}
+- Assumes a baseline hazard function modified by covariates.
+- Introduces the concept of partial likelihood for parameter estimation.
+- Notes that the model does not use absolute survival times but ranks, leading to potential limitations.
+
+<p><p/> 
+
+##### 6. Application: Religious Struggle and Mortality {-}
+- Reviews a study linking negative religious feelings to higher mortality.
+- Criticizes the small effect size (hazard ratio = 1.06) and potential biases such as reverse causation and omitted variables.
+
+
+<p><p/> 
+
+##### 7. Case Study: Hormone Replacement Therapy (HRT) and Heart Disease   {-}
+- Compares findings from observational studies (suggesting HRT reduces heart disease risk) with randomized trials (showing no benefit or even harm).
+- Argues that confounding variables and selection biases likely influenced observational results.
+
+<p><p/> 
+
+##### 8. Simulation Studies on Cox Model Validity {-}
+- Demonstrates that Cox models perform well under ideal conditions but can produce misleading results when assumptions are violated.
+- Highlights the importance of choosing appropriate covariates.
+
+<p><p/> 
+
+#### Recommendations for Statistical Practice {-}
+
+1. **Report Simple Summaries First** – Before applying models, compare crude rates between groups.
+2. **Consider Study Design** – Ensure independence of competing risks and validity of assumptions.
+3. **Be Cautious with Cox Models** – Avoid their use in randomized trials without strong justification.
+4. **Transparency in Data Analysis** – Report full model specifications and provide access to underlying data.
+
+<br/>
+
+#### Conclusion {-}
+Freedman warns against the uncritical application of survival analysis models, particularly in clinical trials and observational studies. He advocates for simpler methods before resorting to complex models like Cox regression and stresses the need for transparency in statistical modeling.
+
+</span>
+
+<br/>
+
+
+### "On Regression Adjustments in Experiments with Several Treatments" [@Freedman:2008ac] 
+
+
+#### Overview {-}
+This paper evaluates the use of regression adjustments in randomized controlled experiments with multiple treatments. It critiques the validity of using regression models for causal inference, arguing that randomization does not justify their assumptions. The paper extends previous results and provides more intuitive proofs to demonstrate potential bias in regression-adjusted estimators.
+
+#### Key Findings {-}
+
+##### 1. **Regression Adjustments and Randomization**  {-}
+- Regression adjustments are commonly applied to experimental data to control for covariate imbalances.
+- However, the standard regression model assumes linear additive effects and constant coefficients across subjects, which are not justified by randomization.
+- The Neyman nonparametric model, which does not assume linearity, shows that regression adjustments can introduce bias.
+
+##### 2. **Bias in Regression Estimates**  {-}
+- The paper isolates a bias term and provides conditions under which regression estimators remain unbiased in finite samples.
+- The source of the bias is the assumption that treatment effects are additive and constant, which is not necessarily valid.
+- The bias term is of order \( O(1/n) \), meaning that while it decreases with larger samples, it does not disappear entirely.
+
+##### 3. **Comparison with the Neyman Model**  {-}
+- The Neyman model relies only on randomization, without requiring distributional assumptions.
+- It provides unbiased estimators for treatment effects through direct comparisons of means (intention-to-treat analysis).
+- Regression-based estimators, however, condition on assignments and make assumptions about error terms that are not warranted.
+
+##### 4. **Asymptotics of Regression Adjustments**  {-}
+- The paper derives the asymptotic properties of regression estimators, demonstrating that they include both a stochastic term of order \( O(1/\sqrt{n}) \) and a bias term of order \( O(1/n) \).
+- It shows that in some cases, regression adjustments may reduce variance, but in others, they may increase variance or introduce systematic errors.
+
+##### 5. **Conditions for Unbiased Estimation**  {-}
+- The paper identifies special cases where regression adjustments lead to unbiased estimates:
+  - When treatment effects are strictly additive across subjects.
+  - When experimental designs are balanced (i.e., equal sample sizes in treatment groups).
+  - When covariates have conditional constancy across treatment assignments.
+
+##### 6. **Implications for Statistical Practice**  {-}
+- The paper argues against the uncritical use of regression adjustments in analyzing experimental data.
+- It recommends prioritizing simple intention-to-treat comparisons before applying regression models.
+- Researchers should be cautious about using regression estimates for causal claims, as they may not accurately reflect treatment effects.
+
+#### Recommendations  {-}
+1. **Report Simple Comparisons First** – Before using regression models, present crude treatment comparisons.
+2. **Understand the Role of Randomization** – Recognize that randomization justifies unbiased estimators, but not regression-based adjustments.
+3. **Be Cautious with Model-Based Inference** – Acknowledge that standard regression assumptions may not hold in randomized experiments.
+4. **Consider Design and Data Balance** – Ensure balanced assignment and check for non-additive treatment effects before applying regression.
+
+#### Conclusion  {-}
+Freedman’s analysis challenges the widespread use of regression adjustments in experimental research. He demonstrates that, under the Neyman model, regression adjustments can introduce bias and misleading variance estimates. The paper advises researchers to rely primarily on randomization-based estimators rather than regression-based adjustments unless specific conditions justify their use.
+
+---
+
+
+### Summary of Lin (2013) and Freedman (2008) 
+
+#### Summary of Lin (2013): Agnostic Notes on Regression Adjustments {-}
+
+- **Objective:**  
+  Lin reexamines Freedman’s critique of regression adjustment in experimental data and offers an “agnostic” perspective on the issue.
+
+- **Key Findings:**
+  - **Large Sample Behavior:**  
+    In sufficiently large samples, many of the problems raised by Freedman—such as worsened asymptotic precision, inconsistent standard error estimates, and small-sample bias—are either minor or can be remedied.
+    
+  - **Role of Interactions:**  
+    Including a full set of treatment-by-covariate interactions in the OLS regression adjustment prevents the deterioration of asymptotic precision. In other words, when interactions are properly modeled, OLS adjustment cannot hurt asymptotic precision.
+    
+  - **Standard Error Estimation:**  
+    Lin advocates for the use of robust (Huber–White sandwich) standard error estimators, which yield asymptotically valid confidence intervals even when the linear model is not perfectly specified.
+    
+  - **Practical Implications:**  
+    While transparency and the dangers of specification search remain important considerations, the paper shows that the statistical issues raised by Freedman can be overcome with careful implementation in large samples.  
+    :contentReference[oaicite:0]{index=0}
+
+---
+
+#### Freedman (2008) [@Freedman:2008ad]: On Regression Adjustments to Experimental Data {-}
+
+- **Objective:**  
+  Freedman investigates the use of regression adjustments under Neyman’s nonparametric model, where each subject has two potential outcomes (one under treatment and one under control), and only one is observed.
+
+- **Key Findings:**
+  - **Bias in Regression Adjustment:**  
+    The multiple regression estimator (which adjusts for covariates) is generally biased in finite samples—even though the bias diminishes as the sample size increases. In contrast, the unadjusted difference-in-means (or the simple regression estimator) is exactly unbiased.
+    
+  - **Impact on Precision:**  
+    Although regression adjustment can potentially improve precision if the covariates are strongly related to the outcome, it may also worsen precision under certain conditions. This is because the usual OLS assumptions (such as the independence between treatment assignment and the error term) are not justified by randomization.
+    
+  - **Misleading Standard Errors:**  
+    The conventional standard error formulas derived from the OLS model can be severely misleading. They may either overstate or understate the true uncertainty, owing to the violation of model assumptions inherent in randomized experiments.
+    
+  - **Overall Caution:**  
+    Freedman’s results serve as a warning against over-reliance on regression adjustments without careful consideration of the underlying assumptions and the potential for specification search.  
+    :contentReference[oaicite:1]{index=1}
+
+---
+
+#### Comparative Key Insights {-}
+
+- **Bias and Consistency:**
+  - **Freedman (2008):**  
+    Emphasizes that regression adjustment introduces finite-sample bias, which, although decreasing with larger samples, can be problematic if model assumptions are not met.
+    
+  - **Lin (2013):**  
+    Demonstrates that when appropriate interactions are included, the bias issues become negligible in large samples and the adjusted estimators maintain or improve precision.
+
+- **Standard Error Estimation:**
+  - **Freedman (2008):**  
+    Shows that conventional OLS standard error estimates can be very misleading because the assumptions behind the OLS model do not hold in randomized experiments.
+    
+  - **Lin (2013):**  
+    Advocates for the use of robust (sandwich) standard errors that provide asymptotically valid inference even when the regression model is mis-specified.
+
+- **Practical Recommendations:**
+  - **Freedman (2008):**  
+    Suggests caution in the application of regression adjustment, highlighting the risk of bias and incorrect precision measurement.
+    
+  - **Lin (2013):**  
+    Offers a more optimistic view for large-sample settings, suggesting that with proper model specification (including treatment-covariate interactions) and robust error estimation, regression adjustment can be a useful tool without the pitfalls highlighted by Freedman.
+
+---
+
+#### Conclusion {-}
+
+Both articles contribute important perspectives on the use of regression adjustments in randomized experiments. Freedman provides a rigorous critique, emphasizing potential pitfalls when standard OLS assumptions do not hold. Lin, on the other hand, shows that many of these issues can be effectively managed in large samples by including treatment-covariate interactions and using robust standard errors. Researchers should therefore be cautious and transparent when applying regression adjustments, ensuring that their models are appropriately specified and that the limitations of standard error estimates are addressed.
+
+
+
+
+<br/>
+
+### Summary and Comparison of Lehmann (2008) and Freedman (1999)
+
+This document summarizes and compares two significant articles discussing the evolution, application, and limitations of statistical models:
+
+- **Lehmann (2008) [@Lehmann:2008aa]:** *"On the History and Use of Some Standard Statistical Models"*
+- **Freedman (1999) [@Freedman:1999aa]:** *"From Association to Causation: Some Remarks on the History of Statistics"*
+
+---
+
+#### **Summary of Lehmann (2008)**
+
+##### **Focus:**
+Lehmann provides a historical account of the **general linear model**, tracing its evolution from its origins in the early 19th century to its modern applications. The paper highlights the assumptions underlying these models and how their use has expanded to different scientific disciplines.
+
+##### **Key Themes & Arguments:**
+1. **Historical Development of Statistical Models:**
+   - The **least squares method** was introduced by Legendre (1805) and later developed by Gauss.
+   - Originally used in **astronomy and geodesy**, where errors were assumed to be random and normally distributed.
+
+2. **Expansion into Other Fields:**
+   - In the 1920s, **R.A. Fisher** extended these models to **agriculture and biology** (e.g., ANOVA).
+   - By the mid-20th century, these methods were applied in **economics and social sciences**, raising concerns about **violated assumptions** (e.g., independence of observations).
+
+3. **Challenges with Assumptions:**
+   - The effectiveness of statistical models depends on assumptions like **normality of errors** and **independent observations**.
+   - While these assumptions were valid in **physical sciences**, they became **questionable in social sciences**, where data are often **correlated and complex**.
+
+4. **Critique of Modern Applications:**
+   - The increasing use of statistical models led to **overgeneralization** and **misuse**, especially when assumptions were ignored.
+   - Lehmann emphasizes the need for **context-awareness** when applying statistical methods.
+
+#### **Implications:**
+Lehmann’s article serves as both a **historical reflection** and a **cautionary note** on the evolution and application of statistical models. It stresses that while these models have been instrumental in scientific advancement, their **assumptions must be scrutinized** before applying them indiscriminately to modern data.
+
+---
+
+#### **Summary of Freedman (1999)**
+
+##### **Focus:**
+Freedman critiques the use of statistical models in drawing **causal inferences** from observational data. He contrasts **historical successes** in identifying causation with the **challenges of modern statistical modeling**, particularly in epidemiology and social sciences.
+
+##### **Key Themes & Arguments:**
+1. **Historical Success in Causal Inference:**
+   - **John Snow’s 1855 cholera study** successfully used **natural experiments** and multiple lines of evidence to infer causation **without complex statistical models**.
+   - **Pierre Louis’ 1835 pneumonia study**, by contrast, lacked proper controls and led to questionable conclusions.
+
+2. **Regression Models and Causal Inference:**
+   - The late 19th-century work of **Yule (1899) on poverty** introduced regression models for social science research.
+   - Freedman argues that these models often **obscure rather than clarify** causal relationships, as they fail to account for **confounding and selection biases**.
+
+3. **Common Pitfalls in Statistical Inference:**
+   - Researchers frequently **mistake correlation for causation** and overlook **confounding variables**.
+   - The misuse of **significance testing** often leads to **false confidence in weak effects**.
+   - Many social science and epidemiology studies rely on **assumptions that are difficult to validate**, leading to unreliable conclusions.
+
+4. **Critique of Modern Methods:**
+   - Freedman warns against **blind reliance on regression models**, arguing that they often give a **false sense of rigor** when making causal claims.
+   - He emphasizes that **study design is more important than statistical adjustments** when determining causality.
+
+##### **Implications:**
+Freedman’s article is a **strong critique** of the overuse of statistical models for causal inference. He stresses that **causation cannot be established purely from data analysis**, highlighting the importance of **experimental design and critical examination of assumptions**.
+
+---
+
+#### **Comparison of Lehmann (2008) and Freedman (1999)**
+
+| **Aspect**            | **Lehmann (2008)**                                      | **Freedman (1999)**                                  |
+|----------------------|------------------------------------------------------|----------------------------------------------------|
+| **Main Focus**      | Evolution and historical use of statistical models.   | Challenges in making causal inferences from statistics. |
+| **Key Critique**    | Overgeneralization and misuse of statistical models. | Regression models fail to properly establish causality. |
+| **Historical Emphasis** | Development of statistical models over two centuries. | Historical examples of causal inference failures and successes. |
+| **Model Concerns**  | Assumptions (e.g., normality, independence) are often violated. | Regression models fail to account for confounding. |
+| **Application Areas** | Physical sciences, agriculture, and social sciences. | Social sciences and epidemiology. |
+| **Solution Proposed** | Awareness of assumptions and their limitations. | Greater reliance on **study design** rather than statistical modeling alone. |
+
+---
+
+#### **Key Takeaways from Both Articles**
+
+1. **Statistical Models Are Not Universally Applicable:**
+   - **Lehmann (2008)** emphasizes that models developed for **astronomy and physics** were later applied to **social sciences**, often **without adjusting for fundamental differences in data structure**.
+   - **Freedman (1999)** critiques how modern researchers apply **regression models** to infer causation **without carefully examining assumptions**.
+
+2. **Causal Inference Requires More Than Just Statistical Modeling:**
+   - **Lehmann (2008)** discusses how statistical models evolved for **prediction and estimation**, but were later **used inappropriately for causal claims**.
+   - **Freedman (1999)** argues that **well-designed studies (like Snow’s cholera study)** are **more reliable than post-hoc statistical adjustments**.
+
+3. **Context Matters in Statistical Applications:**
+   - **Lehmann (2008)** provides historical insights into **how and why** models were developed, emphasizing that **context is crucial** when applying these models today.
+   - **Freedman (1999)** focuses on **epidemiology and social sciences**, where **ignoring context leads to misleading conclusions** about causality.
+
+4. **Study Design vs. Post-Hoc Modeling:**
+   - **Freedman (1999):** Well-designed experiments **(e.g., randomized trials, natural experiments)** are superior to **statistical adjustments** in observational studies.
+   - **Lehmann (2008):** Models should be used **with caution**, ensuring that assumptions **match the problem being studied**.
+
+---
+
+#### **Conclusion**
+
+Both articles **criticize the uncritical application of statistical models** but approach the issue from different angles:
+
+- **Lehmann (2008)** provides a **historical overview**, emphasizing that **statistical models were developed for specific contexts** and that **misuse arises when assumptions are ignored**.
+- **Freedman (1999)** focuses on **causal inference**, warning that **statistical models alone are insufficient to establish causation** and that **proper study design is essential**.
+
+Together, these papers **highlight the need for critical thinking in statistical applications**. They remind us that **statistical techniques must be rigorously tested, carefully applied, and not blindly relied upon to make causal claims**.
+
+
+
+<br/>
+
+### Statistical Models and Shoe Leather [@Freedman:1991aa]
+
+<p><p/> 
+
+* In this article, Freedman critiques the prevalent use of statistical models in social science research, particularly regression analysis applied to observational data. He emphasizes the importance of grounding statistical analysis in real-world context and empirical data, advocating for "shoe leather" methods—direct data collection and fieldwork. Freedman highlights the limitations of relying solely on statistical models for causal inference, especially when underlying assumptions are unverified. He uses John Snow's investigation of the cholera epidemic as an example of effective causal inference through natural experiments and empirical observation.
+</span>
+
+
+<br/>
+
+### Berk Critique [@Berk:1991aa]
+
+<p><p/> 
+
+* Berk acknowledges Freedman's concerns but argues that statistical models remain valuable tools for social scientists. He suggests that while models have limitations, they are necessary for analyzing complex social phenomena where controlled experiments are not feasible. Berk advocates for a balanced approach, combining statistical modeling with empirical validation and theoretical insight.
+</span>
+
+<br/>
+
+### Blalock Critique [@Blalock:1991aa]
+
+<p><p/> 
+
+Blalock questions whether abandoning statistical models is practical, given the challenges of conducting natural experiments in social sciences. He emphasizes the need for causal modeling to understand social processes and suggests that improving model robustness and assumption testing is a more feasible solution than relying solely on empirical methods.
+</span>
+
+<br/>
+
+### Mason Critique [@Mason:1991aa]
+
+<p><p/> 
+
+Mason agrees with Freedman's critique to an extent but points out that the issues with statistical modeling are more pervasive and complex. He argues that statisticians should play a more active role in addressing these challenges by developing better methods and tools for causal inference, rather than discarding models altogether.
+</span>
+
+<br/> 
+
+### Freedman Rejoinder [@Freedman:1991ab]
+
+
+<p><p/> 
+
+* David A. Freedman’s "A Rejoinder to Berk, Blalock, and Mason" is his response to critiques of his discussion on natural experiments, particularly John Snow’s work on the cholera epidemic. In the original article, Freedman presents the concept of the natural experiment as a superior alternative to the common social science practice of fitting models to non-experimental data and making causal inferences based on estimated parameters. In his rejoinder, he defends this position against criticisms from Berk, Blalock, and Mason, reinforcing the importance of verifying assumptions before drawing causal conclusions.
+
+<p><p/>
+* Key points of his argument include:
+   - **Limitations of Statistical Models**: Freedman argues that statistical methods, particularly regression analysis, are often misused in social science research. He emphasizes that causal inferences cannot be made unless the necessary assumptions of these models are properly verified. Rather than debating the truth of any particular set of assumptions, he underscores the importance of ensuring they hold before drawing conclusions from empirical data used to fit a causal mode
+   - **Concerns About Specification and Interpretation**: He critiques the reliance on mathematical models that may not align with real-world data and cautions against overinterpreting coefficients as causal effects.
+   - **Response to Critics**: Freedman directly addresses the critiques from Berk, Blalock, and Mason, reinforcing his position that statistical modeling should not be a substitute for careful theoretical reasoning and empirical validation.
+</span>
+
+
+<br/>
+
+## Statistical Modeling in the Context of DS, AI and BD - Bin Yu
+
+<br/>
+
+
+### Summary of "Stability" by Bin Yu (2013)
+
+The article **"Stability"** by **Bin Yu** discusses the crucial role of stability in statistical analysis, particularly in high-dimensional settings. The main argument is that reproducibility in science relies on stability, which is necessary for reliable and interpretable statistical models. The paper covers different aspects of stability in statistical inference and its implications for neuroscience and high-dimensional regression.
+
+Key Points:
+
+#### 1. Importance of Stability in Scientific Research
+- Reproducibility is a fundamental requirement for scientific discoveries.
+- Many errors in published research stem from instability in statistical models.
+- Stability ensures that results remain consistent under reasonable perturbations to data and models.
+
+#### 2. Stability in Neuroscience and fMRI Models
+- The paper discusses statistical modeling for **brain fMRI signals**, particularly in visual processing.
+- Encoding models predict brain activity from visual stimuli, while decoding models reconstruct stimuli from brain activity.
+- Stability is necessary for interpreting neuroscience models reliably.
+
+#### 3. Statistical Methods for Stability
+- The paper reviews classical stability methods like **jackknife, bootstrap, and cross-validation (CV)**.
+- These methods help assess the robustness of statistical models against data perturbations.
+
+#### 4. Estimation Stability (ES) & ES-CV for Lasso Regression
+- The paper proposes a new method, **Estimation Stability Cross-Validation (ES-CV)**, for selecting tuning parameters in **Lasso regression**.
+- ES-CV reduces the number of predictors by **60%** while maintaining similar predictive performance (~1.3% loss).
+- This method improves model interpretability and reliability.
+
+#### 5. Robust Statistics in High-Dimensional Regression
+- The paper connects **sample variability** and **robust statistics**, particularly when dealing with heavy-tailed error distributions.
+- Findings suggest that in **high-dimensional settings**, **Ordinary Least Squares (OLS)** can outperform **Least Absolute Deviation (LAD)** under certain conditions.
+
+#### 6. Conclusions and Implications
+- Stability should be emphasized in statistical inference and scientific publishing to improve reproducibility.
+- High-dimensional statistics offer both opportunities and challenges, making stability a crucial area for further research.
+
+### Final Thoughts
+Yu's paper advocates for a **stability-driven approach** to statistical modeling, emphasizing its importance in ensuring **scientific integrity**. The article makes a strong case for statisticians to play an active role in enhancing the reliability of scientific research, particularly in **machine learning, neuroscience, and high-dimensional data analysis**.
+
+
+<p><p/>
+###  AI and Stats [@Yu:2018aa]
+
+
+The paper **"Artificial Intelligence and Statistics"** by **Bin Yu and Karl Kumbier** discusses the critical role of statistics in modern artificial intelligence (AI), emphasizing the importance of **human-machine collaboration** in data-driven decision-making. The authors propose the **PQRS framework**—Population, Question of interest, Representativeness of training data, and Scrutiny of results—as a structured approach to integrate statistical principles into AI development.
+
+---
+
+#### **Key Points**
+
+##### **1. The Role of Human-Machine Collaboration in AI**
+- AI has evolved from early **neural event modeling** to a transdisciplinary field combining **computer science, statistics, psychology, and engineering**.
+- AI systems like **Amazon Echo, self-driving cars, and automated medical diagnoses** rely on both **machine learning algorithms** and **manually curated data**.
+- Many AI breakthroughs are dependent on **human-labeled datasets**, such as **ImageNet**, which contains **14 million labeled images**.
+
+##### **2. The PQRS Framework for AI Development**
+The **PQRS** framework provides a structured approach for integrating **statistical reasoning** into AI systems:
+
+- **(P) Population**: Defines the **conditions under which data is generated**, helping understand randomness and uncertainty.
+- **(Q) Question of Interest**: Establishes the **context** for data analysis, ensuring the AI model addresses a meaningful problem.
+- **(R) Representativeness of Training Data**: Assesses whether the **training dataset** properly reflects the target **population**.
+- **(S) Scrutiny of Results**: Evaluates **model outputs** for validity, interpretability, and reliability.
+
+The authors emphasize that **framing data collection and analysis properly** can **prevent AI failures**—a crucial consideration for **self-driving cars** and **automated medical diagnoses**.
+
+##### **3. Stability and Interpretability in AI**
+- Many **supervised learning models** (e.g., **deep learning**) achieve high accuracy but **lack interpretability**.
+- The **stability principle**, proposed by **Yu (2013)**, improves **reproducibility** and **interpretability** by ensuring that results remain **consistent** under small perturbations.
+- **Example**: In **genomics**, the **Iterative Random Forests (IRF) algorithm** enhances stability by identifying **high-quality genetic interactions**, helping researchers understand complex biological systems.
+
+##### **4. Statistical Experimental Design and Causal Inference**
+- The **randomization principle** in **experimental design** (e.g., **A/B testing**) is essential for **causal inference** in **medicine and drug testing**.
+- **Local control techniques** can personalize medical diagnosis by grouping similar patients, though this remains **challenging due to data complexity**.
+
+##### **5. The Future of AI and Human Input**
+- AI development will **always** require **human input**, particularly in **interpreting models, designing experiments, and ensuring ethical applications**.
+- The **PQRS framework and stability principle** offer a **conceptual foundation** for making AI systems **more reliable, interpretable, and reproducible**.
+- The **"holy grail" of AI** is to mimic **human unconscious intelligence**, which remains an **open challenge**.
+
+---
+
+#### **Final Thoughts**
+Yu and Kumbier argue that **statistics is essential** to making AI **reliable and interpretable**, and **human judgment** must remain a key part of AI decision-making. The **PQRS framework** and **stability principle** provide practical tools for ensuring AI systems are **scientifically sound, transparent, and adaptable to real-world changes**.
+
+<br/>
+
+### Veridical Data Science [@Yu:2020aa;@Yu:2024aa]
+
+
+### **Summary of "Veridical Data Science" by Bin Yu & Karl Kumbier (2020)**
+
+The paper **"Veridical Data Science"** by **Bin Yu & Karl Kumbier** proposes a **principled framework for reliable, reproducible, and transparent data science**, called the **PCS framework**. This framework is built on three core principles:
+- **Predictability (P)** – Evaluating how well a model predicts new data.
+- **Computability (C)** – Ensuring computational feasibility and efficiency.
+- **Stability (S)** – Assessing the robustness of data results under perturbations.
+
+---
+
+#### **Key Points**
+
+##### **1. The PCS Framework: A Unified Approach to Data Science**
+- **Motivation:** Traditional statistical methods often fail to address the complexity and human-driven nature of modern data science. Many published results lack **reproducibility**, leading to unreliable conclusions.
+- **Solution:** The **PCS (Predictability, Computability, Stability) framework** offers a **structured workflow** and **documentation** to ensure veridical (truthful) data analysis.
+
+##### **2. The Role of Each PCS Principle**
+- **Predictability (P)**  
+  - Inspired by **Karl Popper’s falsifiability principle**—if a model doesn’t predict well, it should be rejected or revised.
+  - A reality check for assessing whether findings generalize beyond the training data.
+  - **Example:** **Cross-validation (CV)**, where models are evaluated on unseen data.
+  
+- **Computability (C)**  
+  - Refers to the **practical feasibility** of computations in large-scale data science.
+  - Addresses **storage, processing, and algorithm efficiency**.
+  - Inspired by **Turing’s computational theory** and **Kolmogorov complexity**.
+
+- **Stability (S)**  
+  - A key principle ensuring **robustness and reproducibility** of findings
+
+<br/>
+
+### Veridical Data Science - Review [@Benjamini:2024aa]
+
+
+* **Summary of the Review Article on "Veridical Data Science"**  
+**Source:** Harvard Data Science Review  
+**Link:** [Read the full review](https://hdsr.mitpress.mit.edu/pub/5322mn1e)  
+
+The review article titled **"A Review of Veridical Data Science by Bin Yu and Rebecca L. Barter"** critically examines the book **"Veridical Data Science"**, authored by **Bin Yu and Rebecca L. Barter**. The book introduces the **Predictability, Computability, and Stability (PCS) framework**, which aims to guide data scientists in producing **trustworthy and reproducible** results. The framework emphasizes **critical thinking and domain knowledge** throughout the data science life cycle.
+
+---
+
+#### **Key Highlights from the Review** {-}
+
+##### **1. Comprehensive Framework**
+- The review acknowledges that the **PCS framework** provides a **structured approach** to data science.
+- Ensures that models are **not only predictive** but also **computationally feasible and stable** under various perturbations.
+
+##### **2. Emphasis on Stability**
+- A significant portion of the review focuses on the **stability aspect** of the PCS framework.
+- Highlights its importance in ensuring that **data science results are robust and reproducible**.
+
+##### **3. Practical Applications**
+- The reviewers appreciate the inclusion of **practical examples and case studies** in the book.
+- Demonstrates the **real-world application** of the PCS framework across various domains.
+
+##### **4. Educational Value**
+- The review suggests that the book serves as a **valuable resource** for:
+  - **Advanced undergraduate and graduate students**
+  - **Practitioners in data science**
+- Offers insights into **responsible data analysis and decision-making**.
+
+---
+
+#### **Final Thoughts** {-}
+
+The review **commends** the authors for addressing the critical need for a **principled framework in data science**. The **PCS framework ensures** that findings are both **reliable and applicable in real-world contexts**.
+
+🔗 **For a more detailed understanding, you can read the full review here:**  
+[**Harvard Data Science Review**](https://hdsr.mitpress.mit.edu/pub/5322mn1e)
+
+    
+<br/>
+<br/>
+    
+# Appendix - Binary outcome data simulation
+
+**Simulating Section 5 of Freedman (2008) in R**
+
+This section replicates the **simulations from Section 5** of **Freedman (2008)**, which investigates the consequences of fitting logistic regression models to experimental data. The simulations illustrate how the **Maximum Likelihood Estimate (MLE) of the treatment effect is biased**, while **plug-in and ITT estimators are nearly unbiased**.
+
+---
+
+## Neyman Model for Binary Outcome Data
+
+### Overview  {-}
+
+The **Neyman Model** (also called the **Potential Outcomes Framework** or **Rubin Causal Model**) is a foundational approach to causal inference, especially in analyzing **binary outcome data**. It helps researchers assess treatment effects by considering **potential outcomes** under different conditions.
+
+**Key Components** 
+
+### 1. Potential Outcomes {-}
+
+Each unit (e.g., individual, subject) has two potential outcomes:
+
+- $Y_i^T$: The outcome if unit i **receives** the treatment.
+- $Y_i^C$: The outcome if unit i **does not** receive the treatment.
+
+However, we only observe one outcome per unit: either $ Y^T $ or $ Y^C $, never both.
+This is known as the **fundamental problem of causal inference**.
+
+<br/>
+
+### 2. Treatment Assignment {-}
+- Units are assigned to either the treatment group (\( X_i = 1 \)) or the control group (\( X_i = 0 \)).
+- The observed outcome is:
+\begin{equation} 
+  Y_i = X_i \cdot  Y_i^T  + (1 - X_i) \cdot Y_i^C 
+ \tag{1}
+\end{equation}
+
+  This means each unit’s observed outcome corresponds to its assigned condition.
+
+- Either one of the responses may be observed, but not both. Thus, responses are **subject-level parameters**. 
+
+- Each subject has a **covariate $Z_i$**, unaffected by assignment; $Z_i$ is observable.
+
+- In this setup, **the only stochastic element is the randomization**: 
+
+   - conditional on the assignment variable $X_i$,
+the observed response $Y_i = X_i \cdot  Y_i^T  + (1 - X_i) \cdot Y_i^C$
+is deterministic.
+
+<br/>
+
+#### 3. Population-level ITT (intention-to-treat) **parameters**  {-}
+
+ITT parameters are defined by taking averages over all
+n subjects in the study population:
+
+\usepackage{amsmath}
+\begin{equation} 
+  \alpha^T = \frac{1}{n}\sum Y_i^T,  \;\; \alpha^C = \frac{1}{n}\sum Y_i^C 
+   \tag{2}
+\end{equation}
+
+
+For example, $\alpha^T$ is the fraction of successes 
+**if all subjects are assigned to T**;
+similarly for $\alpha^C$ .
+
+- A parameter of considerable interest is the differential log odds of success,
+
+\begin{equation} 
+  \Delta = \log \left( \frac{\alpha_T}{1 - \alpha_T} \right) - \log \left( \frac{\alpha_C}{1 - \alpha_C} \right)
+   \tag{3}
+\end{equation}
+
+- The logit model is all about log odds (more on this, below). 
+   - The parameter 
+$\Delta$ defined by (2) may therefore be what investigators think is estimated by running logistic regressions 
+on experimental data, although that idea is seldom explicit.
+
+---
+
+#### The intention-to-treat principle {-}
+
+* The intention-to-treat principle, which goes back to Bradford Hill (1961, p. 259),
+is to make comparisons based on treatment assigned rather than treatment received. 
+
+<p><p/>
+* Such comparisons take full advantage of the randomization,
+thereby avoiding biases due to self-selection.
+   - For example, the unbiased estimators for the parameters in (1) are the fraction of
+successes in the treatment group and the control group, respectively.
+
+<p><p/>
+* Below, these will be called ITT estimators.
+
+<p><p/>
+* ITT estimators measure the effect of assignment rather than treatment. With crossover, the distinction matters. For additional discussion, see Freedman (2006a).
+
+---
+
+## Logit Model for Binary Data
+
+**Overview** 
+
+<p><p/>
+* The **Logit Model** (Logistic Regression) is a statistical model used for predicting binary outcomes.
+   -  It models the probability that a given observation belongs to one 
+of two categories using a logistic function.
+
+**Key Components**
+
+### 1. Binary Outcome   {-}
+- The response variable \( Y \) is binary: \( Y \in \{0,1\} \).
+- The probability of \( Y = 1 \) is denoted as \( P(Y = 1 | X) \).
+
+<br/>
+
+### 2. Logistic Function {-}
+The logit model assumes the following relationship between the probability of success (\( p \)) and the predictors (\( X \)):
+
+\begin{equation} 
+P_\beta(Y = 1 | X) = \frac{e^{\beta_0 + \beta_1 X_1 + ... + \beta_k X_k}}{1 + e^{\beta_0 + \beta_1 X_1 + ... + \beta_k X_k}}
+   \tag{4}
+\end{equation}
+
+where: 
+
+- \( X = (X_1, X_2, ..., X_k) \) are the predictor variables.
+
+- \( \beta = (\beta_0, \beta_1, ..., \beta_k) \) are the model coefficients.
+
+- The function maps any real-valued input to a value between 0 and 1.
+
+<br/>
+
+### 3. Log-Odds Transformation  {-}
+
+Taking the natural logarithm of the odds (ie. the logit transformation):
+
+\begin{equation} 
+\log\left(\frac{P_\beta(Y=1 | X)}{1 - P_\beta(Y=1 | X)}\right) = \beta_0 + \beta_1 X_1 + ... + \beta_k X_k
+   \tag{5}
+\end{equation}
+
+- This linearises the relationship between the predictors and the response variable.
+
+
+<br/>
+
+#### 4. Maximum Likelihood Estimation (MLE)  {-}
+- The parameters \( \beta \) are estimated using MLE.
+- The likelihood function is:
+\begin{equation}
+  L(\beta | X) = \prod_{i=1}^{n} P_\beta(Y_i | X_i)^{Y_i} (1 - P_\beta(Y_i | X_i))^{1 - Y_i}
+   \tag{6}
+\end{equation}
+
+   - Notice how the 0/1 Y values,  which appear in the exponent of the
+product of individual contributionsto the liekelihood prioduct, act as
+selectors.  
+
+- The log-likelihood function is maximized to obtain the parameter estimates.
+
+<br/>
+
+#### 5. Interpretation of Coefficients   {-}
+- \( \beta_j \) represents the change in the **log-odds** for a one-unit increase in \( X_j \).
+- The exponentiated coefficients \( e^{\beta_j} \) give the **odds ratio**.
+
+<p><p/>
+- Suppose $X_1$ = 0, 1 according to Treatment vs Control.   Consider:
+   - $\lambda_i^T$ = the **log odds of success when $X_1 = 1$** 
+   - $\lambda_i^C$ = the **log odds of success when $X_1 = 0$** 
+
+In view of (5),
+
+\begin{align}
+\lambda_i^T &= \log\left(\frac{P_\beta(Y=1 \mid X_1=1)}{1 - P_\beta(Y=1 \mid X_1=1)}\right) \\
+   \\
+   &= \beta_0 + \beta_1 \cdot 1 + \beta_2 \cdot X_2 + \dots + \beta_k \cdot X_k
+   \tag{7}
+\end{align}
+
+and
+
+\begin{align}
+\lambda_i^C &= \log\left(\frac{P_\beta(Y=1 \mid X_1=0)}{1 - P_\beta(Y=1 \mid X_1=0)}\right) \\
+   \\
+   &= \beta_0 + 0 + \beta_2 \cdot X_2 + \dots + \beta_k \cdot X_k
+   \tag{8}
+\end{align}
+
+
+    
+<br/>
+
+#### 6. Model Evaluation   {-}
+- **Goodness-of-fit**: Likelihood Ratio Test, Pseudo \( R^2 \) (e.g., McFadden's \( R^2 \)).
+   - these are not sufficient!   We need to establish that the errors (residuals) are 
+such that the summaries can be believed to have appropriate statistical properties 
+- **Classification Performance**: Accuracy, Precision, Recall, AUC-ROC.
+- **Multicollinearity**: Variance Inflation Factor (VIF).
+
+<br/>
+
+#### 7. Applications   {-}
+- Medical diagnosis (e.g., predicting disease presence or absence).
+- Credit scoring (e.g., loan default prediction).
+- Marketing (e.g., purchase likelihood modeling).
+- Social sciences (e.g., voting behavior analysis).
+
+---
+
+
+##  A plug-in estimator for the log odds 
+
+* Plug-in estimates of average predicted probabilities $\alpha^T$,  $\alpha^C$
+are computed by plugging $\hat{\beta}$ into (4):
+
+\begin{align}
+\tilde{\alpha}^T &= \frac{1}{n} \sum_1^n  P_\hat{\beta}(Y = 1 | X:X_1=1)    \\
+\tilde{\alpha}^C &= \frac{1}{n} \sum_1^n  P_\hat{\beta}(Y = 1 | X:X_1=0)
+   \tag{9}
+\end{align}
+
+
+* Then the differential log odds in (3) can be estimated by plugging into the
+formula for  $\Delta$:
+
+\begin{align} 
+
+  \tilde{\Delta} = \log \left( \frac{\tilde{\alpha}^T}{1 - \tilde{\alpha}^T} \right) - \log \left( \frac{\tilde{\alpha}^C}{1 - \tilde{\alpha}^C} \right)
+  \tag{10}
+\end{align}
+
+
+## ITT estimator for the log-odds
+
+* The ITT (intention-to-treat) estimators are defined as follows:
+
+\begin{align}
+  \hat{\alpha}^T &= \frac{1}{n_T} \sum_{i \in T} Y_i       \\
+  \hat{\alpha}^C &= \frac{1}{n_C} \sum_{i \in C} Y_i
+  \tag{11}
+\end{align}
+
+
+* Then ITT Estimate of Differential Log Odds is given by:
+
+\begin{align} 
+
+  \hat{\Delta} = \log \left( \frac{\hat{\alpha}^T}{1 - \hat{\alpha}^T} \right) - \log \left( \frac{\hat{\alpha}^C}{1 - \hat{\alpha}^C} \right)
+  \tag{10}
+\end{align}
+
+
+---
+
+
+## Simulations
+
+* We design simulations to illustrate the consequences of specification error
+when the **logit model is fitted to experimental data**. 
+
+* The stochastic element comes from randomization.
+
+* The study considers different population sizes (nSamp = 100, 500, 1000, 5000)
+and generates responses, $Y^C$, $Y^T$, based on 
+thresholded uniform random variables.
+
+<p><p/>
+* For $i = 1, \ldots, nSamp$,
+   - Let $U_i$ be IID uniform random variables - latent variable
+   - Let $Z_i$ be IID uniform random variables - observed predictor
+   - Let $Y_i^C = {U_i > 0.5}$ - for  controls, Y is thresholded on latent values
+   - Let $Y_i^T = {U_i + Z_i > 0.75}$ - for  controls, Y is thresholded on latent values
+shifted by co-variate $Z_i$.
+   
+
+
+<p><p/>
+* It is easy to show:
+   - $P(Y^C = 1) = 1/2$; Odds = 1/1
+   - $P(Y^T = 1) = 1 - 1/2 \cdot (3/4)^2 = 23/32$; Odds = 23/9
+   - $\Delta = log( 23/9 ) - log ( 1 ) = 0.938$
+
+
+<br/>
+
+<p><p/>
+* Even for moderately large nSamp, non-linearity in (3) is an issue,
+and the approximation given for $\Delta$ may be unsatisfactory...
+
+<p><p/>
+* In the simulated data:
+  - Treatment Helped: $Y^T > Y^C \iff {Y_i^T == 1, Y_i^C == 0} \iff {U_i < .5, Z_i > .75 - U_i}$
+  - Treatment Did Not Help: 
+$Y^T \le Y^C \iff {Y_i^T == 0, Y_i^C == 1} \iff {U_i > .5, Z_i < .75 - U_i}$
+
+
+<p><p/>
+* From Figure \@ref(fig:m6a-sim-plot-u-z) we can see that if U and Z are
+independent variates drawn from the uniform(0, 1) distribution:
+   - $P(Y^T > Y^C) = 1/4$
+   - $P(Y^T < Y^C) = 1/32$
+   - $P(Y^T =  Y^C) = 1 - 1/4 - 1/32 = 23/32$
+   - Z is informative - if $Z_i$E is big,
+treatment is likely to help:
+
+
+\begin{align}
+P(Y^T > Y^C | Z = z_0) &= P(U > .75 - Z, U < .5 | Z = z_0)     \\ 
+                       &= \int_{.75 - z_0}^{0.5} u du     \\ 
+                       &= 0.5 - max(.75 - z_0, 0)  \;\;\; \text{ for } z_0 \ge 0.25 \\
+                       & = 0  \text{ otherwise }
+   \tag{11}
+\end{align}
+
+```{r m6a-sim-plot-u-z, fig.cap = "Covariate Space", eval=T, fig.width=7, fig.height=7} 
+
+plot(x=c(0,1), y=c(0,1), xlab='U', ylab='Z', type = 'n', pty='s', ylim=c(0, 1.01))
+
+xvar <- c(-0.1, seq(0, 1, length.out=100))
+yvar <- 0.75 - xvar
+
+lines(xvar, yvar, lty=3)
+abline(v = 0.5 )
+abline(h = 0.5,  col="grey" )
+title(expression(Y^C ~ "=" ~ {U > 0.5}), adj=0)
+title(expression(Y^T ~ "=" ~ {Z > 0.75 - U}), adj=0, line=1)
+
+ # line angle
+line_angle <- atan2(-1, 1) * 180/pi
+
+text(0.4, 0.75 - 0.4, "Z = 0.75 - U", srt = line_angle, pos = 1)
+text(0.51,  0.7, "U = 0.5", srt = -90, pos = 3)
+
+polygon( x = c(0, 0, .5, .5), y = c(0.75, 1, 1, 0.25), 
+border = "darkgreen", col =  "darkgreen", density = 10, lwd = 2)
+text(0.2, 1.02, expression(Y^T > Y^C), col = "darkgreen", adj = 0, pos=4, cex=0.75)
+
+polygon( x = c(0.5, 0.5, .75, .5), y = c(0, 0.25, 0, 0), 
+border = "red", col =  "red", density = 10, lwd = 2)
+
+text(0.47, 0.10, expression(Y^T < Y^C), col = "red", srt=90, pos=1, cex=0.75)
+
+
+```
+
+
+<br/>
+
+
+<p><p/>
+* For sample size nSamp 5000, get ${Z_i, Y_i^C \text{ and } Y_i^T}$
+   - get popDelta
+   - Get 1000 randomized index sets
+
+<p><p/>
+* For each simulated randomization (R = 1000), get MLE $\hat{\beta}$ from
+logit fit and the plug-in estimator $\tilde{\Delta}$ defined by (9) and (10)
+
+* Tabulate mean, sd, se for $\hat{\beta}$, plug-in estimator $\tilde{\Delta}$
+and Truth (= true log odds ratio  defined in (2) and (3).
+
+<br/>
+
+
+### **3. R Code for Simulations** {-}
+
+* To get a better sense of the effect of sample size on results,
+we will remove as much variability as possible.
+
+<p><p/>
+* Blocking:  As the smallest samples size is nSamp = 100, we will consider
+samples in blocks of 100 samples. 
+   - nSamp = 100 $\iff$ blockNo in b01
+   - nSamp = 500 $\iff$ blockNo in b01-05
+   - nSamp = 1000 $\iff$ blockNo in b01-10
+   - nSamp = 5000 $\iff$ blockNo in b01-50  - All blockNo
+
+<p><p/>
+* randomization: to make sure that we can build the datasets
+telescopically randomization to C and T in proportions of 1:3
+will be done within each blockNo.
+
+
+<p><p/>
+* to simulated once on the largest data set nSamp = 5000.
+   - n5000_CT_outcome_frm is data frame with columns
+      - sampNo = s0001, ..., s5000
+      - blockNo = b01, ..., b50
+      - Let $U_i$ be IID uniform random variables - latent variable
+      - Let $Z_i$ be IID uniform random variables - observed predictor
+      - Let $Y_i^C = {U_i > 0.5}$ - for  controls, Y is thresholded on latent values
+      - Let $Y_i^T = {U_i + Z_i > 0.75}$ - for  controls, Y is thresholded on latent values
+shifted by co-variate $Z_i$.
+    
+<p><p/>
+* To get popDelta:
+   - alphaC = mean($Y^C$ == 1)
+   - alphaT = mean($Y^T$ == 1)
+   - popDelta = log_odds_ratio(alphaT) - log_odds_ratio(alphaC)
+
+<p><p/>
+* Get popDeltaBlock for each block, repeat by blockID
+
+<p><p/>
+* Repeat 1000, randomize 25 samples to groupId = "Ctl" within each block
+   - estimate beta, plugInDelta, ITTDelta
+      - for all
+      - for each block
+   
+```{r m6a-n5000-ct-pop-data-frm, cache=T, cache.vars= c("n5000_CT_popData_frm", "n5000_CT_popData_sum_frm", "n5000_CT_popData_b1000_sum_frm", "n5000_CT_popData_b500_sum_frm", "n5000_CT_popData_b100_sum_frm") , fig.cap='Delta as a function of sample size'}
+
+log_odds_ratio <- function(p1 , p2) log(p1/(1-p1)) 
+
+NSAMP = 5000
+SEED = 123
+
+
+set.seed(SEED)
+
+
+n5000_CT_popData_frm <- data.frame(
+   sampNum = 1:NSAMP,
+   sampNo = paste0("s", formatC(1:NSAMP, width = 4, flag = '0')),
+   b100Num =  ((1:NSAMP)-1) %/% 100 +1,
+   b100No =  paste0("b", formatC(((1:NSAMP)-1) %/% 100 +1, width = 2, flag = '0')),
+   b500Num =  ((1:NSAMP)-1) %/% 500 +1,
+   b500No =  paste0("b", formatC(((1:NSAMP)-1) %/% 500 +1, width = 2, flag = '0')),
+   b1000Num =  ((1:NSAMP)-1) %/% 1000 +1,
+   b1000No =  paste0("b", formatC(((1:NSAMP)-1) %/% 1000 +1, width = 2, flag = '0')),
+   Uv = runif(NSAMP),
+   Zv = runif(NSAMP))
+
+
+n5000_CT_popData_frm %<>% 
+dplyr::mutate(
+   yC = Uv > 0.5, 
+   yT = Uv + Zv > 0.75)
+
+ #Verify
+
+ # Overall summary
+ # Reduce tabke of 500 to one line
+ ###################################
+n5000_CT_popData_sum_frm <- n5000_CT_popData_frm %>%
+   dplyr::summarize(
+     propHelp = mean(yT > yC),
+     propNoHelp = mean(yT < yC),
+     aC = mean(yC),
+     aT = mean(yT),
+     popDelta =  log_odds_ratio(aT, aC)
+   ) %>%
+  dplyr::mutate(
+    block = 5000,
+    stat = "mean"
+  ) %>% dplyr::relocate(block, stat)
+
+     
+ # by block size
+ #####################################
+ ## b1000
+n5000_CT_popData_b1000_sum_frm <- n5000_CT_popData_frm %>%
+   dplyr::group_by (b1000No) %>% 
+   dplyr::summarize(
+     propHelp = mean(yT > yC),
+     propNoHelp = mean(yT < yC),
+     aC = mean(yC),
+     aT = mean(yT),
+     popDelta =  log_odds_ratio(aT, aC)
+  ) %>%
+  dplyr::mutate(
+    block = 1000,
+    stat = "mean"
+  ) %>% dplyr::relocate(block, stat)
+
+## b500
+n5000_CT_popData_b500_sum_frm <- n5000_CT_popData_frm %>%
+   dplyr::group_by (b500No) %>% 
+   dplyr::summarize(
+     propHelp = mean(yT > yC),
+     propNoHelp = mean(yT < yC),
+     aC = mean(yC),
+     aT = mean(yT),
+     popDelta =  log_odds_ratio(aT, aC)
+  ) %>%
+  dplyr::mutate(
+    block = 500, 
+    stat = "mean"
+  ) %>% dplyr::relocate(block, stat)
+
+
+
+ ## b100
+n5000_CT_popData_b100_sum_frm <- n5000_CT_popData_frm %>%
+   dplyr::group_by (b100No) %>% 
+   dplyr::summarize(
+     propHelp = mean(yT > yC),
+     propNoHelp = mean(yT < yC),
+     aC = mean(yC),
+     aT = mean(yT),
+     popDelta =  log_odds_ratio(aT, aC)
+  ) %>%
+  dplyr::mutate(
+    block = 100, 
+    stat = "mean"
+  ) %>% dplyr::relocate(block, stat)
+
+ # Put it all together
+ #################################
+report_frm <- rbind(
+n5000_CT_popData_sum_frm,
+
+c(block="b1000",  stat = "mean",
+  round(colMeans(n5000_CT_popData_b1000_sum_frm[, -(1:3)]), 3)),
+c(block="b1000",  stat = "sd",
+ round(apply(n5000_CT_popData_b1000_sum_frm[, -(1:3)], 2, sd), 3)), 
+
+c(block="b500",  stat = "mean",
+  round(colMeans(n5000_CT_popData_b500_sum_frm[, -(1:3)]), 3)),
+c(block="b500",  stat = "sd",
+ round(apply(n5000_CT_popData_b500_sum_frm[, -(1:3)], 2, sd), 3)), 
+
+
+c(block="b100",  stat = "mean",
+  round(colMeans(n5000_CT_popData_b100_sum_frm[, -(1:3)]), 3)),
+c(block="b100",  stat = "sd",
+ round(apply(n5000_CT_popData_b100_sum_frm[, -(1:3)], 2, sd), 3) 
+))
+
+
+report_frm %>%
+knitr::kable(
+row.names = F,
+caption = paste("Pop Summary - seed =", SEED)
+) %>%
+kableExtra::kable_styling(full_width = F)
+    
+
+
+if(F)
+ # by b500No
+n5000_CT_popData_sum_byBlock_frm <- n5000_CT_popData_frm %>%
+   dplyr::group_by(b500No) %>%
+   dplyr::summarize(
+     propHelp = mean(yT > yC),
+     propNoHelp = mean(yT < yC),
+     aC = mean(yC),
+     aT = mean(yT),
+     popDelta =  log_odds_ratio(aT, aC)
+   )
+     
+
+if(F)
+n5000_CT_popData_sum_byBlock_frm %>% 
+knitr::kable(
+caption = paste("500 block Pop Summary - seed =", SEED, "meanDelta=", 
+  mean(n5000_CT_popData_sum_byBlock_frm$popDelta) %>% round(3))
+) %>%
+kableExtra::kable_styling(full_width = F)
+   
+
+```
+
+#### Randomize {-}
+
+* For NSIM = 1000 simulated experimental assignments of subjects to
+"Control" or "Treatment"
+   - compute model based estimates of the log odds ratio
+   - as well as non-parametric summaries: the plug-in estimate and the ITT estimate.
+
+```{r m6a-randomize, cache=T, cache.vars=c("sim_group_mtx")}
+NSIM <- 1000
+
+set.seed(123)  # Set seed for reproducibility
+sim_group_mtx <- do.call('cbind', lapply(1:NSIM, function(x) do.call('c', lapply(1:50, 
+function(x) ifelse(1:100 %in% sample(1:100, size= 25), 0, 1)))))
+
+```
+
+* Recall population parameters
+
+```{r m6a-population-paramerters,
+
+n5000_CT_popData_sum_frm
+
+```{r m6a-eval-sim, cache=T, cache.vars="n5000_sim_res_frm"}
+
+n5000_sim_res_frm <- data.frame()
+
+for(JJ in 1:ncol(sim_group_mtx)) {
+
+   n5000_CT_popData_sim_frm <- n5000_CT_popData_frm %>%
+      dplyr::mutate(
+        simNum = JJ,
+        Group =  sim_group_mtx[, JJ],
+        GroupF =  factor(Group, levels = c(0, 1), labels=c("Control", "Treatment")),
+        yObs = yC^(1 - Group) * yT^Group
+   )
+
+   if(JJ ==1)
+   with(n5000_CT_popData_sim_frm, table(b500No, GroupF)) %>% t() %>%
+   knitr::kable(
+   caption = paste("Simulated experimental group assignments - simNum =", JJ,
+   "Blocking = b500")) %>%
+   kableExtra::kable_styling(full_width = F)
+    
+    # Fit logistic regression
+    sim_fit <- glm(yObs ~ 1 + GroupF + Zv, family = binomial, data=n5000_CT_popData_sim_frm)
+    sim_coefs <- coef(sim_fit)  # Extract coefficients
+    
+    # Compute plug-in and ITT estimators
+    p_T <- mean(predict(sim_fit, 
+           newdata = n5000_CT_popData_sim_frm %>% dplyr::mutate(GroupF = "Treatment"),
+           type = "response"))
+
+    p_C <- mean(predict(sim_fit, 
+           newdata = n5000_CT_popData_sim_frm %>% dplyr::mutate(GroupF = "Control"),
+           type = "response"))
+
+               # Compute plug-in and ITT estimators
+    plugin_estimate <- log(p_T / (1 - p_T)) - log(p_C / (1 - p_C))
+    
+    alpha_T_hat <- with(n5000_CT_popData_sim_frm, mean(yObs[Group == 1]))
+    alpha_C_hat <- with(n5000_CT_popData_sim_frm, mean(yObs[Group == 0]))
+    delta_hat <- log(alpha_T_hat / (1 - alpha_T_hat)) - log(alpha_C_hat / (1 - alpha_C_hat))
+    
+    alpha_T_tilde <- p_T
+    alpha_C_tilde <- p_C
+    delta_tilde <- log(alpha_T_tilde / (1 - alpha_T_tilde)) - log(alpha_C_tilde / (1 - alpha_C_tilde))
+    
+    n5000_sim_res_frm <- rbind(n5000_sim_res_frm,
+    data.frame(simNum = JJ, 
+    Trt = t(summary(sim_fit)$coeff['GroupFTreatment',1:2]),
+    plugin_estimate, delta_hat, delta_tilde,
+    alpha_T_hat, alpha_C_hat, alpha_T_tilde, alpha_C_tilde))
+
+      
+  }
+
+ # Sample sizes - run nSamp - 5000
+ # Can subset later
+
+saveObj("M6A-n5000_sim_res_frm", "n5000_sim_res_frm")
+
+```
+
+
+
+
+
+```{r m6a-truth, fig.cap = "Summarizing trtth in table ie, parameters"
+
+n5000_CT_popData_sum_frm %>%
+knitr::kable( digits = 3, caption = ) %>%
+   kableExtra::kable_styling(full_width = F)
+
+```
+
+
+```{r m6a-n5000-estimation, fig.height=6, fig.width=8}
+
+n5000_sim_res_frm %>%
+dplyr::select(c("Trt.Estimate", "plugin_estimate", "delta_hat", "delta_tilde")
+) %>% pairs()
+
+
+n5000_sim_res_sum_frm <- apply(n5000_sim_res_frm %>%
+dplyr::select(c("Trt.Estimate", "plugin_estimate", "delta_hat", "delta_tilde")
+), 2, summary)
+
+n5000_sim_res_sum_frm <- 
+rbind(n5000_sim_res_sum_frm,
+IQR = apply(n5000_sim_res_frm %>%
+dplyr::select(c("Trt.Estimate", "plugin_estimate", "delta_hat", "delta_tilde")),
+ 2, IQR))
+
+n5000_sim_res_sum_frm %>%
+knitr::kable(
+caption = "Estimating log ratios - logit fit vs Neyman non-parametric approach"
+	)   %>%
+   kableExtra::kable_styling(full_width = F)
+
+
+```
+
+* Better to visualize with MA and Hist/density
+
+* why is logit biassed?
+
+
+## Repeat with only 500 samples, 100 samples
+
+
+
+n5000_CT_popData_sum_frm  %>% 
+knitr::kable(
+caption = paste("Population Summary - seed =", SEED)
+) %>%
+kableExtra::kable_styling(full_width = F)
+    
+n5000_sim_means_vec <- apply(n5000_sim_res_frm[,-1], 2, mean) %>% round(2)
+n5000_sim_sd_vec <- apply(n5000_sim_res_frm[,-1], 2, sd) %>% round(2)
+
+n5000_sim_means_sd_frm <- rbind(
+  means = n5000_sim_means_vec,
+  sd = n5000_sim_sd_vec)
+
+
+
+```
+
+<br/>
+<br/>
+    
+# References {#references}
+<div id="refs"></div>
+    
+<br/> 
+
+```{r , echo=FALSE}
+  knit_exit()
+```
+
+<br/>
+<br/>
+
+########################################################
+###  ARCHIVED CODE
+########################################################
+
+   
+ # Function to simulate data and perform analysis
+simulate_freedman <- function(n, num_simulations = 1000) {
+  results <- data.frame(beta1 = numeric(num_simulations),
+                        beta2 = numeric(num_simulations),
+                        beta3 = numeric(num_simulations),
+                        #plugin = numeric(num_simulations),
+                        #alphaT_tilde = numeric(num_simulations),
+                        #alphaC_tilde = numeric(num_simulations),
+                        #delta_tilde = numeric(num_simulations),
+                        alphaT_hat = numeric(num_simulations),
+                        alphaC_hat = numeric(num_simulations))
+                        #delta_hat = numeric(num_simulations))
+  
+  # Generate random variables - OUSIDE the sim loop!!!!
+    U <- runif(n)
+    V <- runif(n)
+    Z <- V  # Covariate
+
+  # Potential outcomes
+    Y_C <- ifelse(U > 0.5, 1, 0)
+    Y_T <- ifelse(U + V > 0.75, 1, 0)
+    
+  # simulate randomization
+  for (sim in 1:num_simulations) {
+    # Treatment assignment (randomized: 75% T, 25% C)
+    X <- sample(c(0, 1), size = n, replace = TRUE, prob = c(0.25, 0.75))
+    
+    # Observed outcomes
+    Y <- ifelse(X == 1, Y_T, Y_C)
+    
+    # Fit logistic regression
+    model <- glm(Y ~ 1 + X + Z, family = binomial)
+    coefs <- coef(model)  # Extract coefficients
+    
+    # Compute plug-in and ITT estimators
+    p_T <- mean(predict(model, newdata = data.frame(X = 1, Z = Z), type = "response"))
+    p_C <- mean(predict(model, newdata = data.frame(X = 0, Z = Z), type = "response"))
+    plugin_estimate <- log(p_T / (1 - p_T)) - log(p_C / (1 - p_C))
+    
+    alpha_T_hat <- mean(Y[X == 1])
+    alpha_C_hat <- mean(Y[X == 0])
+    delta_hat <- log(alpha_T_hat / (1 - alpha_T_hat)) - log(alpha_C_hat / (1 - alpha_C_hat))
+    
+    alpha_T_tilde <- p_T
+    alpha_C_tilde <- p_C
+    delta_tilde <- log(alpha_T_tilde / (1 - alpha_T_tilde)) - log(alpha_C_tilde / (1 - alpha_C_tilde))
+    
+    # Store results
+    results[sim, ] <- c(coefs[1], coefs[2], coefs[3], 
+                        ###plugin_estimate,
+                        ###alpha_T_tilde, alpha_C_tilde, delta_tilde,
+                        alpha_T_hat, alpha_C_hat
+
+                        )###, delta_hat)
+  }
+  
+  return(results)
+}
+
+ # Sample sizes
+sample_sizes <- c(100, 500, 1000, 5000)
+
+ # Run simulations
+simulation_results <- lapply(sample_sizes, simulate_freedman)
+names(simulation_results) <- paste0("N_", sample_sizes)
+
+ #print(simulation_results)
+
+sim_res_means_frm <- sapply(simulation_results,
+  function(mtx) mean = colMeans(mtx)) %>% t()
+rownames(sim_res_means_frm) <- names(simulation_results)
+
+sim_res_means_frm %>%
+#dplyr::select(beta1, beta2, beta3, alphaT_hat, alphaC_hat) %>%
+knitr::kable(
+digits = 3,
+caption = "Means across simulations"
+) %>%
+kableExtra::kable_styling(full_width = F)
+
+
+sim_res_sd_frm <- sapply(simulation_results,
+  function(mtx) sd = apply(mtx, 2, sd)) %>% t()
+rownames(sim_res_sd_frm) <- names(simulation_results)
+
+
+
+sim_res_sd_frm %>% 
+#dplyr::select(beta1, beta2, beta3, alphaT_hat, alphaC_hat) %>%
+knitr::kable(
+digits = 3,
+caption = "SD across simulations"
+) %>%
+kableExtra::kable_styling(full_width = F) 
+
+
+
+### **1. Description of the Neyman and Logit Models** {-}
+
+#### **1.1 Neyman Model** {-}
+- The **Neyman model (1923)** provides a non-parametric framework for analyzing treatment effects in randomized experiments. It assumes that:    
+- Each subject in the study has **two potential outcomes**:
+  - \( Y_T \) (if treated)
+  - \( Y_C \) (if assigned to control)
+- However, **only one of these potential outcomes is observed** (due to treatment assignment).
+- The **only source of randomness** in this setup is **treatment assignment**, meaning responses are **fixed parameters** rather than stochastic variables.
+- The key parameter of interest is the **differential log odds of success**:
+
+    
+\usepackage{amsmath}
+
+\begin{equation}
+  \Delta = \log \left( \frac{\alpha_T}{1 - \alpha_T} \right) - \log \left( \frac{\alpha_C}{1 - \alpha_C} \right)
+   \tag{1}
+\end{equation}
+
+
+<!--
+\label{eq:neymanModelParm}
+\ref{eq:neymanModelParm}
+(\#eq:neyman-model-parm)
+-->
+
+where \( \alpha_T \) and \( \alpha_C \) represent the fraction of successes if all subjects were treated or assigned to control, respectively.
+
+- **Neyman's approach focuses on comparing observed means between groups, without assuming a particular probability distribution.** This makes it **robust and free of parametric assumptions**.
+
+---
+
+#### **1.2 Logit Model** {-}
+The **logit model**, or **logistic regression**, is a parametric approach commonly used to model binary outcomes. It assumes that:
+
+- The probability of success for subject \( i \) follows the logistic function:
+
+\begin{equation}
+  \Delta = \log \left( \frac{\alpha_T}{1 - \alpha_T} \right) - \log \left( \frac{\alpha_C}{1 - \alpha_C} \right)
+   \tag{2}
+\end{equation}
+
+  where:
+  - \( X_i \) is the treatment assignment (1 = treatment, 0 = control),
+  - \( Z_i \) is a covariate,
+  - \( \beta_2 \) is the coefficient measuring the effect of treatment.
+
+<p><p/>
+- Unlike the Neyman model, the logit model assumes a **probabilistic structure** for the responses and estimates parameters using **Maximum Likelihood Estimation (MLE)**.
+
+- **Key issue:** **Randomization does not justify the logit model’s assumptions.** If the logit model is **misspecified**, its treatment effect estimate \( \hat{\beta}_2 \) can be biased.
+
+---
+
+### **2. Equations Implemented** {-}
+The following estimators are included:
+
+HERE
+
+- **Equation (10a) (Plug-in Estimates of αT and αC)**  
+  \[
+  \tilde{\alpha}_T = \frac{1}{n} \sum_{i=1}^{n} p(\hat{\beta}, 1, Z_i)
+  \]
+  \[
+  \tilde{\alpha}_C = \frac{1}{n} \sum_{i=1}^{n} p(\hat{\beta}, 0, Z_i)
+  \]
+
+- **Equation (10b) (Plug-in Estimate of Differential Log Odds)**  
+  \[
+  \tilde{\Delta} = \log \left( \frac{\tilde{\alpha}_T}{1 - \tilde{\alpha}_T} \right) - \log \left( \frac{\tilde{\alpha}_C}{1 - \tilde{\alpha}_C} \right)
+  \]
+
+- **Equation (11a) (ITT Estimators of αT and αC)**  
+  \[
+  \hat{\alpha}_T = \frac{1}{n_T} \sum_{i \in T} Y_i, \quad
+  \hat{\alpha}_C = \frac{1}{n_C} \sum_{i \in C} Y_i
+  \]
+
+- **Equation (11b) (ITT Estimate of Differential Log Odds)**  
+  \[
+  \hat{\Delta} = \log \left( \frac{\hat{\alpha}_T}{1 - \hat{\alpha}_T} \right) - \log \left( \frac{\hat{\alpha}_C}{1 - \hat{\alpha}_C} \right)
+  \]
+
+---
+
+## Logistic simulations: **Simulating Section 5 of Freedman (2008) **
+
+### **Overview**
+This section replicates the **simulations from Section 5** of **Freedman (2008)**, which investigates the consequences of fitting logistic regression models to experimental data. The simulations illustrate how the **Maximum Likelihood Estimate (MLE) of the treatment effect is biased**, while **plug-in and ITT estimators are nearly unbiased**.
+
+### **Equations Implemented**
+The following estimators are included:
+
+- **Equation (10a) (Plug-in Estimates of αT and αC)**  
+  \[
+  \tilde{\alpha}_T = \frac{1}{n} \sum_{i=1}^{n} p(\hat{\beta}, 1, Z_i)
+  \]
+  \[
+  \tilde{\alpha}_C = \frac{1}{n} \sum_{i=1}^{n} p(\hat{\beta}, 0, Z_i)
+  \]
+
+- **Equation (10b) (Plug-in Estimate of Differential Log Odds)**  
+  \[
+  \tilde{\Delta} = \log \left( \frac{\tilde{\alpha}_T}{1 - \tilde{\alpha}_T} \right) - \log \left( \frac{\tilde{\alpha}_C}{1 - \tilde{\alpha}_C} \right)
+  \]
+
+- **Equation (11a) (ITT Estimators of αT and αC)**  
+  \[
+  \hat{\alpha}_T = \frac{1}{n_T} \sum_{i \in T} Y_i, \quad
+  \hat{\alpha}_C = \frac{1}{n_C} \sum_{i \in C} Y_i
+  \]
+
+- **Equation (11b) (ITT Estimate of Differential Log Odds)**  
+  \[
+  \hat{\Delta} = \log \left( \frac{\hat{\alpha}_T}{1 - \hat{\alpha}_T} \right) - \log \left( \frac{\hat{\alpha}_C}{1 - \hat{\alpha}_C} \right)
+  \]
+
+---
+
+### **R Code for Simulations**
+
+```{r sim-logistic}
+set.seed(123)  # Set seed for reproducibility
+
+# Function to simulate data and perform analysis
+simulate_freedman <- function(n, num_simulations = 1000) {
+  results <- data.frame(beta1 = numeric(num_simulations),
+                        beta2 = numeric(num_simulations),
+                        beta3 = numeric(num_simulations),
+                        plugin = numeric(num_simulations),
+                        alphaT_tilde = numeric(num_simulations),
+                        alphaC_tilde = numeric(num_simulations),
+                        delta_tilde = numeric(num_simulations),
+                        alphaT_hat = numeric(num_simulations),
+                        alphaC_hat = numeric(num_simulations),
+                        delta_hat = numeric(num_simulations))
+  
+  for (sim in 1:num_simulations) {
+    # Generate random variables
+    U <- runif(n)
+    V <- runif(n)
+    Z <- V  # Covariate
+
+    # Potential outcomes
+    Y_C <- ifelse(U > 0.5, 1, 0)
+    Y_T <- ifelse(U + V > 0.75, 1, 0)
+    
+    # Treatment assignment (randomized: 75% T, 25% C)
+    X <- sample(c(0, 1), size = n, replace = TRUE, prob = c(0.25, 0.75))
+    
+    # Observed outcomes
+    Y <- ifelse(X == 1, Y_T, Y_C)
+    
+    # Fit logistic regression
+    model <- glm(Y ~ X + Z, family = binomial)
+    coefs <- coef(model)  # Extract coefficients
+    
+    # Compute plug-in estimator (Eq. 10b)
+    p_T <- mean(predict(model, newdata = data.frame(X = 1, Z = Z), type = "response"))
+    p_C <- mean(predict(model, newdata = data.frame(X = 0, Z = Z), type = "response"))
+    plugin_estimate <- log(p_T / (1 - p_T)) - log(p_C / (1 - p_C))
+    
+    # Compute ITT estimators (Eq. 11a)
+    alpha_T_hat <- mean(Y[X == 1])
+    alpha_C_hat <- mean(Y[X == 0])
+    
+    # Compute estimated log odds ratio (Eq. 11b)
+    delta_hat <- log(alpha_T_hat / (1 - alpha_T_hat)) - log(alpha_C_hat / (1 - alpha_C_hat))
+    
+    # Compute plug-in estimates of alpha_T and alpha_C (Eq. 10a)
+    alpha_T_tilde <- p_T
+    alpha_C_tilde <- p_C
+    
+    # Compute plug-in estimate of the differential log odds (Eq. 10b)
+    delta_tilde <- log(alpha_T_tilde / (1 - alpha_T_tilde)) - log(alpha_C_tilde / (1 - alpha_C_tilde))
+    
+    # Store results
+    results[sim, ] <- c(coefs[1], coefs[2], coefs[3], plugin_estimate,
+                        alpha_T_tilde, alpha_C_tilde, delta_tilde,
+                        alpha_T_hat, alpha_C_hat, delta_hat)
+  }
+  
+  # Compute summary statistics
+  summary_stats <- data.frame(
+    n = n,
+    beta1_mean = mean(results$beta1),
+    beta2_mean = mean(results$beta2),
+    beta3_mean = mean(results$beta3),
+    plugin_mean = mean(results$plugin),
+    alphaT_tilde_mean = mean(results$alphaT_tilde),
+    alphaC_tilde_mean = mean(results$alphaC_tilde),
+    delta_tilde_mean = mean(results$delta_tilde),
+    alphaT_hat_mean = mean(results$alphaT_hat),
+    alphaC_hat_mean = mean(results$alphaC_hat),
+    delta_hat_mean = mean(results$delta_hat),
+    beta1_sd = sd(results$beta1),
+    beta2_sd = sd(results$beta2),
+    beta3_sd = sd(results$beta3),
+    plugin_sd = sd(results$plugin),
+    alphaT_tilde_sd = sd(results$alphaT_tilde),
+    alphaC_tilde_sd = sd(results$alphaC_tilde),
+    delta_tilde_sd = sd(results$delta_tilde),
+    alphaT_hat_sd = sd(results$alphaT_hat),
+    alphaC_hat_sd = sd(results$alphaC_hat),
+    delta_hat_sd = sd(results$delta_hat)
+  )
+  
+  return(summary_stats)
+}
+
+# Sample sizes
+sample_sizes <- c(100, 500, 1000, 5000)
+
+# Run simulations for each sample size
+simulation_results <- do.call(rbind, lapply(sample_sizes, simulate_freedman))
+
+# Print the results
+print(simulation_results)
+
+```
+
+    
+
+<!-- To run
+# nohup Rscript -e "knitr::knit2html('_M6A-DAF_on_modeling.Rmd')" > _M6A-DAF_on_modeling.log  &
+
+# Or
+# nohup Rscript -e "rmarkdown::render('_M6A-DAF_on_modeling.Rmd')" > _M6A-DAF_on_modeling.log  &
+
+
+-->
+
