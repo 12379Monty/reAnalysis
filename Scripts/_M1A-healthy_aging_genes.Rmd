@@ -6,6 +6,8 @@ author: "[Francois Collin](https://www.linkedin.com/in/francoisz/)"
 date: '`r lubridate::now()`'
 always_allow_html: yes
 output:
+  # for use of .tabset
+  #bookdown::html_document2:
   html_document:
     code_folding: hide
     code_download: true
@@ -213,11 +215,45 @@ mqc-cov-by-extr-cons-batch-level-tp1-1.png
 
 # Introduction
 
+* The advent of AI elicits reactions ranging from
+skepticism to unbridled and even euphoric optimism,
+with experts being divided on the very notion of *intelligence*.
+(Gelman blog 5/20/24  https://statmodeling.stat.columbia.edu/2023/11/18/i-disagree-with-geoff-hinton-regarding-glorified-autocomplete/)
+
+<p><p/>
+* A given LLM model can display remarkable apparent intelligence on some queries, while 
+exhibiting stunning stupidity on others
+   - [AI can solve math olympiad problems but flunks tic-tac-toe](https://statmodeling.stat.columbia.edu/2025/02/01/ai-can-solve-math-olympiad-problems-but-flunks-tic-tac-toe/)
+   - When they don't know, they start bullshitting
+
+<p><p/>
+* chatGPT Prompts can be designed to obtain responses with desired attributes
+such as the depth and breadth of the response, and restrictions on the
+source of reference material.
+   - https://github.com/f/awesome-chatgpt-prompts
+
+<p><p/>
+* In this report, we use similarly constructed prompts to get chatGPT
+to produce reviews for three related articles
+from the vantage point of an expert statistician:
+   - [A novel multi-tissue RNA diagnostic of healthy ageing relates to cognitive health status](https://genomebiology.biomedcentral.com/articles/10.1186/s13059-015-0750-x) [Sood:2015aa]
+   - [https://genomebiology.biomedcentral.com/articles/10.1186/s13059-015-0750-x](https://genomebiology.biomedcentral.com/articles/10.1186/s13059-018-1481-6)
+   - [A statistical and biological response to an informatics appraisal of healthy aging gene signatures](https://genomebiology.biomedcentral.com/articles/10.1186/s13059-019-1734-z)
+
+
+<p><p/>
+* Before evaluating the articles of interest, we will ask submit a query to 
+establish what the current scientific position is in terms of the omic sigfnatures
+of aging.
+
+### HERE
+
+---
+
+<br/>
 * In this report we ask chatGPT to review three  papers which discuss the
 discovery of a molecular signature in samples and its utility - accuracy and
 generalizability.
-
-<br/>
 
 The timeline of a back-and-forth discussion about the validity of a
 gene signature is the following:
@@ -237,20 +273,21 @@ risk of age-related disease.
    - We built the RNA classifier using human <i>muscle</i> global 
 gene expression profiles because it has proven a useful tissue for
 predicting systemic physiological traits in humans [@Timmons:2010aa]
-and because we can define healthy physiological status with ease [@Keller:2011aa].
+and because we can define healthy physiological status with ease [@Keller:2010aa].
    - When the RNA classifier was related to cognitive health, this
 ‘healthy ageing gene score’ had the advantage of being hypothesis driven (**???**),
 and built using a paradigm and samples entirely distinct from clinical
 case–control samples. 
    - When applied to blood RNA, we established good validation for
 AD diagnosis and selectivity over common age-related pathologies.
-      - **<span style="color:blue">This is remarkably unexpected.</span>**
+      - **<span style="color:blue">Is This unexpected?</span>**
+The answer will depend on how specific and sensitive the classifier is.
 
-* The results of the present study further support the idea that analysis
+   - The results of the present study further support the idea that analysis
 of peripheral blood RNA would be a fruitful strategy for developing biomarkers
 of cognitive health and prove that
 **a common healthy ageing gene-expression program is detectable
-across multiple tissues**.</p>
+across multiple tissues**.
 
 
 <p><p/>
@@ -273,35 +310,8 @@ We attempt to clarify the various misunderstandings, below.
 
 ---
 
-* The advent of AI elicits reactions ranging from
-skepticism to unbridled and even euphoric optimism,
-with experts being divided on the very notion of intelligence.
-(Gelman blog 5/20/24  https://statmodeling.stat.columbia.edu/2023/11/18/i-disagree-with-geoff-hinton-regarding-glorified-autocomplete/)
 
-<p><p/>
-* A given LLM model can display remarkable apparent intelligence and 
-stunning stupidity
-   - [AI can solve math olympiad problems but flunks tic-tac-toe](https://statmodeling.stat.columbia.edu/2025/02/01/ai-can-solve-math-olympiad-problems-but-flunks-tic-tac-toe/)
-   - When they don't know, they start bullshitting
-
-<p><p/>
-* chatGPT Prompts can be designed to obtain responses with desired attributes
-such as depth, breadth and source.
-   - https://github.com/f/awesome-chatgpt-prompts
-
-<p><p/>
-In this report, we use a similarly constructed prompt to get chatGPT
-to produce article reviews for three related arcicles
-from the vantage point of an expert statistician:
-   - [A novel multi-tissue RNA diagnostic of healthy ageing relates to cognitive health status](https://genomebiology.biomedcentral.com/articles/10.1186/s13059-015-0750-x) [Sood:2015aa]
-   - [https://genomebiology.biomedcentral.com/articles/10.1186/s13059-015-0750-x](https://genomebiology.biomedcentral.com/articles/10.1186/s13059-018-1481-6)
-   - [A statistical and biological response to an informatics appraisal of healthy aging gene signatures](https://genomebiology.biomedcentral.com/articles/10.1186/s13059-019-1734-z)
-
----
-
-<br/>
-
-# 2015 Sood et. al. [@Sood:2015aa] {.taset}
+# 2015 Sood et. al. [@Sood:2015aa] {.tabset}
 
 ## Home {-}
 
@@ -315,19 +325,22 @@ and act as a statistician who is proficient in the traditional
 statistical concepts as they apply to the analysis of designed
 experiments as well as the novel statistical concepts developed
 for the analysis of omic data, and review the article.
-The review should not consider findings from later studies.
+
+* The review should not consider findings from later studies.
 The review should focus on the statistical aspects of the data 
 collected and analysed.
-The review should clarify issues relating to data
+
+* The review should clarify issues relating to data
 provenance - how many data collection runs are aggregated or pooled
 to assemble the analysis dataset.  How are the different tissue
-types distributed across data generation runs?  Are were the data 
+types distributed across data generation runs?  Were the data 
 from different runs normalized?
-What evidence is provided that the classifiers 
+
+* What evidence is provided that the classifiers 
 developed work well with datasets analyzed and will continue to work well
 when future data are analyzed.  
 
-Please keep the answer in
+* Please keep the answer in
 unrendered markdown format.  Also include the markdown code for a 
 bibliography of the citations.
 
@@ -374,32 +387,114 @@ The statistical methodologies employed in Sood et al. (2015) are largely appropr
 
 ## Prompt2 {-}
 
-* Read the attached paper by Sood et.al. 2015 [@Sood:2015aa], 
+* Read the attached paper by Sood et.al. 2015 [@Sood:2015aa],
 and act as a statistician who is proficient in the traditional
 statistical concepts as they apply to the analysis of designed
 experiments as well as the novel statistical concepts developed
 for the analysis of omic data, and review the article.
-The review should not consider findings from later studies.
-The review should focus on the statistical aspects of the data 
-collected and analysed.
-The review should clarify issues relating to data
+
+* The review should not consider findings from later studies.
+The review should focus on the statistical aspects of the data
+collected and analysed. 
+
+* The review should clarify issues relating to data
 provenance - how many data collection runs are aggregated or pooled
 to assemble the analysis dataset.  How are the different tissue
-types distributed across data generation runs?  Are were the data 
+types distributed across data generation runs?  Were the data 
 from different runs normalized?
-What evidence is provided that the classifiers 
+
+* What evidence is provided that the classifiers
 developed work well with datasets analyzed and will continue to work well
-when future data are analyzed.  
-For all statements that you make about the article,
+when future data are analyzed.
+
+<span style="color:blue">
+* For all statements that you make about the article,
 refer to the supporting text in the article by page and paragraph.
+</span>
 
-
-Please keep the answer in
-unrendered markdown format.  Also include the markdown code for a 
+* Please keep the answer in
+unrendered markdown format.  Also include the markdown code for a
 bibliography of the citations.
 
-## **chatGPT response**  {-}
 
+<br/>
+
+## **chatGPT Response2**  {-}
+
+### Overview
+
+Sood et al. (2015) present a multi-tissue RNA diagnostic approach to assess healthy aging. They employ transcriptomics and machine-learning techniques to classify gene expression patterns associated with aging and cognitive health. This review critically examines the statistical methods employed, focusing on data provenance, normalization, and classifier generalizability.
+
+### Data Provenance and Normalization
+
+The study integrates multiple independent datasets, sourced from various tissue types and platforms:
+
+- Muscle RNA profiles from **six independent cohorts** (p. 3, ¶3).
+- Brain RNA profiles from the **BrainEac.org dataset** (p. 6, ¶2).
+- Skin RNA profiles from the **MuTHER cohort** (p. 4, ¶3).
+- Blood RNA profiles from **two Alzheimer’s disease (AD) cohorts** (p. 7, ¶2).
+
+#### Data Collection and Aggregation
+- Muscle tissue RNA profiling was conducted across **six separate datasets** (p. 3, ¶3).
+- Brain RNA profiling incorporated **four regions** from an independent cohort (p. 4, ¶2).
+- Skin RNA profiling included **three technical replicates per clinical sample** (p. 4, ¶3).
+- Blood RNA profiling was derived from **two independently processed case-control cohorts** (p. 7, ¶2).
+
+#### Normalization Methods
+- **Muscle, brain, and blood RNA data**: Normalized using **Robust Multi-array Analysis (RMA)** and, where necessary, **Frozen Robust Multi-array Analysis (fRMA)** to handle batch effects (p. 12, ¶3).
+- **Skin RNA data**: Processed using **quantile normalization** due to platform differences (p. 4, ¶3).
+
+The study effectively acknowledges batch effects by implementing fRMA for inter-laboratory normalization and ensures comparability across platforms.
+
+### Classifier Development and Validation
+
+#### Classifier Construction
+- A **k-nearest neighbor (kNN)** classifier was employed (p. 3, ¶3), using an empirical Bayesian ranking approach to select 150 probe-sets.
+- **Leave-one-out cross-validation (LOOCV)** was used for feature selection (p. 3, ¶3).
+
+#### External Validation
+- External validation was rigorously performed using **seven independent tissue datasets** (p. 4, ¶2).
+- The classifier's **area under the curve (AUC) ranged from 0.78 to 0.99** across tissue types (p. 4, Fig. 2).
+- Classifier **generalizability** was tested by applying the muscle-derived classifier to brain and skin data with **high accuracy** (p. 4, ¶2).
+
+The classifier development follows best practices in machine learning by implementing rigorous cross-validation and independent validation, minimizing overfitting.
+
+### Performance and Generalizability
+
+- The **RNA classifier correctly classified samples** across multiple tissue types with **high accuracy** (p. 4, Fig. 2).
+- Application to **independent AD cohorts** showed a significant association between classifier scores and cognitive health (p. 6, Fig. 4).
+- The classifier was **insensitive to common confounders** like diabetes and vascular disease (p. 7, ¶4; p. 10, Fig. S2).
+
+Despite strong validation, the study **does not explicitly test prospective predictive power** on newly generated samples.
+
+### Limitations and Recommendations
+
+1. **Lack of Prospective Testing**: While cross-validation and external validation are strong, testing the classifier on entirely unseen, prospectively collected samples would provide **stronger evidence of real-world utility**.
+2. **Potential Overfitting Risk**: Despite rigorous external validation, the selection of 150 probe-sets from an initial **54,000 features** (p. 3, ¶3) raises concerns about feature selection bias.
+3. **Tissue-Specific Variability**: The study does not deeply explore whether the classifier performs **equally well across all tissue types** or whether some tissues provide stronger signals.
+
+### Conclusion
+
+Sood et al. (2015) employ robust statistical techniques, ensuring reproducibility and generalizability of their RNA classifier across multiple tissues and independent cohorts. Their approach to normalization, batch correction, and external validation is commendable. However, future studies should emphasize **prospective validation and robustness testing across broader populations**.
+
+---
+
+### Bibliography
+
+```bibtex
+@article{Sood2015,
+  author = {Sood, Sanjana and Gallagher, Iain J. and Lunnon, Katie and Rullman, Eric and Keohane, Aoife and Crossland, Hannah and Phillips, Bethan E. and Cederholm, Tommy and Jensen, Thomas and van Loon, Luc JC and Lannfelt, Lars and Kraus, William E. and Atherton, Philip J. and Howard, Robert and Gustafsson, Thomas and Hodges, Angela and Timmons, James A.},
+  title = {A novel multi-tissue RNA diagnostic of healthy ageing relates to cognitive health status},
+  journal = {Genome Biology},
+  volume = {16},
+  number = {185},
+  year = {2015},
+  doi = {10.1186/s13059-015-0750-x}
+}
+```
+
+<br/>
+<br/>
 
 # 2018 Jabob and Speed [@Jacob:2018aa] {.tabset}
 
