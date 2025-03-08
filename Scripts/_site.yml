@@ -1,0 +1,7 @@
+name: "England-England"
+output_dir: "."
+navbar:
+  title: KRAS-MAPK Pathway Inhibition in PDA
+  left:
+    - text: "Home"
+      href: index.html

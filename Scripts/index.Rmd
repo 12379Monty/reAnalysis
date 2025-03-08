@@ -1,0 +1,9 @@
+---
+title: KRAS-MAPK Pathway Inhibition in PDA
+---
+
+
+
+<li><a href="_M1A-lookMouseData.html">_M1A-lookMouseData.html</a></li>
+<li><a href="_M2A-fitModelTrtVsDMSO.html">_M2A-fitModelTrtVsDMSO.html</a></li>
+<li><a href="_M2B-fitModelTrtVsDMSO.html">_M2B-fitModelTrtVsDMSO.html</a></li>
