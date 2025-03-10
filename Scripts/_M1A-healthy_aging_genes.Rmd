@@ -2,8 +2,7 @@
 title:  "healthy aging gene expression signatures"
 #subtitle: "a tale of two schools"
 author: "[Francois Collin](https://www.linkedin.com/in/francoisz/)"
-#date: '`r format(Sys.time(), "%a %b %d", tz="America/Los_Angeles")`'
-date: '`r lubridate::now()`'
+date: "`r format(Sys.time(), '%B %d, %Y')`"
 always_allow_html: yes
 output:
   # for use of .tabset
@@ -222,7 +221,7 @@ with experts being divided on the very notion of *intelligence*.
 
 <p><p/>
 * A given LLM model can display remarkable apparent intelligence on some queries, while 
-exhibiting stunning stupidity on others
+exhibiting stunning incoherence on others
    - [AI can solve math olympiad problems but flunks tic-tac-toe](https://statmodeling.stat.columbia.edu/2025/02/01/ai-can-solve-math-olympiad-problems-but-flunks-tic-tac-toe/)
    - When they don't know, they start bullshitting
 
@@ -233,33 +232,270 @@ source of reference material.
    - https://github.com/f/awesome-chatgpt-prompts
 
 <p><p/>
-* In this report, we use similarly constructed prompts to get chatGPT
-to produce reviews for three related articles
-from the vantage point of an expert statistician:
-   - [A novel multi-tissue RNA diagnostic of healthy ageing relates to cognitive health status](https://genomebiology.biomedcentral.com/articles/10.1186/s13059-015-0750-x) [Sood:2015aa]
-   - [https://genomebiology.biomedcentral.com/articles/10.1186/s13059-015-0750-x](https://genomebiology.biomedcentral.com/articles/10.1186/s13059-018-1481-6)
-   - [A statistical and biological response to an informatics appraisal of healthy aging gene signatures](https://genomebiology.biomedcentral.com/articles/10.1186/s13059-019-1734-z)
-
+* Specialized GPTs can be used for research purposes: 
+   - Scholar GPT, Concensus, SciSpace, Semantic Scholar, Perplexity, Elicit
 
 <p><p/>
-* Before evaluating the articles of interest, we will ask submit a query to 
-establish what the current scientific position is in terms of the omic sigfnatures
-of aging.
+* In this report, we will use GPTs to:
+   - do a literature search and establish the current state
+of scientific knowledge reguarding omic signatures of ageing.
+   - critically review three papers related to a gene expression
+signature related to aging.
 
-### HERE
+<br/>
+
+# GPT-based Research Assistants {.tabset}
+
+
+* Before diving into the articles of interest, we will submit queries to 
+establish the current state of scientific knowledge reguarding omic signatures
+of ageing.
+
+<p><p/>
+* There are several GPTs which are specialized for research:
+   - Scholar GPT
+   - Concensus
+   - SciSpace
+   - Semantic Scholar
+   - Perplexity
+   - Elicit
+
+<p><p/>
+* See [Consensus GPT vs SciSpace GPT](https://www.youtube.com/watch?v=EN0JZTvbuzQ)
+for a compariasoin of these two GPTs.
+
+## Home {-}
+
+<br/>
+<br/>
+
+## Prompt - 4 tools {-}
+
+<!--
+* Which specialized GPTs are best suited for my research?
+
+* I'm interested in the state of the art knowledge of the association
+between omic profiles and subject age.
+
+* Of particular interest is the problem of inferring age based on omic profiles
+derived from subject or participant samples.
+
+* I want a literature review which will attribute findings to specific 
+papers by appropriayte citation.
+-->
+
+* Compare and contrast 4 research tools - 
+Scholar GPT, Concensus, SciSpace, Semantic Scholar -
+in their strengths and weaknesses when used to establish
+the state of the art knowledge of the association
+between omic profiles and subject age with particular interest 
+in the problem of inferring age based on omic profiles
+derived from subject or participant samples,
+and the need to attribute findings to specific 
+papers by appropriayte citation.
+
+<br/>
+
+## Response - 4 tools {-}
+
+* Comparison of Specialized GPTs for Research on Omic Profiles and Age Inference
+
+### Introduction {-}
+
+Establishing the state-of-the-art knowledge of the association between omic profiles and subject age, particularly in inferring age from such profiles, requires robust AI-powered research tools. This report compares four specialized GPT-based research assistants: **Scholar GPT, Consensus, SciSpace, and Semantic Scholar**. The focus is on their ability to retrieve relevant literature, analyze findings, and provide appropriate citations.
 
 ---
 
+### Comparison of Research Tools {-}
+
+| Feature               | Scholar GPT | Consensus | SciSpace | Semantic Scholar |
+|----------------------|------------|----------|----------|------------------|
+| **Primary Function** | AI-powered research summarization | AI-based literature synthesis and consensus analysis | AI-assisted academic paper reading and querying | AI-driven research search engine with citation tracking |
+| **Strengths** | Summarizes and explains scientific papers | Identifies agreement among studies using consensus scoring | Allows interactive querying of research papers | Provides extensive access to a vast database of academic papers |
+| **Citation Accuracy** | May hallucinate or generate incorrect citations | Offers citation-backed claims but requires manual verification | Provides citation-backed summaries but may have limitations | Highly accurate citations sourced from published literature |
+| **Database Coverage** | Moderate; dependent on pre-trained knowledge | Moderate; relies on indexed scientific papers | Large; integrates with major research databases | Extensive (200M+ papers from peer-reviewed sources) |
+| **Use for Omics Research** | Useful for explaining complex omic concepts but limited citation support | Summarizes and provides insights into research trends but may not provide detailed omic-specific data | Excellent for reading, summarizing, and querying omic research papers | Highly relevant, with extensive papers covering omics and aging |
+| **User Interaction** | Basic conversational responses | Consensus-driven summaries with interactive filtering | Upload PDFs and interactively ask questions | Advanced search with structured citation tracking |
+| **Accessibility** | General AI research assistant; may require additional verification | Requires subscription for full functionality | Some features are premium-only | Free and widely accessible |
+
+---
+
+### Strengths and Weaknesses {-}
+
+#### 1. Scholar GPT {-}
+**Strengths:**
+- AI-powered academic research summarization.
+- Useful for breaking down complex omic concepts.
+
+**Weaknesses:**
+- May produce incorrect citations (hallucinations).
+- Limited direct access to a wide research database.
+
+#### 2. Consensus {-}
+**Strengths:**
+- Provides a high-level synthesis of scientific consensus on a topic.
+- Useful for identifying general agreement trends in literature.
+
+**Weaknesses:**
+- Requires manual verification of citations.
+- May not provide granular insights into omic-specific research.
+
+#### 3. SciSpace {-}
+**Strengths:**
+- Allows users to upload and interact with research papers.
+- AI-assisted explanation of complex papers and omics-related findings.
+
+**Weaknesses:**
+- Some advanced features are paywalled.
+- May not always retrieve the most up-to-date literature.
+
+#### 4. Semantic Scholar {-}
+**Strengths:**
+- Provides extensive access to a wide range of peer-reviewed scientific papers.
+- Highly accurate citation tracking and structured research discovery.
+
+**Weaknesses:**
+- Lacks interactive AI features for summarization and explanation.
+- May require more manual effort to extract insights from literature.
+
+---
+
+## Recommendation {-}
+For research on the association between omic profiles and subject age, **Semantic Scholar** is the best choice due to its extensive, peer-reviewed database and accurate citations. However, **SciSpace** can be valuable for interactive paper analysis, while **Consensus** provides a useful way to gauge agreement across multiple studies. **Scholar GPT**, though helpful for general summaries, is less reliable for citation accuracy.
+
+Combining **Semantic Scholar for literature discovery** and **SciSpace for document querying and interactive summarization** would provide the most effective workflow for researchers interested in this domain.
+
+---
+
+## Conclusion {-}
+While all four tools have strengths in assisting with literature review and scientific exploration, **Semantic Scholar and SciSpace** emerge as the most reliable choices for accurately attributing findings to specific papers in omics and aging research.
+
 <br/>
-* In this report we ask chatGPT to review three  papers which discuss the
-discovery of a molecular signature in samples and its utility - accuracy and
-generalizability.
 
-The timeline of a back-and-forth discussion about the validity of a
-gene signature is the following:
+## Prompt - 6 tools {-}
 
-<p><p/>
-* 2015 Sood et. al. [@Sood:2015aa]:
+* Compare and contrast 6 research tools - 
+Scholar GPT, Concensus, SciSpace, Semantic Scholar, Elicit, and Perplexity -
+in their strengths and weaknesses when used to establish
+the state of the art knowledge of the association
+between omic profiles and subject age with particular interest 
+in the problem of inferring age based on omic profiles
+derived from subject or participant samples,
+and the need to attribute findings to specific 
+papers by appropriayte citation.
+
+<br/>
+
+## Response - 6 tools {-}
+
+* Comparison of Research Tools for Omic-Age Association Studies
+
+Here's a comparison of **Scholar GPT, Consensus, SciSpace, Semantic Scholar, Elicit, and Perplexity** based on their strengths and weaknesses in researching the **association between omic profiles and subject age**, with a focus on **inferring age from omic data** and **ensuring proper citation of findings**.
+
+---
+
+| **Tool**            | **Strengths** | **Weaknesses** |
+|----------------------|--------------|---------------|
+| **Scholar GPT** | - AI-powered research assistant trained on scientific literature.<br>- Can summarize complex papers in accessible language.<br>- Likely to identify patterns in omic-age studies. | - Limited in directly citing specific sources.<br>- May not retrieve the latest papers if not connected to up-to-date databases.<br>- Lacks transparent retrieval methods. |
+| **Consensus** | - AI-driven synthesis of multiple sources.<br>- Provides evidence-backed responses from scientific literature.<br>- Good at finding state-of-the-art knowledge on omic-age associations. | - May not always directly cite papers, focusing instead on summarizing consensus.<br>- Limited in retrieving full-text sources for deep analysis.<br>- May miss niche findings on omic aging biomarkers. |
+| **SciSpace** | - Can read and explain full-text PDFs of scientific papers.<br>- Offers contextual understanding of methods, results, and limitations.<br>- Effective for deep diving into omic-age inference models. | - Does not inherently rank findings by citation importance.<br>- Search functions may not be as refined as Semantic Scholar.<br>- Attribution may require manual verification. |
+| **Semantic Scholar** | - Advanced AI-powered indexing of research papers.<br>- Highlights influential citations and connections between studies.<br>- Offers structured filtering for omics and aging research. | - Abstract-based search may not capture full methodological details.<br>- Full-text access may require external subscriptions (e.g., journal paywalls). |
+| **Elicit** | - AI-assisted literature review tool.<br>- Helps extract methodologies and key findings efficiently.<br>- Structured for systematic reviews, including omic-aging studies. | - Limited in retrieving full-text PDFs.<br>- Can miss some recent or less-cited papers due to dataset constraints.<br>- Not optimized for real-time updates. |
+| **Perplexity** | - Strong real-time search capabilities, including recent studies.<br>- Can aggregate sources and provide citations.<br>- Useful for quickly identifying trends in omic-aging research. | - May retrieve non-peer-reviewed content if not properly filtered.<br>- Citation reliability can vary—requires manual verification.<br>- Lacks structured literature analysis tools. |
+
+---
+
+### **Best Tool for Specific Needs**
+- **For finding state-of-the-art knowledge on omic-age association** → **Semantic Scholar, Consensus**
+- **For deep understanding of methods in omic-age inference** → **SciSpace, Elicit**
+- **For real-time research on the latest findings** → **Perplexity**
+- **For AI-driven literature review with context extraction** → **Scholar GPT, Elicit**
+- **For attribution of findings with proper citations** → **Semantic Scholar, Perplexity**
+
+If your priority is **rigorous citation and access to well-structured academic insights**, **Semantic Scholar** is a solid choice. If you need **AI-powered synthesis of omic-aging literature**, **Consensus and Elicit** are effective. For **explaining methods and interpreting full-text papers**, **SciSpace** is useful. 
+
+Would you like a deeper evaluation of any specific tool in relation to omics and aging research?
+
+<br/>
+<br/>
+
+# State of art: OMIC signatures of aging  {.tabset}
+
+## Home {-}
+
+<br/>
+
+## Consensus {- .tabset}
+
+### Home {-}
+
+<br/>
+
+
+### Prompt {-}
+
+* literature review to report on the state of the art knowledge of the association
+between omic profiles and subject age, with particular interest
+in the problem of inferring age based on omic profiles
+and the need to attribute findings to specific
+papers by appropriayte citation.
+
+* please include detail on the number of features entering into the
+model to predict age as well as the predcitive accureacy of the models
+
+* Keep the report in unrendered markdown format 
+
+<br/>
+
+### Response {-}
+
+**Literature Review: Omic Profiles and Age Prediction**
+
+### Introduction
+Understanding the biological aging process through omic profiles has gained significant attention. Omic-based age prediction models leverage genomic, transcriptomic, epigenomic, proteomic, and metabolomic data to estimate chronological and biological age. This review highlights state-of-the-art research on the association between omic profiles and subject age, focusing on predictive accuracy and the number of features used in these models.
+
+### Omic-Based Age Prediction Models
+
+#### 1. **OMICmAge: Multi-Omics Integration for Age Prediction**
+OMICmAge integrates DNA methylation (DNAm), proteomics, metabolomics, and clinical biomarkers to predict biological age. Using elastic-net regression, researchers developed DNAmEMRAge and OMICmAge, achieving high predictive accuracy with an average ROC of 0.88 for 5-year and 10-year mortality predictions [(Dwaraka et al., 2024)](https://consensus.app/papers/omicmage-an-integrative-multiomics-approach-to-quantify-dwaraka-chen/4b2a974fdb4a57d09c85a121b156317d/?utm_source=chatgpt).
+
+#### 2. **Metabolomic Aging Clock**
+A metabolomic clock based on cerebrospinal fluid (CSF) metabolite and lipid profiles was developed, predicting age within a 10-year range. The model used mass spectrometry analysis with regularized regression techniques to mitigate statistical biases [(Hwangbo et al., 2021)](https://consensus.app/papers/a-metabolomic-aging-clock-using-human-csf-hwangbo-zhang/1431a6651f09501fbf5a2a986a81ca91/?utm_source=chatgpt).
+
+#### 3. **Multi-Omics Network Analysis for Aging Progression**
+A study using epigenomics, transcriptomics, glycomics, and metabolomics on 510 individuals identified molecular pathways linking age-related diseases. Graphical random forests were applied to reveal interdependencies among omic markers, enabling a deeper understanding of biological aging [(Zierer et al., 2016)](https://consensus.app/papers/exploring-the-molecular-basis-of-agerelated-disease-zierer-pallister/2dfbabedbc6156789bb0eafdceb790e5/?utm_source=chatgpt).
+
+#### 4. **Neural Network-Based Multi-Omics Age Prediction**
+A biologically interpretable neural network approach applied to multi-omics data from 2,940 individuals yielded a mean age prediction error of 5.16 years. This method identified key predictive genes, including COL11A2, AFAP1, OTUD7A, PTPRN2, ADARB2, and CD34 [(Hilten et al., 2023)](https://consensus.app/papers/phenotype-prediction-using-biologically-interpretable-hilten-rooij/752664ee876f5317a1be6aec64e9ce66/?utm_source=chatgpt).
+
+#### 5. **Transcriptomic and Epigenetic Aging Clocks**
+Deep learning models trained on over 6,000 blood transcriptomic samples successfully predicted age using deep neural networks. Gene expression importance ranking enhanced interpretability, highlighting critical age-associated transcripts [(Mamoshina et al., 2019)](https://consensus.app/papers/testing-for-batch-effect-through-age-predictors-mamoshina-kochetov/ff9e5b38b98553b983d5bb0a98e8a86d/?utm_source=chatgpt).
+
+### Predictive Features and Accuracy
+- **OMICmAge (Dwaraka et al., 2024)**: Utilized multi-omic integration with DNA methylation and clinical biomarkers, achieving **ROC = 0.88**.
+- **Metabolomic Aging Clock (Hwangbo et al., 2021)**: Predicted age within **10 years** using **85 metabolite and lipid features**.
+- **Neural Networks (Hilten et al., 2023)**: Employed **multi-omic gene expressions**, reducing age prediction error to **5.16 years**.
+- **Transcriptomic Aging Clock (Mamoshina et al., 2019)**: Used **>6,000 gene expression profiles**, achieving high accuracy.
+
+### Conclusion
+Advancements in omic-based age prediction have improved the ability to estimate biological age with high accuracy. The integration of multi-omic data significantly enhances predictive power, with feature sets ranging from tens to thousands of biomarkers. Further research is needed to refine models for personalized aging assessment.
+
+
+<br/>
+<br/>
+
+# Papers to be reviewed - Abstracts {.tabset}
+
+## Home {-}
+
+<br/>
+
+
+## Sood et al. 2015   {-}
+
+* [@Sood:2015aa] -  [A novel multi-tissue RNA diagnostic of healthy ageing relates to cognitive health status](https://genomebiology.biomedcentral.com/articles/10.1186/s13059-015-0750-x)
+
+* Abstract
    -  Diagnostics of the human ageing process may help predict
 later healthcare needs or guide preventative measures for tackling
 diseases of older age. We take a transcriptomics approach to build
@@ -289,9 +525,13 @@ of cognitive health and prove that
 **a common healthy ageing gene-expression program is detectable
 across multiple tissues**.
 
+<br/>
 
-<p><p/>
-* 2018 Jabob and Speed [@Jacob:2018aa]: 
+## Jacob & Speed 2018 {-}
+ 
+* [@Jacob:2018aa] - [The healthy ageing gene expression signature for Alzheimer’s disease diagnosis: a random sampling perspective](https://genomebiology.biomedcentral.com/articles/10.1186/s13059-018-1481-6) 
+
+* Abstract
    - In a recent publication, Sood et al. (Genome Biol 16:185, 2015)
 presented a set of 150 probe sets that could be used in the diagnosis of
 Alzheimer’s disease (AD) based on gene expression. We reproduce some of
@@ -301,15 +541,17 @@ We also show that its performance does not stand out compared to randomly
 sampled sets of 150 probe sets from the same array.
 
 
-<p><p/>
-* 2019 Timmins et. al. [@Timmons:2019aa]:
+## Timmons et al. 2019  {-}
+
+* [@Timmons:2019aa] - [A statistical and biological response to an informatics appraisal of healthy aging gene signatures](https://genomebiology.biomedcentral.com/articles/10.1186/s13059-019-1734-z) 
+
+* Abstract
    - Jacob and Speed did not identify even a single example of a
 ‘150-gene-set’ that was statistically significant at classifying
 Alzheimer’s disease (AD) samples, or age in independent studies. 
 We attempt to clarify the various misunderstandings, below.
 
----
-
+<br/>
 
 # 2015 Sood et. al. [@Sood:2015aa] {.tabset}
 
@@ -318,7 +560,7 @@ We attempt to clarify the various misunderstandings, below.
 <br/>
 <br/>
 
-## Prompt {-}
+## chatGPT Prompt {-}
 
 * Read the attached paper by Sood et.al. 2015 [@Sood:2015aa], 
 and act as a statistician who is proficient in the traditional
@@ -333,7 +575,7 @@ collected and analysed.
 * The review should clarify issues relating to data
 provenance - how many data collection runs are aggregated or pooled
 to assemble the analysis dataset.  How are the different tissue
-types distributed across data generation runs?  Were the data 
+``types distributed across data generation runs?  Were the data 
 from different runs normalized?
 
 * What evidence is provided that the classifiers 
@@ -344,10 +586,10 @@ when future data are analyzed.
 unrendered markdown format.  Also include the markdown code for a 
 bibliography of the citations.
 
-## **chatGPT response**  {-}
+## **Response**  {-}
 
 ### Introduction
-Sood et al. (2015) present a multi-tissue RNA expression classifier designed to distinguish biological age from chronological age. The study relies on transcriptomics data collected from multiple independent cohorts, using machine learning approaches to develop a robust biomarker of healthy aging. This review assesses the statistical soundness of the study, with particular attention to data provenance, normalization methods, and validation of classifiers.
+Sood et al. (2015) present a multi-tissue RNA expression classifier designed to distinguish biological age from chronological age. The study relies on transcriptomics data collected from multiple independent cohorts, using machine learning approaches to develop a robust biomarker of healthy ageing. This review assesses the statistical soundness of the study, with particular attention to data provenance, normalization methods, and validation of classifiers.
 
 ### Data Provenance and Normalization
 A critical statistical concern in multi-cohort transcriptomic studies is the handling of batch effects and potential confounding introduced by differences in data generation protocols. The authors use a variety of RNA datasets from different tissue types, including muscle, skin, and brain, across multiple independent studies. They report the use of the *Robust Multi-array Analysis* (RMA) method for normalization when processing Affymetrix gene chips and *Frozen RMA* (fRMA) for cross-cohort comparisons.
@@ -385,7 +627,7 @@ The statistical methodologies employed in Sood et al. (2015) are largely appropr
 <br/>
 
 
-## Prompt2 {-}
+## chatGPT Prompt2 {-}
 
 * Read the attached paper by Sood et.al. 2015 [@Sood:2015aa],
 and act as a statistician who is proficient in the traditional
@@ -408,6 +650,7 @@ developed work well with datasets analyzed and will continue to work well
 when future data are analyzed.
 
 <span style="color:blue">
+
 * For all statements that you make about the article,
 refer to the supporting text in the article by page and paragraph.
 </span>
@@ -419,7 +662,7 @@ bibliography of the citations.
 
 <br/>
 
-## **chatGPT Response2**  {-}
+## **Response2**  {-}
 
 ### Overview
 
@@ -496,6 +739,62 @@ Sood et al. (2015) employ robust statistical techniques, ensuring reproducibilit
 <br/>
 <br/>
 
+
+## SciSpace Prompt {-}
+
+* Read the attached paper by Sood et.al. 2015 [@Sood:2015aa], 
+and act as a statistician who is proficient in the traditional
+statistical concepts as they apply to the analysis of designed
+experiments as well as the novel statistical concepts developed
+for the analysis of omic data, and review the article.
+
+* The review should not consider findings from later studies.
+The review should focus on the statistical aspects of the data 
+collected and analysed.
+
+* The review should clarify issues relating to data
+provenance - how many data collection runs are aggregated or pooled
+to assemble the analysis dataset.  How are the different tissue
+``types distributed across data generation runs?  Were the data 
+from different runs normalized?
+
+* What evidence is provided that the classifiers 
+developed work well with datasets analyzed and will continue to work well
+when future data are analyzed.  
+
+* Please keep the answer in
+unrendered markdown format.  Also include the markdown code for a 
+bibliography of the citations.
+
+## **Response**  {-}
+
+
+* Review of "A novel multi-tissue RNA diagnostic of healthy ageing relates to cognitive health status" (Sood et al., 2015)
+
+### Data Provenance and Normalization
+Sood et al. (2015) aggregate multiple data collection runs from distinct cohorts to construct a robust multi-tissue RNA classifier for healthy aging. The study pools RNA expression data from independent muscle, brain, and skin tissue datasets, with a total sample size of 594 individuals. The distribution of tissue types across these datasets is well-documented, with separate validations performed in each tissue type to ensure consistency.
+
+Normalization procedures are critical for cross-study comparisons, and the authors utilize the Robust Multi-array Analysis (RMA) method for Affymetrix platforms, while Frozen Robust Multi-array Analysis (fRMA) is used when integrating data from independent laboratories. The study also applies variance stabilization and quantile normalization for Illumina data, ensuring consistency across platforms. However, further clarification on potential batch effects across different data collection runs would strengthen confidence in the findings.
+
+### Statistical Approach to Classifier Development
+The study employs a k-nearest neighbor (kNN) classifier with leave-one-out cross-validation (LOOCV) to construct the RNA expression signature. The classifier is derived from a training set of muscle tissue samples and subsequently validated in independent datasets. The classifier’s performance is reported using area under the curve (AUC) values ranging from 0.83 to 0.96, indicating high predictive accuracy.
+
+The approach to feature selection is rigorous, relying on empirical Bayesian statistics to rank probe sets. The authors iteratively refine the feature set using classification success rates, ultimately selecting 150 probe sets. A crucial methodological strength is the full external validation in independent samples, a step that mitigates the risk of overfitting. However, while the LOOCV approach is robust for internal validation, an additional k-fold cross-validation approach could have provided further generalizability assessment.
+
+### Classifier Performance and Future Generalization
+To assess classifier robustness, the study validates the RNA signature across independent datasets and different tissue types, demonstrating consistent classification accuracy. Furthermore, an analysis of the Uppsala Longitudinal Study of Adult Men (ULSAM) cohort establishes that the gene score remains stable despite variations in lifestyle factors. The study also demonstrates that the classifier is associated with long-term health outcomes, including cognitive function and renal health, suggesting potential for future predictive applications.
+
+A key question remains about the classifier’s generalization to new datasets beyond those included in the study. Although the classifier performs well within the analyzed datasets, future studies should assess its predictive performance in prospective cohorts. Additionally, while the classifier successfully distinguishes age-related cognitive decline, its specificity for Alzheimer’s disease (AD) versus other neurodegenerative disorders requires further examination.
+
+### Conclusion
+Sood et al. (2015) present a statistically robust, multi-tissue RNA classifier of healthy aging with high classification accuracy across multiple independent datasets. Their statistical methodology is rigorous, employing robust normalization, feature selection, and external validation. However, future work should further examine batch effects, generalization to additional prospective datasets, and classifier specificity for neurodegenerative conditions.
+
+### Bibliography
+```markdown
+[@Sood:2015aa] Sood, S., Gallagher, I. J., Lunnon, K., Rullman, E., Keohane, A., Crossland, H., ... & Timmons, J. A. (2015). A novel multi-tissue RNA diagnostic of healthy ageing relates to cognitive health status. *Genome Biology, 16*(185). https://doi.org/10.1186/s13059-015-0750-x
+```
+
+
 # 2018 Jabob and Speed [@Jacob:2018aa] {.tabset}
 
 ## Home {-}
@@ -503,7 +802,7 @@ Sood et al. (2015) employ robust statistical techniques, ensuring reproducibilit
 <br/>
 <br/>
 
-## Prompt {-}
+## chatGPT Prompt {-}
 
 
 * Read the attached paper by Jabob and Speed (2018) [@Jacob:2018aa],
@@ -514,10 +813,11 @@ for the analysis of omic data, and review the article.
 The review should not consider findings from later studies.
 The review should focus on the statistical aspects of the data
 collected and analysed.
-The review should clarify issues relating to data
+
+* The review should clarify issues relating to data
 provenance - how many data collection runs are aggregated or pooled
 to assemble the analysis dataset.  How are the different tissue
-types distributed across data generation runs?  Are were the data
+types distributed across data generation runs?  How were the data
 from different runs normalized?
 What evidence is provided that the classifiers
 developed work well with datasets analyzed and will continue to work well
@@ -528,7 +828,7 @@ unrendered markdown format.  Also include the markdown code for a
 bibliography of the citations.
 
 
-## **chatGPT response**  {-}
+## **response**  {-}
 
 ### Introduction
 Jacob and Speed (2018) present a critical evaluation of the *Healthy Ageing Gene Signature* (HAGS) proposed by Sood et al. (2015) for Alzheimer's disease (AD) diagnosis. Their study systematically assesses whether the classification performance of the HAGS is statistically significant when compared to randomly selected sets of probe sets from the same microarray platform. This review focuses on the statistical methodologies applied, data provenance, normalization strategies, and the robustness of the classifiers developed.
@@ -584,7 +884,7 @@ Their study provides an important cautionary perspective on biomarker discovery 
 
 <br/>
 
-## Prompt2 {-}
+## chatGPT Prompt2 {-}
 
 
 * Read the attached paper by Jabob and Speed (2018) [@Jacob:2018aa],
@@ -610,11 +910,131 @@ Please keep the answer in
 unrendered markdown format.  Also include the markdown code for a
 bibliography of the citations.
 
+<br/>
+
+## Response2  {-}
+
+* Statistical Review of Jacob and Speed (2018)
+
+### Overview
+
+Jacob and Speed (2018) critically examine the statistical validity of the Healthy Ageing Gene Signature (HAGS) developed by Sood et al. (2015). Their primary objective is to determine whether the classifier developed by Sood et al. (2015) is statistically distinct from a randomly selected gene set of similar size. They apply resampling techniques and statistical comparisons to assess the performance of the classifier relative to random gene sets.
+
+### Data Provenance and Normalization
+
+The study investigates the same datasets used by Sood et al. (2015), consisting of:
+
+- **Six muscle gene expression datasets**, all using the Affymetrix HGU133plus2 platform.
+- **One brain gene expression dataset** (Affymetrix HGU133plus2).
+- **One skin dataset**, generated using Illumina Human HT-12 V3 arrays.
+- **Two blood RNA datasets**, analyzed on Illumina Human HT-12 V3 and V4 arrays.
+
+#### Data Collection and Aggregation
+- The **muscle data** used for training the HAGS classifier consisted of **15 young and 15 old samples** (p. 1, ¶2).
+- The remaining **five muscle datasets**, the **brain dataset**, and the **skin dataset** were used for external validation or LOOCV (p. 2, ¶2).
+- The **two AD blood datasets** were independently processed, with efforts to balance for confounders like age, gender, and ethnicity (p. 2, ¶3).
+
+#### Normalization Methods
+- **Affymetrix microarrays** were normalized using **RMA (Robust Multi-array Analysis)** as implemented in the Bioconductor `affy` package (p. 3, ¶2).
+- **Illumina microarrays** were mapped using gene symbols, and normalization was performed using standard quantile methods (p. 3, ¶3).
+- Sood et al. (2015) reportedly used **Frozen RMA (fRMA)** in some cases, but Jacob and Speed were unable to fully reproduce these steps (p. 3, ¶3).
+
+This suggests some uncertainty in the consistency of preprocessing methods across different datasets, which could impact classifier performance.
+
+### Classifier Development and Validation
+
+Jacob and Speed systematically compare the HAGS classifier against random gene sets:
+
+#### Key Experimental Design
+1. **Reproduction of Sood et al. (2015) results**:
+   - AUC values were computed using **LOOCV and external validation** on the original datasets (p. 3, ¶4).
+   - Results were largely consistent with the original findings, confirming that the HAGS classifier does separate old from young samples and AD from control subjects (p. 3, ¶4).
+
+2. **Random Sampling Experiments**:
+   - **1000 random sets of 150 probe-sets** were selected from the Affymetrix HGU133plus2 platform (p. 4, ¶3).
+   - AUCs for these randomly selected sets were computed across multiple datasets and compared to the HAGS classifier (p. 4, Fig. 1).
+   - In most cases, the **performance of the HAGS classifier was not significantly better than the median random classifier** (p. 4, Fig. 1).
+
+3. **Subset Sampling Experiments**:
+   - **50% of each dataset** was randomly selected, and both the HAGS and random classifiers were applied (p. 5, Fig. 2).
+   - Performance was assessed using AUC values.
+   - The HAGS classifier performed **better than random gene sets in some datasets, worse in others, and was indistinguishable in most cases** (p. 5, Fig. 2).
+
+4. **AD Prediction Validation**:
+   - The HAGS classifier was tested on AD vs. control classification in two independent blood RNA datasets.
+   - **LOOCV and external validation showed that random gene sets performed similarly to HAGS** (p. 6, Fig. 3).
+   - This suggests that the observed predictive power of HAGS might be **due to a general gene expression response to aging or disease, rather than a unique biological signature** (p. 7, ¶3).
+
+### Generalizability of the Classifier
+
+#### Does the Classifier Perform Well on Future Data?
+- The study shows that the **HAGS classifier does not perform significantly better than random gene sets** (p. 6, Fig. 3).
+- This raises concerns about **overfitting** in the original Sood et al. (2015) study.
+- The **phenotypic differences being predicted (aging, AD) likely have strong, widespread effects on gene expression**, meaning that **many sets of 150 genes could yield similar results** (p. 7, ¶3).
+- This issue is compounded by the small sample size used to construct the original classifier (**15 young, 15 old samples**) (p. 7, ¶4).
+- The authors cite similar findings in other omics studies (e.g., breast cancer prognosis studies showing that gene expression signatures can be highly unstable with small training sets) (p. 7, ¶4).
+
+### Limitations and Recommendations
+
+1. **Potential Overfitting**:
+   - The original classifier was built using **only 30 samples** (15 young, 15 old), making it prone to overfitting (p. 7, ¶4).
+   - Resampling experiments show that **random classifiers perform just as well**, suggesting that the HAGS classifier lacks specificity (p. 6, Fig. 3).
+
+2. **Lack of Independent Prospective Testing**:
+   - The study does not address whether the classifier performs well on **future, unseen data** from entirely new cohorts.
+   - Clinical utility would require testing in **longitudinal datasets** (p. 7, ¶5).
+
+3. **Broad Effects of Aging and Disease on Gene Expression**:
+   - Many genuue sets appear to differentiate old vs. young and AD vs. control, **suggesting that specific biological mechanisms were not uniquely captured by HAGS** (p. 7, ¶3).
+   - This aligns with prior literature showing that gene expression classifiers built
+
+<br/>
+
+
+## SciSpace Prompt {-}
+
+* Read the attached paper by Jabob and Speed (2018) [@Jacob:2018aa],
+and act as a statistician who is proficient in the traditional
+statistical concepts as they apply to the analysis of designed
+experiments as well as the novel statistical concepts developed
+for the analysis of omic data, and review the article.
+The review should not consider findings from later studies.
+The review should focus on the statistical aspects of the data
+collected and analysed.
+The review should clarify issues relating to data
+provenance - how many data collection runs are aggregated or pooled
+to assemble the analysis dataset.  How are the different tissue
+types distributed across data generation runs?  Are were the data
+from different runs normalized?
+What evidence is provided that the classifiers
+developed work well with datasets analyzed and will continue to work well
 
 
 <br/>
 
-# 2019 Timmins et. al. [@Timmons:2019aa] {.tabset}
+## Response {-}
+
+* Statistical Review of Jacob and Speed (2018)
+
+## Data Provenance
+Jacob and Speed (2018) analyze gene expression data for Alzheimer's disease (AD) diagnosis using the Healthy Ageing Gene Signature (HAGS). The primary data sources include the GEO repository datasets GSE59880, GSE63060, and GSE63061 (p. 3). However, the authors do not explicitly state how many data collection runs were aggregated to form the final analysis dataset. Instead, they focus on reproducing the experimental conditions of Sood et al. (2015) without access to the original authors’ code (p. 1, para. 3). 
+
+Regarding tissue distribution across data generation runs, the study relies on blood gene expression data from two independent cohorts. The details of sample grouping and patient selection are provided in the supplementary materials (p. 1, para. 5). It remains unclear whether specific tissue types were normalized separately across different runs, though the authors use a leave-one-out cross-validation (LOOCV) strategy to mitigate potential biases (p. 2, Fig. 1).
+
+## Normalization Procedures
+The authors do not explicitly mention any normalization procedures applied to the datasets before analysis. Given the nature of gene expression data, it is typically essential to adjust for batch effects and technical variability. However, the study focuses on relative comparisons between the HAGS and randomly selected probe sets rather than absolute classification accuracy (p. 2, para. 1). 
+
+## Classifier Performance and Generalization
+Jacob and Speed (2018) evaluate the performance of the HAGS classifier using LOOCV over repeated random selections of 50% of the dataset (p. 2, Fig. 1). Their findings indicate that the median area under the receiver operating characteristic curve (AUC) for the HAGS is not significantly different from the median AUCs of randomly selected probe sets (p. 2, Fig. 2). This suggests that the HAGS does not exhibit exceptional predictive power beyond what could be expected by chance. 
+
+The study also highlights the potential for unobserved confounders to influence classification performance, as evidenced by principal component analysis (PCA) showing that the first principal component explains 25% of the variance and effectively separates AD and control groups (p. 3, para. 1). This raises concerns about whether the classifiers will generalize well to future datasets with different distributions.
+
+Jacob and Speed (2018) argue that a good predictor of current AD status may not necessarily be a good predictor of future AD status. The study suggests that while the classifiers work well with the datasets analyzed, their ability to perform consistently with future data remains uncertain. They emphasize the importance of considering random sampling perspectives when building gene expression signatures and suggest that future studies should focus on independent datasets to assess the robustness of predictive models (p. 3, para. 2)
+
+<br/>
+
+
+# 2019 Timmons et. al. [@Timmons:2019aa] {.tabset}
 
 ## Home {-}
 
@@ -710,6 +1130,19 @@ Overall, the study reinforces the importance of hypothesis-driven feature select
 <br/>
 <br/>
     
+
+## Prompt2 {-}
+
+
+## Response 2 {-}
+
+
+## SciSpace Prompt {-}
+
+## Response {-}
+
+
+
 # References 
 <div id="refs"></div>
     
@@ -729,9 +1162,9 @@ Overall, the study reinforces the importance of hypothesis-driven feature select
 <br/>
 <br/>
 
-########################################################
-###  ARCHIVED CODE
-########################################################
+#########################################################
+####  ARCHIVED CODE
+#########################################################
 
 <!-- 
 I had heard of the nightmarish harassment Laurent and Terry had suffered
@@ -773,8 +1206,6 @@ knitr::include_graphics( "img/maxresduel.jpg", dpi=150)
 
 # Or
 # nohup Rscript -e "rmarkdown::render('_M1A-healthy_aging_genes.Rmd')" > _M1A-healthy_aging_genes.log  &
-
-
 
 -->
 

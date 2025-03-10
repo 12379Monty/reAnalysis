@@ -1,7 +1,7 @@
 name: "England-England"
 output_dir: "."
 navbar:
-  title: KRAS-MAPK Pathway Inhibition in PDA
+  title: Re-Analysis
   left:
     - text: "Home"
       href: index.html

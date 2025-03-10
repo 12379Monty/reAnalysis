@@ -1,7 +1,8 @@
 #!/bin/bash
 
 OUTPUT="_site.yml"
-TITLE="KRAS-MAPK Pathway Inhibition in PDA"
+TITLE="Re-Analysis"
+
 #DESCRIPTION="Put subtitle here"
 
 echo 'name: "England-England"' > $OUTPUT
