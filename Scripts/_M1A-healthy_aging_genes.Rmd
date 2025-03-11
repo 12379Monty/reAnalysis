@@ -246,6 +246,10 @@ signature related to aging.
 
 # GPT-based Research Assistants {.tabset}
 
+(
+* The results in this section are most un-impressive.
+* Not sure how to make them better
+)
 
 * Before diving into the articles of interest, we will submit queries to 
 establish the current state of scientific knowledge reguarding omic signatures
@@ -424,67 +428,32 @@ Would you like a deeper evaluation of any specific tool in relation to omics and
 ## Home {-}
 
 <br/>
-
-## Consensus {- .tabset}
-
-### Home {-}
-
 <br/>
 
+## Consensus Prompt {-}
 
-### Prompt {-}
+* Produce a literature review to report on the state of the art knowledge of the association
+between omic profiles and subject age
+* We are particularly interested in the problem of inferring age based on omic profiles.
+* We are also interested in detailed descriptions of the models built to predict  age from omic features:
+   - number of features,
+   - gain in predictive accuracy attributable to the inclusion of omic features in the model.
+* Please attribute findings to specific papers by appropriate citation
 
-* literature review to report on the state of the art knowledge of the association
-between omic profiles and subject age, with particular interest
-in the problem of inferring age based on omic profiles
-and the need to attribute findings to specific
-papers by appropriayte citation.
+* Keep the report in un-rendered markdown format, or markdown syntax
+* Also include the markdown syntax for a bibliography of citations."
 
-* please include detail on the number of features entering into the
-model to predict age as well as the predcitive accureacy of the models
 
-* Keep the report in unrendered markdown format 
+## Response  {-}
 
-<br/>
-
-### Response {-}
-
-**Literature Review: Omic Profiles and Age Prediction**
-
-### Introduction
-Understanding the biological aging process through omic profiles has gained significant attention. Omic-based age prediction models leverage genomic, transcriptomic, epigenomic, proteomic, and metabolomic data to estimate chronological and biological age. This review highlights state-of-the-art research on the association between omic profiles and subject age, focusing on predictive accuracy and the number of features used in these models.
-
-### Omic-Based Age Prediction Models
-
-#### 1. **OMICmAge: Multi-Omics Integration for Age Prediction**
-OMICmAge integrates DNA methylation (DNAm), proteomics, metabolomics, and clinical biomarkers to predict biological age. Using elastic-net regression, researchers developed DNAmEMRAge and OMICmAge, achieving high predictive accuracy with an average ROC of 0.88 for 5-year and 10-year mortality predictions [(Dwaraka et al., 2024)](https://consensus.app/papers/omicmage-an-integrative-multiomics-approach-to-quantify-dwaraka-chen/4b2a974fdb4a57d09c85a121b156317d/?utm_source=chatgpt).
-
-#### 2. **Metabolomic Aging Clock**
-A metabolomic clock based on cerebrospinal fluid (CSF) metabolite and lipid profiles was developed, predicting age within a 10-year range. The model used mass spectrometry analysis with regularized regression techniques to mitigate statistical biases [(Hwangbo et al., 2021)](https://consensus.app/papers/a-metabolomic-aging-clock-using-human-csf-hwangbo-zhang/1431a6651f09501fbf5a2a986a81ca91/?utm_source=chatgpt).
-
-#### 3. **Multi-Omics Network Analysis for Aging Progression**
-A study using epigenomics, transcriptomics, glycomics, and metabolomics on 510 individuals identified molecular pathways linking age-related diseases. Graphical random forests were applied to reveal interdependencies among omic markers, enabling a deeper understanding of biological aging [(Zierer et al., 2016)](https://consensus.app/papers/exploring-the-molecular-basis-of-agerelated-disease-zierer-pallister/2dfbabedbc6156789bb0eafdceb790e5/?utm_source=chatgpt).
-
-#### 4. **Neural Network-Based Multi-Omics Age Prediction**
-A biologically interpretable neural network approach applied to multi-omics data from 2,940 individuals yielded a mean age prediction error of 5.16 years. This method identified key predictive genes, including COL11A2, AFAP1, OTUD7A, PTPRN2, ADARB2, and CD34 [(Hilten et al., 2023)](https://consensus.app/papers/phenotype-prediction-using-biologically-interpretable-hilten-rooij/752664ee876f5317a1be6aec64e9ce66/?utm_source=chatgpt).
-
-#### 5. **Transcriptomic and Epigenetic Aging Clocks**
-Deep learning models trained on over 6,000 blood transcriptomic samples successfully predicted age using deep neural networks. Gene expression importance ranking enhanced interpretability, highlighting critical age-associated transcripts [(Mamoshina et al., 2019)](https://consensus.app/papers/testing-for-batch-effect-through-age-predictors-mamoshina-kochetov/ff9e5b38b98553b983d5bb0a98e8a86d/?utm_source=chatgpt).
-
-### Predictive Features and Accuracy
-- **OMICmAge (Dwaraka et al., 2024)**: Utilized multi-omic integration with DNA methylation and clinical biomarkers, achieving **ROC = 0.88**.
-- **Metabolomic Aging Clock (Hwangbo et al., 2021)**: Predicted age within **10 years** using **85 metabolite and lipid features**.
-- **Neural Networks (Hilten et al., 2023)**: Employed **multi-omic gene expressions**, reducing age prediction error to **5.16 years**.
-- **Transcriptomic Aging Clock (Mamoshina et al., 2019)**: Used **>6,000 gene expression profiles**, achieving high accuracy.
-
-### Conclusion
-Advancements in omic-based age prediction have improved the ability to estimate biological age with high accuracy. The integration of multi-omic data significantly enhances predictive power, with feature sets ranging from tens to thousands of biomarkers. Further research is needed to refine models for personalized aging assessment.
 
 
 <br/>
 <br/>
 
 # Papers to be reviewed - Abstracts {.tabset}
+
+* There is no interpretation here - simply text extracted from abstracts.
 
 ## Home {-}
 
@@ -498,7 +467,8 @@ Advancements in omic-based age prediction have improved the ability to estimate 
 * Abstract
    -  Diagnostics of the human ageing process may help predict
 later healthcare needs or guide preventative measures for tackling
-diseases of older age. We take a transcriptomics approach to build
+diseases of older age. 
+   - We take a transcriptomics approach to build
 the first reproducible multi-tissue RNA expression signature by
 gene-chip profiling tissue from sedentary normal subjects who
 reached 65 years of age in good health.
@@ -516,16 +486,34 @@ and built using a paradigm and samples entirely distinct from clinical
 case–control samples. 
    - When applied to blood RNA, we established good validation for
 AD diagnosis and selectivity over common age-related pathologies.
-      - **<span style="color:blue">Is This unexpected?</span>**
-The answer will depend on how specific and sensitive the classifier is.
-
    - The results of the present study further support the idea that analysis
 of peripheral blood RNA would be a fruitful strategy for developing biomarkers
-of cognitive health and prove that
-**a common healthy ageing gene-expression program is detectable
-across multiple tissues**.
+of cognitive health and prove that **a common healthy ageing gene-expression
+program is detectable across multiple tissues**.
 
 <br/>
+
+### Comment {-}
+
+* From the abstract this appears to be an unconventional method which defies
+the most rudimentary guidelines of good statistical practice: PQRS 
+
+* Expand on PQRS
+
+* When investigators believe that they have discovered something useful -
+in this case some classifier with some accuracy - it may be hard to cast doubt 
+on the results because of flaws in the method used to derive the results.  
+
+* An alternative is to show that an equivalent result can be obtained
+from a sham procedure.
+
+* **Question - can any AI analysis tell us that the procedure in 
+Sood  et al. (2014) is wacky?
+
+
+<br/>
+
+
 
 ## Jacob & Speed 2018 {-}
  
@@ -540,6 +528,8 @@ between AD and control patients using blood gene expression in two cohorts.
 We also show that its performance does not stand out compared to randomly
 sampled sets of 150 probe sets from the same array.
 
+<br/>
+
 
 ## Timmons et al. 2019  {-}
 
@@ -553,6 +543,522 @@ We attempt to clarify the various misunderstandings, below.
 
 <br/>
 
+
+ <!-- review_article_prompt 
+# Individual Article Reviews  {.tabset}
+
+```{r m1a-article-review, cache = T, cache.vars = "article_review_prompt_vec", fig.cap="Article review prompt",  results = "asis", eval=F}
+
+```
+
+
+
+* Act as a statistician who is proficient in the traditional statistical concepts as they apply to the analysis of designed experiments, as well as in the novel statistical concepts developed for the analysis of omic data, and review the article.
+
+* The review should not consider findings from later studies
+
+* The review should focus on the statistical aspects of the data collected and analysed.
+
+* The review should clarify issues relating to data provenance;
+   - how many data collection runs are aggregated or pooled to assemble the analysis dataset?
+   - how are the different tissue types distributed across data generation runs?  
+   - Is run associated with age. 
+   - Were the data from different runs normalized?
+* What evidence is provided that the classifiers developed work well with datasets analyzed and will continue to work well when future data are analyzed?
+
+* Keep the report in un-rendered markdown format, or markdown syntax.
+* Also include the markdown syntax for a bibliography of citations.
+
+
+-->
+
+# 2015 Sood et al. [@Sood:2015aa] {.tabset}
+
+## Home {-}
+
+<br/>
+<br/>
+
+## chatGPT Prompt {-}
+
+* Read the attached paper by Sood et.al. 2015 [@Sood:2015aa].
+
+* Act as a statistician who is proficient in the traditional statistical concepts as they apply to the analysis of designed experiments, as well as in the novel statistical concepts developed for the analysis of omic data, and review the article.
+
+* The review should not consider findings from later studies
+
+* The review should focus on the statistical aspects of the data collected and analysed.
+* Key statistical principles include:
+  - verifying that the training data points can be thought of as being
+a representative, random subset of the target population
+  - a representative subset most include enough of the right sort of sample.
+   - how many data collection runs are aggregated or pooled to assemble the analysis dataset?
+   - how are the different tissue types distributed across data generation runs?  
+   - Is run associated with age. 
+   - Were the data from different runs normalized?
+* What evidence is provided that the classifiers developed work well with datasets analyzed and will continue to work well when future data are analyzed?
+
+* Keep the report in un-rendered markdown format, or markdown syntax.
+* Also include the markdown syntax for a bibliography of citations.
+
+<br/>
+
+## **Response**  {-}
+
+Here's a statistical review of the paper by Sood et al. (2015), focusing exclusively on statistical methodologies and considerations as outlined in your request:
+
+---
+
+* Statistical Review of "A novel multi-tissue RNA diagnostic of healthy ageing relates to cognitive health status" by Sood et al. (2015)
+
+This review critically assesses the statistical aspects of the analysis and data handling described by Sood et al. (2015) with special attention to sampling strategies, dataset pooling, normalization procedures, and classifier validation strategies.
+
+### 1. Training Data and Target Population Representation
+
+Sood et al. initiated their classifier development using a **training dataset** comprising RNA samples from skeletal muscle of 15 healthy younger individuals (aged 19–28) and 15 healthy older individuals (aged 59–77). The older group was explicitly described as sedentary but in otherwise good health, with no diabetes and good aerobic capacity. The younger group appears similarly healthy and sedentary, providing a reasonable initial basis for constructing a classifier differentiating healthy ageing from youth.
+
+- **Representativeness and Random Sampling**:  
+  The authors described their cohorts as healthy and explicitly sedentary, implying homogeneity, which supports the concept of an appropriate representative subset for their target population. However, the limited sample size (30 total individuals) and narrow geographic/ethnic sampling (not fully specified) raise questions about generalizability. A more rigorous randomization or stratification process in initial sample selection would further strengthen claims about representativeness.
+
+- **Adequacy of Sample Size**:  
+The sample size (n = 30) for initial training is minimal, particularly given the high dimensionality (~54,000 probe-sets). Although machine learning methods (k-nearest neighbor, kNN) employed here are robust against some overfitting, the small training size could limit the stability and generalizability of selected RNA markers.
+
+---
+
+### Data Collection and Pooling
+
+#### Aggregation of Data Across Multiple Studies
+
+The researchers pooled data across multiple external validation studies to test the generalizability of their RNA signature. They used four independent muscle datasets (Trappe, Hoffman, Derby, Kraus datasets) to externally validate the classifier and additional data sets from human brain and skin.
+
+- **Number of Runs Aggregated**:
+  - Original training dataset: n=30
+  - Independent muscle validation: n = 129 total (across four studies)
+  - Brain tissue dataset: 120 samples
+  - Skin dataset: 279 samples (up to 3 technical replicates/sample)
+
+This extensive external validation across diverse datasets, including various laboratories, technologies, and tissues, is a commendable statistical practice enhancing reliability.
+
+### Tissue Type Distribution Across Runs
+Multiple tissue types (muscle, brain, skin) were independently tested. However, the explicit distribution across individual data generation runs is not detailed clearly, especially how balanced the tissue sampling was within each laboratory batch or platform. Potential batch effects could affect classifier robustness and are not clearly addressed analytically.
+
+### Association of Run with Age
+The authors did not explicitly discuss any statistical analysis regarding whether age was confounded by the data generation run. Given their broad range of validation samples, systematic bias is possible, yet their external validation results strongly imply robustness against run-specific biases.
+
+---
+
+### Normalization Across Different Runs and Platforms
+
+Normalization approaches were appropriate and clearly reported:
+
+- **Robust Multi-array Analysis (RMA)** for initial normalization (single-laboratory data).
+- **Frozen Robust Multi-array Analysis (fRMA)** for multi-center Affymetrix arrays, accommodating inter-laboratory variability.
+- **Quantile normalization** for Illumina platforms.
+
+Such normalization steps are crucial to mitigating batch effects and make cross-platform validation statistically valid. The authors appropriately reported these normalization methods.
+
+---
+
+### Statistical Robustness and Validation of Classifier Performance
+
+Classifier development relied on:
+
+- **k-nearest neighbor (kNN)** methods, known for capturing non-linear interactions and robust classification.
+- **Leave-One-Out Cross-Validation (LOOCV)**: Employed rigorously for internal validation.
+- **External Validation**: Four independent muscle studies, and datasets from brain and skin, using fully independent datasets for both training and evaluation (true external validation).
+
+#### Evidence of Classifier Generalizability:
+
+- Independent classification across muscle datasets yielded ~93% accuracy (range: 70–100%).
+- Cross-tissue validation results were impressive, with high accuracy: brain (AUC ~0.91) and skin (AUC ~0.85).
+- Application to two independent blood datasets demonstrated robust performance in distinguishing Alzheimer's disease (AD) from control (AUC 0.66–0.73 independently, up to 0.86 combined with an AD-specific signature).
+
+This consistent success across diverse datasets and independent validations is strong statistical evidence of robustness. However, the performance of the classifier on future, yet-to-be-seen data remains theoretical without prospective validation.
+
+---
+
+### Predictive Utility and Independence from Lifestyle Factors
+
+- The authors statistically evaluated the classifier's independence from known lifestyle factors (e.g., blood pressure, glucose, cholesterol, physical activity) using the Uppsala Longitudinal Study of Adult Men (ULSAM) cohort. They explicitly demonstrated no significant correlation between the healthy ageing gene score and these common confounders, providing strong statistical evidence of biological specificity.
+- The ULSAM cohort results also showed significant association between the gene score at ~70 years and renal function at 82 years (p=0.009), and 20-year survival (p=0.0295). This suggests statistical robustness in prognostic utility.
+
+---
+
+### Predictive Validity for Future Data
+
+The authors have explicitly discussed the classifier's prospective validity in predicting age-related health outcomes, particularly cognitive impairment and Alzheimer’s disease, based on the application of their signature in independent blood samples. Statistical evidence (AUC values ranging from 0.66 to 0.86) supports the model's future predictive capacity, although explicitly prospective validation data (follow-up beyond the ULSAM cohort) were not presented.
+
+---
+
+### Conclusion (Statistical Perspective)
+
+From a statistical perspective, the methods employed by Sood et al. (2015) demonstrate careful consideration of critical principles, including rigorous external validation, appropriate normalization, and verification of classifier independence from potential confounding factors. However, minor methodological limitations remain concerning sample representativeness and potential platform-specific biases despite their robust cross-validation strategy.
+
+---
+
+### References
+
+- Sood et al. 2015. _Genome Biology_, 16:185. DOI: [10.1186/s13059-015-0750-x](https://doi.org/10.1186/s13059-015-0750-x)
+
+---
+
+**In conclusion**, from a statistical viewpoint, the manuscript by Sood et al. (2015) demonstrates robust statistical methodologies, especially in the context of external validation and normalization across platforms, although it could be improved by more explicit statistical tests addressing representativeness and platform-run age associations.
+
+<br/>
+
+## chatGPT RE:Prompt {-}
+
+Note that what the authors  call external validation  entails fitting a new model with each dataset.  There is no validation of a model; only validation that the subset of 150 probe sets are sufficient to enable KNN + LOOCV to give rise to a fitted model that still discriminates.  This is not validation in the usual sense.  There is no attempt to compare the fitted models from the different data sets.  Jacob and Speed (attached) show that repeating the fit and eval procedures with a random selection of 150 probe sets achieves similar discrimination on some datasets.
+Please include these facts in the conclusions to be drawn form these data.
+
+<br/>
+
+## Response  {-}
+
+*  Statistical Conclusions from Review of Sood et al. (2015)
+
+The analysis by Sood et al. (2015) introduces a 150-gene RNA classifier derived from muscle tissue to discriminate "healthy ageing" across multiple tissues. The statistical methodology used included k-nearest neighbor (kNN) classification coupled with leave-one-out cross-validation (LOOCV). The authors reported successful classification across various tissues (muscle, brain, and skin) and argued for robust multi-tissue applicability.
+
+However, a critical examination reveals important methodological caveats:
+
+- **Representativeness and Sampling**: The initial training dataset comprised only 30 individuals (15 younger and 15 older), raising concerns about the statistical generalizability of this subset to broader populations. While the authors explicitly considered health status, factors such as ethnicity, geography, or more subtle genetic backgrounds were not addressed in detail, limiting the claim of representativeness.
+
+- **Aggregation and Normalization**: Although multiple datasets were used for external validation, what the authors termed "external validation" actually involved re-fitting classifiers to each dataset independently, rather than true independent validation of a single pre-specified model.
+
+- **Normalization Across Platforms**: The normalization procedures (RMA, fRMA) were statistically appropriate and strengthened their cross-platform analysis. However, each dataset had its own normalization procedure, which could have introduced additional variability or biases not fully quantified.
+
+- **Classifier Performance and Validity**: The k-nearest neighbor approach is methodologically sound and robust, but the authors' repeated fitting of new models to each validation dataset limits the interpretability of their claim of generalizability.
+
+- **Evidence for Predictive Robustness**: Jacob and Speed (2018) showed that selecting random subsets of 150 probe sets can yield similar discrimination results on independent datasets, questioning the uniqueness or biological significance of the specific 150-gene set selected by Sood et al.
+
+- **Lack of Unique Diagnostic Power**: The random selection analysis performed by Jacob and Speed underscores that the observed classification performance could largely be attributed to chance or general differences in gene expression between groups (age groups or AD status), rather than the specific biological validity of the selected markers.
+
+In summary, while Sood et al. demonstrated some capability for their RNA signatures to distinguish biological groups (young vs. old, AD vs. control), the absence of genuine external validation, coupled with evidence from random selection analyses, indicates that their particular gene set may not offer specific or biologically insightful diagnostic capabilities beyond what can be randomly achieved with similar-sized gene subsets. These findings emphasize the importance of robust external validation and careful consideration of the randomness in gene signature selection when developing and validating genomic diagnostics.
+
+### References
+
+- Sood, S., Gallagher, I. J., Lunnon, K., et al. (2015). A novel multi-tissue RNA diagnostic of healthy ageing relates to cognitive health status. *Genome Biology*, 16, 185. https://doi.org/10.1186/s13059-015-0750-x.
+
+- Jacob, L., & Speed, T. (2018). The healthy ageing gene expression signature for Alzheimer's disease diagnosis: a random sampling perspective. *Genome Biology*, 19, 97. https://doi.org/10.1186/s13059-018-1481-6.
+
+
+# ABORT STOP HERE 
+
+
+
+<br/> 
+<br/> 
+
+# References 
+<div id="refs"></div> 
+    
+<br/>
+
+
+
+```{r , echo=FALSE}
+  knit_exit()
+```
+
+<br/>
+<br/>
+
+## chatGPT Prompt2 {-}
+
+* Read the attached paper by Sood et.al. 2015 [@Sood:2015aa]
+
+
+* Act as a statistician who is proficient in the traditional statistical concepts as they apply to the analysis of designed experiments, as well as in the novel statistical concepts developed for the analysis of omic data, and review the article.
+
+* The review should not consider findings from later studies
+
+* The review should focus on the statistical aspects of the data collected and analysed.
+* Key statistical principles include:
+  - verifying that the training data points can be thought of as being
+a representative, random subset of the target population
+  - a representative subset most include enough of the right sort of sample.
+   - how many data collection runs are aggregated or pooled to assemble the analysis dataset?
+   - how are the different tissue types distributed across data generation runs?
+   - Is run associated with age. 
+   - Were the data from different runs normalized?
+* What evidence is provided that the classifiers developed work well with datasets analyzed and will continue to work well when future data are analyzed?
+
+<span style="color:blue">
+* For all statements made about the article,
+refer to the supporting text in the article by page and paragraph.
+</span>
+
+* Keep the report in un-rendered markdown format, or markdown syntax.
+* Also include the markdown syntax for a bibliography of citations.
+
+
+<br/>
+
+## **Response2**  {-}
+
+
+
+<br/>
+
+
+## SciSpace Prompt {-}
+
+* Read the attached paper by Sood et.al. 2015 [@Sood:2015aa]
+
+* Act as a statistician who is proficient in the traditional statistical concepts as they apply to the analysis of designed experiments, as well as in the novel statistical concepts developed for the analysis of omic data, and review the article.
+
+* The review should not consider findings from later studies
+
+* The review should focus on the statistical aspects of the data collected and analysed.
+
+* The review should clarify issues relating to data provenance;
+   - how many data collection runs are aggregated or pooled to assemble the analysis dataset?
+   - how are the different tissue types distributed across data generation runs?  
+   - Is run associated with age. 
+   - Were the data from different runs normalized?
+* What evidence is provided that the classifiers developed work well with datasets analyzed and will continue to work well when future data are analyzed?
+
+* Keep the report in un-rendered markdown format, or markdown syntax.
+* Also include the markdown syntax for a bibliography of citations.
+
+
+<br/>
+
+## **Response**  {-}
+
+
+<br/>
+<br/>
+
+
+# 2018 Jabob and Speed [@Jacob:2018aa] {.tabset}
+
+## Home {-}
+
+<br/>
+<br/>
+
+## chatGPT Prompt {-}
+
+* Read the attached paper by  Jabob and Speed 2018 [@Jacob:2018aa]
+
+* Act as a statistician who is proficient in the traditional statistical concepts as they apply to the analysis of designed experiments, as well as in the novel statistical concepts developed for the analysis of omic data, and review the article.
+
+* The review should not consider findings from later studies
+
+* The review should focus on the statistical aspects of the data collected and analysed.
+
+* The review should clarify issues relating to data provenance;
+   - how many data collection runs are aggregated or pooled to assemble the analysis dataset?
+   - how are the different tissue types distributed across data generation runs?  
+   - Is run associated with age. 
+   - Were the data from different runs normalized?
+* What evidence is provided that the classifiers developed work well with datasets analyzed and will continue to work well when future data are analyzed?
+
+* Keep the report in un-rendered markdown format, or markdown syntax.
+* Also include the markdown syntax for a bibliography of citations.
+
+
+<br/>
+
+## **Response**  {-}
+
+
+<br/>
+
+
+## chatGPT Prompt2 {-}
+
+* Read the attached paper by  Jabob and Speed 2018 [@Jacob:2018aa]
+
+* Act as a statistician who is proficient in the traditional statistical concepts as they apply to the analysis of designed experiments, as well as in the novel statistical concepts developed for the analysis of omic data, and review the article.
+
+* The review should not consider findings from later studies
+
+* The review should focus on the statistical aspects of the data collected and analysed.
+
+* The review should clarify issues relating to data provenance;
+   - how many data collection runs are aggregated or pooled to assemble the analysis dataset?
+   - how are the different tissue types distributed across data generation runs?  
+   - Is run associated with age. 
+   - Were the data from different runs normalized?
+* What evidence is provided that the classifiers developed work well with datasets analyzed and will continue to work well when future data are analyzed?
+
+
+<span style="color:blue">
+* For all statements made about the article,
+refer to the supporting text in the article by page and paragraph.
+</span>
+
+* Keep the report in un-rendered markdown format, or markdown syntax.
+* Also include the markdown syntax for a bibliography of citations.
+
+
+<br/>
+
+## **Response2**  {-}
+
+
+
+<br/>
+
+
+## SciSpace Prompt {-}
+
+* Read the attached paper by  Jabob and Speed 2018 [@Jacob:2018aa]
+
+* Act as a statistician who is proficient in the traditional statistical concepts as they apply to the analysis of designed experiments, as well as in the novel statistical concepts developed for the analysis of omic data, and review the article.
+
+* The review should not consider findings from later studies
+
+* The review should focus on the statistical aspects of the data collected and analysed.
+
+* The review should clarify issues relating to data provenance;
+   - how many data collection runs are aggregated or pooled to assemble the analysis dataset?
+   - how are the different tissue types distributed across data generation runs?  
+   - Is run associated with age. 
+   - Were the data from different runs normalized?
+* What evidence is provided that the classifiers developed work well with datasets analyzed and will continue to work well when future data are analyzed?
+
+* Keep the report in un-rendered markdown format, or markdown syntax.
+* Also include the markdown syntax for a bibliography of citations.
+
+
+<br/>
+
+## **Response**  {-}
+
+
+<br/>
+<br/>
+
+
+
+# 2019 Timmons et. al. [@Timmons:2019aa] {.tabset}
+
+## Home {-}
+
+<br/>
+<br/>
+
+## chatGPT Prompt {-}
+
+* Read the attached paper by  Timmons et. al. 2019 [@Timmons:2019aa]
+
+* Act as a statistician who is proficient in the traditional statistical concepts as they apply to the analysis of designed experiments, as well as in the novel statistical concepts developed for the analysis of omic data, and review the article.
+
+* The review should not consider findings from later studies
+
+* The review should focus on the statistical aspects of the data collected and analysed.
+
+* The review should clarify issues relating to data provenance;
+   - how many data collection runs are aggregated or pooled to assemble the analysis dataset?
+   - how are the different tissue types distributed across data generation runs?  
+   - Is run associated with age. 
+   - Were the data from different runs normalized?
+* What evidence is provided that the classifiers developed work well with datasets analyzed and will continue to work well when future data are analyzed?
+
+* Keep the report in un-rendered markdown format, or markdown syntax.
+* Also include the markdown syntax for a bibliography of citations.
+
+
+
+<br/>
+
+## **Response**  {-}
+
+
+<br/>
+
+
+## chatGPT Prompt2 {-}
+
+* Read the attached paper by  Timmons et. al. 2019 [@Timmons:2019aa]
+
+* Act as a statistician who is proficient in the traditional statistical concepts as they apply to the analysis of designed experiments, as well as in the novel statistical concepts developed for the analysis of omic data, and review the article.
+
+* The review should not consider findings from later studies
+
+* The review should focus on the statistical aspects of the data collected and analysed.
+
+* The review should clarify issues relating to data provenance;
+   - how many data collection runs are aggregated or pooled to assemble the analysis dataset?
+   - how are the different tissue types distributed across data generation runs?  
+   - Is run associated with age. 
+   - Were the data from different runs normalized?
+* What evidence is provided that the classifiers developed work well with datasets analyzed and will continue to work well when future data are analyzed?
+
+
+<span style="color:blue">
+* For all statements made about the article,
+refer to the supporting text in the article by page and paragraph.
+</span>
+
+* Keep the report in un-rendered markdown format, or markdown syntax.
+* Also include the markdown syntax for a bibliography of citations.
+
+
+<br/>
+
+## **Response2**  {-}
+
+
+
+## SciSpace Prompt {-}
+
+* Read the attached paper by  Timmons et. al. 2019 [@Timmons:2019aa]
+
+* Act as a statistician who is proficient in the traditional statistical concepts as they apply to the analysis of designed experiments, as well as in the novel statistical concepts developed for the analysis of omic data, and review the article.
+
+* The review should not consider findings from later studies
+
+* The review should focus on the statistical aspects of the data collected and analysed.
+
+* The review should clarify issues relating to data provenance;
+   - how many data collection runs are aggregated or pooled to assemble the analysis dataset?
+   - how are the different tissue types distributed across data generation runs?  
+   - Is run associated with age. 
+   - Were the data from different runs normalized?
+* What evidence is provided that the classifiers developed work well with datasets analyzed and will continue to work well when future data are analyzed?
+
+* Keep the report in un-rendered markdown format, or markdown syntax.
+* Also include the markdown syntax for a bibliography of citations.
+
+<br/>
+
+## **Response**  {-}
+
+
+<br/>
+<br/>
+
+
+
+<br/> 
+<br/> 
+
+# References 
+<div id="refs"></div>
+    
+<br/> 
+
+# Appendix 
+
+
+
+```{r , echo=FALSE}
+  knit_exit()
+```
+
+<br/>
+<br/>
+
+#########################################################
+####  ARCHIVED CODE
+#########################################################
+<p><p/> 
+# Research Paper Summarizers
+
 # 2015 Sood et. al. [@Sood:2015aa] {.tabset}
 
 ## Home {-}
@@ -562,29 +1068,12 @@ We attempt to clarify the various misunderstandings, below.
 
 ## chatGPT Prompt {-}
 
-* Read the attached paper by Sood et.al. 2015 [@Sood:2015aa], 
-and act as a statistician who is proficient in the traditional
-statistical concepts as they apply to the analysis of designed
-experiments as well as the novel statistical concepts developed
-for the analysis of omic data, and review the article.
+* Read the attached paper by Sood et.al. 2015 [@Sood:2015aa].
 
-* The review should not consider findings from later studies.
-The review should focus on the statistical aspects of the data 
-collected and analysed.
+<!-- review_article_prompt_vec HERE -->
 
-* The review should clarify issues relating to data
-provenance - how many data collection runs are aggregated or pooled
-to assemble the analysis dataset.  How are the different tissue
-``types distributed across data generation runs?  Were the data 
-from different runs normalized?
 
-* What evidence is provided that the classifiers 
-developed work well with datasets analyzed and will continue to work well
-when future data are analyzed.  
-
-* Please keep the answer in
-unrendered markdown format.  Also include the markdown code for a 
-bibliography of the citations.
+<br/>
 
 ## **Response**  {-}
 
@@ -621,8 +1110,6 @@ The statistical methodologies employed in Sood et al. (2015) are largely appropr
 
 ### References
 - Sood, S., Gallagher, I. J., Lunnon, K., et al. (2015). *A novel multi-tissue RNA diagnostic of healthy ageing relates to cognitive health status*. Genome Biology, 16:185. https://doi.org/10.1186/s13059-015-0750-x
-
-
 
 <br/>
 
@@ -668,6 +1155,8 @@ bibliography of the citations.
 
 Sood et al. (2015) present a multi-tissue RNA diagnostic approach to assess healthy aging. They employ transcriptomics and machine-learning techniques to classify gene expression patterns associated with aging and cognitive health. This review critically examines the statistical methods employed, focusing on data provenance, normalization, and classifier generalizability.
 
+<br/>
+
 ### Data Provenance and Normalization
 
 The study integrates multiple independent datasets, sourced from various tissue types and platforms:
@@ -677,17 +1166,23 @@ The study integrates multiple independent datasets, sourced from various tissue 
 - Skin RNA profiles from the **MuTHER cohort** (p. 4, ¶3).
 - Blood RNA profiles from **two Alzheimer’s disease (AD) cohorts** (p. 7, ¶2).
 
+<br/>
+
 #### Data Collection and Aggregation
 - Muscle tissue RNA profiling was conducted across **six separate datasets** (p. 3, ¶3).
 - Brain RNA profiling incorporated **four regions** from an independent cohort (p. 4, ¶2).
 - Skin RNA profiling included **three technical replicates per clinical sample** (p. 4, ¶3).
 - Blood RNA profiling was derived from **two independently processed case-control cohorts** (p. 7, ¶2).
 
+<br/>
+
 #### Normalization Methods
 - **Muscle, brain, and blood RNA data**: Normalized using **Robust Multi-array Analysis (RMA)** and, where necessary, **Frozen Robust Multi-array Analysis (fRMA)** to handle batch effects (p. 12, ¶3).
 - **Skin RNA data**: Processed using **quantile normalization** due to platform differences (p. 4, ¶3).
 
 The study effectively acknowledges batch effects by implementing fRMA for inter-laboratory normalization and ensures comparability across platforms.
+
+<br/>
 
 ### Classifier Development and Validation
 
@@ -710,19 +1205,25 @@ The classifier development follows best practices in machine learning by impleme
 
 Despite strong validation, the study **does not explicitly test prospective predictive power** on newly generated samples.
 
+<br/>
+
 ### Limitations and Recommendations
 
 1. **Lack of Prospective Testing**: While cross-validation and external validation are strong, testing the classifier on entirely unseen, prospectively collected samples would provide **stronger evidence of real-world utility**.
 2. **Potential Overfitting Risk**: Despite rigorous external validation, the selection of 150 probe-sets from an initial **54,000 features** (p. 3, ¶3) raises concerns about feature selection bias.
 3. **Tissue-Specific Variability**: The study does not deeply explore whether the classifier performs **equally well across all tissue types** or whether some tissues provide stronger signals.
 
+<br/>
+
 ### Conclusion
 
 Sood et al. (2015) employ robust statistical techniques, ensuring reproducibility and generalizability of their RNA classifier across multiple tissues and independent cohorts. Their approach to normalization, batch correction, and external validation is commendable. However, future studies should emphasize **prospective validation and robustness testing across broader populations**.
 
+<br/>
+
 ---
 
-### Bibliography
+#### Bibliography
 
 ```bibtex
 @article{Sood2015,
@@ -766,6 +1267,8 @@ when future data are analyzed.
 unrendered markdown format.  Also include the markdown code for a 
 bibliography of the citations.
 
+<br/>
+
 ## **Response**  {-}
 
 
@@ -793,6 +1296,9 @@ Sood et al. (2015) present a statistically robust, multi-tissue RNA classifier o
 ```markdown
 [@Sood:2015aa] Sood, S., Gallagher, I. J., Lunnon, K., Rullman, E., Keohane, A., Crossland, H., ... & Timmons, J. A. (2015). A novel multi-tissue RNA diagnostic of healthy ageing relates to cognitive health status. *Genome Biology, 16*(185). https://doi.org/10.1186/s13059-015-0750-x
 ```
+
+<br/>
+<br/>
 
 
 # 2018 Jabob and Speed [@Jacob:2018aa] {.tabset}
@@ -1012,19 +1518,19 @@ developed work well with datasets analyzed and will continue to work well
 
 <br/>
 
-## Response {-}
+## Response {- .tabset}
 
 * Statistical Review of Jacob and Speed (2018)
 
-## Data Provenance
+### Data Provenance {-}
 Jacob and Speed (2018) analyze gene expression data for Alzheimer's disease (AD) diagnosis using the Healthy Ageing Gene Signature (HAGS). The primary data sources include the GEO repository datasets GSE59880, GSE63060, and GSE63061 (p. 3). However, the authors do not explicitly state how many data collection runs were aggregated to form the final analysis dataset. Instead, they focus on reproducing the experimental conditions of Sood et al. (2015) without access to the original authors’ code (p. 1, para. 3). 
 
 Regarding tissue distribution across data generation runs, the study relies on blood gene expression data from two independent cohorts. The details of sample grouping and patient selection are provided in the supplementary materials (p. 1, para. 5). It remains unclear whether specific tissue types were normalized separately across different runs, though the authors use a leave-one-out cross-validation (LOOCV) strategy to mitigate potential biases (p. 2, Fig. 1).
 
-## Normalization Procedures
+### Normalization Procedures {-}
 The authors do not explicitly mention any normalization procedures applied to the datasets before analysis. Given the nature of gene expression data, it is typically essential to adjust for batch effects and technical variability. However, the study focuses on relative comparisons between the HAGS and randomly selected probe sets rather than absolute classification accuracy (p. 2, para. 1). 
 
-## Classifier Performance and Generalization
+### Classifier Performance and Generalization {-}
 Jacob and Speed (2018) evaluate the performance of the HAGS classifier using LOOCV over repeated random selections of 50% of the dataset (p. 2, Fig. 1). Their findings indicate that the median area under the receiver operating characteristic curve (AUC) for the HAGS is not significantly different from the median AUCs of randomly selected probe sets (p. 2, Fig. 2). This suggests that the HAGS does not exhibit exceptional predictive power beyond what could be expected by chance. 
 
 The study also highlights the potential for unobserved confounders to influence classification performance, as evidenced by principal component analysis (PCA) showing that the first principal component explains 25% of the variance and effectively separates AD and control groups (p. 3, para. 1). This raises concerns about whether the classifiers will generalize well to future datasets with different distributions.
@@ -1064,8 +1570,10 @@ Please keep the answer in
 unrendered markdown format.  Also include the markdown code for a
 bibliography of the citations.
 
+<br/>
+<br/>
 
-## **chatGPT response**  {-}
+## **chatGPT Response**  {-}
 
 
 ### Introduction
@@ -1133,6 +1641,30 @@ Overall, the study reinforces the importance of hypothesis-driven feature select
 
 ## Prompt2 {-}
 
+* Read the attached paper by Timmons (2019) [@Timmons:2019aa],
+and act as a statistician who is proficient in the traditional
+statistical concepts as they apply to the analysis of designed
+experiments as well as the novel statistical concepts developed
+for the analysis of omic data, and review the article.
+The review should not consider findings from later studies.
+
+* The review should focus on the statistical aspects of the data
+collected and analysed.
+
+* The review should clarify issues relating to data
+provenance - how many data collection runs are aggregated or pooled
+to assemble the analysis dataset.  How are the different tissue
+types distributed across data generation runs?  Are were the data
+from different runs normalized?
+
+* What evidence is provided that the classifiers
+developed work well with datasets analyzed and will continue to work well
+when future data are analyzed.
+
+Please keep the answer in
+unrendered markdown format.  Also include the markdown code for a
+bibliography of the citations.
+
 
 ## Response 2 {-}
 
@@ -1141,30 +1673,6 @@ Overall, the study reinforces the importance of hypothesis-driven feature select
 
 ## Response {-}
 
-
-
-# References 
-<div id="refs"></div>
-    
-<br/> 
-
-# Appendix 
-
-<p><p/>
-# Research Paper Summarizers
-
-
-
-```{r , echo=FALSE}
-  knit_exit()
-```
-
-<br/>
-<br/>
-
-#########################################################
-####  ARCHIVED CODE
-#########################################################
 
 <!-- 
 I had heard of the nightmarish harassment Laurent and Terry had suffered
