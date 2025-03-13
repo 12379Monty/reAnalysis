@@ -1,0 +1,507 @@
+
+```{css sidenote, echo = FALSE}
+
+.main-container {
+    margin-left: 250px;
+}
+.sidenote, .marginnote { 
+  float: right;
+  clear: right;
+  margin-right: -40%;
+  width: 37%;         # best between 50% and 60%
+  margin-top: 0;
+  margin-bottom: 0;
+  font-size: 1.1rem;
+  line-height: 1.3;
+  vertical-align: baseline;
+  position: relative;
+  }
+```
+
+
+<style>
+@import url('https://fonts.googleapis.com/css?family=Raleway');
+@import url('https://fonts.googleapis.com/css?family=Oxygen');
+@import url('https://fonts.googleapis.com/css?family=Raleway:bold');
+@import url('https://fonts.googleapis.com/css?family=Oxygen:bold');
+
+.main-container {
+  max-width: 1400px !important;
+}
+
+body{
+  font-family: 'Oxygen', sans-serif;
+  font-size: 16px;
+  line-height: 24px;
+}
+
+h1,h2,h3,h4 {
+  font-family: 'Raleway', sans-serif;
+}
+
+.container { width: 1400px; }
+
+caption {
+  font-size: 20px;
+  caption-side: top;
+  text-indent: 30px;
+  background-color: lightgrey;
+  color: black;
+  margin-top: 5px;
+}
+
+g-table-intro h4 {
+  text-indent: 0px;
+}
+</style>
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(echo = TRUE,
+                      comment = NA,
+                      warning = FALSE,
+                      error = FALSE,
+                      message = FALSE,
+                      cache = FALSE,
+                      fig.width = 8,
+                      fig.height = 4)
+```
+
+```{r m1a-GlobalOptions, results="hide", include=FALSE, cache=FALSE}
+
+knitr::opts_knit$set(stop_on_error = 2L) #really make it stop
+options(knitr.table.format = 'html')
+
+options(stringsAsFactors=F)
+
+ #knitr::dep_auto()
+
+```
+<!-- ######################################################################## -->
+
+
+```{r m1a-Prelims,  include=FALSE, echo=FALSE, results='hide', message=FALSE} 
+
+FN <- "_M1A-healthy_aging_genes"
+if(sum(grepl(FN, list.files()))==0) stop("Check FN")
+
+ suppressMessages(require(rmarkdown))
+ suppressMessages(require(knitr))
+
+ suppressPackageStartupMessages(require(methods))
+ suppressPackageStartupMessages(require(bookdown))
+
+ suppressPackageStartupMessages(require(data.table))
+ options(datatable.fread.datatable=F)
+
+ suppressPackageStartupMessages(require(plyr))
+ suppressPackageStartupMessages(require(dplyr))
+ suppressPackageStartupMessages(require(magrittr))
+
+ # Shotcuts for knitting and rendering while in R session (Invoke interactive R from R/Scripts folder)
+ kk <- function(n='') knitr::knit2html(paste("t", n, sep=''), envir=globalenv(),
+       output=paste(FN,".html", sep=''))
+
+ rr <- function(n='') rmarkdown::render(paste("t", n, sep=''), envir=globalenv(),
+       output_file=paste(FN,".html", sep='')) ##, output_dir='Scripts')
+
+ bb <- function(n='') browseURL(paste(FN,".html", sep=''))
+
+ # The usual shortcuts
+ zz <- function(n='') source(paste("t", n, sep=''))
+
+
+ WRKDIR <- '..'
+ if(!file.exists(WRKDIR)) stop("WRKDIR ERROR", WRKDIR)
+
+ # do once
+
+ # Shotcuts for knitting and rendering while in R session
+ kk <- function(n='') knitr::knit2html(paste("t", n, sep=''), envir=globalenv(),
+       output=paste('',FN,".html", sep=''))
+
+ rr <- function(n='') render(paste("t", n, sep=''), envir=globalenv(),
+       output_file=paste(FN,".html", sep=''), output_dir='Scripts')
+
+ bb <- function(n='') browseURL(paste('',FN,".html", sep=''))
+
+ # The usual shorcuts
+ zz <- function(n='') source(paste('', "t", n, sep=''))
+
+ # file rmarkdown file management options: cache, figures
+ cache_DIR <- file.path(WRKDIR,'Scripts', 'cache/M1A/')
+ suppressMessages(dir.create(cache_DIR, recursive=T))
+ opts_chunk$set(cache.path=cache_DIR)
+
+ figures_DIR <- file.path(WRKDIR,'Scripts', 'figures/M1A/')
+ suppressMessages(dir.create(figures_DIR, recursive=T))
+ opts_chunk$set(fig.path=figures_DIR)
+
+ #tables_DIR <- file.path(WRKDIR,'Scripts', 'tables/M1A/')
+ #suppressMessages(dir.create(table_DIR, recursive=T))
+ #opts_chunk$set(fig.path=table_DIR)
+ 
+ # need a local copy of help_DIR
+ #help_DIR <- file.path(WRKDIR,'Scripts', 'help_files')
+ help_DIR <- file.path('.', 'help_files')
+ suppressMessages(dir.create(help_DIR, recursive=T))
+ 
+ temp_DIR <- file.path(WRKDIR,'Scripts', 'temp_files')
+ suppressMessages(dir.create(temp_DIR, recursive=T))
+
+```
+<!-- ######################################################################## -->
+
+*** 
+
+```{r m1a-utilityFns, echo=FALSE}
+ # Here we define some utility functions
+source('r/utilityFns.r')
+
+```
+
+<!-- ######################################################################## -->
+
+
+<!-- SKIP THIS 
+# Params {#params}
+
+## Input params {-}
+-->
+
+```{r m1a-input-params-all, echo = FALSE, results = "asis", eval=F, echo=F}
+ # print out original input params
+data.frame(
+param_name=names(params),
+param_value=unlist(params),
+param_class=sapply(params, class), row.names=NULL) %>%
+  knitr::kable(caption="Input Parameters")
+```
+
+<br/>
+
+
+<!--
+* Breiman: [@Breiman:1984aa; @Breiman:2001aa]
+* Freedman: [@Freedman:2008aa; @Freedman:2008ad; @Freedman:2008ac; @Freedman:2009ac]
+-->
+
+<!--
+mqc-cov-by-extr-cons-batch-level-tp1-1.png
+-->
+
+# Introduction
+
+* The advent of AI elicits reactions ranging from
+skepticism to unbridled and even euphoric optimism,
+with experts being divided on the very notion of *intelligence*.
+(Gelman blog 5/20/24  https://statmodeling.stat.columbia.edu/2023/11/18/i-disagree-with-geoff-hinton-regarding-glorified-autocomplete/)
+
+<p><p/>
+* A given LLM model can display remarkable apparent intelligence on some queries, while 
+exhibiting stunning incoherence on others
+   - [AI can solve math olympiad problems but flunks tic-tac-toe](https://statmodeling.stat.columbia.edu/2025/02/01/ai-can-solve-math-olympiad-problems-but-flunks-tic-tac-toe/)
+   - When they don't know, they start bullshitting
+
+<p><p/>
+* chatGPT Prompts can be designed to obtain responses with desired attributes
+such as the depth and breadth of the response, and restrictions on the
+source of reference material.
+   - https://github.com/f/awesome-chatgpt-prompts
+
+<p><p/>
+* Specialized GPTs can be used for research purposes.
+
+<p><p/> 
+* In this report we utilize chatGPT and other GPT based tools
+to review and analyze the article by Sood et al. 2015  [@Sood:2015aa].
+The methodology used to arrive at a gene signature is suspect in many ways.
+
+<p><p/> 
+* Rather than documenting the parts of the analysis which could give rise
+to dubious results, Jacob & Speed 2018 [@Jacob:2018aa] show that a randomly
+selected set of genes could achieve  comparable performance as the
+discovered gene signature.
+
+<p><p/>
+* Timmons et al. 2019  [@Timmons:2019aa] later rebuked the random genes argument.
+
+The abstracts for these 3 papers can be found in the appendix,
+Section \@ref(healthy-aging-genes-abs).
+
+<br/>
+
+# Outline 
+
+<p><p/>
+* In Section \@ref(GPT-based-res) we prompt chatGPT to compare the following
+research assistant tools:
+   - Scholar GPT, Concensus, SciSpace, Semantic Scholar, Perplexity, Elicit
+
+<p><p/>
+* In Section \@ref(soa-infer-age-omic), we use Concensus to obtain a
+literature review summarizing the state of the art in age inference using omic profiles
+
+
+<p><p/>
+In Section \@ref(sood-etal-review) 
+
+<br/>
+
+# GPT-Based Research Assistants {#GPT-based-res .tabset}
+
+(
+* The results in this section are most un-impressive.
+* Not sure how to make them better
+)
+
+* Before diving into the articles of interest, we will submit queries to 
+establish the current state of scientific knowledge reguarding omic signatures
+of ageing.
+
+<p><p/>
+* There are several GPTs which are specialized for research:
+   - Scholar GPT
+   - Concensus
+   - SciSpace
+   - Semantic Scholar
+   - Perplexity
+   - Elicit
+
+<p><p/>
+* See [Consensus GPT vs SciSpace GPT](https://www.youtube.com/watch?v=EN0JZTvbuzQ)
+for a compariasoin of these two GPTs.
+
+## Home {-}
+
+<br/>
+<br/>
+
+## chatGPT Prompt - 4 tools {-}
+
+<!--
+* Which specialized GPTs are best suited for my research?
+
+* I'm interested in the state of the art knowledge of the association
+between omic profiles and subject age.
+
+* Of particular interest is the problem of inferring age based on omic profiles
+derived from subject or participant samples.
+
+* I want a literature review which will attribute findings to specific 
+papers by appropriayte citation.
+-->
+
+* Compare and contrast 4 research tools - 
+Scholar GPT, Concensus, SciSpace, Semantic Scholar -
+in their strengths and weaknesses when used to establish
+the state of the art knowledge of the association
+between omic profiles and subject age with particular interest 
+in the problem of inferring age based on omic profiles
+derived from subject or participant samples,
+and the need to attribute findings to specific 
+papers by appropriayte citation.
+
+<br/>
+
+## Response {-}
+
+* Comparison of Specialized GPTs for Research on Omic Profiles and Age Inference
+
+### Introduction {-}
+
+Establishing the state-of-the-art knowledge of the association between omic profiles and subject age, particularly in inferring age from such profiles, requires robust AI-powered research tools. This report compares four specialized GPT-based research assistants: **Scholar GPT, Consensus, SciSpace, and Semantic Scholar**. The focus is on their ability to retrieve relevant literature, analyze findings, and provide appropriate citations.
+
+---
+
+### Comparison of Research Tools {-}
+
+| Feature               | Scholar GPT | Consensus | SciSpace | Semantic Scholar |
+|----------------------|------------|----------|----------|------------------|
+| **Primary Function** | AI-powered research summarization | AI-based literature synthesis and consensus analysis | AI-assisted academic paper reading and querying | AI-driven research search engine with citation tracking |
+| **Strengths** | Summarizes and explains scientific papers | Identifies agreement among studies using consensus scoring | Allows interactive querying of research papers | Provides extensive access to a vast database of academic papers |
+| **Citation Accuracy** | May hallucinate or generate incorrect citations | Offers citation-backed claims but requires manual verification | Provides citation-backed summaries but may have limitations | Highly accurate citations sourced from published literature |
+| **Database Coverage** | Moderate; dependent on pre-trained knowledge | Moderate; relies on indexed scientific papers | Large; integrates with major research databases | Extensive (200M+ papers from peer-reviewed sources) |
+| **Use for Omics Research** | Useful for explaining complex omic concepts but limited citation support | Summarizes and provides insights into research trends but may not provide detailed omic-specific data | Excellent for reading, summarizing, and querying omic research papers | Highly relevant, with extensive papers covering omics and aging |
+| **User Interaction** | Basic conversational responses | Consensus-driven summaries with interactive filtering | Upload PDFs and interactively ask questions | Advanced search with structured citation tracking |
+| **Accessibility** | General AI research assistant; may require additional verification | Requires subscription for full functionality | Some features are premium-only | Free and widely accessible |
+
+---
+
+### Strengths and Weaknesses {-}
+
+#### 1. Scholar GPT {-}
+**Strengths:**
+- AI-powered academic research summarization.
+- Useful for breaking down complex omic concepts.
+
+**Weaknesses:**
+- May produce incorrect citations (hallucinations).
+- Limited direct access to a wide research database.
+
+#### 2. Consensus {-}
+**Strengths:**
+- Provides a high-level synthesis of scientific consensus on a topic.
+- Useful for identifying general agreement trends in literature.
+
+**Weaknesses:**
+- Requires manual verification of citations.
+- May not provide granular insights into omic-specific research.
+
+#### 3. SciSpace {-}
+**Strengths:**
+- Allows users to upload and interact with research papers.
+- AI-assisted explanation of complex papers and omics-related findings.
+
+**Weaknesses:**
+- Some advanced features are paywalled.
+- May not always retrieve the most up-to-date literature.
+
+#### 4. Semantic Scholar {-}
+**Strengths:**
+- Provides extensive access to a wide range of peer-reviewed scientific papers.
+- Highly accurate citation tracking and structured research discovery.
+
+**Weaknesses:**
+- Lacks interactive AI features for summarization and explanation.
+- May require more manual effort to extract insights from literature.
+
+---
+
+### Recommendation {-}
+For research on the association between omic profiles and subject age, **Semantic Scholar** is the best choice due to its extensive, peer-reviewed database and accurate citations. However, **SciSpace** can be valuable for interactive paper analysis, while **Consensus** provides a useful way to gauge agreement across multiple studies. **Scholar GPT**, though helpful for general summaries, is less reliable for citation accuracy.
+
+Combining **Semantic Scholar for literature discovery** and **SciSpace for document querying and interactive summarization** would provide the most effective workflow for researchers interested in this domain.
+
+---
+
+### Conclusion {-}
+
+While all four tools have strengths in assisting with literature review and scientific exploration, **Semantic Scholar and SciSpace** emerge as the most reliable choices for accurately attributing findings to specific papers in omics and aging research.
+
+<br/>
+
+## chatGPT Prompt - 6 tools {-}
+
+* Compare and contrast 6 research tools - 
+Scholar GPT, Concensus, SciSpace, Semantic Scholar, Elicit, and Perplexity -
+in their strengths and weaknesses when used to establish
+the state of the art knowledge of the association
+between omic profiles and subject age with particular interest 
+in the problem of inferring age based on omic profiles
+derived from subject or participant samples,
+and the need to attribute findings to specific 
+papers by appropriayte citation.
+
+<br/>
+
+## Response {-}
+
+* Comparison of Research Tools for Omic-Age Association Studies
+
+Here's a comparison of **Scholar GPT, Consensus, SciSpace, Semantic Scholar, Elicit, and Perplexity** based on their strengths and weaknesses in researching the **association between omic profiles and subject age**, with a focus on **inferring age from omic data** and **ensuring proper citation of findings**.
+
+---
+
+| **Tool**            | **Strengths** | **Weaknesses** |
+|----------------------|--------------|---------------|
+| **Scholar GPT** | - AI-powered research assistant trained on scientific literature.<br>- Can summarize complex papers in accessible language.<br>- Likely to identify patterns in omic-age studies. | - Limited in directly citing specific sources.<br>- May not retrieve the latest papers if not connected to up-to-date databases.<br>- Lacks transparent retrieval methods. |
+| **Consensus** | - AI-driven synthesis of multiple sources.<br>- Provides evidence-backed responses from scientific literature.<br>- Good at finding state-of-the-art knowledge on omic-age associations. | - May not always directly cite papers, focusing instead on summarizing consensus.<br>- Limited in retrieving full-text sources for deep analysis.<br>- May miss niche findings on omic aging biomarkers. |
+| **SciSpace** | - Can read and explain full-text PDFs of scientific papers.<br>- Offers contextual understanding of methods, results, and limitations.<br>- Effective for deep diving into omic-age inference models. | - Does not inherently rank findings by citation importance.<br>- Search functions may not be as refined as Semantic Scholar.<br>- Attribution may require manual verification. |
+| **Semantic Scholar** | - Advanced AI-powered indexing of research papers.<br>- Highlights influential citations and connections between studies.<br>- Offers structured filtering for omics and aging research. | - Abstract-based search may not capture full methodological details.<br>- Full-text access may require external subscriptions (e.g., journal paywalls). |
+| **Elicit** | - AI-assisted literature review tool.<br>- Helps extract methodologies and key findings efficiently.<br>- Structured for systematic reviews, including omic-aging studies. | - Limited in retrieving full-text PDFs.<br>- Can miss some recent or less-cited papers due to dataset constraints.<br>- Not optimized for real-time updates. |
+| **Perplexity** | - Strong real-time search capabilities, including recent studies.<br>- Can aggregate sources and provide citations.<br>- Useful for quickly identifying trends in omic-aging research. | - May retrieve non-peer-reviewed content if not properly filtered.<br>- Citation reliability can vary—requires manual verification.<br>- Lacks structured literature analysis tools. |
+
+---
+
+### **Best Tool for Specific Needs**
+- **For finding state-of-the-art knowledge on omic-age association** → **Semantic Scholar, Consensus**
+- **For deep understanding of methods in omic-age inference** → **SciSpace, Elicit**
+- **For real-time research on the latest findings** → **Perplexity**
+- **For AI-driven literature review with context extraction** → **Scholar GPT, Elicit**
+- **For attribution of findings with proper citations** → **Semantic Scholar, Perplexity**
+
+If your priority is **rigorous citation and access to well-structured academic insights**, **Semantic Scholar** is a solid choice. If you need **AI-powered synthesis of omic-aging literature**, **Consensus and Elicit** are effective. For **explaining methods and interpreting full-text papers**, **SciSpace** is useful. 
+
+Would you like a deeper evaluation of any specific tool in relation to omics and aging research?
+
+<br/>
+<br/>
+
+# OMIC signatures of aging  {#soa-infer-age-omic .tabset}
+
+## Home {-}
+
+<br/>
+<br/>
+
+## Consensus Prompt {-}
+
+* Produce a literature review to report on the state of the art knowledge of the association
+between omic profiles and subject age
+* We are particularly interested in the problem of inferring age based on omic profiles.
+* We are also interested in detailed descriptions of the models built to predict  age from omic features:
+   - number of features,
+   - gain in predictive accuracy attributable to the inclusion of omic features in the model.
+* Please attribute findings to specific papers by appropriate citation
+
+* Keep the report in un-rendered markdown format, or markdown syntax
+* Also include the markdown syntax for a bibliography of citations."
+
+
+## Response  {-}
+
+* Literature Review: Inferring Age from Omic Profiles
+
+### Introduction
+
+The association between omic profiles and subject age has become a crucial area of research in aging biology. Omic-based models leverage molecular features such as DNA methylation, metabolomics, transcriptomics, and proteomics to infer chronological and biological age. This review synthesizes recent findings on the predictive capability of omic profiles for age inference, highlighting the number of features used, model architectures, and the gain in predictive accuracy due to omic feature inclusion.
+
+### Omic-Based Age Prediction Models
+
+#### 1. Multi-Omics Age Prediction Approaches
+
+Chen et al. (2023) developed OMICmAge, an integrative multi-omics approach that predicts biological age by combining DNA methylation (DNAm) with proteomic, metabolomic, and clinical data [(Chen et al., 2023)](https://consensus.app/papers/omicmage-an-integrative-multiomics-approach-to-quantify-chen-dwaraka/3281ad73801b5cb3bfdf3c6b190dd010/?utm_source=chatgpt). Their elastic-net regression model demonstrated superior accuracy in predicting mortality risk compared to existing biomarkers.
+
+Dwaraka et al. (2024) further refined OMICmAge, reporting an average ROC of 0.88 for predicting 5- and 10-year mortality [(Dwaraka et al., 2024)](https://consensus.app/papers/omicmage-an-integrative-multiomics-approach-to-quantify-dwaraka-chen/4b2a974fdb4a57d09c85a121b156317d/?utm_source=chatgpt).
+
+#### 2. Metabolomic Clocks
+
+Hwangbo et al. (2021) developed a metabolomic aging clock using cerebrospinal fluid (CSF) metabolite and lipid data [(Hwangbo et al., 2021)](https://consensus.app/papers/a-metabolomic-aging-clock-using-human-csf-hwangbo-zhang/1431a6651f09501fbf5a2a986a81ca91/?utm_source=chatgpt). Their predictive models estimated chronological age within 10 years. Key metabolites associated with aging included the carnitine shuttle, sucrose, biopterin, and vitamin E metabolism.
+
+Robinson et al. (2018) integrated metabolomics and DNA methylation data to assess metabolic age acceleration in a UK cohort [(Robinson et al., 2018)](https://consensus.app/papers/metabolomic-aging-and-its-association-with-depression-in-a-robinson-hyam/38b2b6b774fb53c384e568ecdc35b41b/?utm_source=chatgpt). Their elastic-net model used 472 features and achieved a Pearson correlation of 0.85 with chronological age.
+
+#### 3. Deep Learning and Neural Networks
+
+Van Hilten et al. (2023) implemented biologically interpretable neural networks for multi-omics age prediction using RNA expression and CpG methylation data [(Van Hilten et al., 2023)](https://consensus.app/papers/phenotype-prediction-using-biologically-interpretable-hilten-rooij/752664ee876f5317a1be6aec64e9ce66/?utm_source=chatgpt). Their model inferred age with a mean error of 5.16 years and identified consistently predictive genes such as COL11A2, AFAP1, and CD34.
+
+#### 4. Machine Learning for Omic Feature Selection
+
+Uche et al. (2021) investigated the role of omics in improving machine learning interpretability [(Uche et al., 2021)](https://consensus.app/papers/can-omics-help-in-prognostic-machine-learning-uche-caruana/5b496ae621ca5fdeba66c5cfafff7c1c/?utm_source=chatgpt). Their Explainable Boosting Machine (EBM) demonstrated that incorporating omic features enhanced the model’s predictive accuracy and interpretability.
+
+Zenbout et al. (2023) proposed an optimized bioinspired feature selection approach for omic data analysis, which significantly improved predictive performance in clinical endpoint predictions [(Zenbout et al., 2023)](https://consensus.app/papers/efficient-bioinspired-feature-selection-and-machine-zenbout-bouramoul/98159e634b9958aea029c8a8f7699ef4/?utm_source=chatgpt).
+
+### Gain in Predictive Accuracy Due to Omic Features
+
+- **OMICmAge**: Outperformed traditional biomarkers with an ROC of 0.88 [(Dwaraka et al., 2024)](https://consensus.app/papers/omicmage-an-integrative-multiomics-approach-to-quantify-dwaraka-chen/4b2a974fdb4a57d09c85a121b156317d/?utm_source=chatgpt).
+- **Metabolomic Aging Clocks**: Achieved age predictions within a 10-year margin [(Hwangbo et al., 2021)](https://consensus.app/papers/a-metabolomic-aging-clock-using-human-csf-hwangbo-zhang/1431a6651f09501fb5a2a986a81ca91/?utm_source=chatgpt).
+- **Deep Learning Models**: Reduced mean absolute error to 5.16 years [(Van Hilten et al., 2023)](https://consensus.app/papers/phenotype-prediction-using-biologically-interpretable-hilten-rooij/752664ee876f5317a1be6aec64e9ce66/?utm_source=chatgpt).
+- **Machine Learning Interpretability**: Increased model accuracy by incorporating omic features [(Uche et al., 2021)](https://consensus.app/papers/can-omics-help-in-prognostic-machine-learning-uche-caruana/5b496ae621ca5fdeba66c5cfafff7c1c/?utm_source=chatgpt).
+
+### Conclusion
+
+Recent advancements in age prediction using omic profiles demonstrate the potential of multi-omics integration and machine learning models in improving chronological and biological age inference. The use of deep learning and optimized feature selection methods has significantly enhanced predictive accuracy, providing valuable insights into aging biology and age-related diseases.
+
+### References
+
+- Chen, Q. et al. (2023). "OMICmAge: An integrative multi-omics approach to quantify biological age." [bioRxiv](https://consensus.app/papers/omicmage-an-integrative-multiomics-approach-to-quantify-chen-dwaraka/3281ad73801b5cb3bfdf3c6b190dd010/?utm_source=chatgpt).
+- Dwaraka, V. et al. (2024). "OMICmAge: Improved mortality prediction using multi-omics." [Physiology](https://consensus.app/papers/omicmage-an-integrative-multiomics-approach-to-quantify-dwaraka-chen/4b2a974fdb4a57d09c85a121b156317d/?utm_source=chatgpt).
+- Hwangbo, N. et al. (2021). "A metabolomic aging clock using human CSF." [The Journals of Gerontology](https://consensus.app/papers/a-metabolomic-aging-clock-using-human-csf-hwangbo-zhang/1431a6651f09501fb5a2a986a81ca91/?utm_source=chatgpt).
+- Vanlty Hilten, A. et al. (2023). "Phenotype prediction using biologically interpretable neural networks." [bioRxiv](https://consensus.app/papers/phenotype-prediction-using-biologically-interpretable-hilten-rooij/752664ee876f5317a1be6aec64e9ce66/?utm_source=chatgpt).
+- Uche, C. et al. (2021). "Can Omics Help in Prognostic Machine Learning Interpretability?" [IJROBP](https://consensus.app/papers/can-omics-help-in-prognostic-machine-learning-uche-caruana/5b496ae621ca5fdeba66c5cfafff7c1c/?utm_source=chatgpt).
+- Zenbout, I. et al. (2023). "Efficient Bioinspired Feature Selection." [IEEE Access](https://consensus.app/papers/efficient-bioinspired-feature-selection-and-machine-zenbout-bouramoul/98159e634b9958aea029c8a8f7699ef4/?utm_source=chatgpt).
+
+
+<br/>
+<br/>
+
+# Sood et al. (2015) - AI Review {.tabset}
