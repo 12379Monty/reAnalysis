@@ -17,7 +17,7 @@ output:
     # this has no effect
     number_sections: yes
     # css: ['../_css/pandoc3.css', '../_css/myMargins.css']
-bibliography: [../_bibFiles/_healthy_aging.bib, ../../_bibFiles/_Breiman.bib, ../../_bibFiles/_Yu.bib]
+bibliography: [../_bibFiles/_healthy_aging.bib, ../_bibFiles/_ref_free_genom_inf.bib, ../../_bibFiles/_Breiman.bib, ../../_bibFiles/_Yu.bib]
 csl: ../_csl/cell-numeric.csl
 link-citations: true
 ---
@@ -215,7 +215,9 @@ param_class=sapply(params, class), row.names=NULL) %>%
 
 * Response
 
-### Best GPT-based tools for defining technical terms in biotech-related scientific publications:
+### GPT-based tools for technical terms  {-}
+
+* Best GPT-based tools for defining technical terms in biotech-related scientific publications:
 
 | Tool | Strengths | Ideal Usage |
 |------|-----------|-------------|
@@ -224,7 +226,7 @@ param_class=sapply(params, class), row.names=NULL) %>%
 | **[Explainpaper](https://www.explainpaper.com)** | - GPT-driven academic language translator<br>- Clear, user-friendly explanations of complex biotech concepts | Students or researchers seeking straightforward definitions |
 | **[Consensus](https://consensus.app)** | - Aggregates and summarizes definitions from multiple scientific papers<br>- Provides context-aware definitions within the broader biotech field | Cross-validating definitions across multiple sources |
 
-#### Recommended overall choice:
+#### Recommended overall choice:  {-}
 - ✅ **[SciSpace Copilot](https://scispace.com)** is the best overall choice for its contextual accuracy and specialized biotech literature integration. 
 
 **Alternatives:** Use **Elicit** or **Consensus** if definitions from broader perspectives or cross-validation across sources is desired.
@@ -243,18 +245,18 @@ on fundamental questions in the evolution of genomes.
 [Salzman Lab](https://salzmanlab.stanford.edu/):
    - SPLASH: A statistical, reference-free genomic algorithm unifies biological discover
 [PDF](https://www.cell.com/cell/pdf/S0092-8674(23)01179-0.pdf),
-[Code](https://github.com/refresh-bio/SPLASH) [@Chaung:2023AA]
+[Code](https://github.com/refresh-bio/SPLASH) [@Chaung:2023aa]
    - OASIS: An interpretable, finite-sample valid alternative to Pearson’s X2 
 for scientific discovery
 [URL](https://www.pnas.org/doi/10.1073/pnas.2304671121),
 [Code](https://github.com/refresh-bio/SPLASH) [@Baharava:2014aa]
 
 
-# Outline 
+## Outline  {-}
 
 <p><p/>
 * In Section \@ref(GPT-based-res) we prompt **chatGPT** to compare the following
-research assistant tools:
+research assistant tools: (also done in [_M1A-healthy_aging_genes.html](./M1A-healthy_aging_genes.html)
    - **Scholar GPT, Concensus, SciSpace, Semantic Scholar, Perplexity, Elicit**
 
 <p><p/>
@@ -263,27 +265,27 @@ literature review summarizing the state of the art in reference-free genomics.
 
 
 <p><p/>
-* In Section \@ref(splash-ai-review) we prompt **chatCPT** and **SciSpace** to provide a
-technical review of Chaung et al. (2023) [@Chaung:2023aa].  Here,
+* In Section \@ref(splash-ai-review) we prompt **chatGPT** and **SciSpace** to provide a
+technical review of Chaung et al. (2023) [@Chaung:2023aa] (SPLASH).
    - **does** the AI assistants get some key concepts wrong while maintaining 
 a steady tone of confidence.
 
 <p><p/>
 * In the next Section, \@ref(splash-ai-review-with-line-ref), we prompt
-**chatCPT and **SciSpace** to provide line references for all claims or attributions
+**chatGPT and **SciSpace** to provide line references for all claims or attributions
 made regarding the article.
    - How much does the response change?
 
 
 <p><p/>
-* In Section \@ref(oasis-ai-review) we prompt **chatCPT** and **SciSpace** to provide a
+* In Section \@ref(oasis-ai-review) we prompt **chatGPT** and **SciSpace** to provide a
 technical review of Baharava et al. (2024) [@Baharava:2024aa].
 **Does** the AI assistants get some
 key concepts wrong while maintaining a steady tone of confidence.
 
 <p><p/>
 * In the next Section, \@ref(oasis-ai-review-with-line-ref), we prompt
-**chatCPT and **SciSpace** to provide line references for all claims or attributions
+**chatGPT and **SciSpace** to provide line references for all claims or attributions
 made regarding the article.
    - How much does the response change?
 
@@ -328,9 +330,18 @@ the state of the art knowledge  in reference-free genomics
 <br/>
 
 
+## **Response** {-}
+
+<br/>
+<br/>
 
 ## chatGPT Prompt - 6 tools {-}
 
+
+* Compare and contrast 6 research tools - 
+Scholar GPT, Concensus, SciSpace, Semantic Scholar, Elicit, and Perplexity -
+in their strengths and weaknesses when used to establish
+the state of the art knowledge  in reference-free genomics
 
 <br/>
 
@@ -341,25 +352,28 @@ the state of the art knowledge  in reference-free genomics
 
 # State of the Arts:  Reference-Free Genomic Inference {#soa-ref-free-genomics  .tabset}
 
+
+* In this report we focus on two papers from the [Salzman Lab]:
+   - SPLASH: 
+A statistical, reference-free genomic algorithm unifies biological discover
+[PDF](https://www.cell.com/cell/pdf/S0092-8674(23)01179-0.pdf),
+[Code](https://github.com/refresh-bio/SPLASH) [@Chaung:2023AA]
+   - OASIS: 
+An interpretable, finite-sample valid alternative to Pearson’s X2 
+for scientific discovery
+[URL](https://www.pnas.org/doi/10.1073/pnas.2304671121),
+[Code](https://github.com/refresh-bio/SPLASH) [@Baharava:2014aa]
+
 ## Home {-}
 
 <br/>
 <br/>
 
-
-* In this report we focus on two papers from the [Salzman Lab]:
-   - SPLASH: A statistical, reference-free genomic algorithm unifies biological discover
-[PDF](https://www.cell.com/cell/pdf/S0092-8674(23)01179-0.pdf),
-[Code](https://github.com/refresh-bio/SPLASH) [@Chaung:2023AA]
-   - OASIS: An interpretable, finite-sample valid alternative to Pearson’s X2 
-for scientific discovery
-[URL](https://www.pnas.org/doi/10.1073/pnas.2304671121),
-[Code](https://github.com/refresh-bio/SPLASH) [@Baharava:2014aa]
-
 ## Consensus Prompt {-}
 
-* Produce a literature review to report on the state of the art knowledge of 
-reference-free genomic inference.
+* reference-free genomic inference is part of the methodologies discussed in
+the two attached papers.  Please produce a literature review to report
+on the state of the art knowledge of reference-free genomic inference.
 
 * We are particularly interested in the statistical aspects of methods.
 
@@ -374,31 +388,20 @@ reference-free genomic inference.
 <br/>
 <br/>
 
-# Sood et al. (2015) - AI Review {#sood-ai-review .tabset}
+# SPLASH - Chaung et al, 2023 [@Chaung:2023AA]
 
-`r CAPTION <-
-readChar(normalizePath("img/Sood_2015_Figure1-Caption.txt"), 
-         file.info(normalizePath("img/Sood_2015_Figure1-Caption.txt"))$size)
-`
+## Home {-}
 
-![Figure 1](img/Sood_2015_Figure1.png)
+<br/>
 
+## chatGPT Prompt {-}
 
-```{r cache = FALSE, echo = F, warning = F, message = F, results="asis"}
-###message(CAPTION)
+<br/>
+<br/>
 
-s <- CAPTION
-cat(gsub('(.{1,80})(\\s|$)', '\\1\n', s))
+# OASIS - 
+[Code](https://github.com/refresh-bio/SPLASH) [@Baharava:2014aa]
 
-```
-
-
- 
-```{r m2a-study-design, fig.cap = CAPTION, include=T, fig.align='center', eval=F}
-
-knitr::include_graphics(normalizePath("img/Sood_2015_Figure1.png"), dpi=150)
-
-```                   
 
 ## Home {-}
 
@@ -721,6 +724,8 @@ This structured outline provides detailed citations by page and paragraph number
 
 ## What is a Statistical Algorithm?
 
+* Submitted to SciSpace (copilot)
+
 A **statistical algorithm** is a computational procedure that applies statistical techniques to analyze data, make predictions, or identify patterns. These algorithms use probability theory, statistical inference, and mathematical modeling to extract meaningful insights from data. They are widely used in fields such as machine learning, data science, econometrics, and bioinformatics.
 
 ### Key Characteristics:
@@ -746,6 +751,8 @@ In essence, statistical algorithms form the backbone of data-driven decision-mak
 
 
 ## What is Biological Inference?
+
+* Submitted to SciSpace (copilot)
 
 **Poor definition.**
 
@@ -776,6 +783,14 @@ relationships in biological systems.
 
 
 
+<br/>
+<br/>
+
+# References {#references}
+<div id="refs"></div>
+    
+<br/>
+
 # Appendix {-}
 
 ## Parameter settings {-}
@@ -795,10 +810,10 @@ relationships in biological systems.
 
 
 <!-- To run
-# nohup Rscript -e "knitr::knit2html('_M1A-healthy_aging_genes.Rmd')" > _M1A-healthy_aging_genes.log  &
+# nohup Rscript -e "knitr::knit2html('_M2A-ref_free_genomic_inf.Rmd')" > _M2A-ref_free_genomic_inf.log  &
 
 # Or
-# nohup Rscript -e "rmarkdown::render('_M1A-healthy_aging_genes.Rmd')" > _M1A-healthy_aging_genes.log  &
+# nohup Rscript -e "rmarkdown::render('_M2A-ref_free_genomic_inf.Rmd')" > _M2A-ref_free_genomic_inf.log  &
 
 -->
 

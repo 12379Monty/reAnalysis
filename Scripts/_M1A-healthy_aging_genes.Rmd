@@ -1036,6 +1036,17 @@ We attempt to clarify the various misunderstandings, below.
 refer to the supporting text in the article by page and paragraph.
 </span>
 
+
+
+<br/>
+<br/>
+
+# References {#references}
+<div id="refs"></div>
+    
+<br/>
+
+
    
 # Appendix {-}
 

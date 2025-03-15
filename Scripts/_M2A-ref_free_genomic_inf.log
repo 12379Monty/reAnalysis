@@ -1,0 +1,33 @@
+
+
+processing file: _M2A-ref_free_genomic_inf.Rmd
+1/17                       
+2/17 [sidenote]            
+3/17                       
+4/17 [setup]               
+5/17                       
+6/17 [m2a-GlobalOptions]   
+7/17                       
+8/17 [m2a-Prelims]         
+9/17                       
+10/17 [m2a-utilityFns]      
+11/17                       
+12/17 [m2a-input-params-all]
+13/17                       
+14/17 [m2a-session-info]    
+15/17                       
+16/17 [unnamed-chunk-1]     
+output file: _M2A-ref_free_genomic_inf.knit.md
+
+/usr/local/bin/pandoc +RTS -K512m -RTS _M2A-ref_free_genomic_inf.knit.md --to html4 --from markdown+autolink_bare_uris+tex_math_single_backslash --output _M2A-ref_free_genomic_inf.html --lua-filter /Library/Frameworks/R.framework/Versions/4.4-x86_64/Resources/library/bookdown/rmarkdown/lua/custom-environment.lua --lua-filter /Library/Frameworks/R.framework/Versions/4.4-x86_64/Resources/library/rmarkdown/rmarkdown/lua/pagebreak.lua --lua-filter /Library/Frameworks/R.framework/Versions/4.4-x86_64/Resources/library/rmarkdown/rmarkdown/lua/latex-div.lua --lua-filter /Library/Frameworks/R.framework/Versions/4.4-x86_64/Resources/library/rmarkdown/rmarkdown/lua/table-classes.lua --embed-resources --standalone --wrap preserve --variable bs3=TRUE --section-divs --table-of-contents --toc-depth 3 --template /Library/Frameworks/R.framework/Versions/4.4-x86_64/Resources/library/rmarkdown/rmd/h/default.html --no-highlight --variable highlightjs=1 --number-sections --include-before-body /var/folders/jk/d24lm6n944q5y650lph85m7w0000gp/T//Rtmpt4CiIT/rmarkdown-str811e53206fcc.html --variable navbar=1 --variable theme=bootstrap --mathjax --variable 'mathjax-url=https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML' --include-in-header /var/folders/jk/d24lm6n944q5y650lph85m7w0000gp/T//Rtmpt4CiIT/rmarkdown-str811e768be4b6.html --variable code_folding=hide --variable source_embed=_M2A-ref_free_genomic_inf.Rmd --include-after-body /var/folders/jk/d24lm6n944q5y650lph85m7w0000gp/T//Rtmpt4CiIT/file811e5a54a587.html --variable code_menu=1 --citeproc 
+[WARNING] Duplicate identifier 'references' at _M2A-ref_free_genomic_inf.knit.md line 692 column 1
+[WARNING] Citeproc: citation Baharava:2014aa not found
+[WARNING] Citeproc: citation Baharava:2024aa not found
+[WARNING] Citeproc: citation Chaung:2023AA not found
+
+Output created: _M2A-ref_free_genomic_inf.html
+Warning messages:
+1: The label(s) splash-ai-review not found 
+2: The label(s) splash-ai-review-with-line-ref not found 
+3: The label(s) oasis-ai-review not found 
+4: The label(s) oasis-ai-review-with-line-ref not found 
