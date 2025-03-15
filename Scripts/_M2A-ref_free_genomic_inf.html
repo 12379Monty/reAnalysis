@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+<title>Preliminaries</title>
+<style type="text/css">
+body {
+  font-family: sans-serif;
+  max-width: 800px;
+  margin: auto;
+  padding: 1em;
+  line-height: 1.5;
+  box-sizing: border-box;
+}
+body, .footnotes, code { font-size: .9em; }
+li li { font-size: .95em; }
+*, *:before, *:after {
+  box-sizing: inherit;
+}
+pre, img { max-width: 100%; }
+pre, pre:hover {
+  white-space: pre-wrap;
+  word-break: break-all;
+}
+pre code {
+  display: block;
+  overflow-x: auto;
+}
+code { font-family: 'DejaVu Sans Mono', 'Droid Sans Mono', 'Lucida Console', Consolas, Monaco, monospace; }
+:not(pre) > code, code[class] { background-color: #F8F8F8; }
+code.language-undefined, pre > code:not([class]) {
+  background-color: inherit;
+  border: 1px solid #eee;
+}
+table {
+  margin: auto;
+  border-top: 1px solid #666;
+}
+table thead th { border-bottom: 1px solid #ddd; }
+th, td { padding: 5px; }
+thead, tfoot, tr:nth-child(even) { background: #eee; }
+blockquote {
+  color: #666;
+  margin: 0;
+  padding-left: 1em;
+  border-left: 0.5em solid #eee;
+}
+hr, .footnotes::before { border: 1px dashed #ddd; }
+.frontmatter { text-align: center; }
+#TOC .numbered li { list-style: none; }
+#TOC .numbered { padding-left: 0; }
+#TOC .numbered ul { padding-left: 1em; }
+table, .body h2 { border-bottom: 1px solid #666; }
+.body .appendix, .appendix ~ h2 { border-bottom-style: dashed; }
+.footnote-ref a::before { content: "["; }
+.footnote-ref a::after { content: "]"; }
+section.footnotes::before {
+  content: "";
+  display: block;
+  max-width: 20em;
+}
+
+@media print {
+  body {
+    font-size: 12pt;
+    max-width: 100%;
+  }
+  tr, img { page-break-inside: avoid; }
+}
+@media only screen and (min-width: 992px) {
+  pre { white-space: pre; }
+}
+</style>
+</head>
+<body>
+<div class="frontmatter">
+<div class="title"><h1>Preliminaries</h1></div>
+<div class="author"><h2></h2></div>
+<div class="date"><h3></h3></div>
+</div>
+<div class="body">
+<style type="text/css">
+
+.main-container {
+    margin-left: 250px;
+}
+.sidenote, .marginnote { 
+  float: right;
+  clear: right;
+  margin-right: -40%;
+  width: 37%;         # best between 50% and 60%
+  margin-top: 0;
+  margin-bottom: 0;
+  font-size: 1.1rem;
+  line-height: 1.3;
+  vertical-align: baseline;
+  position: relative;
+  }
+</style>
+<style>
+@import url('https://fonts.googleapis.com/css?family=Raleway');
+@import url('https://fonts.googleapis.com/css?family=Oxygen');
+@import url('https://fonts.googleapis.com/css?family=Raleway:bold');
+@import url('https://fonts.googleapis.com/css?family=Oxygen:bold');
+
+.main-container {
+  max-width: 1400px !important;
+}
+
+body{
+  font-family: 'Oxygen', sans-serif;
+  font-size: 16px;
+  line-height: 24px;
+}
+
+h1,h2,h3,h4 {
+  font-family: 'Raleway', sans-serif;
+}
+
+.container { width: 1400px; }
+
+caption {
+  font-size: 20px;
+  caption-side: top;
+  text-indent: 30px;
+  background-color: lightgrey;
+  color: black;
+  margin-top: 5px;
+}
+
+g-table-intro h4 {
+  text-indent: 0px;
+}
+</style>
+<!-- ######################################################################## -->
+<!-- ######################################################################## -->
+<hr />
+<!-- ######################################################################## -->
+<!-- SKIP THIS 
+# Params {#params}
+
+## Input params {-}
+-->
+<br/>
+<!--
+* Breiman: [@Breiman:1984aa; @Breiman:2001aa]
+* Freedman: [@Freedman:2008aa; @Freedman:2008ad; @Freedman:2008ac; @Freedman:2009ac]
+-->
+<h2 id="preliminaries" ->Preliminaries</h2>
+<ul>
+<li>
+<p>chatGPT query:</p>
+<ul>
+<li>what is the best GPT based tool to obtain definitions of technical terms used in biotech related scientific publications?</li>
+</ul>
+</li>
+<li>
+<p>Response</p>
+</li>
+</ul>
+<h3 id="best-gpt-based-tools-for-defining-technical-terms-in-biotech-related-scientific-publications">Best GPT-based tools for defining technical terms in biotech-related scientific publications:</h3>
+<table>
+<thead>
+<tr>
+<th>Tool</th>
+<th>Strengths</th>
+<th>Ideal Usage</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong><a href="https://scispace.com">SciSpace Copilot</a></strong></td>
+<td>- Contextual definitions within scientific papers<br>- Highly accurate for biotech terms<br>- Integrated directly into research PDFs</td>
+<td>Immediate comprehension within biotech research papers</td>
+</tr>
+<tr>
+<td><strong><a href="https://elicit.org">Elicit.org</a></strong></td>
+<td>- GPT-powered scientific research assistant<br>- Simplifies technical jargon into plain language<br>- Effective for quick clarification</td>
+<td>Rapid clarification and concise definitions</td>
+</tr>
+<tr>
+<td><strong><a href="https://www.explainpaper.com">Explainpaper</a></strong></td>
+<td>- GPT-driven academic language translator<br>- Clear, user-friendly explanations of complex biotech concepts</td>
+<td>Students or researchers seeking straightforward definitions</td>
+</tr>
+<tr>
+<td><strong><a href="https://consensus.app">Consensus</a></strong></td>
+<td>- Aggregates and summarizes definitions from multiple scientific papers<br>- Provides context-aware definitions within the broader biotech field</td>
+<td>Cross-validating definitions across multiple sources</td>
+</tr>
+</tbody>
+</table>
+<h4 id="recommended-overall-choice">Recommended overall choice:</h4>
+<ul>
+<li>✅ <strong><a href="https://scispace.com">SciSpace Copilot</a></strong> is the best overall choice for its contextual accuracy and specialized biotech literature integration.</li>
+</ul>
+<p><strong>Alternatives:</strong> Use <strong>Elicit</strong> or <strong>Consensus</strong> if definitions from broader perspectives or cross-validation across sources is desired.</p>
+<br/>
+<h1 id="introduction">Introduction</h1>
+<ul>
+<li>
+<p>The <a href="https://salzmanlab.stanford.edu/">Salzman Lab</a>
+develop and apply new <strong>statistical algorithms</strong> for <strong>biological inference</strong>
+on fundamental questions in the evolution of genomes.</p>
+</li>
+<li>
+<p>In this report we focus on two papers from the [Salzman Lab]:</p>
+<ul>
+<li>SPLASH: A statistical, reference-free genomic algorithm unifies biological discover
+<a href="https://www.cell.com/cell/pdf/S0092-8674(23)01179-0.pdf">PDF</a>,
+<a href="https://github.com/refresh-bio/SPLASH">Code</a> [@Chaung:2023AA]</li>
+<li>OASIS: An interpretable, finite-sample valid alternative to Pearson’s X2
+for scientific discovery
+<a href="https://www.pnas.org/doi/10.1073/pnas.2304671121">URL</a>,
+<a href="https://github.com/refresh-bio/SPLASH">Code</a> [@Baharava:2014aa]</li>
+</ul>
+</li>
+</ul>
+<h1 id="outline">Outline</h1>
+<p><p/>
+* In Section \@ref(GPT-based-res) we prompt **chatGPT** to compare the following
+research assistant tools:
+   - **Scholar GPT, Concensus, SciSpace, Semantic Scholar, Perplexity, Elicit**
+<p><p/>
+* In Section \@ref(soa-ref-free-genomic-inf), we use **Concensus** to obtain a
+literature review summarizing the state of the art in reference-free genomics.
+<p><p/>
+* In Section \@ref(splash-ai-review) we prompt **chatCPT** and **SciSpace** to provide a
+technical review of Chaung et al. (2023) [@Chaung:2023aa].  Here,
+   - **does** the AI assistants get some key concepts wrong while maintaining 
+a steady tone of confidence.
+<p><p/>
+* In the next Section, \@ref(splash-ai-review-with-line-ref), we prompt
+**chatCPT and **SciSpace** to provide line references for all claims or attributions
+made regarding the article.
+   - How much does the response change?
+<p><p/>
+* In Section \@ref(oasis-ai-review) we prompt **chatCPT** and **SciSpace** to provide a
+technical review of Baharava et al. (2024) [@Baharava:2024aa].
+**Does** the AI assistants get some
+key concepts wrong while maintaining a steady tone of confidence.
+<p><p/>
+* In the next Section, \@ref(oasis-ai-review-with-line-ref), we prompt
+**chatCPT and **SciSpace** to provide line references for all claims or attributions
+made regarding the article.
+   - How much does the response change?
+<br/>
+<h1 id="GPT-based-res" class="tabset">GPT-Based Research Assistants</h1>
+<ul>
+<li>
+<p>The results in this section are most un-impressive.</p>
+</li>
+<li>
+<p>Not sure how to make them better
+)</p>
+</li>
+<li>
+<p>Before diving into the articles of interest, we will submit queries to
+establish the current state of scientific knowledge regarding
+reference-free genomics.</p>
+</li>
+</ul>
+<p><p/>
+* There are several GPTs which are specialized for research:
+   - Scholar GPT
+   - Concensus
+   - SciSpace
+   - Semantic Scholar
+   - Perplexity
+   - Elicit
+<p><p/>
+* See [Consensus GPT vs SciSpace GPT](https://www.youtube.com/watch?v=EN0JZTvbuzQ)
+for a comparison of these two GPTs.
+<br/>
+</div>
+</body>
+</html>

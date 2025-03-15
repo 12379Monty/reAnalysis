@@ -1,27 +1,30 @@
 
 
 processing file: _M1A-healthy_aging_genes.Rmd
-1/19                       
-2/19 [sidenote]            
-3/19                       
-4/19 [setup]               
-5/19                       
-6/19 [m1a-GlobalOptions]   
-7/19                       
-8/19 [m1a-Prelims]         
-9/19                       
-10/19 [m1a-utilityFns]      
-11/19                       
-12/19 [m1a-input-params-all]
-13/19                       
-14/19 [unnamed-chunk-1]     
-15/19                       
-16/19 [m1a-study-design]    
-17/19                       
-18/19 [m1a-article-review]  
-19/19                       
+1/23                       
+2/23 [sidenote]            
+3/23                       
+4/23 [setup]               
+5/23                       
+6/23 [m1a-GlobalOptions]   
+7/23                       
+8/23 [m1a-Prelims]         
+9/23                       
+10/23 [m1a-utilityFns]      
+11/23                       
+12/23 [m1a-input-params-all]
+13/23                       
+14/23 [unnamed-chunk-1]     
+15/23                       
+16/23 [m1a-study-design]    
+17/23                       
+18/23 [m1a-article-review]  
+19/23                       
+20/23 [m1a-session-info]    
+21/23                       
+22/23 [unnamed-chunk-2]     
 output file: _M1A-healthy_aging_genes.knit.md
 
-/usr/local/bin/pandoc +RTS -K512m -RTS _M1A-healthy_aging_genes.knit.md --to html4 --from markdown+autolink_bare_uris+tex_math_single_backslash --output _M1A-healthy_aging_genes.html --lua-filter /Library/Frameworks/R.framework/Versions/4.4-x86_64/Resources/library/bookdown/rmarkdown/lua/custom-environment.lua --lua-filter /Library/Frameworks/R.framework/Versions/4.4-x86_64/Resources/library/rmarkdown/rmarkdown/lua/pagebreak.lua --lua-filter /Library/Frameworks/R.framework/Versions/4.4-x86_64/Resources/library/rmarkdown/rmarkdown/lua/latex-div.lua --lua-filter /Library/Frameworks/R.framework/Versions/4.4-x86_64/Resources/library/rmarkdown/rmarkdown/lua/table-classes.lua --embed-resources --standalone --wrap preserve --variable bs3=TRUE --section-divs --table-of-contents --toc-depth 3 --template /Library/Frameworks/R.framework/Versions/4.4-x86_64/Resources/library/rmarkdown/rmd/h/default.html --no-highlight --variable highlightjs=1 --number-sections --include-before-body /var/folders/jk/d24lm6n944q5y650lph85m7w0000gp/T//RtmprbVQ85/rmarkdown-str29ea80555de.html --variable navbar=1 --variable theme=bootstrap --mathjax --variable 'mathjax-url=https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML' --include-in-header /var/folders/jk/d24lm6n944q5y650lph85m7w0000gp/T//RtmprbVQ85/rmarkdown-str29ea164865ef.html --variable code_folding=hide --variable source_embed=_M1A-healthy_aging_genes.Rmd --include-after-body /var/folders/jk/d24lm6n944q5y650lph85m7w0000gp/T//RtmprbVQ85/file29ea6b1c3956.html --variable code_menu=1 --citeproc 
+/usr/local/bin/pandoc +RTS -K512m -RTS _M1A-healthy_aging_genes.knit.md --to html4 --from markdown+autolink_bare_uris+tex_math_single_backslash --output _M1A-healthy_aging_genes.html --lua-filter /Library/Frameworks/R.framework/Versions/4.4-x86_64/Resources/library/bookdown/rmarkdown/lua/custom-environment.lua --lua-filter /Library/Frameworks/R.framework/Versions/4.4-x86_64/Resources/library/rmarkdown/rmarkdown/lua/pagebreak.lua --lua-filter /Library/Frameworks/R.framework/Versions/4.4-x86_64/Resources/library/rmarkdown/rmarkdown/lua/latex-div.lua --lua-filter /Library/Frameworks/R.framework/Versions/4.4-x86_64/Resources/library/rmarkdown/rmarkdown/lua/table-classes.lua --embed-resources --standalone --wrap preserve --variable bs3=TRUE --section-divs --table-of-contents --toc-depth 3 --template /Library/Frameworks/R.framework/Versions/4.4-x86_64/Resources/library/rmarkdown/rmd/h/default.html --no-highlight --variable highlightjs=1 --number-sections --include-before-body /var/folders/jk/d24lm6n944q5y650lph85m7w0000gp/T//RtmpnnV6Gt/rmarkdown-str743b87bd042.html --variable navbar=1 --variable theme=bootstrap --mathjax --variable 'mathjax-url=https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML' --include-in-header /var/folders/jk/d24lm6n944q5y650lph85m7w0000gp/T//RtmpnnV6Gt/rmarkdown-str743b78a5a167.html --variable code_folding=hide --variable source_embed=_M1A-healthy_aging_genes.Rmd --include-after-body /var/folders/jk/d24lm6n944q5y650lph85m7w0000gp/T//RtmpnnV6Gt/file743b4207af12.html --variable code_menu=1 --citeproc 
 
 Output created: _M1A-healthy_aging_genes.html

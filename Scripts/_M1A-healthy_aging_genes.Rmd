@@ -1037,3 +1037,29 @@ refer to the supporting text in the article by page and paragraph.
 </span>
 
    
+# Appendix {-}
+
+## Parameter settings {-}
+  * WRKDIR = `r normalizePath(WRKDIR)`
+  * FN = `r FN`
+  * Scripts = Scripts
+  * RUN DATE = `r date()`
+
+```{r m1a-session-info, echo=T, eval=T}
+ sessionInfo()
+```
+
+```{r, echo=FALSE}
+  knit_exit()
+```
+
+
+
+<!-- To run
+# nohup Rscript -e "knitr::knit2html('_M1A-healthy_aging_genes.Rmd')" > _M1A-healthy_aging_genes.log  &
+
+# Or
+# nohup Rscript -e "rmarkdown::render('_M1A-healthy_aging_genes.Rmd')" > _M1A-healthy_aging_genes.log  &
+
+-->
+
