@@ -617,7 +617,7 @@ Prior to the development of SPLASH, reference-free genomic inference relied on k
 <br/>
 <br/>
 
-# SPLASH - Chaung et al, 2023 [@Chaung:2023aa] {.tabset #splash-ai-review}
+# SPLASH - Chaung et al, 2023 {.tabset #splash-ai-review}
 
 ## Home {-}
 
