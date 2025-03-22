@@ -12,13 +12,13 @@ output:
     code_folding: hide
     code_download: true
     toc: true
-    toc_depth: 3
+    toc_depth: 2
     # does this have an effect
     fig_caption: yes
     # this has no effect
     number_sections: yes
     # css: ['../_css/pandoc3.css', '../_css/myMargins.css']
-bibliography: [../_bibFiles/_healthy_aging.bib, ../_bibFiles/_ref_free_genom_inf.bib, ../../_bibFiles/_Breiman.bib, ../../_bibFiles/_Yu.bib, ../../_bibFiles/_Freedman.bib]
+bibliography: [../_bibFiles/_healthy_aging.bib, ../_bibFiles/_ref_free_genom_inf.bib, ../../_bibFiles/_Breiman.bib, ../../_bibFiles/_Yu.bib, ../../_bibFiles/_Freedman.bib, ../../_bibFiles/_RUV.bib]
 csl: ../_csl/cell-numeric.csl
 link-citations: true
 ---
@@ -249,31 +249,59 @@ param_class=sapply(params, class), row.names=NULL) %>%
 <br/>
 
 
-## Preliminaries {-}
+# Synopsys  {-}
 
-* chatGPT query:
-   - what is the best GPT based tool to obtain definitions of technical terms used in biotech related scientific publications?
+<p><p/> 
+* The methodology used in OASIS is similar to that used in
+the RUV methodology [@Molania:2023aa; @Gerard:2021aa; @Jiang:2023aa].
+It might be good to compare the two directly.
+   - I will try to do this based on the data and software identified in 
+the paper.
 
-* Response
-   - Best GPT-based tools for defining technical terms in biotech-related scientific publications:
+<p><p/>
+* Asking the GPT research assistants to focus on statistical aspects
+and randomness seems to have caused them to overuse and sometimes misuse
+these terms.
 
-| Tool | Strengths | Ideal Usage |
-|------|-----------|-------------|
-| **[SciSpace Copilot](https://scispace.com)** | - Contextual definitions within scientific papers<br>- Highly accurate for biotech terms<br>- Integrated directly into research PDFs | Immediate comprehension within biotech research papers |
-| **[Elicit.org](https://elicit.org)** | - GPT-powered scientific research assistant<br>- Simplifies technical jargon into plain language<br>- Effective for quick clarification | Rapid clarification and concise definitions |
-| **[Explainpaper](https://www.explainpaper.com)** | - GPT-driven academic language translator<br>- Clear, user-friendly explanations of complex biotech concepts | Students or researchers seeking straightforward definitions |
-| **[Consensus](https://consensus.app)** | - Aggregates and summarizes definitions from multiple scientific papers<br>- Provides context-aware definitions within the broader biotech field | Cross-validating definitions across multiple sources |
-|
+<p><p/>
+* In high throughput data analysis, data summaries play a prominent role 
+such that almost every analysis is statistical in some sense so that attaching
+the label statistical to an analysis method has little descriptive value.
 
-#### Recommended overall choice:  {-}
-- ✅ **[SciSpace Copilot](https://scispace.com)** is the best overall choice for its contextual accuracy and specialized biotech literature integration.^[
-The SciSpace Copilot interface is not intuitive at this point - use alternative
-]
+<p><p/>
+* Outside of simulated data, p-values cannot be taken at face value
+**without careful scrutiny of the data in every case**.  q-values even less so.
+   - In omic scale analyses it has not been possible to carefully examine
+modeling assumptions for every feature (when modeling is at the feature level).
+AI may change this.
+   - The shape of the distribution can be examined to ensure that it meets expectations.
 
-**Alternatives:** Use **Elicit** or **Consensus** if definitions from broader perspectives or cross-validation across sources is desired.
+<p><p/>
+* p/q values may still provide useful guides for the purpose of ordering and
+selecting features, but some checks must be put in place to verify that
+this is the case. 
+
+<p><p/>
+* Theoretical properties of summaries can provide guidance for the design of
+analysis steps or components but they get their value from the properties
+they confer to the procedures.
+   - ie. the q-value filter is correct if the resulting procedure 
+achieves a good balance between sensitivity and specificity,
+ 
+<p><p/>
+* For the purpose of discovery or feature identification,
+it is the distribution of the summaries over the study dataset that matters most.
+   - Is it peaked, flat, heavy-tailed.
+   - Is the shape consistent with expectations.
+
+<p><p/>
+* In high throughput analysis, including genomics, unwanted shared variability
+among features is to be expected.  An analysis is incomplete if it does not
+include a careful examination at the data to detect any sign of unwanted variability.
+See the RUV literature  [@Molania:2023aa; @Gerard:2021aa; @Jiang:2023aa].
+
 
 <br/>
-
 
 # Introduction
 
@@ -298,32 +326,30 @@ for scientific discovery
 
 <p><p/>
 * In Section \@ref(GPT-based-res) we prompt **chatGPT** to compare the following
-research assistant tools: (also done in [_M1A-healthy_aging_genes.html](./M1A-healthy_aging_genes.html)
+research assistant tools.
    - **Scholar GPT, Concensus, SciSpace, Semantic Scholar, Perplexity, Elicit**
 
 <p><p/>
 * In Section \@ref(soa-ref-free-genomics), we use **Concensus** to obtain a
 literature review summarizing the state of the art in reference-free genomics
 <span style="color:blue">prior to `SPLASH` and `OASIS`</span>.
-*./
-
 
 <p><p/>
 * In Section \@ref(splash-ai-review) we prompt **chatGPT** and **scholar GPT** to provide a
-technical review of Chaung et al. (2023) [@Chaung:2023aa] (SPLASH).
+technical review of Chaung et al. (2023) [@Chaung:2023aa] (**SPLASH**).
    - **does** the AI assistants get some key concepts (wrong while maintaining 
 a steady tone of confidence)?
 
 <p><p/>
 * In Section \@ref(oasis-ai-review) we prompt **chatGPT** and **SciSpace** to provide a
-technical review of Baharav et al. (2024) [@Baharav:2024aa].
+technical review of Baharav et al. (2024) [@Baharav:2024aa] (**OASIS**).
    - **does** the AI assistants get some
 key concepts wrong?
 
 
 <p><p/>
-* In Section \@ref(splash-oasis-citing-review) we prompt blah blah blah to get
-a review of the citing literature.
+* In Section \@ref(splash-oasis-citings) we use AI assisted research tools to summarize
+the citing literature for SPLASH and OASIS.
 
 
 <br/>
@@ -355,10 +381,6 @@ for scientific discovery
 # GPT-Based Research Assistants {#GPT-based-res .tabset}
 
 
-* The results in this section are most un-impressive.
-   -0  Not sure how to make them better
-)
-
 * Before diving into the articles of interest, we will submit queries to 
 establish the current state of scientific knowledge regarding 
 reference-free genomics, prior to `SPLASH` and `OASIS`
@@ -383,7 +405,7 @@ for a comparison of these two GPTs.
 <br/>
 <br/>
 
-## chatGPT Prompt - 4 tools {-}
+## chatGPT Prompt {-}
 
 * Refer to the articles uploaded to the project - 
 
@@ -394,19 +416,16 @@ for a comparison of these two GPTs.
 to get a sense of the `reference-free genomic inference` context.
 
 
-* Compare and contrast 4 research tools - 
-Scholar GPT, Concensus, SciSpace, Semantic Scholar -
+
+* Compare and contrast 6 research tools - 
+Scholar GPT, Concensus, SciSpace, Semantic Scholar, Elicit, and Perplexity -
 in their strengths and weaknesses when used to establish
-the state of the art for knowledge  around reference-free genomics
-
-
+the state of the art knowledge  in reference-free genomics
 
 <br/>
 
-
 ## **Response** {-}
 
-It appears the files "SPLASH" (Chaung et al., 2023) and "OASIS" (Baharav et al., 2024) are now uploaded and accessible.
 
 I will briefly outline the key points about these two reference-free genomic inference methods from the uploaded articles before proceeding to compare the four research tools.
 
@@ -439,40 +458,8 @@ so that compaerisons can be made between the with and without referen e ana1lyse
 
 ---
 
-### Comparison of Research Tools for Establishing State-of-the-Art Knowledge in Reference-Free Genomics: {-}
-
-| Tool             | Strengths (Context: reference-free genomics)                                                     | Weaknesses (Context: reference-free genomics)                          |
-|------------------|--------------------------------------------------------------------------------------------------|-------------------------------------------------------------------------|
-| Scholar GPT      | - Good at clarifying complex statistical methods (e.g., SPLASH and OASIS).<br>- Effective for synthesizing novel methods and their implications.<br>- Ideal for interactive learning about method-specific details. | - Dependent on clarity and quality of uploaded or included context.<br>- May occasionally generalize details when nuanced interpretation is needed. |
-| Consensus        | - Efficient at quickly summarizing consensus points and widely accepted findings.<br>- Useful to quickly gauge acceptance or prominence of SPLASH or OASIS within the broader community. | - Might not effectively highlight emerging, nuanced approaches like OASIS, especially before extensive citation or wider adoption. |
-| SciSpace         | - Strong at in-depth explanation and breaking down complicated statistical procedures and experimental design, as found in SPLASH and OASIS.<br>- Helpful for direct clarification of specific, technical content. | - Less effective in comparative literature review; typically focused on one paper at a time rather than establishing cross-paper, state-of-the-art status. |
-| Semantic Scholar | - Excellent at identifying influential works and creating citation-based knowledge networks.<br>- Provides comprehensive overviews of research lineage and impact, ideal for seeing SPLASH or OASIS positioning in the wider research context. | - May miss detailed, methodological nuances if those nuances aren’t widely cited or easily discoverable via citation metrics alone.<br>- Not ideal for direct methodological clarification. |
-
----
-
-### Recommended Use Cases in the Context of Reference-Free Genomics:
-
-- **Scholar GPT and SciSpace**: Best for deep-diving into the details of complex, innovative methods like SPLASH and OASIS.
-- **Consensus**: Ideal for quickly establishing the perceived reliability and adoption of SPLASH or OASIS methodologies within the genomic community.
-- **Semantic Scholar**: Most effective for understanding historical and contextual positioning, tracking methodological influence, and recognizing highly cited seminal works that frame state-of-the-art reference-free genomic methods.
-
-Let me know if you'd like further details or assistance on a particular aspect.
-
 <br/>
 <br/>
-
-## chatGPT Prompt - 6 tools {-}
-
-
-* Compare and contrast 6 research tools - 
-Scholar GPT, Concensus, SciSpace, Semantic Scholar, Elicit, and Perplexity -
-in their strengths and weaknesses when used to establish
-the state of the art knowledge  in reference-free genomics
-
-<br/>
-
-## **Response** {-}
-
 
 Here is a clear **comparison and contrast** in markdown syntax of the six tools (**Scholar GPT, Consensus, SciSpace, Semantic Scholar, Elicit, and Perplexity**) in the context of establishing state-of-the-art knowledge in **reference-free genomics**:
 
@@ -525,6 +512,8 @@ for scientific discovery
 
 * In  the literature review section, we will include all of the publications prior to
 the publications of `SPLASH` and `OASIS`.
+
+<br/>
 
 ## Home {-}
 
@@ -630,30 +619,7 @@ Prior to the development of SPLASH, reference-free genomic inference relied on k
 
 # SPLASH - Chaung et al, 2023 [@Chaung:2023aa] {.tabset #splash-ai-review}
 
-* Asking the GPT research assistants to focus on statistical aspects
-and randomness seems to have caused them to overuse and sometimes misuse
-these terms.
-
-* In high throughput data analysis, data summaries play a prominent role 
-such that almost every analysis is statistical in some sense so that attaching
-the label statistical to an analysis method has little descriptive value.
-
-* Outside of simulated data, p-values cannot be taken at face value without
-careful scrutiny of the data.  q-values even less so.
-
-* p/q values may still provide useful guides for the purpose of ordering and
-selecting features.  ie. designing filters
-
-<p><p/>
-* theoretical properties of summaries can provide guidance for the design of
-analysis steps or components but they get their value from the properties
-they confer to the procedures.
-   - ie. the q-value filter is correct if the resulting procedure 
-achieves a good balance between sensitivity and specificity,
- 
-
 ## Home {-}
-
 
 <br/>
 
@@ -1684,14 +1650,15 @@ D = 1 - \frac{\sum_{i} \min (P_i, Q_i)}{\sum_{i} P_i + Q_i}
 \]
 
 
-```{r, echo=FALSE}
-  knit_exit()
-```
 
-```{r}
+```{r m2a-effect-size-fn, eval = F}
 ## Compute effect size function
 effect_size <- function(mutation_data) {
   total_counts <- rowSums(mutation_data)  # Total counts per mutation
+  # BUG - distance should be pairwise
+  ###################################
+  # we are taking a sample-pair level metric
+  ###############################
   min_sums <- rowSums(apply(mutation_data, 1, function(x) min(x[1:2], x[3:4])))  # Minimum values in Delta vs. Omicron
 
   # Effect size calculation
@@ -1776,41 +1743,473 @@ Let me know what you'd like to explore next! 🔬📊
 
 
 
-## OASIS -  Baharav et al., 2024 [@Baharav:2024aa] {#oasis-ai-review .tabset}
+# OASIS -  Baharav et al., 2024 {#oasis-ai-review .tabset}
+
+* Follow same steps as in the section on SPLASH - Section \@ref(splash-ai-review).
+
+
+## Home {-}
+
+<br/>
+
+## chatGPT Prompt {-}
+
+* Please provide a summary of the technical content of the attached article
+`OASIS` ( Baharav et al., 2024 [@Baharav:2024aa]) 
+paying particualr attention to statistical
+aspects of the mothodologies or any component which is prey to randomness or variability.
+
+(
+* Note that the randomness or variability that I am interested in here is at the measurement
+error or modeling level - the error term in a model.  It is the variability that suggests the 
+summaries and justifies the inference. It is not typically discussed to any length in the journals
+and seems to trip up the research assistants.
+)
+
+
+<br/>
+
+## **Response**  {-}
+
+* Summary of "OASIS: An interpretable, finite-sample valid alternative to Pearson’s X² for scientific discovery" (Baharav et al., 2024)
+
+### Overview and Motivation {-}
+The article introduces **OASIS (Optimized Adaptive Statistic for Inferring Structure)**, a novel statistical framework for testing contingency tables. Contingency tables (matrices of count data) are common in quantitative research, especially genomics. OASIS addresses significant limitations of Pearson’s chi-squared (X²) test, notably invalid finite-sample P-values, lack of robustness, and interpretability, making it suited for sparse, high-dimensional data common in modern genomic studies.
+
+---
+
+### Methodological Approach {-}
+
+#### 1. **Construction of OASIS Test Statistic** {-}
+- Constructs residuals linear in the normalized contingency table data, effectively capturing structured deviations from independence.
+- Computes a centered and normalized matrix \( \tilde{X} \), derived by subtracting expected values from observed counts and normalizing by column totals.
+
+#### 2. **Finite-Sample Valid P-value Computation** {-}
+- Uses classical concentration inequalities (Hoeffding’s inequality) instead of asymptotic approximations, thus providing rigorous, finite-sample valid P-value bounds.
+- The OASIS statistic is defined as a linear form:
+\[
+S = f^\top \tilde{X} c
+\]
+where \( f \) and \( c \) are embedding vectors for rows and columns, respectively, selected via optimization, randomization, or metadata.
+- Finite-sample valid P-value bound:
+\[
+P(|S| \ge s) \le 2\exp\left(-\frac{2s^2}{1 - \gamma}\right)
+\]
+where \( \gamma \) quantifies correlation between column embeddings and sample sizes.
+
+#### 3. **Asymptotic Normality and P-value Approximation** {-}
+- Provides theoretical proofs showing OASIS's statistic converges to a normal distribution asymptotically, allowing standard Gaussian approximation of P-values for large samples.
+- Asymptotic approximation closely aligns with finite-sample bounds, incorporating a variance parameter \( \sigma_f^2 \) derived from the embedding vector \( f \).
+
+---
+
+### Statistical Variability and Randomness {-}
+
+#### 1. **Randomness in Data-Splitting and Embeddings** {-}
+- Implements data-splitting (training/test sets) to select optimal embedding vectors without statistical bias, ensuring validity via Bonferroni corrections for multiple splits.
+- Contingency table counts are modeled explicitly as multinomial distributions under the null hypothesis, integrating randomness directly into theoretical guarantees.
+
+#### 2. **Robustness to Variability (Overdispersion)** {-}
+- OASIS explicitly addresses **overdispersion**, common in genomic data such as single-cell RNA sequencing, ensuring robustness.
+- Simulations confirm OASIS maintains robust control of the false discovery rate (FDR), whereas Pearson’s X² often fails under similar conditions.
+
+---
+
+### Power and Performance {-}
+- Simulations demonstrate that OASIS significantly outperforms Pearson’s X² in detecting structured deviations from the null hypothesis (e.g., distinct two-group scenarios).
+- Conversely, OASIS shows lower power relative to Pearson’s X² in scenarios with diffuse, noisy signals, highlighting a clear trade-off emphasizing structured signal detection.
+
+---
+
+### Applications and Interpretability {-}
+- OASIS successfully applied to genomic data, such as de novo detection of SARS-CoV-2 and Mycobacterium tuberculosis variants, outperforming existing methods without relying on reference genomes.
+- Provides interpretability post-inference, clearly indicating why the null hypothesis was rejected via meaningful embedding vectors, in contrast to purely exploratory techniques like correspondence analysis.
+
+---
+
+### Statistical Validity and Effect Size {-}
+- Defines a clear, intuitive effect size measure quantifying differences between groups identified by embeddings. This effect size is bounded by total variation distance, ensuring practical interpretability.
+- Provides rigorous proofs for the finite-sample validity of its P-values using classical probability and concentration inequality arguments.
+
+---
+
+### Conclusions and Broader Implications {-}
+- Highlights OASIS’s potential beyond contingency tables, offering a general framework potentially applicable to structured inference, matrix decomposition, and multi-table inference beyond standard singular value decomposition (SVD).
+
+---
+
+### Supplemental Information Highlights {-}
+- Extensive mathematical proofs are provided, supporting theoretical claims regarding finite-sample validity, asymptotic normality, and embedding optimization.
+- Additional simulations emphasize robustness, stability, and effectiveness of embedding optimization strategies under various statistical conditions.
+
+---
+
+**In summary**, OASIS provides a statistically rigorous, computationally efficient, robust, and interpretable alternative to Pearson’s X² test, particularly valuable in modern genomics and other domains dealing with high-dimensional, sparse, structured data.
+
+
+<br/>
+<br/>
+
+<!--
+### SciSpace Prompt {-} {-}
+
+<br/>
+
+### **Response**  {-}
+
+<br/>
+
+-->
+
+## Scholar GPT Prompt {-}
+
+* Please provide a summary of the technical content of the attached article,
+`OASIS` ( Baharav et al., 2024 [@Baharav:2024aa]),
+paying particular attention to statistical
+aspects of the mothodologies or any component
+which is prey to randomness or variability.
+
+* `"OASIS: An interpretable, finite-sample valid alternative to Pearson’s X² for scientific discovery" 
+
+
+
+<br/>
+
+
+## **Response**  {-}
 
 ### Home {-}
 
 <br/>
 
 
-### chatGPT Prompt {-}
+* Technical Summary of OASIS (Baharav et al., 2024)
+
+> *Baharav, T. Z., Tse, D., & Salzman, J. (2024). OASIS: An interpretable, finite-sample valid alternative to Pearson’s X² for scientific discovery. Proceedings of the National Academy of Sciences, 121(15), e2304671121. [https://doi.org/10.1073/pnas.2304671121](https://doi.org/10.1073/pnas.2304671121)*
+
+### 🔍 Overview  {-}
+
+OASIS (Optimized Adaptive Statistic for Inferring Structure) is a family of statistical tests designed for **contingency table analysis**, providing:
+
+- Finite-sample valid p-values
+- Closed-form bounds
+- Interpretability through a linear test-statistic
+- Better robustness to noise and overdispersion than Pearson’s χ² test
+
+It is particularly suited for **sparse and high-dimensional data**, such as those arising in genomics.
+
+---
+
+### 🧮 Test Statistic  {-}
+
+Given a count matrix \( X \in \mathbb{N}^{I \times J} \), the OASIS test statistic is:
+
+\[
+S = f^\top \tilde{X} c
+\]
+
+Where:
+- \( f \in \mathbb{R}^I \): row embedding vector
+- \( c \in \mathbb{R}^J \): column embedding vector
+- \( \tilde{X} \): the centered and column-normalized matrix
+
+This structure allows for **signal aggregation** and **dampening of noise** through linear algebraic properties.
+
+---
+
+### 📊 Statistical Randomness and Finite-Sample Validity  {-}
+
+#### Reformulation via Latent Variables  {-}
+
+Each table cell count \( X_{i,j} \) is constructed from i.i.d. latent variables:
+
+\[
+Z_{j,k} \sim p, \quad X_{i,j} = \sum_{k=1}^{n_j} \mathbb{1}\{Z_{j,k} = i\}
+\]
+
+This allows \( S \) to be written as a **weighted sum of independent random variables**, enabling concentration bounds.
+
+---
+
+#### Finite-Sample p-Value Bound  {-}
+
+Using **Hoeffding’s inequality**, the authors derive:
+
+\[
+P(|S| \geq s) \leq 2 \exp\left( \frac{-2s^2}{1 - \gamma} \right)
+\]
+
+Where:
+
+\[
+\gamma = \left( \frac{\sum_j c_j \sqrt{n_j}}{\sqrt{M} \|c\|} \right)^2, \quad M = \sum_j n_j
+\]
+
+- This is valid for any fixed \( f, c \)
+- Ensures **exact control** of type I error for **any sample size**
+
+---
+
+### 📈 Asymptotic Normality  {-}
+
+The statistic converges to a normal distribution as sample sizes increase:
+
+\[
+\frac{1}{\sqrt{1 - \gamma}} S \xrightarrow{D} \mathcal{N}(0, \sigma_f^2 \|c\|^2)
+\]
+
+Where:
+
+\[
+\sigma_f^2 = \text{Var}_{Z \sim p}(f_Z)
+\]
+
+- Derived via **Lyapunov’s Central Limit Theorem**
+- Ensures smooth transition between finite-sample and asymptotic inference
+
+---
+
+### 🧪 Effect Size  {-}
+
+OASIS defines an **effect size estimate**:
+
+\[
+\hat{\Delta} = \left| \mathbb{E}_{p_A}[f_Z] - \mathbb{E}_{p_B}[f_Z] \right|
+\]
+
+- Measures difference between two groups
+- Upper bounded by **total variation distance** \( \delta_{TV}(p_A, p_B) \)
+- Ensures effect size is biologically meaningful
+
+---
+
+### 🔁 Data-Splitting Validity  {-}
+
+To avoid overfitting:
+- Data is split into train/test sets
+- Embeddings \( f \), \( c \) are learned on train, evaluated on test
+- The p-value remains valid under classical **data-splitting logic**:
+
+\[
+P(p(X) \leq u) \leq u
+\]
+
+Multiple random splits are allowed, with **Bonferroni correction** to maintain error control.
+
+---
+
+### 📚 Comparison with Pearson’s χ²  {-}
+
+| Feature | Pearson χ² | OASIS |
+|--------|-------------|--------|
+| P-values | Asymptotic | Finite-sample valid |
+| Residual Aggregation | Squared sum | Bilinear form |
+| Normalization | Rows & columns | Columns only |
+| Interpretability | Post-hoc via SVD | Built-in |
+| Robustness | Poor (esp. overdispersion) | Strong |
+
+---
+
+### ✅ Conclusion  {-}
+
+OASIS offers:
+- Closed-form finite-sample p-value bounds
+- Asymptotic normality
+- Interpretability through test structure
+- High performance in noisy, sparse biological data
+
+It is a rigorous, modern replacement for χ² tests in scientific discovery contexts, especially genomics.
+
+---
+
+### 📘 Reference  {-}
+
+Baharav, T. Z., Tse, D., & Salzman, J. (2024). *OASIS: An interpretable, finite-sample valid alternative to Pearson’s X² for scientific discovery*. *PNAS*, **121**(15), e2304671121.  
+👉 [DOI Link](https://doi.org/10.1073/pnas.2304671121)
+
+
+# SPLASH and OASIS Citation Litetature {#splash-oasis-citings .tabset}
+
+## Home {-}
 
 <br/>
-
-
-### **Response**  {-}
-
 <br/>
 
+## Ask chatGPT {-}
 
+* Prompt: Which AI research assistants are best for surveying the most recent literature for citings of a particulat articale?
 
-### SciSpace Prompt {-}
+* Response:
 
+Here are some of the best AI-driven tools specifically suited to finding recent literature and citations of a particular article:
+
+### Best Tools for Citation Tracking and Literature Discovery: {-}
+
+1. **ResearchRabbit**
+   - **Strengths:** AI-powered literature discovery, finds recent citations, visualizes citation networks.
+   - **Use case:** Quickly visualize and explore articles citing your target paper, including the newest ones.
+   - **Website:** [researchrabbit.ai](https://www.researchrabbit.ai/)
+
+2. **Connected Papers**
+   - **Strengths:** Creates visual graphs of related research papers, efficiently surfacing new papers citing a given article.
+   - **Use case:** Find recent and related publications visually in seconds.
+   - **Website:** [connectedpapers.com](https://www.connectedpapers.com/)
+
+3. **Scite.ai**
+   - **Strengths:** Analyzes citations contextually (supporting, contrasting, or neutral), and quickly finds recent citations to a specific article.
+   - **Use case:** Understand not just who cites the paper, but how it's discussed.
+   - **Website:** [scite.ai](https://scite.ai/)
+
+4. **Semantic Scholar**
+   - **Strengths:** AI-driven search and literature discovery; good at surfacing newer papers citing a particular source.
+   - **Use case:** Finding and tracking highly relevant and recent literature through powerful filters.
+   - **Website:** [semanticscholar.org](https://www.semanticscholar.org/)
+
+5. **Elicit**
+   - **Strengths:** AI-powered literature surveys, extracts key insights, and tracks citation influence efficiently.
+   - **Use case:** Quickly create structured literature reviews and citation tracking summaries.
+   - **Website:** [elicit.org](https://elicit.org/)
+
+### Recommended Workflow: {-}
+
+- **Start with ResearchRabbit or Connected Papers** to visually see a map of recent citations and related works.
+- Use **Semantic Scholar** to narrow results with sophisticated filters (year, citation count, fields).
+- Then apply **Scite.ai** to evaluate the context and impact of these citations.
+- For deeper analysis and summarization, **Elicit** can be used to generate a structured review.
+
+This combination provides a comprehensive AI-assisted workflow for effectively tracking recent citations of any given article.
 
 <br/>
-
-
-### **Response**  {-}
-
 <br/>
 
+## scite_ {-}
 
-
-
+* RETURN TO THIS LATER
+   - there has not been enough time for OASIS citations to appear.
 
 # Appendix 
 
+## chatGPT Technical Terms {-}
+
+* chatGPT query:
+   - what is the best GPT based tool to obtain definitions of technical terms used in biotech related scientific publications?
+
+* Response
+   - Best GPT-based tools for defining technical terms in biotech-related scientific publications:
+
+| Tool | Strengths | Ideal Usage |
+|------|-----------|-------------|
+| **[SciSpace Copilot](https://scispace.com)** | - Contextual definitions within scientific papers<br>- Highly accurate for biotech terms<br>- Integrated directly into research PDFs | Immediate comprehension within biotech research papers |
+| **[Elicit.org](https://elicit.org)** | - GPT-powered scientific research assistant<br>- Simplifies technical jargon into plain language<br>- Effective for quick clarification | Rapid clarification and concise definitions |
+| **[Explainpaper](https://www.explainpaper.com)** | - GPT-driven academic language translator<br>- Clear, user-friendly explanations of complex biotech concepts | Students or researchers seeking straightforward definitions |
+| **[Consensus](https://consensus.app)** | - Aggregates and summarizes definitions from multiple scientific papers<br>- Provides context-aware definitions within the broader biotech field | Cross-validating definitions across multiple sources |
+|
+
+#### Recommended overall choice:  {-}
+- ✅ **[SciSpace Copilot](https://scispace.com)** is the best overall choice for its contextual accuracy and specialized biotech literature integration.^[
+The SciSpace Copilot interface is not intuitive at this point - use alternative
+]
+
+**Alternatives:** Use **Elicit** or **Consensus** if definitions from broader perspectives or cross-validation across sources is desired.
+
+<br/>
+
+## GPT-Based Research Assistants {#App-GPT-based-res .tabset -}
+
+* Compare the resuts when chatGPT is asked about 4 assistants
+with those when 6 assistants were included (Section \@ref(GPT-based-res).
+
+<br/>
+
+### Home {-}
+
+<br/>
+<br/>
+
+### chatGPT Prompt - 4 tools {-}
+
+* Refer to the articles uploaded to the project - 
+
+   - Chaung, K., Baharav, T.Z., Henderson, G., Zheludev, I.N., Wang, P.L., and Salzman, J. (2023). SPLASH: A statistical, reference-free genomic algorithm unifies biological discovery. Cell 186, 5440–5456.
+2.
+
+   - Baharav, T.Z., Tse, D., and Salzman, J. (2024). OASIS: An interpretable, finite-sample valid alternative to pearson’s x(2) for scientific discovery. Proc Natl Acad Sci U S A 121, e2304671121. -
+to get a sense of the `reference-free genomic inference` context.
+
+
+* Compare and contrast 4 research tools - 
+Scholar GPT, Concensus, SciSpace, Semantic Scholar -
+in their strengths and weaknesses when used to establish
+the state of the art for knowledge  around reference-free genomics
+
+
+
+<br/>
+
+
+### **Response** {-}
+
+It appears the files "SPLASH" (Chaung et al., 2023) and "OASIS" (Baharav et al., 2024) are now uploaded and accessible.
+
+I will briefly outline the key points about these two reference-free genomic inference methods from the uploaded articles before proceeding to compare the four research tools.
+
+<br/>
+
+#### Overview of Uploaded Articles: {-}
+
+##### 1. SPLASH (Chaung et al., 2023): {-}
+- Introduces SPLASH, a statistical, reference-free algorithm designed to 
+<span style="color:darkgreen">unify</span>^[
+What does `unify` mean here?
+]genomic analysis without relying on predefined genomic references.
+- Uses statistical methods to detect genomic events such as splicing, structural variants, and microbiome composition directly from sequencing data without alignment.
+   -  Contingency table summary statistics which have known distributions under
+independent assortments can be computed and analyzed in order to idendify rare genomic
+events.   
+   - Sensible "statistical" filters tend to work, more or less.  The key is to 
+collect the necessary data and do rhe necessary analyses tp arrive at an accurate
+and detailed assessment of performance on a meaningful scale.
+- Highlights the potential for broader biological discovery without the bias introduced by standard reference genomes.
+   - it would be good to have a comrehensive sense of estrimates of bias and variability
+so that compaerisons can be made between the with and without referen e ana1lyses.
+
+<br/>
+
+##### 2. OASIS (Baharav et al., 2024): {-}
+- Presents OASIS as an interpretable alternative to Pearson’s χ², specifically tailored for genomic data analysis.
+- It emphasizes interpretability, finite-sample validity, and robustness, particularly suited for identifying rare and novel biological phenomena from genomic data.
+- Demonstrates applicability across different genomic datasets, making it powerful in uncovering insights that traditional reference-dependent or common statistical tests might miss.
+
+---
+
+#### Comparison of Research Tools for Establishing State-of-the-Art Knowledge in Reference-Free Genomics: {-}
+
+| Tool             | Strengths (Context: reference-free genomics)                                                     | Weaknesses (Context: reference-free genomics)                          |
+|------------------|--------------------------------------------------------------------------------------------------|-------------------------------------------------------------------------|
+| Scholar GPT      | - Good at clarifying complex statistical methods (e.g., SPLASH and OASIS).<br>- Effective for synthesizing novel methods and their implications.<br>- Ideal for interactive learning about method-specific details. | - Dependent on clarity and quality of uploaded or included context.<br>- May occasionally generalize details when nuanced interpretation is needed. |
+| Consensus        | - Efficient at quickly summarizing consensus points and widely accepted findings.<br>- Useful to quickly gauge acceptance or prominence of SPLASH or OASIS within the broader community. | - Might not effectively highlight emerging, nuanced approaches like OASIS, especially before extensive citation or wider adoption. |
+| SciSpace         | - Strong at in-depth explanation and breaking down complicated statistical procedures and experimental design, as found in SPLASH and OASIS.<br>- Helpful for direct clarification of specific, technical content. | - Less effective in comparative literature review; typically focused on one paper at a time rather than establishing cross-paper, state-of-the-art status. |
+| Semantic Scholar | - Excellent at identifying influential works and creating citation-based knowledge networks.<br>- Provides comprehensive overviews of research lineage and impact, ideal for seeing SPLASH or OASIS positioning in the wider research context. | - May miss detailed, methodological nuances if those nuances aren’t widely cited or easily discoverable via citation metrics alone.<br>- Not ideal for direct methodological clarification. |
+
+---
+
+#### Recommended Use Cases in the Context of Reference-Free Genomics: {-}
+
+- **Scholar GPT and SciSpace**: Best for deep-diving into the details of complex, innovative methods like SPLASH and OASIS.
+- **Consensus**: Ideal for quickly establishing the perceived reliability and adoption of SPLASH or OASIS methodologies within the genomic community.
+- **Semantic Scholar**: Most effective for understanding historical and contextual positioning, tracking methodological influence, and recognizing highly cited seminal works that frame state-of-the-art reference-free genomic methods.
+
+Let me know if you'd like further details or assistance on a particular aspect.
+
+<br/>
+<br/>
+
+
 ## Multinomial Distance Metrics 
+
+* This `D` is different than the D is SPLASH
+   - should behave similarly when total counts are similar
+   - with no scaling and doing the math on the linear scale is interesting
 
 <br/>
 
@@ -1828,7 +2227,7 @@ D = 1 - \frac{\sum_{i=1}^{n}\min(p_i, q_i)}{\sum_{i=1}^{n}(p_i + q_i)}
 
 ---
 
-### Step-by-step analysis of the defined metric \( D \):
+### Step-by-step analysis of the defined metric \( D \): {-}
 
 **Step 1: Interpretation**
 
@@ -1843,7 +2242,7 @@ D = 1 - \frac{\sum_{i=1}^{n}\min(p_i, q_i)}{2}
 
 ---
 
-### Step 2: Properties of \( D \)
+### Step 2: Properties of \( D \) {-}
 
 - **Range**:  
   Since \(0 \leq \sum_{i}\min(p_i, q_i) \leq 1\), it follows that:
@@ -1880,7 +2279,7 @@ These alternative definitions yield the intuitive property: \(D(P,Q)=0\) if \(P=
 
 ---
 
-### Step 3: Suggested corrected metric
+### Step 3: Suggested corrected metric {-}
 
 If your goal is to define a metric distance measure between distributions, a commonly used overlap-based measure is:
 
@@ -1896,7 +2295,7 @@ Properties of this standard metric:
 
 ---
 
-### **Summary:**
+### **Summary:** {-}
 
 | Metric | Definition | Range | \(P=Q\) | Disjoint \(P,Q\) |
 |---|---|---|---|---|
@@ -1905,7 +2304,7 @@ Properties of this standard metric:
 
 ---
 
-### **Conclusion and Recommendation:**
+### **Conclusion and Recommendation:** {-}
 
 - Your given metric is mathematically valid but has an unusual property of having a nonzero lower bound (0.5) even when distributions are identical.
 - If the intention is to measure a meaningful distance between two probability distributions (multinomial), **consider using the standard overlap metric \(D'\)** above, which provides intuitive and desirable properties for practical applications:
@@ -1915,6 +2314,35 @@ Properties of this standard metric:
 \]
 
 If you have a specific reason for choosing your original formula, please clarify so I can adjust accordingly.
+
+<br/>
+<br/>
+
+# References {-} 
+<div id="refs"></div>
+    
+<br/>
+
+<!-- 
+## Parameter settings {-}
+  * WRKDIR = `r normalizePath(WRKDIR)`
+  * FN = `r FN`
+  * Scripts = Scripts
+  * RUN DATE = `r date()`
+
+```{r m2a-session-info, echo=T, eval=F}
+ sessionInfo()
+```
+-->
+
+```{r, echo=FALSE}
+  knit_exit()
+```
+
+#######################################################################
+## ARCHIVAL
+#######################################################################
+
 
 ## What is a Statistical Algorithm?
 
@@ -1985,31 +2413,6 @@ biological inference plays a crucial role in advancing our understanding of life
 by integrating data-driven approaches to uncover hidden patterns and 
 relationships in biological systems.
 
-
-
-<br/>
-<br/>
-
-# References {#references}
-<div id="refs"></div>
-    
-<br/>
-
-<!-- 
-## Parameter settings {-}
-  * WRKDIR = `r normalizePath(WRKDIR)`
-  * FN = `r FN`
-  * Scripts = Scripts
-  * RUN DATE = `r date()`
-
-```{r m2a-session-info, echo=T, eval=F}
- sessionInfo()
-```
--->
-
-```{r, echo=FALSE}
-  knit_exit()
-```
 
 
 

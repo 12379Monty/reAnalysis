@@ -1,0 +1,1147 @@
+# SPLASH - Chaung et al, 2023 [@Chaung:2023aa] {.tabset #splash-ai-review}
+
+* Asking the GPT research assistants to focus on statistical aspects
+and randomness seems to have caused them to overuse and sometimes misuse
+these terms.
+
+* In high throughput data analysis, data summaries play a prominent role 
+such that almost every analysis is statistical in some sense so that attaching
+the label statistical to an analysis method has little descriptive value.
+
+* Outside of simulated data, p-values cannot be taken at face value without
+careful scrutiny of the data.  q-values even less so.
+
+* p/q values may still provide useful guides for the purpose of ordering and
+selecting features.  ie. designing filters
+
+<p><p/>
+* theoretical properties of summaries can provide guidance for the design of
+analysis steps or components but they get their value from the properties
+they confer to the procedures.
+   - ie. the q-value filter is correct if the resulting procedure 
+achieves a good balance between sensitivity and specificity,
+ 
+
+## Home {-}
+
+
+<br/>
+
+## chatGPT Prompt {-}
+
+* Please provide a summary of the technical content of the attached article 
+`SPLASH` (Chaung et al, 2023 [@Chaung:2023aa] paying particualr attention to statistical
+aspects of the mothodologies or any component which is prey to randomness or variability.
+
+<br/>
+
+## **Response**  {-}
+
+Here is a detailed summary in markdown format, focusing on statistical aspects and methodologies subject to randomness or variability as described in the provided article (Chaung et al., 2023):
+
+**SPLASH: A Statistical, Reference-Free Genomic Algorithm for Biological Discovery  **
+
+### Summary {-}
+
+#### Overview of SPLASH   {-}
+SPLASH (Statistically Primary aLignment Agnostic Sequence Homing) is a statistical and reference-free genomic analysis algorithm designed to detect sample-dependent sequence variation directly from raw sequencing data, without the need for reference genomes or metadata. It addresses limitations inherent to traditional reference-based genomic analyses, such as reference genome incompleteness, misassemblies, and bias, while also significantly reducing computational complexity.
+
+---
+
+<br/>
+
+#### Statistical Methodology and Variability   {-}
+**Key statistical aspects include:**
+
+- **k-mer-based variation detection:** SPLASH operates on k-mer pairs called "anchors" (constant subsequences) and their associated "targets" (sequences downstream at a fixed offset). By default, k is 27 but adjustable.
+  
+<p><p/>
+- **Statistical Testing Approach**:
+  - SPLASH constructs contingency tables for each anchor, with samples as columns and targets as rows, capturing frequency counts of anchor-target pairs.
+  - A flexible statistical test is performed that searches through multiple random splits of the samples and targets, evaluating the most discriminative grouping that minimizes the p-value, indicating the strongest evidence against the null hypothesis (i.e., no variation between samples).
+  - The algorithm computes a p-value bound using closed-form solutions derived from Hoeffding’s inequality, thus avoiding the computational cost of permutation tests or resampling methods.
+  - The resulting p-values are corrected for multiple testing using the Benjamini-Yekutieli (BY) procedure to control the false discovery rate (FDR).
+
+<p><p/>
+<span style="color:darkgreen">
+  - What do we believe these p-values to tell us? 
+      - clearly they are not "probabilities" from a known distrubution
+      - these may still be useful metrics to rank and identify markers
+      - in  partricular, where is the randomness coming from?
+</span>
+
+<p><p/>
+- **Effect Size**:
+  - SPLASH provides an "effect size" metric (ranging from 0 to 1) indicating how discretely target distributions differ across sample groups identified by the algorithm. An effect size of 1 indicates that target sets are entirely distinct between groups.
+
+<p><p/>
+<span style="color:darkgreen">
+  - We need to think how to interpret this effect size.
+      - in the case two groups with continuous measure we may have t = D/se where 
+$D = \hat{\mu_2} - \hat{\mu_1}$ is in interpretable units so that one can judge
+whether the observed difference is meaningful
+      - these may still be useful metrics to rank and identify markers
+      - in  particular, where is the randomness coming from?
+</span>
+
+<p><p/>
+- **Unsupervised and Supervised Modes**:
+  - While metadata can be included ("supervised" mode), all analyses presented were conducted in the default unsupervised mode, relying on random splits of samples and targets to identify significant variation.
+
+
+<p><p/>
+<span style="color:darkgreen">
+  - For unsupervised analysis, are there alternatives to the random split
+approach. 
+</span>
+
+
+<p><p/>
+- **Consensus Sequence Assembly**:
+  - For interpretability, SPLASH builds longer consensus sequences from significant anchors, which can then be aligned against known protein domains or reference databases to understand biological functions or genomic context.
+
+---
+
+<br/>
+
+### Applications and Statistical Highlights   {-}
+
+**Hard to interpret** without a comparator and an appropriate measure of closeness
+to the truth.
+
+
+<br/>
+
+<p><p/>
+#### 1. **SARS-CoV-2 Strain Mutation Detection**: {-}
+- SPLASH accurately identified variant-specific and emergent mutations (e.g., strain-defining mutations K417N, V213G, N679K, and P681H) in the SARS-CoV-2 spike protein without using metadata or a reference genome.
+- Statistical precision was demonstrated by comparison with reference archetypes (Delta, Omicron BA.1, Omicron BA.2). Nearly all SPLASH anchors perfectly mapped to strain-defining mutations compared to control anchors, showing high statistical significance.
+
+<br/>
+
+<p><p/>
+#### 2. Single-cell RNA-seq (Alternative Isoforms & Paralogs)   {-}
+- In single-cell RNA-seq data, SPLASH identified regulated alternative splicing and differential paralog expression (e.g., MYL12A vs. MYL12B in macrophages vs. capillary cells), again using only raw reads and no cell-type metadata.
+- For highly polymorphic HLA genes (e.g., HLA-DRB1 vs. HLA-DRB4, HLA-DPA1 vs. HLA-DPB1, HLA-B allele-specific expression), SPLASH effectively detected differential expression and isoform usage, with high statistical confidence (low q-values and significant binomial p-values).
+
+<br/>
+
+####  B and T Cell Receptor (BCR/TCR) Diversity: {-}
+- SPLASH effectively identified diverse, clonotypic immunoglobulin (Ig) and T-cell receptor (TCR) sequences in both human and mouse lemur single-cell RNA-seq datasets without reliance on pre-existing annotations.
+- The detected receptor sequences had high "target entropy" (many distinct targets) and were expressed clonotypically, reflecting biologically expected diversity due to V(D)J recombination.
+
+- **Discovery in Non-model Organisms (Octopus and Eelgrass)**:
+  - SPLASH uncovered tissue-specific alternative splicing and RNA editing events in octopus RNA-seq data, including previously unannotated isoforms of sensory-relevant genes.
+  - For eelgrass (Zostera marina), SPLASH revealed seasonally and geographically regulated variation, including sequences originating from associated diatoms, highlighting ecological interactions and circadian regulation.
+
+<br/>
+
+#### Statistical Robustness and Computational Efficiency: {-}
+- SPLASH demonstrated robust performance across parameter settings (k-mer lengths, anchor-target distances).
+- Computationally efficient, SPLASH reduces the amount of data needing reference alignment by over 500-fold by focusing alignment only on statistically significant consensus sequences.
+
+
+<p><p/>
+<span style="color:darkgreen">
+  - For practical purposes we would also like to see resistance to input data
+conditions.
+</span>
+
+
+<p><p/>
+- **Consensus Sequence Assembly**:
+  - For interpretability, SPLASH builds longer consensus sequences from significant anchors, which can then be aligned against known protein domains or reference databases to understand biological functions or genomic context.
+
+---
+
+<br/>
+
+### Applications and Statistical Highlights   {-}
+
+**Hard to interpret** without a comparator and an appropriate measure of closeness
+to the truth.
+
+
+<br/>
+
+<p><p/>
+#### 1. **SARS-CoV-2 Strain Mutation Detection**: {-}
+- SPLASH accurately identified variant-specific and emergent mutations (e.g., strain-defining mutations K417N, V213G, N679K, and P681H) in the SARS-CoV-2 spike protein without using metadata or a reference genome.
+- Statistical precision was demonstrated by comparison with reference archetypes (Delta, Omicron BA.1, Omicron BA.2). Nearly all SPLASH anchors perfectly mapped to strain-defining mutations compared to control anchors, showing high statistical significance.
+
+<br/>
+
+<p><p/>
+#### 2. Single-cell RNA-seq (Alternative Isoforms & Paralogs)   {-}
+- In single-cell RNA-seq data, SPLASH identified regulated alternative splicing and differential paralog expression (e.g., MYL12A vs. MYL12B in macrophages vs. capillary cells), again using only raw reads and no cell-type metadata.
+- For highly polymorphic HLA genes (e.g., HLA-DRB1 vs. HLA-DRB4, HLA-DPA1 vs. HLA-DPB1, HLA-B allele-specific expression), SPLASH effectively detected differential expression and isoform usage, with high statistical confidence (low q-values and significant binomial p-values).
+
+<br/>
+
+####  B and T Cell Receptor (BCR/TCR) Diversity: {-}
+- SPLASH effectively identified diverse, clonotypic immunoglobulin (Ig) and T-cell receptor (TCR) sequences in both human and mouse lemur single-cell RNA-seq datasets without reliance on pre-existing annotations.
+- The detected receptor sequences had high "target entropy" (many distinct targets) and were expressed clonotypically, reflecting biologically expected diversity due to V(D)J recombination.
+
+- **Discovery in Non-model Organisms (Octopus and Eelgrass)**:
+  - SPLASH uncovered tissue-specific alternative splicing and RNA editing events in octopus RNA-seq data, including previously unannotated isoforms of sensory-relevant genes.
+  - For eelgrass (Zostera marina), SPLASH revealed seasonally and geographically regulated variation, including sequences originating from associated diatoms, highlighting ecological interactions and circadian regulation.
+
+<br/>
+
+#### Statistical Robustness and Computational Efficiency: {-}
+- SPLASH demonstrated robust performance across parameter settings (k-mer lengths, anchor-target distances).
+- Computationally efficient, SPLASH reduces the amount of data needing reference alignment by over 500-fold by focusing alignment only on statistically significant consensus sequences.
+
+<br/>
+
+#### Statistical Limitations: {-}
+- SPLASH currently does not infer the biological mechanisms underlying identified variations, and is not appropriate for tasks limited to simple quantification (e.g., basic differential gene expression analysis without sequence variation).
+
+---
+
+<br/>
+
+### Summary of Statistical and Randomness Elements: {-}
+- **Statistical Model**: Contingency tables, random splits, and significance testing via concentration inequalities.
+- **Randomness and Variability**: Anchor-target construction (random offsets and k-mers), random splitting in unsupervised mode, and statistical testing inherently include randomness.
+- **Multiple Testing**: FDR control via BY procedure.
+- **Computational Aspect**: Closed-form statistical tests avoiding permutation or bootstrap methods, significantly reducing computational burden.
+- **Effect Size Metric**: Provides interpretable quantification of biologically meaningful differences, prioritizing statistically and biologically relevant anchors.
+
+<br/>
+
+<p><p/>
+<span style="color:darkgreen">
+  - "Where is the randomness from" (Leo Breiman 1991) is the critical factor in deciding
+how to summarize the data, and how to interpret the summaries.
+  - Neyman's non-parametric model (Freedman (2008) [Freedman:2008ad] also called
+the **Potential Outcomes Framework** may provide a natural framework for the
+analysis of variability in this context.)
+  - In that context, the dataset is the population and inference  a finite set
+of random elements to the population of all possible random elements.
+</span>
+
+<br/>
+
+#### Summary of Contributions: {-}
+<p><p/>
+- SPLASH provides a statistically rigorous, scalable, reference-free methodology
+capable of identifying biologically meaningful sequence variation across diverse
+organisms and biological contexts, **outperforming reference-based methods**,
+particularly in scenarios involving high genomic diversity, incomplete references,
+or single-cell heterogeneity.
+
+<span style="color:darkgreen">
+   - performance claims should be accurately measured and supported by
+an adequate amount of representative data.
+</span>
+<br/>
+
+#### Limitations: {-}
+<p><p/>
+- SPLASH is primarily aimed at detecting differential sequence variation and is not
+designed for simple quantitative differential gene expression analysis.
+- The method does not inherently infer the biological mechanisms behind the detected variations; this requires additional contextual analysis.
+
+Overall, SPLASH presents a robust statistical framework suited to a variety of genomic analyses, highlighting a paradigm shift towards a unified, statistics-driven approach to biological discovery in genomics without reliance on reference genomes.
+
+   - TBD
+
+<br/>
+
+
+<!-- 
+## SciSpace Prompt  - SKIP {-}
+
+
+* Please provide a summary of the technical content of the attached article 
+`SPLASH` (Chaung et al, 2023 [@Chaung:2023aa] paying particualr attention to statistical
+aspects of the mothodologies or any component which is subject to randomness or variability.
+
+* What statistical methods are employed in the SPLASH methodology to account for randomness and variability?
+
+* How do the key statistical components of SPLASH impact its applicability in different research domains?
+
+* Use mardown to report your response.
+
+
+<br/>
+
+
+## **Response**  {-}
+
+<br/>
+-->
+
+## Scholar GPT Prompt {-}
+
+* Please provide a summary of the technical content of the attached article 
+`SPLASH` (Chaung et al, 2023 [@Chaung:2023aa] paying particualr attention to statistical
+aspects of the mothodologies or any component which is prey to randomness or variability.
+
+
+<br/>
+
+
+## **Response**  {- .tabset}
+
+### Home {-}
+
+<br/>
+
+### Overall Summary {-}
+
+* **Technical Summary of SPLASH (Chaung et al., 2023) with Focus on Statistical Aspects and Variability**
+
+#### **Overview of SPLASH Methodology** {-}
+SPLASH (Statistically Primary aLignment Agnostic Sequence Homing) is a novel, statistically-driven genomic analysis framework that directly operates on raw sequencing data without requiring alignment to a reference genome. This reference-free approach allows for broader biological discovery, especially in cases where reference genomes are incomplete or do not exist. 
+
+* The method is particularly useful for:  
+   - Detecting sample-dependent sequence variations.
+   - Identifying mutations in viral strains.
+   - Exploring adaptive immune diversity.
+   - Analyzing sequence variation in under-documented non-model organisms.
+
+The core strength of SPLASH lies in its **statistical inference capabilities** applied to sequencing data, making it highly sensitive to randomness and variability in biological data.
+
+
+<span style="color:darkgreen">
+   - quite a statement!
+</span>
+
+<br/>
+
+---
+
+#### **Statistical Framework and Variability Analysis** {-}
+The SPLASH algorithm is designed to overcome key challenges associated with reference-based sequencing approaches by using **statistical tests** to infer meaningful sequence variations directly from raw sequencing reads. The key statistical methodologies and their susceptibility to variability include:
+
+<p><p/>
+##### **1. K-mer Based Sequence Variation Analysis** {-}
+- SPLASH uses **k-mers** (short DNA sequences of length k) to detect sequence variation. It selects **anchors** (fixed sequence stretches) and detects **targets** (variable sequences adjacent to the anchors).
+- The variability of detected k-mers is controlled by **sample size** and **biological diversity**, making the method robust for applications in metagenomics, cancer genomics, and viral mutation tracking.
+
+<p><p/>
+##### **2. Contingency Table for Target Variation** {-}
+- SPLASH compiles **contingency tables** for each anchor-target pair across multiple samples.
+- It then applies a **statistical test for independence** to determine if target distributions differ significantly between samples.
+- The null hypothesis states that observed target frequencies come from the same distribution. A **low p-value** indicates significant sample-specific sequence variation.
+
+<p><p/>
+##### **3. False Discovery Rate (FDR) Control** {-}
+- SPLASH applies **multiple testing correction** methods to ensure that identified variations are not artifacts of random noise.
+- False discovery rates are minimized through:
+  - **P-value bounding techniques** (instead of computationally expensive permutation tests).
+  - **Closed-form p-value bounds** that enhance computational efficiency.
+
+##### **4. Effect Size Calculation** {-}
+- SPLASH computes an **effect size metric** (ranging from 0 to 1) to quantify the magnitude of variation.
+- A high effect size implies strong sample-specific differences.
+- This metric is resilient to sample noise and can detect **structured variability**, such as differential expression of alleles or cell-type-specific splicing.
+
+##### **5. Handling Low Observations and Statistical Power** {-}
+- Unlike traditional permutation-based methods (which may underestimate the false discovery rate by an order of magnitude), SPLASH provides a **rigorous mathematical bound on p-values**, ensuring robust statistical inference.
+- It is optimized for **low read-depth** situations where standard methods fail due to statistical imprecision.
+
+---
+ 
+#### **Application to Biologically Variable Systems** {-}
+SPLASH's statistical foundation enables it to detect biologically meaningful variations in datasets with high intrinsic randomness, such as:
+
+1. **Viral Genomic Variation (e.g., SARS-CoV-2)**
+   - SPLASH detects **strain-defining mutations** in SARS-CoV-2 patient samples **without prior knowledge** of strain sequences.
+   - It successfully identifies significant variations by comparing k-mer target distributions, revealing mutations like **K417N and P681R**, which are associated with Omicron and Delta strains.
+
+2. **Single-Cell RNA Sequencing (scRNA-seq)**
+   - SPLASH identifies **paralogous gene regulation**, such as distinguishing between **MYL12A and MYL12B** expression in human macrophages.
+   - It reveals **allele-specific expression** of **HLA genes**, which is challenging for reference-based approaches due to high polymorphism.
+
+3. **Adaptive Immune System Diversity**
+   - SPLASH uncovers **TCR (T-cell receptor) and Ig (Immunoglobulin) diversity** without a reference database.
+   - It identifies highly **clonotypic expression patterns** in B and T cells, revealing novel V(D)J recombinations.
+
+4. **Non-Model Organisms (e.g., Octopus & Eelgrass)**
+   - SPLASH detects **statocyst-specific isoforms** in octopus that are missing from reference genomes.
+   - It identifies **geographic and seasonal variation in eelgrass epiphytes**, demonstrating applications in **environmental genomics**.
+
+---
+
+#### **Key Strengths and Limitations in Statistical Analysis** {-}
+##### **Strengths:** {-}
+✔ **Reference-free approach** allows discovery in underrepresented genomes.  
+✔ **Statistical efficiency**: Uses closed-form p-value bounds instead of slow resampling methods.  
+✔ **Robust to noise**: Effect size calculations prevent overfitting to random variations.  
+✔ **Broad applicability**: Works in single-cell analysis, viral surveillance, and adaptive immune studies.  
+
+##### **Limitations and Susceptibility to Randomness:** {-}
+⚠ **Sample size dependency**: SPLASH requires a **sufficient number of samples** to ensure statistical power.  
+⚠ **Assumes discrete variation**: It may struggle with continuous genomic variation patterns.  
+⚠ **No direct mechanism inference**: While SPLASH detects variation, it does not determine whether differences arise from splicing, mutation, or RNA editing.  
+
+---
+
+#### **Conclusion** {-}
+SPLASH is a **powerful statistical tool for genomic discovery**, leveraging **alignment-free statistical inference** to detect biologically relevant sequence variations. Its methodologies are designed to **minimize false discoveries** while being **computationally efficient**. Given its ability to analyze **highly variable biological systems**, SPLASH has the potential to revolutionize genomic analysis across diverse applications.
+
+Would you like a deeper dive into a specific statistical test or methodology used in SPLASH? 🚀
+
+<br/>
+
+### Statistical Methods Deep Dive {-}
+
+
+<span style="color:darkgreen">
+* omic analysis methods are often guided by statistically sound
+data summarise and rules operating on these.
+Choosing among alternative summaries and statistics is guided
+by a comprehensive assessment of results across  all
+expected conditions.
+
+<p><p/>
+* the distance metric is interesting 
+   - does it have a name?
+  // 
+</span>
+
+<br/>
+
+---
+
+#### **Statistical Framework and Variability Analysis** {-}
+The SPLASH algorithm is designed to overcome key challenges associated with reference-based sequencing approaches by using **statistical tests** to infer meaningful sequence variations directly from raw sequencing reads. The key statistical methodologies and their susceptibility to variability include:
+
+<p><p/>
+##### **1. K-mer Based Sequence Variation Analysis** {-}
+- SPLASH uses **k-mers** (short DNA sequences of length k) to detect sequence variation. It selects **anchors** (fixed sequence stretches) and detects **targets** (variable sequences adjacent to the anchors).
+- The variability of detected k-mers is controlled by **sample size** and **biological diversity**, making the method robust for applications in metagenomics, cancer genomics, and viral mutation tracking.
+
+<p><p/>
+##### **2. Contingency Table for Target Variation** {-}
+- SPLASH compiles **contingency tables** for each anchor-target pair across multiple samples.
+- It then applies a **statistical test for independence** to determine if target distributions differ significantly between samples.
+- The null hypothesis states that observed target frequencies come from the same distribution. A **low p-value** indicates significant sample-specific sequence variation.
+
+<p><p/>
+##### **3. False Discovery Rate (FDR) Control** {-}
+- SPLASH applies **multiple testing correction** methods to ensure that identified variations are not artifacts of random noise.
+- False discovery rates are minimized through:
+  - **P-value bounding techniques** (instead of computationally expensive permutation tests).
+  - **Closed-form p-value bounds** that enhance computational efficiency.
+
+##### **4. Effect Size Calculation** {-}
+- SPLASH computes an **effect size metric** (ranging from 0 to 1) to quantify the magnitude of variation.
+- A high effect size implies strong sample-specific differences.
+- This metric is resilient to sample noise and can detect **structured variability**, such as differential expression of alleles or cell-type-specific splicing.
+
+##### **5. Handling Low Observations and Statistical Power** {-}
+- Unlike traditional permutation-based methods (which may underestimate the false discovery rate by an order of magnitude), SPLASH provides a **rigorous mathematical bound on p-values**, ensuring robust statistical inference.
+- It is optimized for **low read-depth** situations where standard methods fail due to statistical imprecision.
+
+---
+ 
+#### **Application to Biologically Variable Systems** {-}
+SPLASH's statistical foundation enables it to detect biologically meaningful variations in datasets with high intrinsic randomness, such as:
+
+1. **Viral Genomic Variation (e.g., SARS-CoV-2)**
+   - SPLASH detects **strain-defining mutations** in SARS-CoV-2 patient samples **without prior knowledge** of strain sequences.
+   - It successfully identifies significant variations by comparing k-mer target distributions, revealing mutations like **K417N and P681R**, which are associated with Omicron and Delta strains.
+
+2. **Single-Cell RNA Sequencing (scRNA-seq)**
+   - SPLASH identifies **paralogous gene regulation**, such as distinguishing between **MYL12A and MYL12B** expression in human macrophages.
+   - It reveals **allele-specific expression** of **HLA genes**, which is challenging for reference-based approaches due to high polymorphism.
+
+3. **Adaptive Immune System Diversity**
+   - SPLASH uncovers **TCR (T-cell receptor) and Ig (Immunoglobulin) diversity** without a reference database.
+   - It identifies highly **clonotypic expression patterns** in B and T cells, revealing novel V(D)J recombinations.
+
+4. **Non-Model Organisms (e.g., Octopus & Eelgrass)**
+   - SPLASH detects **statocyst-specific isoforms** in octopus that are missing from reference genomes.
+   - It identifies **geographic and seasonal variation in eelgrass epiphytes**, demonstrating applications in **environmental genomics**.
+
+---
+
+#### **Key Strengths and Limitations in Statistical Analysis** {-}
+##### **Strengths:** {-}
+✔ **Reference-free approach** allows discovery in underrepresented genomes.  
+✔ **Statistical efficiency**: Uses closed-form p-value bounds instead of slow resampling methods.  
+
+**Deeper Dive into SPLASH's Statistical Methodologies**
+
+SPLASH's statistical framework is designed to detect **sequence variation across samples without reference alignment**, making it computationally efficient and broadly applicable. Below, we take a detailed look at its core statistical techniques, including **k-mer based variation detection, contingency table analysis, p-value bounding, false discovery rate control, and effect size computation**.
+
+---
+
+##### **1. K-mer Based Statistical Detection of Variation**  {-}
+###### **Concept:** {-}
+- SPLASH detects variation by analyzing **k-mers**—subsequences of length *k* within sequencing reads.
+- The method identifies **anchors** (stable sequences) and **targets** (variable sequences downstream of the anchor).
+- The goal is to determine **whether different samples have different target distributions**, which signals biologically meaningful variation.
+
+##### **Statistical Rationale:** {-}
+- Instead of mapping reads to a reference genome, SPLASH **counts occurrences** of k-mer anchor-target pairs.
+- Variability is assessed using **contingency tables** that track how often each target appears in different samples.
+
+##### **Randomness & Variability Considerations:** {-}
+- **Choice of k**: Default is *k = 27*, ensuring **statistical resolution** while balancing sequencing noise.
+- **Effect of sequencing errors**: Short k-mers are susceptible to random sequencing errors, but SPLASH mitigates this by aggregating across multiple read positions.
+
+---
+
+#### **2. Contingency Table Analysis for Sequence Variation** {-}
+##### **Concept:** {-}
+- For each anchor, SPLASH builds a **contingency table**, where:
+  - **Rows** represent **targets** (different k-mer sequences).
+  - **Columns** represent **samples** (biological conditions, individuals, or time points).
+  - **Entries** contain **the count of each target in each sample**.
+
+- The key question: *Is the target distribution significantly different across samples?*
+- SPLASH applies a **statistical test for independence** to determine whether the observed variation is **random noise** or **biologically meaningful**.
+
+##### **Statistical Test Used:** {-}
+- **Null Hypothesis (H₀)**: Target distributions do not differ across samples (i.e., no sample-specific sequence variation).
+- **Alternative Hypothesis (H₁)**: Targets differ significantly between samples, indicating biological regulation.
+
+- SPLASH **does not use chi-squared tests**, as these require large counts and normal approximations, which are **problematic for sparse sequencing data**.
+- Instead, SPLASH applies a **custom statistical test** that minimizes false positives while maintaining high sensitivity.
+
+##### **Randomness & Variability Considerations:** {-}
+- **Sufficient sample size**: If too few samples are available, power is reduced.
+- **Sparse contingency tables**: Some targets may have **very low counts**, making statistical inference harder.
+- **Multiple hypothesis testing**: Analyzing many k-mer pairs increases the risk of false positives.
+
+---
+
+#### **3. P-value Bounding for Statistical Efficiency** {-}
+##### **Concept:** {-}
+- Traditional methods rely on **permutation tests** or **bootstrap resampling** to determine p-values, which are computationally expensive.
+- SPLASH instead uses a **closed-form p-value bound**, which is:
+  - **Faster to compute** than resampling-based methods.
+  - **More robust** to low-count situations.
+
+##### **Statistical Details:** {-}
+- The bound is derived using:
+  - **Concentration inequalities** (Chernoff bounds) to approximate significance.
+  - **Random splits of samples and targets**, selecting the grouping that minimizes the p-value.
+- This ensures **statistical rigor** without excessive computational overhead.
+
+##### **Randomness & Variability Considerations:** {-}
+- **Avoids overfitting**: Since SPLASH tests multiple random sample splits, it minimizes **selection bias**.
+- **Handles rare variations well**: Unlike permutation tests, which can **underestimate false discovery rates**, p-value bounding maintains accuracy.
+
+---
+
+#### **4. False Discovery Rate (FDR) Control** {-}
+##### **Concept:** {-}
+- Given that SPLASH evaluates thousands of k-mer anchor-target pairs, **multiple testing correction** is crucial to reduce false positives.
+- SPLASH employs **FDR control** methods such as **Benjamini-Hochberg (BH) correction** to adjust p-values.
+
+##### **Statistical Approach:** {-}
+- **Unadjusted p-values** are ranked from smallest to largest.
+- The threshold for statistical significance is determined by:
+  \[
+  p_{(i)} \leq \frac{i}{m} \alpha
+  \]
+  where:
+  - \( p_{(i)} \) is the *i-th* ranked p-value,
+  - \( m \) is the total number of tests,
+  - \( \alpha \) is the desired FDR level (e.g., 0.05).
+
+##### **Randomness & Variability Considerations:** {-}
+- **FDR is adaptive**: The method dynamically adjusts to sequencing noise.
+- **Lower false positives compared to uncorrected p-values**, but at the cost of **some true positives being discarded**.
+
+---
+
+#### **5. Effect Size Computation for Variation Magnitude** {-}
+##### **Concept:** {-}
+- SPLASH calculates **effect sizes** to measure the magnitude of variation.
+- Effect size ranges from **0 to 1**, where:
+  - **0** means no variation between samples.
+  - **1** means completely different target distributions.
+
+##### **Mathematical Definition:** {-}
+- SPLASH's effect size is based on a **distance metric**:
+  \[
+  d = 1 - \frac{ \sum_{i} \min (p_i, q_i) }{ \sum_{i} p_i + q_i }
+  \]
+  where:
+  - \( p_i \) and \( q_i \) are target frequencies in different sample groups.
+
+- If \( d \approx 0 \), targets are similarly distributed → **No significant variation**.
+- If \( d \approx 1 \), targets are distinct across samples → **Biologically meaningful difference**.
+
+##### **Randomness & Variability Considerations:** {-}
+- **More robust than p-values**: Unlike p-values, which depend on sample size, effect size remains stable across datasets.
+- **Can detect rare but important variations**: Even low-frequency variants with high effect size can be biologically relevant.
+
+---
+
+#### **6. Application to Highly Variable Biological Systems** {-}
+##### **Example: Detecting Viral Strain Variants** {-}
+- SPLASH applied to **SARS-CoV-2 sequencing data** revealed **strain-specific mutations** without prior knowledge.
+- Targets clustered **Omicron vs. Delta vs. Original strains**, validating the statistical approach.
+- SPLASH identified:
+  - **Mutation K417N** in Omicron.
+  - **P681R substitution** in Delta.
+  - **Previously unreported emerging mutations**.
+
+##### **Example: Single-Cell RNA-seq Analysis** {-}
+- SPLASH identified **cell-type-specific expression** in:
+  - **HLA genes**, revealing allele-specific expression.
+  - **MYL12A/B paralogs**, distinguishing macrophages vs. endothelial cells.
+- The method **worked without predefined metadata**, showcasing its power in **unsupervised discovery**.
+
+##### **Example: Immune Receptor Diversity** {-}
+- SPLASH discovered **novel V(D)J recombinations** in **B and T cells**.
+- It revealed **clonally expanded immune receptors** without a reference genome.
+
+---
+
+#### **Conclusion: Statistical Power of SPLASH** {-}
+SPLASH’s **reference-free statistical approach** provides a robust way to analyze genomic variation, particularly in highly diverse and noisy biological datasets. By leveraging:
+✔ **k-mer based contingency tables**,  
+✔ **Closed-form p-value bounds**,  
+✔ **False discovery rate correction**, and  
+✔ **Effect size calculations**,  
+
+SPLASH **accurately detects biologically meaningful variation**, making it a powerful tool for **viral surveillance, single-cell transcriptomics, and immune system diversity studies**.
+
+Would you like a deeper look at **specific statistical formulas or implementation details**? 🚀
+
+<br/>
+### **Statistical Formulas**  {-}
+
+**In-Depth Statistical Formulas Used in SPLASH**
+
+SPLASH employs a robust statistical framework designed to detect **sample-specific sequence variation** directly from raw sequencing reads. The key statistical techniques include **contingency table analysis, p-value bounding, effect size computation, and false discovery rate (FDR) correction**. Below, we explore the **exact mathematical formulations** behind these methodologies.
+
+---
+
+#### **1. Contingency Table Analysis** {-}
+SPLASH constructs **contingency tables** for each anchor-target pair to evaluate whether observed sequence distributions vary significantly across samples.
+
+##### **Formulation:** {-}
+For each anchor **A**, let:
+- \( S = \{ S_1, S_2, \dots, S_n \} \) be the set of **n samples**.
+- \( T = \{ T_1, T_2, \dots, T_m \} \) be the set of **m targets** (variable sequences).
+- \( C_{ij} \) be the **count** of target \( T_i \) in sample \( S_j \).
+
+The contingency table is represented as:
+
+\[
+C =
+\begin{bmatrix}
+C_{11} & C_{12} & \dots & C_{1n} \\
+C_{21} & C_{22} & \dots & C_{2n} \\
+\vdots & \vdots & \ddots & \vdots \\
+C_{m1} & C_{m2} & \dots & C_{mn}
+\end{bmatrix}
+\]
+
+##### **Null Hypothesis (\(H_0\))** {-}
+- The target distributions across samples follow the same underlying probability distribution:
+  \[
+  P(T_i | S_j) = P(T_i), \quad \forall i, j
+  \]
+- That is, target variation is purely due to random sampling.
+
+##### **Alternative Hypothesis (\(H_1\))** {-}
+- The probability distribution of targets **varies significantly** between samples:
+  \[
+  P(T_i | S_j) \neq P(T_i)
+  \]
+  for some \( i, j \), indicating **biologically relevant sample-dependent variation**.
+
+##### **Statistical Test for Contingency Table** {-}
+SPLASH applies a **divergence measure** to test whether the observed contingency table deviates significantly from what would be expected under \(H_0\).
+
+A commonly used measure is the **Pearson chi-square test**:
+
+\[
+\chi^2 = \sum_{i=1}^{m} \sum_{j=1}^{n} \frac{(C_{ij} - E_{ij})^2}{E_{ij}}
+\]
+
+where:
+- \( E_{ij} \) is the expected count under \(H_0\):
+  \[
+  E_{ij} = \frac{(\sum_k C_{ik}) (\sum_k C_{kj})}{\sum_{k,l} C_{kl}}
+  \]
+- \( \chi^2 \) follows a chi-square distribution with \( (m-1)(n-1) \) degrees of freedom.
+
+However, since **chi-square tests assume large counts**, SPLASH instead applies **custom p-value bounding methods**, detailed next.
+
+---
+
+#### **2. P-value Bounding for Statistical Efficiency** {-}
+Instead of permutation tests, which are computationally expensive, SPLASH computes a **closed-form p-value bound**.
+
+##### **P-value Bound Computation** {-}
+SPLASH uses a concentration inequality (Chernoff bound) to bound the probability of deviation from expected target distributions:
+
+\[
+P\left( \sum_{i=1}^{m} \sum_{j=1}^{n} C_{ij} \geq t \right) \leq e^{- \frac{t^2}{2m n \sigma^2}}
+\]
+
+where:
+- \( \sigma^2 \) is the variance estimate of the observed target distributions.
+- \( t \) is the **observed test statistic** from the contingency table.
+
+##### **Effect of the Bound** {-}
+- This avoids computationally expensive resampling.
+- It provides an upper bound on the probability that observed deviations occur by chance.
+
+If the bound **falls below a predefined significance threshold (\(\alpha\), typically 0.05)**, the variation is deemed significant.
+
+---
+
+#### **3. Effect Size Computation** {-}
+P-values only tell us whether an effect is **statistically significant**, but we also need to measure how **large** the difference is. SPLASH computes **effect sizes** to quantify the magnitude of sequence variation.
+
+##### **Effect Size Formula** {-}
+SPLASH uses a **normalized divergence metric**:
+
+\[
+D = 1 - \frac{\sum_{i} \min (P_i, Q_i)}{\sum_{i} P_i + Q_i}
+\]
+
+where:
+- \( P_i \) and \( Q_i \) are **target frequency distributions** in two sample groups.
+
+##### **Interpretation:** {-}
+- \( D = 0 \): No variation (identical target distributions).
+- \( D = 1 \): Completely different target distributions.
+- \( 0.5 \leq D \leq 1 \): Strong biological differentiation.
+
+---
+
+#### **4. False Discovery Rate (FDR) Control** {-}
+Since SPLASH evaluates thousands of anchor-target pairs, multiple hypothesis testing increases the risk of **false positives**. To correct for this, SPLASH applies **Benjamini-Hochberg (BH) correction**.
+
+##### **FDR Correction Formula** {-}
+1. Rank unadjusted p-values: \( p_1 \leq p_2 \leq \dots \leq p_m \)
+2. Compute threshold:
+   \[
+   p_{\text{BH}} = \frac{i}{m} \alpha
+   \]
+   where:
+   - \( i \) is the p-value rank.
+   - \( m \) is the total number of tests.
+   - \( \alpha \) is the desired FDR threshold (e.g., 0.05).
+3. Adjusted p-value:
+   \[
+   p'_i = \min\left( \frac{m}{i} p_i, 1 \right)
+   \]
+
+##### **Effect of FDR Correction** {-}
+- **Reduces false positives** while maintaining sensitivity.
+- Ensures only **statistically robust** anchor-target pairs are reported.
+
+---
+
+#### **5. Application to SARS-CoV-2 Mutation Analysis** {-}
+SPLASH’s statistical framework successfully identified **strain-specific mutations** in SARS-CoV-2 sequences.
+
+For example, when analyzing viral sequences from Omicron and Delta strains:
+- SPLASH computed **p-value bounds** and **effect sizes** for thousands of k-mer target distributions.
+- A **low p-value** (\( < 10^{-5} \)) indicated significant variation in:
+  - **Mutation K417N (Omicron-specific)**
+  - **Mutation P681R (Delta-specific)**
+- The **effect size** for these mutations was close to **1**, confirming strong differentiation between strains.
+
+---
+
+#### **Conclusion: The Power of SPLASH's Statistical Methods** {-}
+##### **Key Takeaways** {-}
+✅ **Contingency table analysis** determines if target distributions vary significantly.  
+✅ **P-value bounding (Chernoff bound)** provides a computationally efficient significance test.  
+✅ **Effect size metric** quantifies the biological importance of variation.  
+✅ **FDR correction (Benjamini-Hochberg)** ensures statistical robustness.  
+
+Would you like a **worked example with real genomic data** to see how these formulas are applied in practice? 🚀
+
+<br/>
+
+### Worked Out Example {-}
+
+Let's walk through a **worked example** using **real genomic data** to see how the statistical formulas in SPLASH are applied.
+
+**Example: Detecting Sequence Variation in SARS-CoV-2 Data Using SPLASH's Statistical Framework**
+
+**Scenario:**
+We have **sequencing data** from **two different SARS-CoV-2 strains** (Delta and Omicron). Our goal is to use **SPLASH’s statistical methods** to identify significant sequence variations.
+
+---
+
+#### **Step 1: Constructing a Contingency Table** {-}
+We analyze **a specific genomic region** where two different **mutations** appear in Delta and Omicron.
+
+We define:
+- **Anchor (fixed sequence)**: A conserved **27-mer k-mer** from the Spike protein gene.
+- **Targets (variant sequences)**: The **mutated sequences** found in different samples.
+
+Here is a **hypothetical contingency table** for this region:
+
+| **Target (Mutation)** | **Delta Sample 1** | **Delta Sample 2** | **Omicron Sample 1** | **Omicron Sample 2** | **Total** |
+|----------------|----------------|----------------|----------------|----------------|--------|
+| **K417 (Wildtype)** | 150 | 145 | 0 | 0 | 295 |
+| **K417N (Omicron-specific)** | 0 | 0 | 180 | 170 | 350 |
+| **P681R (Delta-specific)** | 120 | 110 | 0 | 0 | 230 |
+| **P681H (Omicron-specific)** | 0 | 0 | 190 | 180 | 370 |
+| **Total Reads** | **270** | **255** | **370** | **350** | **1245** |
+
+---
+
+#### **Step 2: Statistical Test for Target Variability** {-}
+We test whether **target distributions** are different between Delta and Omicron.
+
+#### **Null Hypothesis \( H_0 \)** {-}
+- Target distributions do not differ across samples (i.e., no significant variation).
+
+##### **Alternative Hypothesis \( H_1 \)** {-}
+- Target distributions differ significantly across samples, indicating meaningful **strain-specific mutations**.
+
+##### **Chi-Square Test** {-}
+We compute the **expected counts** under \( H_0 \):
+
+\[
+E_{ij} = \frac{ (\sum_k C_{ik}) (\sum_k C_{kj}) }{\sum_{k,l} C_{kl}}
+\]
+
+For the **K417N mutation (Omicron-specific)**:
+- Expected count in **Delta Sample 1**:
+
+  \[
+  E_{K417N, Delta1} = \frac{(350 \times 270)}{1245} = 75.96
+  \]
+
+- Expected count in **Omicron Sample 1**:
+
+  \[
+  E_{K417N, Omicron1} = \frac{(350 \times 370)}{1245} = 104.03
+  \]
+
+Now, computing the **Chi-Square statistic**:
+
+\[
+\chi^2 = \sum_{i=1}^{m} \sum_{j=1}^{n} \frac{(C_{ij} - E_{ij})^2}{E_{ij}}
+\]
+
+For the **K417N mutation**:
+
+\[
+\frac{(0 - 75.96)^2}{75.96} + \frac{(180 - 104.03)^2}{104.03} = \frac{5772.92}{75.96} + \frac{5772.92}{104.03} = 76.02 + 55.50 = 131.52
+\]
+
+Summing over all **mutations**, we get:
+
+\[
+\chi^2_{\text{total}} = 452.67
+\]
+
+Using a chi-square distribution table with **df = (4-1)(4-1) = 9**, we find:
+
+\[
+p \text{-value} \approx 3.5 \times 10^{-40}
+\]
+
+##### **Interpretation:** {-}
+- Since **p < 0.05**, we **reject \( H_0 \)**.
+- The data **strongly supports strain-specific variation**.
+
+---
+
+#### **Step 3: P-value Bounding for Statistical Efficiency** {-}
+To **confirm robustness**, we apply a **p-value bound** using **Chernoff's inequality**:
+
+\[
+P\left( \sum_{i=1}^{m} \sum_{j=1}^{n} C_{ij} \geq t \right) \leq e^{- \frac{t^2}{2m n \sigma^2}}
+\]
+
+For our data:
+- \( t = 452.67 \)
+- \( \sigma^2 \approx 25 \) (estimated variance)
+- \( m = 4 \), \( n = 4 \) (number of rows and columns)
+
+\[
+P(452.67) \leq e^{- \frac{(452.67)^2}{2(4)(4)(25)}}
+\]
+
+\[
+= e^{- \frac{204909.93}{200}} = e^{-1024.55} \approx 10^{-445}
+\]
+
+##### **Interpretation:** (Worst verbiage ever maybe) {-}
+- The probability that **this variation happened by random chance is practically zero**.
+- **P-value bounding confirms that our chi-square test is highly significant**.
+
+---
+
+#### **Step 4: Computing Effect Size** {-}
+To measure how **strongly** the target distributions differ, we compute **effect size**:
+
+\[
+D = 1 - \frac{\sum_{i} \min (P_i, Q_i)}{\sum_{i} P_i + Q_i}
+\]
+
+For **K417N** (Omicron-specific):
+- **Delta samples**: \( P_{\text{Delta}} = 0 \)
+- **Omicron samples**: \( Q_{\text{Omicron}} = 350 \)
+
+\[
+D_{K417N} = 1 - \frac{\min(0, 350)}{0 + 350} = 1 - 0 = 1.0
+\]
+
+For **P681R** (Delta-specific):
+- **Delta samples**: \( P_{\text{Delta}} = 230 \)
+- **Omicron samples**: \( Q_{\text{Omicron}} = 0 \)
+
+\[
+D_{P681R} = 1 - \frac{\min(230, 0)}{230 + 0} = 1 - 0 = 1.0
+\]
+
+##### **Interpretation:** {-}
+- **Effect size = 1** → **Perfect separation** between Delta and Omicron.
+- **Effect sizes close to 1 confirm biologically meaningful strain differences**.
+
+---
+
+#### **Step 5: False Discovery Rate (FDR) Correction** {-}
+Since we test multiple mutations, we control for **false positives** using **Benjamini-Hochberg correction**.
+
+##### **FDR Adjustment** {-}
+1. Rank unadjusted p-values:  
+   \( p_1 = 3.5 \times 10^{-40} \), \( p_2 = 5.2 \times 10^{-35} \), \( p_3 = 1.1 \times 10^{-30} \), etc.
+
+2. Compute the **adjusted significance threshold**:
+
+   \[
+   p_{\text{BH}} = \frac{i}{m} \alpha
+   \]
+
+   - Let \( \alpha = 0.05 \).
+   - With **m = 100 tests**, the cutoff for **significance** is:
+
+   \[
+   p' = \frac{1}{100} \times 0.05 = 5 \times 10^{-4}
+   \]
+
+3. Since all our **p-values are much smaller**, they remain **statistically significant** after correction.
+
+---
+
+#### **Conclusion: Key Findings from Our Statistical Analysis** {-}
+✅ **Significant variation in K417N (Omicron) and P681R (Delta)**  
+✅ **Effect size of 1 confirms strong biological separation**  
+✅ **FDR correction ensures these are not false positives**  
+
+This worked example **demonstrates how SPLASH statistically detects genomic variations** in viral strains, immune genes, and other biological applications.
+
+---
+
+
+I would like to see **a R-based implementation** of these calculations on real sequencing data.
+
+
+---
+
+### **R-based implementation** {-}
+
+* **R-based implementation** to apply **statistical tests** similar to SPLASH on **real sequencing data**.
+
+
+#### **🔬 Goal: Detect SARS-CoV-2 Strain-Specific Mutations Using SPLASH-Like Statistics** {-}
+We will:
+1. **Load sequencing data** for mutations in Delta and Omicron strains.
+2. **Construct a contingency table** of mutation occurrences.
+3. **Perform a Chi-Square test** to detect significant variation.
+4. **Compute p-value bounds** using Chernoff’s inequality.
+5. **Calculate effect size** to measure the strength of mutation differences.
+6. **Adjust for multiple testing** using **False Discovery Rate (FDR) correction**.
+
+---
+
+#### **Step 1: Load Required R Libraries** {-}
+```{r m2a-load-libs}
+## Install required packages (if not already installed)
+##install.packages(c("tidyverse", "stats", "pheatmap"))
+
+## Load libraries
+suppressPackageStartupMessages(require(tidyverse))
+suppressPackageStartupMessages(require(stats))
+suppressPackageStartupMessages(require(pheatmap))
+
+```
+
+---
+
+#### **Step 2: Input SARS-CoV-2 Mutation Data** {-}
+Here’s a hypothetical dataset where we have sequencing results for **two Delta and two Omicron samples**, showing counts for specific **mutations (targets)**.
+
+```{r m2a-target-vs-samples}
+## Mutation occurrence data in different samples
+mutation_data <- matrix(c(
+  150, 145, 0,   0,   # K417 Wildtype (Delta)
+  0,   0,   180, 170, # K417N (Omicron-specific)
+  120, 110, 0,   0,   # P681R (Delta-specific)
+  0,   0,   190, 180  # P681H (Omicron-specific)
+), nrow = 4, byrow = TRUE)
+
+## Assign row and column names
+rownames(mutation_data) <- c("K417_Wildtype", "K417N_Omicron", "P681R_Delta", "P681H_Omicron")
+colnames(mutation_data) <- c("Delta_Sample1", "Delta_Sample2", "Omicron_Sample1", "Omicron_Sample2")
+
+## Print mutation table
+##print(mutation_data)
+
+mutation_data %>%
+knitr::kable(
+caption = "Mutation occurrence: culumnss are data in different samples"
+ ) %>% 
+kableExtra::kable_styling(full_width = F)
+
+```
+
+---
+
+#### **Step 3: Compute Chi-Square Test for Target Variation** {-}
+We apply a **Chi-Square test** to determine whether target distributions significantly differ between Delta and Omicron samples.
+
+```{r}
+## Perform Chi-Square test
+chi_sq_test <- chisq.test(mutation_data)
+
+## Print test result
+print(chi_sq_test)
+```
+##### **Interpreting the Output:** {-}
+- If **p-value < 0.05**, we **reject \( H_0 \)**, meaning the mutation distribution **significantly differs** between strains.
+- **Chi-square statistic** quantifies how much variation exists between Delta and Omicron samples.
+
+---
+
+#### **Step 4: Compute P-Value Bound (Chernoff’s Inequality)** {-}
+Instead of resampling, we approximate the p-value bound using **Chernoff’s bound**.
+
+```{r}
+## Function to compute Chernoff's bound
+chernoff_bound <- function(test_stat, m, n, variance) {
+  return(exp(- (test_stat^2) / (2 * m * n * variance)))
+}
+
+## Define parameters
+variance_est <- 25  # Estimated variance
+m <- 4  # Number of mutations
+n <- 4  # Number of samples
+test_stat <- chi_sq_test$statistic  # Use Chi-Square test statistic
+
+## Compute p-value bound
+chernoff_pval <- chernoff_bound(test_stat, m, n, variance_est)
+
+## Print bound
+print(paste("Chernoff P-Value Bound: ", chernoff_pval))
+```
+##### **Interpreting the Output:** {-}
+- A **low bound (e.g., \( 10^{-40} \))** confirms **significant variation**.
+- This method is **computationally efficient** compared to permutation testing.
+
+---
+
+#### **Step 5: Compute Effect Size** {-}
+To quantify how **different** Delta and Omicron are, we compute an **effect size metric**:
+
+\[
+D = 1 - \frac{\sum_{i} \min (P_i, Q_i)}{\sum_{i} P_i + Q_i}
+\]
+
+
+
+```{r m2a-effect-size-fn, eval = F}
+## Compute effect size function
+effect_size <- function(mutation_data) {
+  total_counts <- rowSums(mutation_data)  # Total counts per mutation
+  # BUG - distance should be pairwise
+  ###############################
+  min_sums <- rowSums(apply(mutation_data, 1, function(x) min(x[1:2], x[3:4])))  # Minimum values in Delta vs. Omicron
+
+  # Effect size calculation
+  D <- 1 - (min_sums / sum(total_counts))
+  return(D)
+}
+
+## Compute effect sizes
+effect_sizes <- effect_size(mutation_data)
+
+## Print effect sizes for each mutation
+print(effect_sizes)
+```
+##### **Interpreting the Output:** {-}
+- **Effect size = 1** → Completely distinct mutations between strains.
+- **Effect size = 0.5 - 1** → Strong biological difference.
+- **Effect size < 0.5** → Moderate or weak separation.
+
+---
+
+#### **Step 6: Apply False Discovery Rate (FDR) Correction** {-}
+Since we are testing multiple mutations, we **control false positives** using **Benjamini-Hochberg (BH) correction**.
+
+```{r}
+## Apply BH correction for multiple testing
+adjusted_p_values <- p.adjust(chi_sq_test$p.value, method = "BH")
+
+## Print adjusted p-values
+print(adjusted_p_values)
+```
+##### **Interpreting the Output:** {-}
+- If **adjusted p-value < 0.05**, the mutation remains **statistically significant** after FDR correction.
+
+---
+
+#### **Step 7: Visualize Mutation Distribution** {-}
+To **visualize** differences between strains, we plot a **heatmap of mutation counts**.
+
+```{r}
+## Create heatmap
+pheatmap(mutation_data, 
+         cluster_rows = FALSE, 
+         cluster_cols = FALSE,
+         display_numbers = TRUE,
+         color = colorRampPalette(c("blue", "white", "red"))(50))
+```
+##### **Interpreting the Heatmap:** {-}
+- **Red** = High occurrence of mutations.
+- **Blue** = Low occurrence.
+- **Omicron mutations (K417N, P681H) appear in Omicron samples**.
+- **Delta mutations (K417 Wildtype, P681R) are absent in Omicron**.
+
+---
+
+#### **📌 Final Interpretation of Results** {-}
+| **Test** | **Result** | **Interpretation** |
+|---------|---------|----------------|
+| **Chi-Square Test** | \( p < 0.05 \) | Significant mutation variation between Delta and Omicron. |
+| **P-value Bound** | \( 10^{-40} \) | Mutation differences are not due to random chance. |
+| **Effect Size** | ~1.0 | Mutations **completely separate** strains. |
+| **FDR Correction** | \( p_{\text{adjusted}} < 0.05 \) | The variation is **not a false positive**. |
+| **Heatmap** | Clear clustering of mutations by strain | **Omicron and Delta have distinct mutation patterns**. |
+
+---
+
+#### **🎯 Conclusion** {-}
+- The **K417N and P681H mutations are exclusive to Omicron**.
+- The **P681R mutation is exclusive to Delta**.
+- The **statistical methods confirm that these mutations are not random**.
+- **SPLASH-style statistics successfully differentiate viral strains without a reference genome!** 🚀
+
+---
+
+#### **📌 What’s Next?** {-}
+Would you like to:
+1. **Extend this analysis to real sequencing datasets**? (E.g., FASTQ files)  
+2. **Apply machine learning** to predict viral strains based on mutation patterns?  
+3. **Compare different statistical methods** (Chi-square vs. Fisher's exact test)?  
+
+Let me know what you'd like to explore next! 🔬📊
+<br/>
+
+
+
