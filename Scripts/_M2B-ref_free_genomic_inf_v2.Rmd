@@ -1642,6 +1642,7 @@ tests for contingency tables.
 * We are particularly interested in the statistical aspects of methods.
 
 * Keep the report in un-rendered markdown format, or markdown syntax
+
 * Also include the markdown syntax for a bibliography of citations."
 
 <br/>
@@ -1649,92 +1650,96 @@ tests for contingency tables.
 
 ### **Response**  {-}
 
-Literature Review: Statistical Tests for Contingency Tables
-Contingency tables are a cornerstone of statistical analysis for categorical data and are widely used in genomics, social sciences, and epidemiology. Numerous statistical tests have been developed to test for dependence between rows and columns. This review surveys the state-of-the-art methods with an emphasis on their statistical properties, particularly in the context of modern, high-dimensional and sparse applications.
+**Literature Review: Statistical Tests for Contingency Tables**
 
-1. Classical Approaches
-1.1 Pearson’s Chi-Square Test
-Pearson’s χ² test is one of the oldest and most widely used methods for testing independence in contingency tables. The test statistic is based on the sum of squared deviations between observed and expected counts:
+### Introduction
 
-mathematica
-Copy
-Edit
-χ² = ∑ (Xᵢⱼ - Eᵢⱼ)² / Eᵢⱼ
-Despite its popularity, the χ² test suffers from several known issues:
+Contingency tables are a fundamental structure in statistics used to examine the relationship between categorical variables. They are widely applied across domains such as the social sciences, genomics, and biomedical research. While the Pearson chi-squared (χ²) test is historically prominent, modern datasets—often high-dimensional, sparse, and noisy—necessitate more robust and interpretable statistical tools. This review surveys key statistical methods for analyzing contingency tables, with a particular focus on the recently introduced OASIS framework and its application in genomics.
 
-Finite-sample validity: The χ² approximation is unreliable when expected counts are small or sparse.
-Lack of robustness: Sensitive to noise or overdispersion, common in biological data.
-Poor interpretability: Provides no explanation for why the null is rejected.
-1.2 Likelihood Ratio Test (G-Test)
-The likelihood ratio test compares the likelihood of the data under the null and alternative models. It is sometimes more powerful than χ², but:
+### Classical Methods
 
-Still relies on asymptotic assumptions.
-Shares interpretability issues with χ².
-1.3 Fisher’s Exact Test
-Fisher's exact test gives exact p-values for 2×2 tables using the hypergeometric distribution.
+#### Pearson’s Chi-Squared (χ²) Test
 
-Exact, not approximate.
-Not scalable to large or high-dimensional tables.
-2. Simulation-Based and Resampling Methods
-2.1 Permutation and MCMC-based Tests
-These methods estimate the null distribution through repeated sampling:
+The Pearson χ² test assesses independence by comparing observed and expected frequencies under the null hypothesis. Despite its widespread use, it suffers from several statistical drawbacks:
 
-Provide finite-sample valid p-values.
-Computationally expensive, especially with multiple hypotheses or large tables.
-Do not inherently offer interpretability.
-2.2 Limited-Information Methods
-These methods analyze selected subsets of table structure (e.g., univariate or bivariate margins):
+- Relies on asymptotic approximations, which can be invalid in small-sample or sparse data contexts.
+- Lacks robustness to noise and technical artifacts.
+- Offers limited interpretability when rejecting the null hypothesis.
 
-Perform well empirically in some settings.
-Rely on asymptotic approximations.
-Not designed for arbitrary table geometries.
-3. Modern Approaches for High-Dimensional Data
-3.1 Correspondence Analysis
-A visual and exploratory technique based on matrix decomposition (SVD of normalized residuals):
+These issues often lead to misestimation of p-values and challenges in scientific inference.
 
-Helps identify latent structure in tables.
-Not a statistical test: no p-values, no Type I error control.
-Widely used for interpretation post χ².
-3.2 SPLASH Framework
-The SPLASH algorithm introduced by [Chaung et al., 2023][@Chaung:2023aa] redefines genomic inference as detecting sample-specific variation in k-mer distributions. Each k-mer anchor is tested via a contingency table.
+### Alternative Methods
 
-Detects structured variation without a reference genome.
-Computes a p-value bound for each anchor.
-Enables robust inference in sparse sequencing datasets.
-Motivates development of improved tests like OASIS.
-4. OASIS: A Finite-Sample Valid Alternative
-The OASIS method by [Baharav et al., 2024][@Baharav:2024] introduces a new family of statistical tests specifically designed for sparse, high-dimensional contingency tables, such as those used in SPLASH.
+#### Log-Linear Models
 
-Key features:
+Log-linear models extend χ² tests by modeling the log of expected counts with interaction terms. While flexible, they assume model correctness and still require large-sample theory for valid inference.
 
-✅ Finite-sample valid p-values using closed-form concentration bounds (e.g., Hoeffding's inequality).
-✅ Interpretable: based on a linear test statistic 
-𝑆
-=
-𝑓
-𝑡
-𝑋
-~
-𝑐
-S=f 
-t
-  
-X
-~
- c, allowing insight into table structure.
-✅ More robust than χ² to noise and overdispersion.
-✅ Computationally efficient: no need for permutations or sampling.
-✅ Higher power in structured signal settings (e.g., two-group differences, time series).
-This method addresses the key limitations of classical tests and has been validated in real applications like variant detection in SARS-CoV-2 and strain inference in M. tuberculosis.
+#### Resampling-Based Methods
 
-5. Conclusion
-Traditional tests like χ² and G-tests have well-known limitations in modern data settings. Resampling methods offer finite-sample validity but at high computational cost. Recent innovations such as SPLASH and OASIS provide powerful alternatives by focusing on finite-sample validity, statistical rigor, and interpretability — particularly critical in high-throughput genomic applications.
+Permutation and MCMC methods can provide more accurate p-values, but are computationally intensive. They are impractical for large or complex tables, and may still be sensitive to noise.
 
+#### Limited-Information Tests
 
+These focus on lower-dimensional projections (e.g., univariate or bivariate margins), offering some power in high-sparsity settings. However, they lack general interpretability and rely on asymptotics.
+
+### OASIS: A Modern Framework
+
+#### Overview
+
+**OASIS (Optimized Adaptive Statistic for Inferring Structure)** is a novel family of tests designed to overcome the limitations of traditional methods. Introduced by [@Baharav:2024], OASIS:
+
+- Uses a linear test statistic to allow **finite-sample valid p-values**.
+- Leverages **concentration inequalities** for closed-form bounds.
+- Avoids assumptions of distributional asymptotics.
+- Is **robust to overdispersion** and noise, common in genomic data.
+- Offers **interpretable decomposition** of results, showing what structure leads to rejection.
+
+#### Technical Highlights
+
+OASIS formulates the test as a bilinear form on a normalized residual matrix. Unlike χ², it does not upweight rare observations, and instead emphasizes structured deviations from the null. The result is a test that is both **more powerful** in certain regimes and **more statistically disciplined**.
+
+#### Comparison with Pearson's χ²
+
+| Feature | Pearson's χ² | OASIS |
+|--------|---------------|--------|
+| P-values | Asymptotic only | Finite-sample valid |
+| Robustness | Sensitive to sparse/low counts | Robust to noise |
+| Computation | Simple but approximate | Efficient and rigorous |
+| Interpretability | Limited | High |
+
+### Applications in Genomics: SPLASH
+
+#### SPLASH Framework
+
+SPLASH (Statistically Primary aLignment Agnostic Sequence Homing), introduced by [@Chaung:2023aa], applies OASIS to sequencing data to detect variation **without reference genomes** or **metadata**. It works by:
+
+- Identifying "anchors" and "targets" as k-mers in reads.
+- Building contingency tables across samples for each anchor.
+- Using OASIS to test for differential distribution of targets.
+
+This enables reference-free detection of:
+
+- Viral strain mutations (e.g., SARS-CoV-2)
+- Cell-type-specific isoforms and splicing
+- Adaptive immune receptor diversity
+- Unannotated transcripts in non-model organisms
+
+#### Case Study: SARS-CoV-2
+
+SPLASH was able to detect known and novel strain-defining mutations across patient samples with high specificity and without any metadata. This showcases the power of statistically grounded, reference-free methods enabled by OASIS.
+
+### Conclusion
+
+Statistical tests for contingency tables are evolving to meet the needs of modern, complex datasets. The OASIS framework provides a **statistically valid**, **robust**, and **interpretable** alternative to classical methods, particularly useful in genomics and other high-dimensional fields. Its application in SPLASH demonstrates its practical impact and potential for broader scientific discovery.
+
+### References
+
+[@Baharav:2024]: Baharav, T. Z., Tse, D., & Salzman, J. (2024). OASIS: An interpretable, finite-sample valid alternative to Pearson’s X2 for scientific discovery. *PNAS*, 121(15), e2304671121. https://doi.org/10.1073/pnas.2304671121
+
+[@Chaung:2023aa]: Chaung, K., Baharav, T. Z., Henderson, G., Zheludev, I. N., Wang, P. L., & Salzman, J. (2023). SPLASH: A statistical, reference-free genomic algorithm unifies biological discovery. *Cell*, 186(25), 5440–5456. https://doi.org/10.1016/j.cell.2023.10.028
 
 <br/>
 <br/>
-
 
 ## OASIS Review {- .tabset #oasis-ai-review}
 
