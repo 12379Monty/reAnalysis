@@ -515,6 +515,11 @@ Reference-free genomic inference methods provide robust alternatives to referenc
 
 * SPLASH: A Statistical, Reference-Free Genomic Algorithm for Biological Discovery
 
+### Home {-}
+
+<br/>
+<br/>
+
 
 ### chatGPT {-}
 
@@ -1759,7 +1764,7 @@ for scientific discovery
 
 <br/>
 
-### chatGPT Prompt {-}
+### chatGPT {-}
 
 * Please provide a summary of the technical content of the attached article
 `OASIS` ( Baharav et al., 2024 [@Baharav:2024aa]) 
@@ -1857,7 +1862,7 @@ where \( \gamma \) quantifies correlation between column embeddings and sample s
 <br/>
 <br/>
 
-### Scholar GPT Prompt {-}
+### Scholar GPT {-}
 
 * Please provide a summary of the technical content of the attached article,
 `OASIS` ( Baharav et al., 2024 [@Baharav:2024aa]),
@@ -1869,13 +1874,13 @@ which is prey to randomness or variability.
 <br/>
 
 
-### **Response**  {-}
+#### **Response**  {-}
 
 * Technical Summary of OASIS (Baharav et al., 2024)
 
 > *Baharav, T. Z., Tse, D., & Salzman, J. (2024). OASIS: An interpretable, finite-sample valid alternative to Pearson’s X² for scientific discovery. Proceedings of the National Academy of Sciences, 121(15), e2304671121. [https://doi.org/10.1073/pnas.2304671121](https://doi.org/10.1073/pnas.2304671121)*
 
-#### 🔍 Overview  {-}
+##### 🔍 Overview  {-}
 
 OASIS (Optimized Adaptive Statistic for Inferring Structure) is a family of statistical tests designed for **contingency table analysis**, providing:
 
@@ -1888,7 +1893,7 @@ It is particularly suited for **sparse and high-dimensional data**, such as thos
 
 ---
 
-#### 🧮 Test Statistic  {-}
+##### 🧮 Test Statistic  {-}
 
 Given a count matrix \( X \in \mathbb{N}^{I \times J} \), the OASIS test statistic is:
 
@@ -1905,9 +1910,9 @@ This structure allows for **signal aggregation** and **dampening of noise** thro
 
 ---
 
-#### 📊 Statistical Randomness and Finite-Sample Validity  {-}
+##### 📊 Statistical Randomness and Finite-Sample Validity  {-}
 
-##### Reformulation via Latent Variables  {-}
+###### Reformulation via Latent Variables  {-}
 
 Each table cell count \( X_{i,j} \) is constructed from i.i.d. latent variables:
 
@@ -1919,7 +1924,7 @@ This allows \( S \) to be written as a **weighted sum of independent random vari
 
 ---
 
-##### Finite-Sample p-Value Bound  {-}
+###### Finite-Sample p-Value Bound  {-}
 
 Using **Hoeffding’s inequality**, the authors derive:
 
@@ -1938,7 +1943,7 @@ Where:
 
 ---
 
-#### 📈 Asymptotic Normality  {-}
+##### 📈 Asymptotic Normality  {-}
 
 The statistic converges to a normal distribution as sample sizes increase:
 
@@ -1957,7 +1962,7 @@ Where:
 
 ---
 
-#### 🧪 Effect Size  {-}
+##### 🧪 Effect Size  {-}
 
 OASIS defines an **effect size estimate**:
 
@@ -1971,7 +1976,7 @@ OASIS defines an **effect size estimate**:
 
 ---
 
-#### 🔁 Data-Splitting Validity  {-}
+##### 🔁 Data-Splitting Validity  {-}
 
 To avoid overfitting:
 - Data is split into train/test sets
@@ -1986,7 +1991,7 @@ Multiple random splits are allowed, with **Bonferroni correction** to maintain e
 
 ---
 
-#### 📚 Comparison with Pearson’s χ²  {-}
+##### 📚 Comparison with Pearson’s χ²  {-}
 
 | Feature | Pearson χ² | OASIS |
 |--------|-------------|--------|
@@ -2015,6 +2020,8 @@ It is a rigorous, modern replacement for χ² tests in scientific discovery cont
 Baharav, T. Z., Tse, D., & Salzman, J. (2024). *OASIS: An interpretable, finite-sample valid alternative to Pearson’s X² for scientific discovery*. *PNAS*, **121**(15), e2304671121.  
 👉 [DOI Link](https://doi.org/10.1073/pnas.2304671121)
 
+<br/>
+<br/>
 
 ## OASIS Citings {-}
 
