@@ -411,7 +411,9 @@ the citing literature for SPLASH and OASIS.
 <br/>
 <br/>
 
-## Lit Review - Prior SPLASH  {#ref-free-genomic-pre-splash  -}
+## Lit Review {#ref-free-genomic-pre-splash  -}
+
+* Lit review prior to SPLASH
 
 ### Consensus {-}
 
@@ -1607,21 +1609,24 @@ Let me know what you'd like to explore next! 🔬📊
 <br/>
 
 
-## scite_ {-}
+## SPLASH Citings {-}
 
-* RETURN TO THIS LATER
-   - there has not been enough time for OASIS citations to appear.
+* RETURN TO THIS LATER - See Section \@ref(GPT-based-res)
+for examples.
 
 
-# State of the Art:  Test for Contingency Tables {#soa-test-contingency-tables  .tabset}
-
+# Test for Contingency Tables {#test-contingency-tables  .tabset}
 
 ## Home {-}
 
 <br/>
+<br/>
 
-## Consensus Prompt {-}
+## Lit Review {#test-conting-tables-pre-oasis}
 
+* Lit review prior to OASIS {-}
+
+### Concensus {-}
 
 * A new statistical test for contingency tables,
 OASIS, is described in the attached -  Baharav et al., 2024  [@Baharav:2024].
@@ -1641,13 +1646,95 @@ tests for contingency tables.
 <br/>
 <br/>
 
-## **Response**  {-}
+### **Response**  {-}
+
+Literature Review: Statistical Tests for Contingency Tables
+Contingency tables are a cornerstone of statistical analysis for categorical data and are widely used in genomics, social sciences, and epidemiology. Numerous statistical tests have been developed to test for dependence between rows and columns. This review surveys the state-of-the-art methods with an emphasis on their statistical properties, particularly in the context of modern, high-dimensional and sparse applications.
+
+1. Classical Approaches
+1.1 Pearson’s Chi-Square Test
+Pearson’s χ² test is one of the oldest and most widely used methods for testing independence in contingency tables. The test statistic is based on the sum of squared deviations between observed and expected counts:
+
+mathematica
+Copy
+Edit
+χ² = ∑ (Xᵢⱼ - Eᵢⱼ)² / Eᵢⱼ
+Despite its popularity, the χ² test suffers from several known issues:
+
+Finite-sample validity: The χ² approximation is unreliable when expected counts are small or sparse.
+Lack of robustness: Sensitive to noise or overdispersion, common in biological data.
+Poor interpretability: Provides no explanation for why the null is rejected.
+1.2 Likelihood Ratio Test (G-Test)
+The likelihood ratio test compares the likelihood of the data under the null and alternative models. It is sometimes more powerful than χ², but:
+
+Still relies on asymptotic assumptions.
+Shares interpretability issues with χ².
+1.3 Fisher’s Exact Test
+Fisher's exact test gives exact p-values for 2×2 tables using the hypergeometric distribution.
+
+Exact, not approximate.
+Not scalable to large or high-dimensional tables.
+2. Simulation-Based and Resampling Methods
+2.1 Permutation and MCMC-based Tests
+These methods estimate the null distribution through repeated sampling:
+
+Provide finite-sample valid p-values.
+Computationally expensive, especially with multiple hypotheses or large tables.
+Do not inherently offer interpretability.
+2.2 Limited-Information Methods
+These methods analyze selected subsets of table structure (e.g., univariate or bivariate margins):
+
+Perform well empirically in some settings.
+Rely on asymptotic approximations.
+Not designed for arbitrary table geometries.
+3. Modern Approaches for High-Dimensional Data
+3.1 Correspondence Analysis
+A visual and exploratory technique based on matrix decomposition (SVD of normalized residuals):
+
+Helps identify latent structure in tables.
+Not a statistical test: no p-values, no Type I error control.
+Widely used for interpretation post χ².
+3.2 SPLASH Framework
+The SPLASH algorithm introduced by [Chaung et al., 2023][@Chaung:2023aa] redefines genomic inference as detecting sample-specific variation in k-mer distributions. Each k-mer anchor is tested via a contingency table.
+
+Detects structured variation without a reference genome.
+Computes a p-value bound for each anchor.
+Enables robust inference in sparse sequencing datasets.
+Motivates development of improved tests like OASIS.
+4. OASIS: A Finite-Sample Valid Alternative
+The OASIS method by [Baharav et al., 2024][@Baharav:2024] introduces a new family of statistical tests specifically designed for sparse, high-dimensional contingency tables, such as those used in SPLASH.
+
+Key features:
+
+✅ Finite-sample valid p-values using closed-form concentration bounds (e.g., Hoeffding's inequality).
+✅ Interpretable: based on a linear test statistic 
+𝑆
+=
+𝑓
+𝑡
+𝑋
+~
+𝑐
+S=f 
+t
+  
+X
+~
+ c, allowing insight into table structure.
+✅ More robust than χ² to noise and overdispersion.
+✅ Computationally efficient: no need for permutations or sampling.
+✅ Higher power in structured signal settings (e.g., two-group differences, time series).
+This method addresses the key limitations of classical tests and has been validated in real applications like variant detection in SARS-CoV-2 and strain inference in M. tuberculosis.
+
+5. Conclusion
+Traditional tests like χ² and G-tests have well-known limitations in modern data settings. Resampling methods offer finite-sample validity but at high computational cost. Recent innovations such as SPLASH and OASIS provide powerful alternatives by focusing on finite-sample validity, statistical rigor, and interpretability — particularly critical in high-throughput genomic applications.
+
 
 
 <br/>
 <br/>
 
-# OASIS -  Baharav et al., 2024 {#oasis-ai-review .tabset}
+## OASIS Review {-}
 
 * Follow same steps as in the section on SPLASH - Section \@ref(splash-ai-review).
 
@@ -1753,17 +1840,6 @@ where \( \gamma \) quantifies correlation between column embeddings and sample s
 
 <br/>
 <br/>
-
-<!--
-### SciSpace Prompt {-} {-}
-
-<br/>
-
-### **Response**  {-}
-
-<br/>
-
--->
 
 ## Scholar GPT Prompt {-}
 
@@ -1986,16 +2062,35 @@ This combination provides a comprehensive AI-assisted workflow for effectively t
 <br/>
 <br/>
 
-## scite_ {-}
+## OASIS Citings {-}
 
 * RETURN TO THIS LATER
    - there has not been enough time for OASIS citations to appear.
+
+<br/>
+<br/>
 
 # Appendix 
 
 <br/>
 
-## chatGPT Technical Terms
+## Statistical Strategies - TO REVIEW
+
+- K-mer frequency analysis and modeling (Vinga & Almeida, 2003; Patro et al., 2014).
+- Likelihood-based frameworks for rapid abundance estimation (Bray et al., 2016).
+- Statistical distance metrics for genomic comparisons (Ondov et al., 2016).
+- Hypothesis-driven statistical inference to detect variations and differential expression (Pierce et al., 2019).
+
+
+## chatGPT Technical Terms {.tabset}
+
+### Home {-}
+
+<br/>
+<br/>
+
+
+###  GPTs for Technical Terms {-}
 
 * chatGPT query:
    - what is the best GPT based tool to obtain definitions of technical terms used in biotech related scientific publications?
@@ -2023,41 +2118,13 @@ The SciSpace Copilot interface is not intuitive at this point - use alternative
 
 ## GPT-Based Research Assistants {#GPT-based-res .tabset}
 
-
-* Before diving into the articles of interest, we will submit queries to 
-establish the current state of scientific knowledge regarding 
-reference-free genomics, prior to `SPLASH` and `OASIS`
-
-<p><p/>
-* There are several GPTs which are specialized for research:
-   - Scholar GPT
-   - Concensus
-   - SciSpace
-   - Semantic Scholar
-   - Perplexity
-   - Elicit
-
-<p><p/>
-* See [Consensus GPT vs SciSpace GPT](https://www.youtube.com/watch?v=EN0JZTvbuzQ)
-for a comparison of these two GPTs.
-
-<br/>
-
 ### Home {-}
 
 <br/>
 <br/>
 
+
 ### GPT for Review {-}
-
-* Refer to the articles uploaded to the project - 
-
-   - Chaung, K., Baharav, T.Z., Henderson, G., Zheludev, I.N., Wang, P.L., and Salzman, J. (2023). SPLASH: A statistical, reference-free genomic algorithm unifies biological discovery. Cell 186, 5440–5456.
-2.
-
-   - Baharav, T.Z., Tse, D., and Salzman, J. (2024). OASIS: An interpretable, finite-sample valid alternative to pearson’s x(2) for scientific discovery. Proc Natl Acad Sci U S A 121, e2304671121. -
-to get a sense of the `reference-free genomic inference` context.
-
 
 **chatGPT Prompt:**
 
@@ -2141,17 +2208,17 @@ This approach provides comprehensive, reliable, and efficient establishment of s
 
 ### Best Interactive {-}
 
-**Prompt**:  
+**chatGPT Prompt:**
 
 * Please list and compare the best GPT based research assistants to
-answer specific questions about the content of a spcific paper
+answer specific questions about the content of a specific paper
 Here are the best GPT-based research assistants specifically tailored for answering detailed questions about the content, design, and analytical decisions within a single research paper:
 
 **Response**
 
 Here are the best GPT-based research assistants specifically tailored for answering detailed questions about the content, design, and analytical decisions within a single research paper:
 
-#### 1. **Elicit**
+#### 1. **Elicit** {-}
 - **Strengths:**  
   - Excellent for answering specific methodological questions.
   - Specializes in extracting study designs, identifying key variables, summarizing findings, and critiquing methodological choices.
@@ -2161,7 +2228,7 @@ Here are the best GPT-based research assistants specifically tailored for answer
 - **Best for:**  
   - Researchers analyzing methodology or experimental design choices in detail.
 
-#### 2. **SciSpace Copilot**
+#### 2. **SciSpace Copilot** {-}
 - **Strengths:**  
   - Tailored specifically to explain complex concepts within scientific papers.
   - Good at clarifying jargon, interpreting figures and tables, and summarizing reasoning behind analytical methods.
@@ -2171,7 +2238,7 @@ Here are the best GPT-based research assistants specifically tailored for answer
 - **Best for:**  
   - Understanding and questioning specific sections of papers, especially methods or results.
 
-#### 3. **Consensus**
+#### 3. **Consensus** {-}
 - **Strengths:**  
   - Provides concise answers from single or multiple papers, clearly highlighting the context.
   - Useful for quickly answering focused questions on methodologies and study design.
@@ -2181,7 +2248,7 @@ Here are the best GPT-based research assistants specifically tailored for answer
 - **Best for:**  
   - Rapid extraction of key design and analytical decisions.
 
-#### 4. **CORE-GPT**
+#### 4. **CORE-GPT** {-}
 - **Strengths:**  
   - Explicitly designed to provide evidence-based, cited answers directly tied to specific papers.
   - High accuracy in answering nuanced methodological and analytical questions.
@@ -2191,7 +2258,7 @@ Here are the best GPT-based research assistants specifically tailored for answer
 - **Best for:**  
   - Ensuring accurate, citation-backed responses to detailed analytical queries.
 
-#### 5. **ChatPDF**
+#### 5. **ChatPDF** {-}
 - **Strengths:**  
   - User-friendly tool for direct interaction with uploaded PDFs.
   - Answers specific questions related to methods, analysis, and paper structure.
@@ -2202,7 +2269,7 @@ Here are the best GPT-based research assistants specifically tailored for answer
 
 ---
 
-#### Recommended Selection:
+#### Recommended Selection: {-}
 
 - **Detailed Methodological Analysis**: **Elicit**, **SciSpace Copilot**
 - **Rapid Clarifications and Summaries**: **Consensus**, **ChatPDF**
@@ -2221,20 +2288,16 @@ These tools provide the strongest combination of specificity, depth, and accurac
 
 ### Citing Litetature  Review  {-}
 
-## Home {-}
+**chatGPT Prompt:**
 
-<br/>
-<br/>
+* Which AI research assistants are best for surveying the most recent
+literature for citings of a particulat articale?
 
-**Ask chatGPT**  {-}
-
-* Prompt: Which AI research assistants are best for surveying the most recent literature for citings of a particulat articale?
-
-* Response:
+**Response**
 
 Here are some of the best AI-driven tools specifically suited to finding recent literature and citations of a particular article:
 
-### Best Tools for Citation Tracking and Literature Discovery: {-}
+#### Best Tools for Citation Tracking and Literature Discovery: {-}
 
 1. **ResearchRabbit**
    - **Strengths:** AI-powered literature discovery, finds recent citations, visualizes citation networks.
@@ -2261,7 +2324,7 @@ Here are some of the best AI-driven tools specifically suited to finding recent 
    - **Use case:** Quickly create structured literature reviews and citation tracking summaries.
    - **Website:** [elicit.org](https://elicit.org/)
 
-### Recommended Workflow: {-}
+#### Recommended Workflow: {-}
 
 - **Start with ResearchRabbit or Connected Papers** to visually see a map of recent citations and related works.
 - Use **Semantic Scholar** to narrow results with sophisticated filters (year, citation count, fields).
@@ -2272,11 +2335,18 @@ This combination provides a comprehensive AI-assisted workflow for effectively t
 
 <br/>
 <br/>
-## Multinomial Distance Metrics  
 
-* This `D` is different than the D is SPLASH
+## Multinomial Distance Metrics 
+
+<br/>
+
+### D Metric {-} 
+
+<span style="color:darkgreen">
+* This `D` is different than the D in SPLASH
    - should behave similarly when total counts are similar
    - with no scaling and doing the math on the linear scale is interesting
+</span>
 
 <br/>
 
@@ -2409,7 +2479,36 @@ If you have a specific reason for choosing your original formula, please clarify
 #######################################################################
 ## ARCHIVAL
 #######################################################################
+
+* Refer to the articles uploaded to the project - 
+
+   - Chaung, K., Baharav, T.Z., Henderson, G., Zheludev, I.N., Wang, P.L., and Salzman, J. (2023). SPLASH: A statistical, reference-free genomic algorithm unifies biological discovery. Cell 186, 5440–5456.
+2.
+
+   - Baharav, T.Z., Tse, D., and Salzman, J. (2024). OASIS: An interpretable, finite-sample valid alternative to pearson’s x(2) for scientific discovery. Proc Natl Acad Sci U S A 121, e2304671121. -
+to get a sense of the `reference-free genomic inference` context.
+
 ### Upload articles {-}
+
+
+* Before diving into the articles of interest, we will submit queries to 
+establish the current state of scientific knowledge regarding 
+reference-free genomics, prior to `SPLASH` and `OASIS`
+
+<p><p/>
+* There are several GPTs which are specialized for research:
+   - Scholar GPT
+   - Concensus
+   - SciSpace
+   - Semantic Scholar
+   - Perplexity
+   - Elicit
+
+<p><p/>
+* See [Consensus GPT vs SciSpace GPT](https://www.youtube.com/watch?v=EN0JZTvbuzQ)
+for a comparison of these two GPTs.
+
+<br/>
 
 <p><p/>
 * In this report we focus on two papers from the [Salzman Lab]:
