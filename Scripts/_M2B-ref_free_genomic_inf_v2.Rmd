@@ -1,5 +1,5 @@
 ---
-title:  "Reference-Free Genomic Inference with SPLASH and OASIS - V2"
+title:  "Reference-Free Genomic Inference with SPLASH and OASIS"
 #subtitle: "a tale of two schools"
 author: "[Francois Collin](https://www.linkedin.com/in/francoisz/)"
 date: "`r format(Sys.time(), '%B %d, %Y')`"
@@ -201,9 +201,6 @@ param_class=sapply(params, class), row.names=NULL) %>%
   knitr::kable(caption="Input Parameters")
 ```
 
-<br/>
-
-
 <!--
 * Breiman: [@Breiman:1984aa; @Breiman:2001aa]
 * Freedman: [@Freedman:2008aa; @Freedman:2008ad; @Freedman:2008ac; @Freedman:2009ac]
@@ -218,9 +215,6 @@ param_class=sapply(params, class), row.names=NULL) %>%
     }
 </style>
 
-
-<br/>
-<br/>
 
 > The real danger today is not that computers are smarter than us
 > but that we think computers are smarter than us.
@@ -252,7 +246,7 @@ param_class=sapply(params, class), row.names=NULL) %>%
 # General Remarks/Background  {-}
 
 * We still need to better understand the statistical procedure used to "score"
-samples for indenpendence, etc., but we can make some general remarks
+samples for independence, etc., but we can make some general remarks
 which apply broadly, independent of the specifics of the statistical procedures.
 
 <!--
@@ -273,14 +267,14 @@ AI may change this.
    - The shape of the distribution of scores across the omic scale 
 can be examined to ensure that it meets expectations.
    - When p-values are off on some way, the impact this has on the results
-should be ascertained empirically.
+should be ascertained empirically on the -omic scale with appropriate data.
 
 <p><p/>
 * biased p (q) values may still provide useful guides for the purpose of ordering and
 selecting features, but some checks must be put in place to verify that
 this is the case. 
 <!--
-   - if we are interested in considering the effect size in the identification proces, ...
+   - if we are interested in considering the effect size in the identification process, ...
    - p (q) values near 0 or 1 usually need to be examined, and analyzed, on a different scale
 -->
 
@@ -297,7 +291,7 @@ it is the distribution of the summaries over the study dataset that matters most
    - Is the distribution of values of a statistic used to filter or select
 features peaked, flat, heavy-tailed?
    - Is the shape consistent with expectations?  If the shape is not as expected,
-the points falling in the tails may also not have rhe expected intrerpretration.
+the points falling in the tails may also not have the expected interpretation.
 
 
 
