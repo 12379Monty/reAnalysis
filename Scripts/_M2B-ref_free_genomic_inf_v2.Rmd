@@ -249,7 +249,11 @@ param_class=sapply(params, class), row.names=NULL) %>%
 <br/>
 
 
-# Synopsys/Background  {-}
+# General Remarks/Background  {-}
+
+* We still need to better understand the statistical procedure used to "score"
+samples for indenpendence, etc., but we can make some general remarks
+which apply broadly, independent of the specifics of the statistical procedures.
 
 <!--
 <p><p/> 
@@ -512,7 +516,7 @@ Reference-free genomic inference methods provide robust alternatives to referenc
 
 ## SPLASH Review {#splash-ai-review .tabset -}
 
-* SPLASH: A Statistical, Reference-Free Genomic Algorithm for Biological Discove
+* SPLASH: A Statistical, Reference-Free Genomic Algorithm for Biological Discovery
 
 
 ### chatGPT {-}
@@ -1614,6 +1618,8 @@ Let me know what you'd like to explore next! 🔬📊
 * RETURN TO THIS LATER - See Section \@ref(GPT-based-res)
 for examples.
 
+<br/>
+<br/>
 
 # Test for Contingency Tables {#test-contingency-tables  .tabset}
 
@@ -1622,7 +1628,7 @@ for examples.
 <br/>
 <br/>
 
-## Lit Review {#test-conting-tables-pre-oasis}
+## Lit Review {- #test-conting-tables-pre-oasis} 
 
 * Lit review prior to OASIS {-}
 
@@ -1734,16 +1740,18 @@ Traditional tests like χ² and G-tests have well-known limitations in modern da
 <br/>
 <br/>
 
-## OASIS Review {-}
 
-* Follow same steps as in the section on SPLASH - Section \@ref(splash-ai-review).
+## OASIS Review {- .tabset #oasis-ai-review}
 
 
-## Home {-}
+* OASIS: An interpretable, finite-sample valid alternative to Pearson’s X2 
+for scientific discovery
+
+### Home {-}
 
 <br/>
 
-## chatGPT Prompt {-}
+### chatGPT Prompt {-}
 
 * Please provide a summary of the technical content of the attached article
 `OASIS` ( Baharav et al., 2024 [@Baharav:2024aa]) 
@@ -1760,22 +1768,22 @@ and seems to trip up the research assistants.
 
 <br/>
 
-## **Response**  {-}
+#### **Response**  {-}
 
 * Summary of "OASIS: An interpretable, finite-sample valid alternative to Pearson’s X² for scientific discovery" (Baharav et al., 2024)
 
-### Overview and Motivation {-}
+##### Overview and Motivation {-}
 The article introduces **OASIS (Optimized Adaptive Statistic for Inferring Structure)**, a novel statistical framework for testing contingency tables. Contingency tables (matrices of count data) are common in quantitative research, especially genomics. OASIS addresses significant limitations of Pearson’s chi-squared (X²) test, notably invalid finite-sample P-values, lack of robustness, and interpretability, making it suited for sparse, high-dimensional data common in modern genomic studies.
 
 ---
 
-### Methodological Approach {-}
+##### Methodological Approach {-}
 
-#### 1. **Construction of OASIS Test Statistic** {-}
+###### 1. **Construction of OASIS Test Statistic** {-}
 - Constructs residuals linear in the normalized contingency table data, effectively capturing structured deviations from independence.
 - Computes a centered and normalized matrix \( \tilde{X} \), derived by subtracting expected values from observed counts and normalizing by column totals.
 
-#### 2. **Finite-Sample Valid P-value Computation** {-}
+###### 2. **Finite-Sample Valid P-value Computation** {-}
 - Uses classical concentration inequalities (Hoeffding’s inequality) instead of asymptotic approximations, thus providing rigorous, finite-sample valid P-value bounds.
 - The OASIS statistic is defined as a linear form:
 \[
@@ -1788,48 +1796,48 @@ P(|S| \ge s) \le 2\exp\left(-\frac{2s^2}{1 - \gamma}\right)
 \]
 where \( \gamma \) quantifies correlation between column embeddings and sample sizes.
 
-#### 3. **Asymptotic Normality and P-value Approximation** {-}
+###### 3. **Asymptotic Normality and P-value Approximation** {-}
 - Provides theoretical proofs showing OASIS's statistic converges to a normal distribution asymptotically, allowing standard Gaussian approximation of P-values for large samples.
 - Asymptotic approximation closely aligns with finite-sample bounds, incorporating a variance parameter \( \sigma_f^2 \) derived from the embedding vector \( f \).
 
 ---
 
-### Statistical Variability and Randomness {-}
+##### Statistical Variability and Randomness {-}
 
-#### 1. **Randomness in Data-Splitting and Embeddings** {-}
+###### 1. **Randomness in Data-Splitting and Embeddings** {-}
 - Implements data-splitting (training/test sets) to select optimal embedding vectors without statistical bias, ensuring validity via Bonferroni corrections for multiple splits.
 - Contingency table counts are modeled explicitly as multinomial distributions under the null hypothesis, integrating randomness directly into theoretical guarantees.
 
-#### 2. **Robustness to Variability (Overdispersion)** {-}
+###### 2. **Robustness to Variability (Overdispersion)** {-}
 - OASIS explicitly addresses **overdispersion**, common in genomic data such as single-cell RNA sequencing, ensuring robustness.
 - Simulations confirm OASIS maintains robust control of the false discovery rate (FDR), whereas Pearson’s X² often fails under similar conditions.
 
 ---
 
-### Power and Performance {-}
+##### Power and Performance {-}
 - Simulations demonstrate that OASIS significantly outperforms Pearson’s X² in detecting structured deviations from the null hypothesis (e.g., distinct two-group scenarios).
 - Conversely, OASIS shows lower power relative to Pearson’s X² in scenarios with diffuse, noisy signals, highlighting a clear trade-off emphasizing structured signal detection.
 
 ---
 
-### Applications and Interpretability {-}
+##### Applications and Interpretability {-}
 - OASIS successfully applied to genomic data, such as de novo detection of SARS-CoV-2 and Mycobacterium tuberculosis variants, outperforming existing methods without relying on reference genomes.
 - Provides interpretability post-inference, clearly indicating why the null hypothesis was rejected via meaningful embedding vectors, in contrast to purely exploratory techniques like correspondence analysis.
 
 ---
 
-### Statistical Validity and Effect Size {-}
+##### Statistical Validity and Effect Size {-}
 - Defines a clear, intuitive effect size measure quantifying differences between groups identified by embeddings. This effect size is bounded by total variation distance, ensuring practical interpretability.
 - Provides rigorous proofs for the finite-sample validity of its P-values using classical probability and concentration inequality arguments.
 
 ---
 
-### Conclusions and Broader Implications {-}
+##### Conclusions and Broader Implications {-}
 - Highlights OASIS’s potential beyond contingency tables, offering a general framework potentially applicable to structured inference, matrix decomposition, and multi-table inference beyond standard singular value decomposition (SVD).
 
 ---
 
-### Supplemental Information Highlights {-}
+##### Supplemental Information Highlights {-}
 - Extensive mathematical proofs are provided, supporting theoretical claims regarding finite-sample validity, asymptotic normality, and embedding optimization.
 - Additional simulations emphasize robustness, stability, and effectiveness of embedding optimization strategies under various statistical conditions.
 
@@ -1841,7 +1849,7 @@ where \( \gamma \) quantifies correlation between column embeddings and sample s
 <br/>
 <br/>
 
-## Scholar GPT Prompt {-}
+#/## Scholar GPT Prompt {-}
 
 * Please provide a summary of the technical content of the attached article,
 `OASIS` ( Baharav et al., 2024 [@Baharav:2024aa]),
@@ -1850,18 +1858,10 @@ aspects of the mothodologies or any component
 which is prey to randomness or variability.
 
 * `"OASIS: An interpretable, finite-sample valid alternative to Pearson’s X² for scientific discovery" 
-
-
-
 <br/>
 
 
-## **Response**  {-}
-
-### Home {-}
-
-<br/>
-
+### **Response**  {-}
 
 * Technical Summary of OASIS (Baharav et al., 2024)
 
@@ -2008,60 +2008,6 @@ Baharav, T. Z., Tse, D., & Salzman, J. (2024). *OASIS: An interpretable, finite-
 👉 [DOI Link](https://doi.org/10.1073/pnas.2304671121)
 
 
-# OASIS Citation Litetature {#oasis-citings .tabset}
-
-## Home {-}
-
-<br/>
-<br/>
-
-## Ask chatGPT {-}
-
-* Prompt: Which AI research assistants are best for surveying the most recent literature for citings of a particulat articale?
-
-* Response:
-
-Here are some of the best AI-driven tools specifically suited to finding recent literature and citations of a particular article:
-
-### Best Tools for Citation Tracking and Literature Discovery: {-}
-
-1. **ResearchRabbit**
-   - **Strengths:** AI-powered literature discovery, finds recent citations, visualizes citation networks.
-   - **Use case:** Quickly visualize and explore articles citing your target paper, including the newest ones.
-   - **Website:** [researchrabbit.ai](https://www.researchrabbit.ai/)
-
-2. **Connected Papers**
-   - **Strengths:** Creates visual graphs of related research papers, efficiently surfacing new papers citing a given article.
-   - **Use case:** Find recent and related publications visually in seconds.
-   - **Website:** [connectedpapers.com](https://www.connectedpapers.com/)
-
-3. **Scite.ai**
-   - **Strengths:** Analyzes citations contextually (supporting, contrasting, or neutral), and quickly finds recent citations to a specific article.
-   - **Use case:** Understand not just who cites the paper, but how it's discussed.
-   - **Website:** [scite.ai](https://scite.ai/)
-
-4. **Semantic Scholar**
-   - **Strengths:** AI-driven search and literature discovery; good at surfacing newer papers citing a particular source.
-   - **Use case:** Finding and tracking highly relevant and recent literature through powerful filters.
-   - **Website:** [semanticscholar.org](https://www.semanticscholar.org/)
-
-5. **Elicit**
-   - **Strengths:** AI-powered literature surveys, extracts key insights, and tracks citation influence efficiently.
-   - **Use case:** Quickly create structured literature reviews and citation tracking summaries.
-   - **Website:** [elicit.org](https://elicit.org/)
-
-### Recommended Workflow: {-}
-
-- **Start with ResearchRabbit or Connected Papers** to visually see a map of recent citations and related works.
-- Use **Semantic Scholar** to narrow results with sophisticated filters (year, citation count, fields).
-- Then apply **Scite.ai** to evaluate the context and impact of these citations.
-- For deeper analysis and summarization, **Elicit** can be used to generate a structured review.
-
-This combination provides a comprehensive AI-assisted workflow for effectively tracking recent citations of any given article.
-
-<br/>
-<br/>
-
 ## OASIS Citings {-}
 
 * RETURN TO THIS LATER
@@ -2081,6 +2027,9 @@ This combination provides a comprehensive AI-assisted workflow for effectively t
 - Statistical distance metrics for genomic comparisons (Ondov et al., 2016).
 - Hypothesis-driven statistical inference to detect variations and differential expression (Pierce et al., 2019).
 
+
+<br/>
+<br/>
 
 ## chatGPT Technical Terms {.tabset}
 
