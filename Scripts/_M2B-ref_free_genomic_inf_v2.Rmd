@@ -264,17 +264,6 @@ It might be good to compare the two directly.
 the paper.
 -->
 
-
-<p><p/>
-* Asking the GPT research assistants to focus on statistical aspects
-and randomness seems to have caused them to overuse and sometimes misuse
-these terms.
-
-<p><p/>
-* In high throughput data analysis, data summaries play a prominent role 
-such that almost every analysis is statistical in some sense so that attaching
-the label statistical to an analysis method has little descriptive value.
-
 <p><p/>
 * Outside of simulated data, p-values cannot be taken at face value
 **without careful scrutiny of the data in every case**.  q-values even less so.
@@ -283,9 +272,11 @@ modeling assumptions for every feature (when modeling is at the feature level).
 AI may change this.
    - The shape of the distribution of scores across the omic scale 
 can be examined to ensure that it meets expectations.
+   - When p-values are off on some way, the impact this has on the results
+should be ascertained empirically.
 
 <p><p/>
-* p (q) values may still provide useful guides for the purpose of ordering and
+* biased p (q) values may still provide useful guides for the purpose of ordering and
 selecting features, but some checks must be put in place to verify that
 this is the case. 
 <!--
@@ -329,6 +320,16 @@ that is not otherwise specified) will often dominate the total variability.
 and optimize by study design and/or parameter setting.
 
 <br/>
+
+<p><p/>
+* Asking the GPT research assistants to focus on statistical aspects
+and randomness seems to have caused them to overuse and sometimes misuse
+these terms.
+
+<p><p/>
+* In high throughput data analysis, data summaries play a prominent role 
+such that almost every analysis is statistical in some sense so that attaching
+the label statistical to an analysis method has little descriptive value.
 
 <!--
 <p><p/>
