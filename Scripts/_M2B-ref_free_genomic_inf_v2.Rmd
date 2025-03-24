@@ -315,6 +315,7 @@ and optimize by study design and/or parameter setting.
 
 <br/>
 
+<!--
 <p><p/>
 * Asking the GPT research assistants to focus on statistical aspects
 and randomness seems to have caused them to overuse and sometimes misuse
@@ -324,6 +325,7 @@ these terms.
 * In high throughput data analysis, data summaries play a prominent role 
 such that almost every analysis is statistical in some sense so that attaching
 the label statistical to an analysis method has little descriptive value.
+-->
 
 <!--
 <p><p/>
@@ -593,8 +595,10 @@ approach.
 
 ##### Applications and Statistical Highlights   {-}
 
+<span style="color:darkgreen">
 **Hard to interpret** without a comparator and an appropriate measure of closeness
 to the truth.
+</span>
 
 
 <br/>
@@ -699,18 +703,19 @@ to the truth.
 
 <p><p/>
 <span style="color:darkgreen">
-  - "Where is the randomness from" (Leo Breiman 1991) is the critical factor in deciding
+- "Where is the randomness from" (Leo Breiman 1991) is the critical factor in deciding
 how to summarize the data, and how to interpret the summaries.
-  - Neyman's non-parametric model (Freedman (2008) [Freedman:2008ad] also called
+- Neyman's non-parametric model (Freedman (2008) [Freedman:2008ad] also called
 the **Potential Outcomes Framework** may provide a natural framework for the
 analysis of variability in this context.)
-  - In that context, the dataset is the population and inference  a finite set
-of random elements to the population of all possible random elements.
+   - In that context, the dataset is the population and inference
+is from a finite set of random elements to the population of
+all possible random elements.
 </span>
 
 <br/>
 
-###### Summary of Contributions: {-}
+##### Summary of Contributions: {-}
 <p><p/>
 - SPLASH provides a statistically rigorous, scalable, reference-free methodology
 capable of identifying biologically meaningful sequence variation across diverse
@@ -724,10 +729,13 @@ an adequate amount of representative data.
 </span>
 <br/>
 
-###### Limitations: {-}
+##### Limitations: {-}
 <p><p/>
-- SPLASH is primarily aimed at detecting differential sequence variation and is not
+- SPLASH is primarily aimed at **detecting differential sequence variation** and is not
 designed for simple quantitative differential gene expression analysis.
+<span style="color:darkgreen">
+   - SPLASH detects anchors with multiple targets which have differing sample profiles.
+</span>
 - The method does not inherently infer the biological mechanisms behind the detected variations; this requires additional contextual analysis.
 
 Overall, SPLASH presents a robust statistical framework suited to a variety of genomic analyses, highlighting a paradigm shift towards a unified, statistics-driven approach to biological discovery in genomics without reliance on reference genomes.
@@ -1849,7 +1857,7 @@ where \( \gamma \) quantifies correlation between column embeddings and sample s
 <br/>
 <br/>
 
-#/## Scholar GPT Prompt {-}
+### Scholar GPT Prompt {-}
 
 * Please provide a summary of the technical content of the attached article,
 `OASIS` ( Baharav et al., 2024 [@Baharav:2024aa]),
@@ -1867,7 +1875,7 @@ which is prey to randomness or variability.
 
 > *Baharav, T. Z., Tse, D., & Salzman, J. (2024). OASIS: An interpretable, finite-sample valid alternative to Pearson’s X² for scientific discovery. Proceedings of the National Academy of Sciences, 121(15), e2304671121. [https://doi.org/10.1073/pnas.2304671121](https://doi.org/10.1073/pnas.2304671121)*
 
-### 🔍 Overview  {-}
+#### 🔍 Overview  {-}
 
 OASIS (Optimized Adaptive Statistic for Inferring Structure) is a family of statistical tests designed for **contingency table analysis**, providing:
 
@@ -1880,7 +1888,7 @@ It is particularly suited for **sparse and high-dimensional data**, such as thos
 
 ---
 
-### 🧮 Test Statistic  {-}
+#### 🧮 Test Statistic  {-}
 
 Given a count matrix \( X \in \mathbb{N}^{I \times J} \), the OASIS test statistic is:
 
@@ -1897,9 +1905,9 @@ This structure allows for **signal aggregation** and **dampening of noise** thro
 
 ---
 
-### 📊 Statistical Randomness and Finite-Sample Validity  {-}
+#### 📊 Statistical Randomness and Finite-Sample Validity  {-}
 
-#### Reformulation via Latent Variables  {-}
+##### Reformulation via Latent Variables  {-}
 
 Each table cell count \( X_{i,j} \) is constructed from i.i.d. latent variables:
 
@@ -1911,7 +1919,7 @@ This allows \( S \) to be written as a **weighted sum of independent random vari
 
 ---
 
-#### Finite-Sample p-Value Bound  {-}
+##### Finite-Sample p-Value Bound  {-}
 
 Using **Hoeffding’s inequality**, the authors derive:
 
@@ -1930,7 +1938,7 @@ Where:
 
 ---
 
-### 📈 Asymptotic Normality  {-}
+#### 📈 Asymptotic Normality  {-}
 
 The statistic converges to a normal distribution as sample sizes increase:
 
@@ -1949,7 +1957,7 @@ Where:
 
 ---
 
-### 🧪 Effect Size  {-}
+#### 🧪 Effect Size  {-}
 
 OASIS defines an **effect size estimate**:
 
@@ -1963,7 +1971,7 @@ OASIS defines an **effect size estimate**:
 
 ---
 
-### 🔁 Data-Splitting Validity  {-}
+#### 🔁 Data-Splitting Validity  {-}
 
 To avoid overfitting:
 - Data is split into train/test sets
@@ -1978,7 +1986,7 @@ Multiple random splits are allowed, with **Bonferroni correction** to maintain e
 
 ---
 
-### 📚 Comparison with Pearson’s χ²  {-}
+#### 📚 Comparison with Pearson’s χ²  {-}
 
 | Feature | Pearson χ² | OASIS |
 |--------|-------------|--------|
@@ -1990,7 +1998,7 @@ Multiple random splits are allowed, with **Bonferroni correction** to maintain e
 
 ---
 
-### ✅ Conclusion  {-}
+#### ✅ Conclusion  {-}
 
 OASIS offers:
 - Closed-form finite-sample p-value bounds
@@ -2002,7 +2010,7 @@ It is a rigorous, modern replacement for χ² tests in scientific discovery cont
 
 ---
 
-### 📘 Reference  {-}
+#### 📘 Reference  {-}
 
 Baharav, T. Z., Tse, D., & Salzman, J. (2024). *OASIS: An interpretable, finite-sample valid alternative to Pearson’s X² for scientific discovery*. *PNAS*, **121**(15), e2304671121.  
 👉 [DOI Link](https://doi.org/10.1073/pnas.2304671121)
