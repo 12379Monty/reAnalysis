@@ -349,9 +349,8 @@ for scientific discovery
 develop and apply new **statistical algorithms** for **biological inference**
 on fundamental questions in the evolution of genomes.
 
-<p><p/>
-* In this report we survey the scientific literature in order to
-situate two papers from the [Salzman Lab](https://salzmanlab.stanford.edu/):
+<p><p/> 
+* Here we consider 2 papers from the [Salzman Lab](https://salzmanlab.stanford.edu/):
    - SPLASH: 
 A statistical, reference-free genomic algorithm unifies biological discover
 [PDF](https://www.cell.com/cell/pdf/S0092-8674(23)01179-0.pdf),
@@ -362,8 +361,22 @@ for scientific discovery
 [URL](https://www.pnas.org/doi/10.1073/pnas.2304671121),
 [Code](https://github.com/refresh-bio/SPLASH) [@Baharav:2024aa]
 
+* In the first section is a brief literature review of 
+Statistical Tests for Contingency Table
+
 <p><p/>
-* The report is divided into two parts, one focusing
+* In the next two sections  go over the data and analysis highlights
+for the  SPLASH and OASIS.
+
+
+In the rest of the report we use various  GPT tools to produce variosu reviews.
+
+<p><p/>
+* In the following sections we survey the scientific literature in order to
+situate the two papers SPLASH and OASIS
+
+<p><p/>
+* The latte part of the report is divided into two parts, one focusing
 on each paper: SPLASH, OASIS
 
 * Each part is further separated into 
@@ -375,37 +388,362 @@ to the paper,
 paper (SPLASH only as OASIS is too new).
 
 
-<!--
-<p><p/>
-* In Section \@ref(soa-ref-free-genomics), we use **Concensus** to obtain a
-literature review summarizing the state of the art in reference-free genomics
-<span style="color:blue">prior to `SPLASH`.
+<br/>
+<br/>
+
+# Brief Literature Review: Statistical Tests for Contingency Tables
+
+
+Before looking at the SPLASH data and OASIS algorithm, we take a quick look at classical
+statistical tests for contingency tables.
+
+---
+
+## 1. Classical Statistical Tests {-}
+
+### 1.1 Pearson’s \( \chi^2 \) Test {-}
+
+Pearson’s chi-square test compares observed counts \( O_{ij} \) with expected counts \( E_{ij} \) under the null hypothesis of independence. The test statistic is:
+
+\[
+\chi^2 = \sum_{i,j} \frac{(O_{ij} - E_{ij})^2}{E_{ij}}
+\]
+
+- **Advantages:** Simple, widely used, computationally efficient.
+- **Limitations:** Relies on asymptotic approximation; invalid when expected counts are low (e.g., \( E_{ij} < 5 \)); no interpretability beyond significance.
+
+<br/>
+
+### 1.2 Log-Linear Models  {-}
+
+Log-linear models describe the logarithm of expected counts as a linear function of categorical predictors. The likelihood ratio test statistic is:
+
+\[
+G^2 = 2 \sum_{i,j} O_{ij} \left[ \log(O_{ij}) - \log(E_{ij}) \right]
+\]
+
+- **Advantages:** Flexibility for modeling multi-way interactions; connections to information geometry.
+- **Limitations:** Requires iterative maximum likelihood estimation; asymptotic inference only; unstable when counts are very low or zero.
+
+---
+
+## 2. Simulation-Based and Limited-Information Methods {-}
+
+Monte Carlo and permutation-based tests provide finite-sample inference without relying on asymptotics. However:
+
+- **Computation is intensive**, especially in large tables or multiple testing contexts.
+- **Interpretability is limited**, often offering only significance without structural insight.
+
+Limited-information approaches analyze margins or low-dimensional projections but do not scale well or generalize to arbitrary contingency structures.
+
+---
+
+## 3. OASIS: Optimized Adaptive Statistic for Inferring Structure {-}
+
+OASIS, proposed by [@Baharav:2024aa], is a statistical test for contingency tables developed in conjunction with SPLASH [@Chaung:2023aa]. It is specifically designed for sparse and structured settings such as reference-free genomic inference.
+
+The test statistic is a bilinear form:
+
+\[
+S = f^\top \tilde{X} c
+\]
+
+Where:
+- \( \tilde{X} = (O - E) \cdot \text{diag}(1/\sqrt{\text{colSums}(O)}) \)
+- \( f \in \mathbb{R}^I \) and \( c \in \mathbb{R}^J \) are row and column embeddings, either fixed or optimized.
+
+**Key characteristics:**
+- Finite-sample valid p-value bounds using Hoeffding-type inequalities.
+- Efficient, closed-form evaluation—no resampling or iterative fitting.
+- Embedding-based decomposition enables some interpretability.
+- Suitable for structured alternatives such as strain-level genomic differences.
+
+---
+
+## 4. Comparison Table {-}
+
+The following table compares OASIS to two classical alternatives for testing independence in contingency tables.
+
+| Feature                        | **OASIS**                                           | **Pearson’s \( \chi^2 \)**                      | **Log-Linear Models**                             |
+|-------------------------------|----------------------------------------------------|------------------------------------------------|---------------------------------------------------|
+| **Test Statistic**            | \( S = f^\top \tilde{X} c \), where \( \tilde{X} = (O - E) \cdot \text{diag}(1/\sqrt{\text{colSums}(O)}) \) | \( \chi^2 = \sum_{i,j} \frac{(O_{ij} - E_{ij})^2}{E_{ij}} \) | \( G^2 = 2 \sum_{i,j} O_{ij} \left[ \log(O_{ij}) - \log(E_{ij}) \right] \) |
+| **Inference Type**           | Finite-sample valid bounds                         | Asymptotic                                    | Asymptotic                                        |
+| **P-value Computation**      | Closed-form concentration inequality               | χ² distribution (approximate)                 | Likelihood ratio test statistic (approximate)     |
+| **Susceptibility to Outliers** | Moderate (linear in residuals)                     | Severe (squared residuals)                    | Very low (log-scaling dampens extremes)           |
+| **Low-Count Performance**    | Valid but potentially unstable                     | Invalid when expected counts < 5              | Invalid (MLE may not exist or be degenerate)      |
+| **Interpretability**         | Embedding-based; directional                        | None inherent                                 | With some extra work                              |
+| **Computational Cost**       | Low (non-iterative)                                | Low                                           | High (requires iterative estimation)              |
+
+| **Compositional Geometry**   | No (based on residual differences)                 | No                                            | Yes (log-ratio structure, KL divergence)          |
+
+---
+
+## 5. Application Context: SPLASH and OASIS {-}`
+
+OASIS was developed to complement the SPLASH algorithm [@Chaung:2023aa], which reframes genomic discovery as detection of sample-dependent structure in k-mer count tables. SPLASH generates a large number of contingency tables, and OASIS provides the statistical validation step with p-value control even in sparse data. Together, they form a framework for reference-free, statistically valid genomic inference.
+
+---
+
+## 6. Discussion: Stability, Robustness, and Geometry {-}
+
+### 6.1 Stability at Low Counts {-}
+
+Although OASIS provides **valid p-value bounds**, this does not ensure **stability** of the results under small perturbations to sparse tables:
+
+- In low-count settings, small changes to a single cell can **dramatically change** normalized residuals \( \tilde{X}_{ij} \), potentially reversing test outcomes.
+- Log-linear models may be **invalid** in such settings (e.g., MLE failure), but when estimable, they are often **more stable** under small perturbations due to their use of smoothed log-ratio-based contrasts.
+
+### 6.2 Sensitivity to Overdispersion {-}
+
+OASIS uses **linear residuals** and is thus **moderately sensitive to outliers**, especially if aligned with the direction of the embedding vectors.
+
+- Pearson's \( \chi^2 \) is **severely affected** by outliers due to squaring of residuals.
+- Log-linear models are **less affected** by extreme counts due to the slow growth of the log function and their intrinsic relation to KL divergence.
+
+### 6.3 Geometric Interpretability {-}
+
+OASIS has been described as “geometric” in the sense of its **bilinear projection** form:
+\[
+S = f^\top \tilde{X} c
+\]
+This form enables interpretability via decomposition into row and column contrasts.
+
+However, it lacks the **information-geometric** properties of log-ratio models:
+- Log-linear models operate in the space of **relative changes**, aligning with **compositional data analysis** and **multiplicative invariance**.
+- They are more naturally suited to biological count data where interpretation often depends on **proportions** rather than absolute differences.
+
+---
+
+## References
+
+```bibtex
+@article{Baharav:2024aa,
+  title={OASIS: An interpretable, finite-sample valid alternative to Pearson’s X2 for scientific discovery},
+  author={Baharav, Tavor Z. and Tse, David and Salzman, Julia},
+  journal={Proceedings of the National Academy of Sciences},
+  volume={121},
+  number={15},
+  pages={e2304671121},
+  year={2024},
+  doi={10.1073/pnas.2304671121},
+  url={https://www.pnas.org/doi/10.1073/pnas.2304671121}
+}
+
+@article{Chaung:2023aa,
+  title={SPLASH: A statistical, reference-free genomic algorithm unifies biological discovery},
+  author={Chaung, Kaitlin and Baharav, Tavor Z. and Henderson, George and Zheludev, Ivan N. and Wang, Peter L. and Salzman, Julia},
+  journal={Cell},
+  volume={186},
+  number={25},
+  pages={5440--5456},
+  year={2023},
+  publisher={Elsevier},
+  doi={10.1016/j.cell.2023.10.028},
+  url={https://doi.org/10.1016/j.cell.2023.10.028}
+}
+```
+
+
+<br/>
+<br/>
+
+
+# SPLASH - Data and Analysis  {.tabset}
+
+## Home {-}
+
+<br/>
+<br/>
+
+## Analysis Data {-}
 
 <p><p/>
-* In Section \@ref(splash-ai-review) we prompt **chatGPT** and **scholar GPT** to provide a
-technical review of Chaung et al. (2023).
+* The goal of SPLASH is to detect sequence variation between a set of samples.
 
 <p><p/>
-In Section \@ref(soa-test-contingency-tables), we use **Concensus** to obtain a
-literature review summarizing the state of the art in contingency tables statistical tests	
-<span style="color:blue">prior to `OASIS`</span>.
-
+* Each sample is represented by a separate file of sequencing data (FASTQ).
 
 <p><p/>
-* In Section \@ref(oasis-ai-review) we prompt **chatGPT** and **SciSpace** to provide a
-technical review of [Baharav@Baharav:2024aa] (**OASIS**).
-
+* To detect variation (in the sense of genomic sequence differences between samples)
+a set of **anchors** - k-mers which appear among the reads - are identified
+and combined into a set.
 
 <p><p/>
-* In Section \@ref(splash-citings) we use AI assisted research tools to summarize
-the citing literature for SPLASH and OASIS.
+* A set of **targets** - k-mers which appear among the reads at locations a few loci
+down from the anchers - is also compiled.
 
+<p><p/>
+* The analysis dataset consists of a set of tables, one for each anchor:
+   - The columns of the table correspond to samples
+   - The rows of the table correspond to targets
+   - The entries in the tables are the number of anchor reads
+with the target for each sample.
+
+<p><p/>
+*  The goal is to interrogate the read counts in order
+to distinghish two scenarios:
+   - 1. the reads for all samples were generated by a common source. eg the same biological
+units, or units from the same group.
+   - 2. the reads for the samples  were generated by more than one source.
+
+<!-- 
+*  Under scenario 1.`
+      - can differ from sample to sample and overall
+      - differences are due to?
+   - sample counts
+      - differences are due to technical effects; library size, etc.
+   - target counts = anchor * target
+
+* Under independence: 
+  - If we think of all the reads being sampled from
+one universal pool, and reads are labeled with
+anchor and target, we can think of the sample counts and the target
+counts as random.
+  - Independence:  
+
+...HERE...
 -->
 
 <br/>
 
+## calcuation of p-values {-}
 
-# Reference-Free Genomic Inference {#ref-free-genomics  .tabset}
+* For a fixed anchor, we have a contingency table of counts: rows are targets, 
+columns are samples.  The following computation steps are followed:
+
+
+1. **Random Selection Vector (f):**  
+   Each target is randomly mapped to values in `{0,1}` with equal probability.
+
+2. **Compute Global Mean (\(\hat{m}\)):**  
+   Compute the overall mean of all targets across all samples:
+\begin{equation}
+   \hat{m} = \frac{1}{M}\sum_{j,k} f_{Z_{j,k}}
+(\#eq:global-mean)
+\end{equation}
+
+3. **Compute Sample Means (\(\hat{m}_j\)):**  
+   Calculate the mean within each sample \( j \):
+\begin{equation}
+   \hat{m}_j = \frac{1}{n_j}\sum_{k=1}^{n_j} f_{Z_{j,k}}
+(\#eq:sample-means)
+\end{equation}
+
+
+
+4. **Anchor-Sample Scores (\(S_j\)):**  
+   Calculate scores for each sample, scaled by square root of total counts per sample:
+\begin{equation}
+   S_j = \sqrt{n_j}(\hat{m}_j - \hat{m})
+(\#eq:anchor-sample)
+\end{equation}
+
+
+<span style="color:darkgreen">
+* $S_j$ is a measure in standard units up to a scaler ($\sigma$)  and
+ignoring the variability in $\hat{m}$, which is an order of magnitude
+smaller than variability in $\hat{m_j}$
+means
+<p><p/>
+* the coefficient, $\sqrt{n_j}$ provides an adjusment for differing sample
+sizes.  
+
+<p><p/>
+<span style="color:darkgreen">
+* $S_j$ is a measure in standard units up to a scaler ($\sigma$)  and
+* this works well as long as there are no high coverage targets with
+different levels in different samples.
+
+</span>
+
+
+ 
+5. **Final Statistic (\(S\)):**  
+   Scores from all samples are weighted by a class-assignment vector \( c_j \), and summed to produce a single statistic:
+\begin{equation}
+   S = \sum_{j=1}^{J} c_j S_j
+(\#eq:final-statistic)
+\end{equation}
+
+
+<p><p/>
+<span style="color:darkgreen">
+* $S_j$ values in equation \@ref(anchor-samples) are usually scaled
+by an estimate of ($\sigma$) which results in a statistic which asymptotically
+has a student t distribution.
+* This is used to compute p-values which are valid estimates of true tail probabilities
+when the counts are high enough.
+
+</span>
+
+
+
+### P-value Bound (Hoeffding's inequality):   {-}
+
+In probability theory, Hoeffding's inequality provides an upper bound on the probability that the sum of bounded independent random variables deviates from its expected value by more than a certain amount. Hoeffding's inequality was proven by Wassily Hoeffding in 1963.[1]
+
+Hoeffding's inequality is a special case of the Azuma–Hoeffding inequality and McDiarmid's inequality. It is similar to the Chernoff bound, but tends to be less sharp, in particular when the variance of the random variables is small.[2] It is similar to, but incomparable with, one of Bernstein's inequalities.
+
+
+The probability bound (p-value) that the statistic \( S \) exceeds the observed value under the null hypothesis is calculated using Hoeffding’s inequality:
+\begin{equation}
+P(|S| \geq a) \leq 2\exp\left(-\frac{2a^2}{\sum_j c_j^2 + \frac{(\sum_j c_j\sqrt{n_j})^2}{M}}\right), \quad \text{where} \quad a = \frac{|S|}{2}
+(\#eq:pvalue-bound)
+\end{equation}
+
+Multiple hypothesis correction is performed using the Benjamini-Yekutieli (BY) method, ensuring control of false discovery rate (FDR).
+
+***
+
+### SPLASH Effect Size {-}
+
+
+SPLASH quantifies biological effect size based on the group assignments that yield the smallest p-value. This metric measures the absolute difference between the average target values across two sample groups defined by weights \( c_j = \pm1 \):
+
+\begin{equation}
+\left| \frac{1}{\sum_{j \in A_+} n_j}\sum_{j \in A_+} n_j\hat{m}_j - \frac{1}{\sum_{j \in A_-} n_j}\sum_{j \in A_-} n_j\hat{m}_j \right|
+(\#eq:effect-size)
+\end{equation}
+
+
+- Where \( A_+ \) and \( A_- \) are the sets of samples assigned by SPLASH with \( c_j = +1 \) or \( c_j = -1 \).
+- Effect size ranges from 0 (identical distributions between groups) to 1 (completely disjoint target distributions).
+
+<span style="color:darkgreen">
+*The effct size in Equation \@ref(#eq:effect-size) is expressed as a difference.  If the two groups have different sample sizes, the difference is not a good way to combine the 
+two.
+
+***
+
+### Binomial p-value bound for target fraction abundance plots
+
+To statistically quantify visually apparent differences in target abundance (e.g., for dominant targets), SPLASH calculates a binomial p-value:
+
+1. Compute overall frequency \( p \) of a target across all samples.
+2. Establish binomial confidence intervals (e.g., 1%–99%) for each sample.
+3. Count how many samples fall outside this confidence interval (denoted by \( X \)).
+4. Calculate a p-value bound based on binomial probability:
+   \[
+   P(\text{Binomial}(m, q) \geq X), \quad \text{where} \quad q \leq 0.02
+   \]
+
+This statistical method evaluates if observed variations in target frequencies across samples significantly deviate from expected binomial sampling variation.
+
+***
+
+
+# OASIS - Data and Analysis
+
+## TBD
+
+    
+***
+
+BELOW ARE SECTIONS ASSEMBLED by GPT 
+
+***
+
+# SPLASH: Reference-Free Genomic Inference {#ref-free-genomics  .tabset}
 
 ## Home {-}
 
@@ -425,7 +763,7 @@ reference-free genomic inference.  Do not include papers which were published
 after  Chaung et al. 2023 [@Chaung:2023aa].
 
 * We are particularly interested in the statistical aspects of methods discussed in
-the litersture.
+the  literature.
 
 * Keep the report in un-rendered markdown format, or markdown syntax
 * Also include the markdown syntax for a bibliography of citations."
@@ -540,7 +878,7 @@ Here is a detailed summary in markdown format, focusing on statistical aspects a
 ###### Overview of SPLASH   {-}
 SPLASH (Statistically Primary aLignment Agnostic Sequence Homing) is a statistical and reference-free genomic analysis algorithm designed to detect sample-dependent sequence variation directly from raw sequencing data, without the need for reference genomes or metadata. It addresses limitations inherent to traditional reference-based genomic analyses, such as reference genome incompleteness, misassemblies, and bias, while also significantly reducing computational complexity.
 
----
+***
 
 <br/>
 
@@ -594,7 +932,7 @@ approach.
 - **Consensus Sequence Assembly**:
   - For interpretability, SPLASH builds longer consensus sequences from significant anchors, which can then be aligned against known protein domains or reference databases to understand biological functions or genomic context.
 
----
+***
 
 <br/>
 
@@ -648,7 +986,7 @@ conditions.
 - **Consensus Sequence Assembly**:
   - For interpretability, SPLASH builds longer consensus sequences from significant anchors, which can then be aligned against known protein domains or reference databases to understand biological functions or genomic context.
 
----
+***
 
 <br/>
 
@@ -693,7 +1031,7 @@ to the truth.
 ###### Statistical Limitations: {-}
 - SPLASH currently does not infer the biological mechanisms underlying identified variations, and is not appropriate for tasks limited to simple quantification (e.g., basic differential gene expression analysis without sequence variation).
 
----
+***
 
 <br/>
 
@@ -786,7 +1124,7 @@ The core strength of SPLASH lies in its **statistical inference capabilities** a
 
 <br/>
 
----
+***
 
 ##### **Statistical Framework and Variability Analysis** {-}
 The SPLASH algorithm is designed to overcome key challenges associated with reference-based sequencing approaches by using **statistical tests** to infer meaningful sequence variations directly from raw sequencing reads. The key statistical methodologies and their susceptibility to variability include:
@@ -818,7 +1156,7 @@ The SPLASH algorithm is designed to overcome key challenges associated with refe
 - Unlike traditional permutation-based methods (which may underestimate the false discovery rate by an order of magnitude), SPLASH provides a **rigorous mathematical bound on p-values**, ensuring robust statistical inference.
 - It is optimized for **low read-depth** situations where standard methods fail due to statistical imprecision.
 
----
+***
  
 ##### **Application to Biologically Variable Systems** {-}
 SPLASH's statistical foundation enables it to detect biologically meaningful variations in datasets with high intrinsic randomness, such as:
@@ -839,7 +1177,7 @@ SPLASH's statistical foundation enables it to detect biologically meaningful var
    - SPLASH detects **statocyst-specific isoforms** in octopus that are missing from reference genomes.
    - It identifies **geographic and seasonal variation in eelgrass epiphytes**, demonstrating applications in **environmental genomics**.
 
----
+***
 
 ##### **Key Strengths and Limitations in Statistical Analysis** {-}
 ###### **Strengths:** {-}
@@ -853,7 +1191,7 @@ SPLASH's statistical foundation enables it to detect biologically meaningful var
 ⚠ **Assumes discrete variation**: It may struggle with continuous genomic variation patterns.  
 ⚠ **No direct mechanism inference**: While SPLASH detects variation, it does not determine whether differences arise from splicing, mutation, or RNA editing.  
 
----
+***
 
 ##### **Conclusion** {-}
 SPLASH is a **powerful statistical tool for genomic discovery**, leveraging **alignment-free statistical inference** to detect biologically relevant sequence variations. Its methodologies are designed to **minimize false discoveries** while being **computationally efficient**. Given its ability to analyze **highly variable biological systems**, SPLASH has the potential to revolutionize genomic analysis across diverse applications.
@@ -880,7 +1218,7 @@ expected conditions.
 
 <br/>
 
----
+***
 
 ##### **Statistical Framework and Variability Analysis** {-}
 The SPLASH algorithm is designed to overcome key challenges associated with reference-based sequencing approaches by using **statistical tests** to infer meaningful sequence variations directly from raw sequencing reads. The key statistical methodologies and their susceptibility to variability include:
@@ -912,7 +1250,7 @@ The SPLASH algorithm is designed to overcome key challenges associated with refe
 - Unlike traditional permutation-based methods (which may underestimate the false discovery rate by an order of magnitude), SPLASH provides a **rigorous mathematical bound on p-values**, ensuring robust statistical inference.
 - It is optimized for **low read-depth** situations where standard methods fail due to statistical imprecision.
 
----
+***
  
 ##### **Application to Biologically Variable Systems** {-}
 SPLASH's statistical foundation enables it to detect biologically meaningful variations in datasets with high intrinsic randomness, such as:
@@ -933,7 +1271,7 @@ SPLASH's statistical foundation enables it to detect biologically meaningful var
    - SPLASH detects **statocyst-specific isoforms** in octopus that are missing from reference genomes.
    - It identifies **geographic and seasonal variation in eelgrass epiphytes**, demonstrating applications in **environmental genomics**.
 
----
+***
 
 ##### **Key Strengths and Limitations in Statistical Analysis** {-}
 ###### **Strengths:** {-}
@@ -944,7 +1282,7 @@ SPLASH's statistical foundation enables it to detect biologically meaningful var
 
 SPLASH's statistical framework is designed to detect **sequence variation across samples without reference alignment**, making it computationally efficient and broadly applicable. Below, we take a detailed look at its core statistical techniques, including **k-mer based variation detection, contingency table analysis, p-value bounding, false discovery rate control, and effect size computation**.
 
----
+***
 
 ###### **1. K-mer Based Statistical Detection of Variation**  {-}
 ####### **Concept:** {-}
@@ -960,7 +1298,7 @@ SPLASH's statistical framework is designed to detect **sequence variation across
 - **Choice of k**: Default is *k = 27*, ensuring **statistical resolution** while balancing sequencing noise.
 - **Effect of sequencing errors**: Short k-mers are susceptible to random sequencing errors, but SPLASH mitigates this by aggregating across multiple read positions.
 
----
+***
 
 ##### **2. Contingency Table Analysis for Sequence Variation** {-}
 ###### **Concept:** {-}
@@ -984,7 +1322,7 @@ SPLASH's statistical framework is designed to detect **sequence variation across
 - **Sparse contingency tables**: Some targets may have **very low counts**, making statistical inference harder.
 - **Multiple hypothesis testing**: Analyzing many k-mer pairs increases the risk of false positives.
 
----
+***
 
 ##### **3. P-value Bounding for Statistical Efficiency** {-}
 ###### **Concept:** {-}
@@ -1003,7 +1341,7 @@ SPLASH's statistical framework is designed to detect **sequence variation across
 - **Avoids overfitting**: Since SPLASH tests multiple random sample splits, it minimizes **selection bias**.
 - **Handles rare variations well**: Unlike permutation tests, which can **underestimate false discovery rates**, p-value bounding maintains accuracy.
 
----
+***
 
 ##### **4. False Discovery Rate (FDR) Control** {-}
 ###### **Concept:** {-}
@@ -1025,7 +1363,7 @@ SPLASH's statistical framework is designed to detect **sequence variation across
 - **FDR is adaptive**: The method dynamically adjusts to sequencing noise.
 - **Lower false positives compared to uncorrected p-values**, but at the cost of **some true positives being discarded**.
 
----
+***
 
 ##### **5. Effect Size Computation for Variation Magnitude** {-}
 ###### **Concept:** {-}
@@ -1049,7 +1387,7 @@ SPLASH's statistical framework is designed to detect **sequence variation across
 - **More robust than p-values**: Unlike p-values, which depend on sample size, effect size remains stable across datasets.
 - **Can detect rare but important variations**: Even low-frequency variants with high effect size can be biologically relevant.
 
----
+***
 
 ##### **6. Application to Highly Variable Biological Systems** {-}
 ###### **Example: Detecting Viral Strain Variants** {-}
@@ -1070,7 +1408,7 @@ SPLASH's statistical framework is designed to detect **sequence variation across
 - SPLASH discovered **novel V(D)J recombinations** in **B and T cells**.
 - It revealed **clonally expanded immune receptors** without a reference genome.
 
----
+***
 
 ##### **Conclusion: Statistical Power of SPLASH** {-}
 SPLASH’s **reference-free statistical approach** provides a robust way to analyze genomic variation, particularly in highly diverse and noisy biological datasets. By leveraging:
@@ -1090,7 +1428,7 @@ Would you like a deeper look at **specific statistical formulas or implementatio
 
 SPLASH employs a robust statistical framework designed to detect **sample-specific sequence variation** directly from raw sequencing reads. The key statistical techniques include **contingency table analysis, p-value bounding, effect size computation, and false discovery rate (FDR) correction**. Below, we explore the **exact mathematical formulations** behind these methodologies.
 
----
+***
 
 ##### **1. Contingency Table Analysis** {-}
 SPLASH constructs **contingency tables** for each anchor-target pair to evaluate whether observed sequence distributions vary significantly across samples.
@@ -1145,7 +1483,7 @@ where:
 
 However, since **chi-square tests assume large counts**, SPLASH instead applies **custom p-value bounding methods**, detailed next.
 
----
+***
 
 ##### **2. P-value Bounding for Statistical Efficiency** {-}
 Instead of permutation tests, which are computationally expensive, SPLASH computes a **closed-form p-value bound**.
@@ -1167,7 +1505,7 @@ where:
 
 If the bound **falls below a predefined significance threshold (\(\alpha\), typically 0.05)**, the variation is deemed significant.
 
----
+***
 
 ##### **3. Effect Size Computation** {-}
 P-values only tell us whether an effect is **statistically significant**, but we also need to measure how **large** the difference is. SPLASH computes **effect sizes** to quantify the magnitude of sequence variation.
@@ -1187,7 +1525,7 @@ where:
 - \( D = 1 \): Completely different target distributions.
 - \( 0.5 \leq D \leq 1 \): Strong biological differentiation.
 
----
+***
 
 ##### **4. False Discovery Rate (FDR) Control** {-}
 Since SPLASH evaluates thousands of anchor-target pairs, multiple hypothesis testing increases the risk of **false positives**. To correct for this, SPLASH applies **Benjamini-Hochberg (BH) correction**.
@@ -1211,7 +1549,7 @@ Since SPLASH evaluates thousands of anchor-target pairs, multiple hypothesis tes
 - **Reduces false positives** while maintaining sensitivity.
 - Ensures only **statistically robust** anchor-target pairs are reported.
 
----
+***
 
 ##### **5. Application to SARS-CoV-2 Mutation Analysis** {-}
 SPLASH’s statistical framework successfully identified **strain-specific mutations** in SARS-CoV-2 sequences.
@@ -1223,7 +1561,7 @@ For example, when analyzing viral sequences from Omicron and Delta strains:
   - **Mutation P681R (Delta-specific)**
 - The **effect size** for these mutations was close to **1**, confirming strong differentiation between strains.
 
----
+***
 
 ##### **Conclusion: The Power of SPLASH's Statistical Methods** {-}
 ###### **Key Takeaways** {-}
@@ -1245,7 +1583,7 @@ Let's walk through a **worked example** using **real genomic data** to see how t
 **Scenario:**
 We have **sequencing data** from **two different SARS-CoV-2 strains** (Delta and Omicron). Our goal is to use **SPLASH’s statistical methods** to identify significant sequence variations.
 
----
+***
 
 ##### **Step 1: Constructing a Contingency Table** {-}
 We analyze **a specific genomic region** where two different **mutations** appear in Delta and Omicron.
@@ -1323,7 +1661,7 @@ p \text{-value} \approx 3.5 \times 10^{-40}
 - Since **p < 0.05**, we **reject \( H_0 \)**.
 - The data **strongly supports strain-specific variation**.
 
----
+***
 
 ##### **Step 3: P-value Bounding for Statistical Efficiency** {-}
 To **confirm robustness**, we apply a **p-value bound** using **Chernoff's inequality**:
@@ -1349,7 +1687,7 @@ P(452.67) \leq e^{- \frac{(452.67)^2}{2(4)(4)(25)}}
 - The probability that **this variation happened by random chance is practically zero**.
 - **P-value bounding confirms that our chi-square test is highly significant**.
 
----
+***
 
 ##### **Step 4: Computing Effect Size** {-}
 To measure how **strongly** the target distributions differ, we compute **effect size**:
@@ -1378,7 +1716,7 @@ D_{P681R} = 1 - \frac{\min(230, 0)}{230 + 0} = 1 - 0 = 1.0
 - **Effect size = 1** → **Perfect separation** between Delta and Omicron.
 - **Effect sizes close to 1 confirm biologically meaningful strain differences**.
 
----
+***
 
 ##### **Step 5: False Discovery Rate (FDR) Correction** {-}
 Since we test multiple mutations, we control for **false positives** using **Benjamini-Hochberg correction**.
@@ -1402,7 +1740,7 @@ Since we test multiple mutations, we control for **false positives** using **Ben
 
 3. Since all our **p-values are much smaller**, they remain **statistically significant** after correction.
 
----
+***
 
 ##### **Conclusion: Key Findings from Our Statistical Analysis** {-}
 ✅ **Significant variation in K417N (Omicron) and P681R (Delta)**  
@@ -1411,13 +1749,13 @@ Since we test multiple mutations, we control for **false positives** using **Ben
 
 This worked example **demonstrates how SPLASH statistically detects genomic variations** in viral strains, immune genes, and other biological applications.
 
----
+***
 
 
 I would like to see **a R-based implementation** of these calculations on real sequencing data.
 
 
----
+***
 
 #### **R-based implementation** {-}
 
@@ -1433,7 +1771,7 @@ We will:
 5. **Calculate effect size** to measure the strength of mutation differences.
 6. **Adjust for multiple testing** using **False Discovery Rate (FDR) correction**.
 
----
+***
 
 ##### **Step 1: Load Required R Libraries** {-}
 ```{r m2b-load-libs}
@@ -1447,7 +1785,7 @@ suppressPackageStartupMessages(require(pheatmap))
 
 ```
 
----
+***
 
 ##### **Step 2: Input SARS-CoV-2 Mutation Data** {-}
 Here’s a hypothetical dataset where we have sequencing results for **two Delta and two Omicron samples**, showing counts for specific **mutations (targets)**.
@@ -1476,7 +1814,7 @@ kableExtra::kable_styling(full_width = F)
 
 ```
 
----
+***
 
 ##### **Step 3: Compute Chi-Square Test for Target Variation** {-}
 We apply a **Chi-Square test** to determine whether target distributions significantly differ between Delta and Omicron samples.
@@ -1492,7 +1830,7 @@ print(chi_sq_test)
 - If **p-value < 0.05**, we **reject \( H_0 \)**, meaning the mutation distribution **significantly differs** between strains.
 - **Chi-square statistic** quantifies how much variation exists between Delta and Omicron samples.
 
----
+***
 
 ##### **Step 4: Compute P-Value Bound (Chernoff’s Inequality)** {-}
 Instead of resampling, we approximate the p-value bound using **Chernoff’s bound**.
@@ -1519,7 +1857,7 @@ print(paste("Chernoff P-Value Bound: ", chernoff_pval))
 - A **low bound (e.g., \( 10^{-40} \))** confirms **significant variation**.
 - This method is **computationally efficient** compared to permutation testing.
 
----
+***
 
 #### **Step 5: Compute Effect Size** {-}
 To quantify how **different** Delta and Omicron are, we compute an **effect size metric**:
@@ -1556,7 +1894,7 @@ print(effect_sizes)
 - **Effect size = 0.5 - 1** → Strong biological difference.
 - **Effect size < 0.5** → Moderate or weak separation.
 
----
+***
 
 #### **Step 6: Apply False Discovery Rate (FDR) Correction** {-}
 Since we are testing multiple mutations, we **control false positives** using **Benjamini-Hochberg (BH) correction**.
@@ -1571,7 +1909,7 @@ print(adjusted_p_values)
 ##### **Interpreting the Output:** {-}
 - If **adjusted p-value < 0.05**, the mutation remains **statistically significant** after FDR correction.
 
----
+***
 
 #### **Step 7: Visualize Mutation Distribution** {-}
 To **visualize** differences between strains, we plot a **heatmap of mutation counts**.
@@ -1590,7 +1928,7 @@ pheatmap(mutation_data,
 - **Omicron mutations (K417N, P681H) appear in Omicron samples**.
 - **Delta mutations (K417 Wildtype, P681R) are absent in Omicron**.
 
----
+***
 
 #### **📌 Final Interpretation of Results** {-}
 | **Test** | **Result** | **Interpretation** |
@@ -1601,7 +1939,7 @@ pheatmap(mutation_data,
 | **FDR Correction** | \( p_{\text{adjusted}} < 0.05 \) | The variation is **not a false positive**. |
 | **Heatmap** | Clear clustering of mutations by strain | **Omicron and Delta have distinct mutation patterns**. |
 
----
+***
 
 #### **🎯 Conclusion** {-}
 - The **K417N and P681H mutations are exclusive to Omicron**.
@@ -1609,7 +1947,7 @@ pheatmap(mutation_data,
 - The **statistical methods confirm that these mutations are not random**.
 - **SPLASH-style statistics successfully differentiate viral strains without a reference genome!** 🚀
 
----
+***
 
 #### **📌 What’s Next?** {-}
 Would you like to:
@@ -1629,7 +1967,7 @@ for examples.
 <br/>
 <br/>
 
-# Test for Contingency Tables {#test-contingency-tables  .tabset}
+# OASIS: Test for Contingency Tables {#test-contingency-tables  .tabset}
 
 ## Home {-}
 
@@ -1643,7 +1981,7 @@ for examples.
 ### Concensus {-}
 
 * A new statistical test for contingency tables,
-OASIS, is described in the attached -  Baharav et al., 2024  [@Baharav:2024].
+OASIS, is described in the attached -  Baharav et al., 2024  [@Baharav:2024aa].
 
 * One application is in the context making reference-free genomic inference
 as described in   Chaung et al. (2023) [@Chaung:2023aa] (**SPLASH** paper).
@@ -1658,6 +1996,14 @@ tests for contingency tables.
 
 * Also include the markdown syntax for a bibliography of citations."
 
+* Include a table comparing OASIS to Pearson's $X2$ and log-linear models
+as alternative ways to  test for independence.  In the table, incoude a
+row with the test statistic.
+
+* In writing the test statistic for OASIS, can $\tilde{X}$ be w3ritten in terms
+of O and E to make the comparison with Pearson'x $\Chi^2$ easier?  Similarly 
+can the log-ratio models test statistic be written fully interm of
+log(O) and log(E).
 <br/>
 <br/>
 
@@ -1788,7 +2134,7 @@ and seems to trip up the research assistants.
 ##### Overview and Motivation {-}
 The article introduces **OASIS (Optimized Adaptive Statistic for Inferring Structure)**, a novel statistical framework for testing contingency tables. Contingency tables (matrices of count data) are common in quantitative research, especially genomics. OASIS addresses significant limitations of Pearson’s chi-squared (X²) test, notably invalid finite-sample P-values, lack of robustness, and interpretability, making it suited for sparse, high-dimensional data common in modern genomic studies.
 
----
+***
 
 ##### Methodological Approach {-}
 
@@ -1813,7 +2159,7 @@ where \( \gamma \) quantifies correlation between column embeddings and sample s
 - Provides theoretical proofs showing OASIS's statistic converges to a normal distribution asymptotically, allowing standard Gaussian approximation of P-values for large samples.
 - Asymptotic approximation closely aligns with finite-sample bounds, incorporating a variance parameter \( \sigma_f^2 \) derived from the embedding vector \( f \).
 
----
+***
 
 ##### Statistical Variability and Randomness {-}
 
@@ -1825,36 +2171,36 @@ where \( \gamma \) quantifies correlation between column embeddings and sample s
 - OASIS explicitly addresses **overdispersion**, common in genomic data such as single-cell RNA sequencing, ensuring robustness.
 - Simulations confirm OASIS maintains robust control of the false discovery rate (FDR), whereas Pearson’s X² often fails under similar conditions.
 
----
+***
 
 ##### Power and Performance {-}
 - Simulations demonstrate that OASIS significantly outperforms Pearson’s X² in detecting structured deviations from the null hypothesis (e.g., distinct two-group scenarios).
 - Conversely, OASIS shows lower power relative to Pearson’s X² in scenarios with diffuse, noisy signals, highlighting a clear trade-off emphasizing structured signal detection.
 
----
+***
 
 ##### Applications and Interpretability {-}
 - OASIS successfully applied to genomic data, such as de novo detection of SARS-CoV-2 and Mycobacterium tuberculosis variants, outperforming existing methods without relying on reference genomes.
 - Provides interpretability post-inference, clearly indicating why the null hypothesis was rejected via meaningful embedding vectors, in contrast to purely exploratory techniques like correspondence analysis.
 
----
+***
 
 ##### Statistical Validity and Effect Size {-}
 - Defines a clear, intuitive effect size measure quantifying differences between groups identified by embeddings. This effect size is bounded by total variation distance, ensuring practical interpretability.
 - Provides rigorous proofs for the finite-sample validity of its P-values using classical probability and concentration inequality arguments.
 
----
+***
 
 ##### Conclusions and Broader Implications {-}
 - Highlights OASIS’s potential beyond contingency tables, offering a general framework potentially applicable to structured inference, matrix decomposition, and multi-table inference beyond standard singular value decomposition (SVD).
 
----
+***
 
 ##### Supplemental Information Highlights {-}
 - Extensive mathematical proofs are provided, supporting theoretical claims regarding finite-sample validity, asymptotic normality, and embedding optimization.
 - Additional simulations emphasize robustness, stability, and effectiveness of embedding optimization strategies under various statistical conditions.
 
----
+***
 
 **In summary**, OASIS provides a statistically rigorous, computationally efficient, robust, and interpretable alternative to Pearson’s X² test, particularly valuable in modern genomics and other domains dealing with high-dimensional, sparse, structured data.
 
@@ -1891,7 +2237,7 @@ OASIS (Optimized Adaptive Statistic for Inferring Structure) is a family of stat
 
 It is particularly suited for **sparse and high-dimensional data**, such as those arising in genomics.
 
----
+***
 
 ##### 🧮 Test Statistic  {-}
 
@@ -1908,7 +2254,7 @@ Where:
 
 This structure allows for **signal aggregation** and **dampening of noise** through linear algebraic properties.
 
----
+***
 
 ##### 📊 Statistical Randomness and Finite-Sample Validity  {-}
 
@@ -1922,7 +2268,7 @@ Z_{j,k} \sim p, \quad X_{i,j} = \sum_{k=1}^{n_j} \mathbb{1}\{Z_{j,k} = i\}
 
 This allows \( S \) to be written as a **weighted sum of independent random variables**, enabling concentration bounds.
 
----
+***
 
 ###### Finite-Sample p-Value Bound  {-}
 
@@ -1941,7 +2287,7 @@ Where:
 - This is valid for any fixed \( f, c \)
 - Ensures **exact control** of type I error for **any sample size**
 
----
+***
 
 ##### 📈 Asymptotic Normality  {-}
 
@@ -1960,7 +2306,7 @@ Where:
 - Derived via **Lyapunov’s Central Limit Theorem**
 - Ensures smooth transition between finite-sample and asymptotic inference
 
----
+***
 
 ##### 🧪 Effect Size  {-}
 
@@ -1974,7 +2320,7 @@ OASIS defines an **effect size estimate**:
 - Upper bounded by **total variation distance** \( \delta_{TV}(p_A, p_B) \)
 - Ensures effect size is biologically meaningful
 
----
+***
 
 ##### 🔁 Data-Splitting Validity  {-}
 
@@ -1989,7 +2335,7 @@ P(p(X) \leq u) \leq u
 
 Multiple random splits are allowed, with **Bonferroni correction** to maintain error control.
 
----
+***
 
 ##### 📚 Comparison with Pearson’s χ²  {-}
 
@@ -2001,7 +2347,7 @@ Multiple random splits are allowed, with **Bonferroni correction** to maintain e
 | Interpretability | Post-hoc via SVD | Built-in |
 | Robustness | Poor (esp. overdispersion) | Strong |
 
----
+***
 
 #### ✅ Conclusion  {-}
 
@@ -2013,7 +2359,7 @@ OASIS offers:
 
 It is a rigorous, modern replacement for χ² tests in scientific discovery contexts, especially genomics.
 
----
+***
 
 #### 📘 Reference  {-}
 
@@ -2031,6 +2377,14 @@ Baharav, T. Z., Tse, D., & Salzman, J. (2024). *OASIS: An interpretable, finite-
 <br/>
 <br/>
 
+
+Here's the summary of the sections on pages 37–39 from the attached document, presented in unrendered markdown format, including the equations:
+
+***
+
+<br/>
+<br/>
+
 # Appendix 
 
 <br/>
@@ -2042,6 +2396,101 @@ Baharav, T. Z., Tse, D., & Salzman, J. (2024). *OASIS: An interpretable, finite-
 - Statistical distance metrics for genomic comparisons (Ondov et al., 2016).
 - Hypothesis-driven statistical inference to detect variations and differential expression (Pierce et al., 2019).
 
+<br/>
+<br/>
+
+## OASIS vs log-linear {.tabset}
+
+### Home {-}
+
+<br/>
+<br/>
+
+### Option A {-}
+
+#### 6. Discussion: Stability, Robustness, and Geometry of OASIS vs. Log-Linear Models
+
+##### 6.1 Stability at Low Counts
+
+While OASIS provides **finite-sample valid p-value bounds** using classical concentration inequalities, this does **not guarantee statistical stability**. In sparse contingency tables where row and column totals are small:
+
+- A single count difference in a low-count cell can produce a **large change in the normalized residual** \( \tilde{X}_{ij} \), potentially **flipping the direction or magnitude** of the OASIS test statistic.
+- This is especially problematic when the row and column embeddings \( f \) and \( c \) concentrate weight on those cells.
+- In contrast, log-linear models may **fail** (e.g., with undefined likelihood when \( O_{ij} = 0 \)), but when valid, their **log-ratio based inference is smoother** and less sensitive to small changes.
+
+Thus, OASIS is **valid but not necessarily stable** under low-count perturbations.
+
+##### 6.2 Overdispersion and Sensitivity to Outliers
+
+OASIS's reliance on raw count differences means that **overdispersed counts** — i.e., rare but large deviations — can **heavily influence the test statistic**. In real biological data, this may amplify the signal from noise or contamination:
+
+- If an overdispersed entry aligns with the structure in \( f \) and \( c \), it can **dominate** the signal.
+- The log-linear likelihood ratio statistic, in contrast, uses:
+  \[
+  G^2 = 2 \sum_{i,j} O_{ij} \left[ \log(O_{ij}) - \log(E_{ij}) \right]
+  \]
+  which **grows slowly** with outliers and is more robust to extreme counts.
+
+Therefore, while OASIS is robust in theory (due to finite-sample control), it may be **more sensitive to outliers in practice** than the log-likelihood ratio.
+
+##### 6.3 Geometric Interpretability
+
+The term "geometric" has been used to describe OASIS due to its **bilinear structure**:
+\[
+S = f^\top \tilde{X} c
+\]
+This allows projection and decomposition, reminiscent of PCA or correspondence analysis. However, this is **algebraic**, not **compositional geometry**.
+
+In contrast, the **log-ratio** statistic used in log-linear models is:
+- Geometrically rooted in **information geometry**.
+- Directly connected to **Kullback–Leibler divergence** and **compositional data analysis**.
+- Reflective of **multiplicative scale-invariant relationships** common in biology.
+
+Thus, log-linear models are **more inherently geometric** in the biological and statistical sense than OASIS.
+
+
+<br/>
+<br/>
+
+### Option B {- .tabset}
+
+* Appendix: Nuanced Comparisons Between OASIS and Log-Linear Models
+
+#### A.1 Stability in Low-Count Regimes
+
+Although OASIS provides closed-form p-value bounds valid for any number of observations, its **statistic may not be stable** in sparse settings. This is because:
+
+- A single change in a low-count entry can substantially alter the normalized residual matrix \( \tilde{X} \).
+- The test statistic \( S = f^\top \tilde{X} c \) aggregates these residuals linearly, so instability in one cell can reverse the outcome.
+
+By contrast, log-linear models — when estimable — often **smooth out such variation** due to the concavity of the log function.
+
+<br/>
+
+#### A.2 Sensitivity to Overdispersion
+
+OASIS's linear formulation makes it **more sensitive to extreme residuals** than log-linear approaches:
+
+- Overdispersed counts (common in single-cell or microbial data) can disproportionately affect OASIS.
+- The log-likelihood ratio statistic:
+  \[
+  G^2 = 2 \sum O_{ij} (\log(O_{ij}) - \log(E_{ij}))
+  \]
+  increases **logarithmically**, providing **a form of outlier damping**.
+
+Hence, while OASIS is theoretically robust to some forms of noise, it may be **practically vulnerable to heavy-tailed count distributions**.
+
+### A.3 What Makes a Method "Geometric"?
+
+OASIS’s bilinear test statistic can be interpreted as a **projection** of the normalized contingency table, akin to PCA or correspondence analysis.
+
+However, it does **not** respect the **multiplicative, compositional structure** of biological count data.
+
+In contrast:
+- Log-linear models operate on **log-ratios**, aligning with **Aitchison geometry** and **KL divergence**.
+- This makes them inherently geometric in the **information-theoretic and compositional data** sense.
+
+Thus, log-linear tests offer **more biologically natural geometry**, especially when comparing proportions across groups.
 
 <br/>
 <br/>
