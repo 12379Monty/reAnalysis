@@ -1,4 +1,4 @@
----
+Anchor-Sample Scores (---
 title:  "Reference-Free Genomic Inference with SPLASH and OASIS"
 #subtitle: "a tale of two schools"
 author: "[Francois Collin](https://www.linkedin.com/in/francoisz/)"
@@ -454,8 +454,9 @@ The following table compares OASIS to two classical alternatives for testing ind
 | **Computational Cost**       | Low (non-iterative)                                | Low                                           | High (requires iterative estimation)              |
 ---
 
+<!-- 
 | **Compositional Geometry**   | No (based on residual differences)                 | No                                            | Yes (log-ratio structure, KL divergence)          |
-
+-->
 
 <!-- 
 ## 5. Application Context: SPLASH and OASIS {-}
@@ -616,11 +617,10 @@ columns are samples.  The following computation steps are followed:
    Calculate scores for each sample, scaled by square root of total counts per sample:
 \begin{equation}
    S_j = \sqrt{n_j}(\hat{m}_j - \hat{m})
-(\#eq:anchor-sample)
+(\#eq:anchor-samples)
 \end{equation}
 
 
-<span style="color:darkgreen">
 * $S_j$ is a measure in standard units up to a scaler ($\sigma$)  and
 ignoring the variability in $\hat{m}$, which is an order of magnitude
 smaller than variability in $\hat{m_j}$
@@ -628,14 +628,12 @@ means
 <p><p/>
 * the coefficient, $\sqrt{n_j}$ provides an adjusment for differing sample
 sizes.  
-</span>
 
 <p><p/>
-<span style="color:darkgreen">
 * $S_j$ is a measure in standard units up to a scaler ($\sigma$)  and
 * this works well as long as there are no high coverage targets with
 different levels in different samples.
-</span>
+
 
 
 
@@ -648,7 +646,6 @@ different levels in different samples.
 \end{equation}
 
 
-<span style="color:darkgreen">
 
 <p><p/>
 * $S_j$ values in equation \@ref(eq:anchor-samples) are usually scaled
@@ -658,9 +655,9 @@ has a student t distribution.
 * This is used to compute p-values which are valid estimates of true tail probabilities
 when the counts are high enough.
 
-</span>
 
-
+<br/>
+<br/>
 
 ### P-value Bound (Hoeffding's inequality):   {-}
 
@@ -729,7 +726,7 @@ or research assistants`.
 
 * The articulation that these
 tools produce is so impressive that it is easy to
-forget that they have no reasining power whatsoever.
+forget that they have no reasoning power whatsoever.
 
 
 > The real danger today is not that computers are smarter than us
