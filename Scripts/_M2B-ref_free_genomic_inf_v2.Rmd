@@ -215,39 +215,9 @@ param_class=sapply(params, class), row.names=NULL) %>%
     }
 </style>
 
-
-> The real danger today is not that computers are smarter than us
-> but that we think computers are smarter than us.
->
-> `r tufte::quote_footer('Gary Smith^[
- [Computers Still Do Not “Understand”](https://mindmatters.ai/2024/01/computers-still-do-not-understand/)
-]')`
-
-
-> Machine learning programs are stuck in a prehuman or 
-> nonhuman phase of cognitive evolution.
-> Their deepest flaw is the absence of the most critical
-> capacity of any intelligence: to say not only what is the case, 
-> what was the case and what will be the case —
-> that’s description and prediction — but also what 
-> is not the case and what could and could not be the case. 
-> Those are the ingredients of explanation, 
-> the mark of true intelligence.
-> 
-`r tufte::quote_footer('Noam Chomsky^[
- [Noam Chomsky: The False Promise of ChatGPT](https://www.nytimes.com/2023/03/08/opinion/noam-chomsky-chatgpt-ai.html?unlocked_article_code=HWKFHWmEMp2Rj9LxZ1YhQ4wPgTWnxg7mt1hpa4Ykz8POkadrtm5v3R5EoWZk1IpqSiHRsZkocOQsD-MKMV5HnovvYnhM6Hkh5PRGKQSyRZBqNuBrKZyWO4Sf4z3DC3bbWpx-xqf3-Ee_bkjdlGBl2mEMph4Kq3oJoEg1jXCUbvucfk8zQyiMDH5Gq4VQ8e7xGEJuaTrLjD8lplwuaP_npTyGrnxsQANFwAk2WCgxu9gnET-Ui5E5f5IwdFWyS9utz9JbDgCiVGUI2n0yCxokjnFMwCOl1tr95Vc8GZ_p3w0tzfFT-hRK5JzB2pGyMho_BJEA_0mDs0MdsnSRpiR3bvMs&smid=url-share)
-]')`
-
-
 <br/>
 <br/>
 
-
-# General Remarks/Background  {-}
-
-* We still need to better understand the statistical procedure used to "score"
-samples for independence, etc., but we can make some general remarks
-which apply broadly, independent of the specifics of the statistical procedures.
 
 <!--
 <p><p/> 
@@ -257,6 +227,15 @@ It might be good to compare the two directly.
    - I will try to do this based on the data and software identified in 
 the paper.
 -->
+
+# General Remarks - Omic Scale Analysis {-}
+
+<p><p/>
+* Omic scale data refers to measurements taken in parallel over many features -
+from thousands of genes to millions of proteins.  Even though the result of
+interest, gene scores for example, may be obtained as a result of analyzing
+features one at a time, the success of the design or analysis method
+can only be assessed bu taking a holistic look at the study data and results.
 
 <p><p/>
 * Outside of simulated data, p-values cannot be taken at face value
@@ -391,7 +370,7 @@ paper (SPLASH only as OASIS is too new).
 <br/>
 <br/>
 
-# Brief Literature Review: Statistical Tests for Contingency Tables
+# Preliminaries: Statistical Tests for Contingency Tables
 
 
 Before looking at the SPLASH data and OASIS algorithm, we take a quick look at classical
@@ -478,7 +457,8 @@ The following table compares OASIS to two classical alternatives for testing ind
 
 ---
 
-## 5. Application Context: SPLASH and OASIS {-}`
+<!-- 
+## 5. Application Context: SPLASH and OASIS {-}
 
 OASIS was developed to complement the SPLASH algorithm [@Chaung:2023aa], which reframes genomic discovery as detection of sample-dependent structure in k-mer count tables. SPLASH generates a large number of contingency tables, and OASIS provides the statistical validation step with p-value control even in sparse data. Together, they form a framework for reference-free, statistically valid genomic inference.
 
@@ -500,6 +480,7 @@ OASIS uses **linear residuals** and is thus **moderately sensitive to outliers**
 - Pearson's \( \chi^2 \) is **severely affected** by outliers due to squaring of residuals.
 - Log-linear models are **less affected** by extreme counts due to the slow growth of the log function and their intrinsic relation to KL divergence.
 
+<!--
 ### 6.3 Geometric Interpretability {-}
 
 OASIS has been described as “geometric” in the sense of its **bilinear projection** form:
@@ -511,7 +492,7 @@ This form enables interpretability via decomposition into row and column contras
 However, it lacks the **information-geometric** properties of log-ratio models:
 - Log-linear models operate in the space of **relative changes**, aligning with **compositional data analysis** and **multiplicative invariance**.
 - They are more naturally suited to biological count data where interpretation often depends on **proportions** rather than absolute differences.
-
+-->
 ---
 
 ## References
@@ -739,11 +720,39 @@ This statistical method evaluates if observed variations in target frequencies a
     
 ***
 
-BELOW ARE SECTIONS ASSEMBLED by GPT 
+Below are sections which are to a great
+extent assembled by GPT  powered tools,
+or research assistants.  The articulation that these
+tools produce is so impressive that it is easy to
+z;ssssssssssssorget that they have no reasining power whatsoever.
+
+
+> The real danger today is not that computers are smarter than us
+> but that we think computers are smarter than us.
+>
+> `r tufte::quote_footer('Gary Smith^[
+ [Computers Still Do Not “Understand”](https://mindmatters.ai/2024/01/computers-still-do-not-understand/)
+]')`
+
+
+> Machine learning programs are stuck in a prehuman or 
+> nonhuman phase of cognitive evolution.
+> Their deepest flaw is the absence of the most critical
+> capacity of any intelligence: to say not only what is the case, 
+> what was the case and what will be the case —
+> that’s description and prediction — but also what 
+> is not the case and what could and could not be the case. 
+> Those are the ingredients of explanation, 
+> the mark of true intelligence.
+> 
+`r tufte::quote_footer('Noam Chomsky^[
+ [Noam Chomsky: The False Promise of ChatGPT](https://www.nytimes.com/2023/03/08/opinion/noam-chomsky-chatgpt-ai.html?unlocked_article_code=HWKFHWmEMp2Rj9LxZ1YhQ4wPgTWnxg7mt1hpa4Ykz8POkadrtm5v3R5EoWZk1IpqSiHRsZkocOQsD-MKMV5HnovvYnhM6Hkh5PRGKQSyRZBqNuBrKZyWO4Sf4z3DC3bbWpx-xqf3-Ee_bkjdlGBl2mEMph4Kq3oJoEg1jXCUbvucfk8zQyiMDH5Gq4VQ8e7xGEJuaTrLjD8lplwuaP_npTyGrnxsQANFwAk2WCgxu9gnET-Ui5E5f5IwdFWyS9utz9JbDgCiVGUI2n0yCxokjnFMwCOl1tr95Vc8GZ_p3w0tzfFT-hRK5JzB2pGyMho_BJEA_0mDs0MdsnSRpiR3bvMs&smid=url-share)
+]')`
+
 
 ***
 
-# SPLASH: Reference-Free Genomic Inference {#ref-free-genomics  .tabset}
+# Reference-Free Genomic Inference {#ref-free-genomics  .tabset}
 
 ## Home {-}
 
@@ -1967,7 +1976,7 @@ for examples.
 <br/>
 <br/>
 
-# OASIS: Test for Contingency Tables {#test-contingency-tables  .tabset}
+# Test for Contingency Tables {#test-contingency-tables  .tabset}
 
 ## Home {-}
 
