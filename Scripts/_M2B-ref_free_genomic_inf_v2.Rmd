@@ -1,4 +1,4 @@
-Anchor-Sample Scores (---
+---
 title:  "Reference-Free Genomic Inference with SPLASH and OASIS"
 #subtitle: "a tale of two schools"
 author: "[Francois Collin](https://www.linkedin.com/in/francoisz/)"
@@ -235,7 +235,26 @@ the paper.
 from thousands of genes to millions of proteins.  Even though the result of
 interest, gene scores for example, may be obtained as a result of analyzing
 features one at a time, the success of the design or analysis method
-can only be assessed bu taking a holistic look at the study data and results.
+can only be assessed by taking a holistic look at the study data and results.
+
+
+<p><p/>
+* In high throughput analysis, including most-omics, unwanted shared variability
+among features is to be expected.  An analysis is incomplete if it does not
+include a careful examination of the data to detect any sign of unwanted variability.
+See the RUV literature  [@Molania:2023aa; @Gerard:2021aa; @Jiang:2023aa].
+   - ideally we would measure the level of unwanted variability
+
+
+<p><p/>
+* The statistical standard errors of measurement, or the sampling errors, are only
+one source of variability in data collected in a high throughput,
+massively parallel fashion.  Other sources of variability such as
+reagent lots, instruments, operators, days (ie. day to day variability is variability
+that is not otherwise specified) will often dominate the total variability.
+   - The Bin Yu Group [@Yu:2024aa;@Yu:2020aa;@Yu:2013aa;@Yu:2018aa] suggest the use of
+**stability** as a more comprehensive or inclusive measure of variability to monitor
+and optimize by study design and/or parameter setting.
 
 <p><p/>
 * Outside of simulated data, p-values cannot be taken at face value
@@ -272,25 +291,6 @@ features peaked, flat, heavy-tailed?
    - Is the shape consistent with expectations?  If the shape is not as expected,
 the points falling in the tails may also not have the expected interpretation.
 
-
-
-<p><p/>
-* In high throughput analysis, including most-omics, unwanted shared variability
-among features is to be expected.  An analysis is incomplete if it does not
-include a careful examination of the data to detect any sign of unwanted variability.
-See the RUV literature  [@Molania:2023aa; @Gerard:2021aa; @Jiang:2023aa].
-   - ideally we would measure the level of unwanted variability
-
-
-<p><p/>
-* The statistical standard errors of measurement, or the sampling errors, are only
-one source of variability in data collected in a high throughput,
-massively parallel fashion.  Other sources of variability such as
-reagent lots, instruments, operators, days (ie. day to day variability is variability
-that is not otherwise specified) will often dominate the total variability.
-   - The Bin Yu Group [@Yu:2024aa;@Yu:2020aa;@Yu:2013aa;@Yu:2018aa] suggest the use of
-**stability** as a more comprehensive or inclusive measure of variability to monitor
-and optimize by study design and/or parameter setting.
 
 <br/>
 
