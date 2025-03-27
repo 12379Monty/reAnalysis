@@ -245,6 +245,13 @@ include a careful examination of the data to detect any sign of unwanted variabi
 See the RUV literature  [@Molania:2023aa; @Gerard:2021aa; @Jiang:2023aa].
    - ideally we would measure the level of unwanted variability
 
+<p><p>
+* All RNA-Seq formal analyses entail QC, Pre-processing (normalization), followed by
+the analysis steps that are the closest to the results, and often the only steps reported
+on: feature identification/differential expression analysis, 
+subgroup identification/cluster analysis.
+   - similarly for other omic platforms.
+   - the same should be done with these datasets
 
 <p><p/>
 * The statistical standard errors of measurement, or the sampling errors, are only
@@ -255,26 +262,6 @@ that is not otherwise specified) will often dominate the total variability.
    - The Bin Yu Group [@Yu:2024aa;@Yu:2020aa;@Yu:2013aa;@Yu:2018aa] suggest the use of
 **stability** as a more comprehensive or inclusive measure of variability to monitor
 and optimize by study design and/or parameter setting.
-
-<p><p/>
-* Outside of simulated data, p-values cannot be taken at face value
-**without careful scrutiny of the data in every case**.  q-values even less so.
-   - In omic scale analyses it has not been possible to carefully examine
-modeling assumptions for every feature (when modeling is at the feature level).
-AI may change this.
-   - The shape of the distribution of scores across the omic scale 
-can be examined to ensure that it meets expectations.
-   - When p-values are off on some way, the impact this has on the results
-should be ascertained empirically on the -omic scale with appropriate data.
-
-<p><p/>
-* biased p (q) values may still provide useful guides for the purpose of ordering and
-selecting features, but some checks must be put in place to verify that
-this is the case. 
-<!--
-   - if we are interested in considering the effect size in the identification process, ...
-   - p (q) values near 0 or 1 usually need to be examined, and analyzed, on a different scale
--->
 
 <p><p/>
 * Theoretical properties of summaries can provide guidance for the design of
@@ -305,6 +292,28 @@ these terms.
 such that almost every analysis is statistical in some sense so that attaching
 the label statistical to an analysis method has little descriptive value.
 -->
+
+<p><p/>
+* Outside of simulated data, p-values cannot be taken at face value
+**without careful scrutiny of the data in every case**.  q-values even less so.
+   - In omic scale analyses it has not been possible to carefully examine
+modeling assumptions for every feature (when modeling is at the feature level).
+AI may change this.
+   - The shape of the distribution of scores across the omic scale 
+can be examined to ensure that it meets expectations.
+   - When p-values are off on some way, the impact this has on the results
+should be ascertained empirically on the -omic scale with appropriate data.
+
+<p><p/>
+* biased p (q) values may still provide useful guides for the purpose of ordering and
+selecting features, but some checks must be put in place to verify that
+this is the case. 
+<!--
+   - if we are interested in considering the effect size in the identification process, ...
+   - p (q) values near 0 or 1 usually need to be examined, and analyzed, on a different scale
+-->
+
+<br/>
 
 <!--
 <p><p/>
@@ -340,16 +349,20 @@ for scientific discovery
 [URL](https://www.pnas.org/doi/10.1073/pnas.2304671121),
 [Code](https://github.com/refresh-bio/SPLASH) [@Baharav:2024aa]
 
+<p><p/>
 * In the first section is a brief literature review of 
 Statistical Tests for Contingency Table
 
 <p><p/>
-* In the next two sections  go over the data and analysis highlights
-for the  SPLASH and OASIS.
+* In the next two sections  go over the data and analyses described in
+the  SPLASH and OASIS papers
 
 
-In the rest of the report we use various  GPT tools to produce variosu reviews.
+In the rest of the report we use various  GPT tools to produce literature reviews
+relevant to Reference-Free Genomic Inference and Tests for Contingency Tables.
 
+
+<!--
 <p><p/>
 * In the following sections we survey the scientific literature in order to
 situate the two papers SPLASH and OASIS
@@ -366,21 +379,29 @@ to the paper,
    - a review of  relevant literature following the publications of the 
 paper (SPLASH only as OASIS is too new).
 
+-->
+
 
 <br/>
 <br/>
 
-# Preliminaries: Statistical Tests for Contingency Tables
+# Preliminaries {.tabset}
 
+## Home {-}
+
+<br/>
+<br/>
+
+## Tests for Contingency Tables {-}
 
 Before looking at the SPLASH data and OASIS algorithm, we take a quick look at classical
 statistical tests for contingency tables.
 
 ---
 
-## 1. Classical Statistical Tests {-}
+### 1. Classical Statistical Tests {-}
 
-### 1.1 Pearson’s \( \chi^2 \) Test {-}
+#### 1.1 Pearson’s \( \chi^2 \) Test {-}
 
 Pearson’s chi-square test compares observed counts \( O_{ij} \) with expected counts \( E_{ij} \) under the null hypothesis of independence. The test statistic is:
 
@@ -393,7 +414,7 @@ Pearson’s chi-square test compares observed counts \( O_{ij} \) with expected 
 
 <br/>
 
-### 1.2 Log-Linear Models  {-}
+#### 1.2 Log-Linear Models  {-}
 
 Log-linear models describe the logarithm of expected counts as a linear function of categorical predictors. The likelihood ratio test statistic is:
 
@@ -406,7 +427,7 @@ G^2 = 2 \sum_{i,j} O_{ij} \left[ \log(O_{ij}) - \log(E_{ij}) \right]
 
 ---
 
-## 2. Simulation-Based and Limited-Information Methods {-}
+### 2. Simulation-Based and Limited-Information Methods {-}
 
 Monte Carlo and permutation-based tests provide finite-sample inference without relying on asymptotics. However:
 
@@ -417,7 +438,7 @@ Limited-information approaches analyze margins or low-dimensional projections bu
 
 ---
 
-## 3. OASIS: Optimized Adaptive Statistic for Inferring Structure {-}
+### 3. OASIS: Optimized Adaptive Statistic for Inferring Structure {-}
 
 OASIS, proposed by [@Baharav:2024aa], is a statistical test for contingency tables developed in conjunction with SPLASH [@Chaung:2023aa]. It is specifically designed for sparse and structured settings such as reference-free genomic inference.
 
@@ -439,7 +460,7 @@ Where:
 
 ---
 
-## 4. Comparison Table {-}
+### 4. Comparison Table {-}
 
 The following table compares OASIS to two classical alternatives for testing independence in contingency tables.
 
@@ -459,22 +480,22 @@ The following table compares OASIS to two classical alternatives for testing ind
 -->
 
 <!-- 
-## 5. Application Context: SPLASH and OASIS {-}
+### 5. Application Context: SPLASH and OASIS {-}
 
 OASIS was developed to complement the SPLASH algorithm [@Chaung:2023aa], which reframes genomic discovery as detection of sample-dependent structure in k-mer count tables. SPLASH generates a large number of contingency tables, and OASIS provides the statistical validation step with p-value control even in sparse data. Together, they form a framework for reference-free, statistically valid genomic inference.
 
 ---
 
-## 6. Discussion: Stability, Robustness, and Geometry {-}
+### 6. Discussion: Stability, Robustness, and Geometry {-}
 
-### 6.1 Stability at Low Counts {-}
+#### 6.1 Stability at Low Counts {-}
 
 Although OASIS provides **valid p-value bounds**, this does not ensure **stability** of the results under small perturbations to sparse tables:
 
 - In low-count settings, small changes to a single cell can **dramatically change** normalized residuals \( \tilde{X}_{ij} \), potentially reversing test outcomes.
 - Log-linear models may be **invalid** in such settings (e.g., MLE failure), but when estimable, they are often **more stable** under small perturbations due to their use of smoothed log-ratio-based contrasts.
 
-### 6.2 Sensitivity to Overdispersion {-}
+#### 6.2 Sensitivity to Overdispersion {-}
 
 OASIS uses **linear residuals** and is thus **moderately sensitive to outliers**, especially if aligned with the direction of the embedding vectors.
 
@@ -482,7 +503,7 @@ OASIS uses **linear residuals** and is thus **moderately sensitive to outliers**
 - Log-linear models are **less affected** by extreme counts due to the slow growth of the log function and their intrinsic relation to KL divergence.
 
 <!--
-### 6.3 Geometric Interpretability {-}
+#### 6.3 Geometric Interpretability {-}
 
 OASIS has been described as “geometric” in the sense of its **bilinear projection** form:
 \[
@@ -496,7 +517,7 @@ However, it lacks the **information-geometric** properties of log-ratio models:
 -->
 ---
 
-## References
+### References
 
 ```bibtex
 @article{Baharav:2024aa,
@@ -530,6 +551,125 @@ However, it lacks the **information-geometric** properties of log-ratio models:
 <br/>
 
 
+##  within-sample relative abundances {- .tabset}
+
+### Home {-}
+
+<br/>
+
+### chatGPT {-}
+
+* Query:
+   - what are RNA-Seq methods to compare across samples the within sample relative expression
+
+* **Response**
+
+When comparing across samples to assess **within-sample relative expression** (comparing how the proportion or relative abundance of genes within a sample changes across multiple samples), the analysis shifts from traditional absolute differential expression testing toward methods designed for compositional or proportion-based data analysis.
+
+#### **Key Concept**:
+RNA-seq counts represent compositional data (relative abundances), especially after normalization. Therefore, comparing the **within-sample relative abundances** across samples involves methods that account explicitly for compositionality.
+
+---
+
+**Methods for Comparing Within-Sample Relative Expression Across Samples:**
+
+#### **1. Compositional Data Analysis (CoDA):**
+
+RNA-seq counts can be explicitly analyzed as compositional data, considering genes' relative abundance (proportions within each sample).
+
+- **ALDEx2** (Analysis of differential abundance taking compositionality into account):
+  - Uses a Bayesian framework and log-ratio transformations (CLR, centered log-ratio).
+  - Designed specifically to identify differentially abundant (relative) features across groups of samples.
+  - R package: [`ALDEx2`](https://bioconductor.org/packages/release/bioc/html/ALDEx2.html)
+
+- **ANCOM-BC**:
+  - ANCOM (Analysis of Composition of Microbiomes) adapted for RNA-seq and microbiome data.
+  - Uses log-ratio approach and compositional modeling to infer differences in relative abundance.
+  - R package: [`ANCOMBC`](https://bioconductor.org/packages/release/bioc/html/ANCOMBC.html)
+
+---
+
+#### **2. Relative Log Expression (RLE)-based methods:**
+   
+- **DESeq2** normalization via Relative Log Expression (RLE):
+  - The standard normalization method in DESeq2 inherently compares relative expression across samples.
+  - After normalization, the data reflect relative abundances suitable for relative comparisons.
+  - R package: [`DESeq2`](https://bioconductor.org/packages/release/bioc/html/DESeq2.html)
+
+---
+
+#### **3. Percent or Proportion-based comparisons:**
+   
+- **Direct Proportion Comparisons**:
+  - Convert normalized counts to proportions (counts per gene/total counts per sample) and use statistical tests designed for proportional data (e.g., beta regression).
+  - Beta regression (`betareg`) or logistic regression approaches (`glm`) in R can compare proportions across groups.
+
+---
+
+#### **4. Quantile or Rank-based Methods:**
+   
+- **NOISeq**:
+  - Uses non-parametric statistics and ranks to compare relative expression within and across samples, without explicit assumptions about absolute expression.
+  - R package: [`NOISeq`](https://bioconductor.org/packages/release/bioc/html/NOISeq.html)
+
+---
+
+#### **5. Compositional transformation (CLR, ALR, ILR transformations)**:
+
+Explicit log-ratio transformations of compositional data to perform downstream statistical testing:
+
+- **Centered Log-Ratio (CLR)**:
+  \[
+  CLR(gene) = \log\left(\frac{count_{gene}}{\text{geometric mean(counts)}}\right)
+  \]
+
+- **Additive Log-Ratio (ALR)**:
+  \[
+  ALR(gene) = \log\left(\frac{count_{gene}}{count_{reference\,gene}}\right)
+  \]
+
+After transformation, standard statistical tests (e.g., linear models, ANOVA, linear mixed models) can be applied.
+
+**Example R package for CoDA transformations**: [`compositions`](https://cran.r-project.org/package=compositions)
+
+---
+
+#### **Recommended approach**:
+For explicit RNA-seq **relative expression comparisons** across samples, especially if compositionality matters (e.g., microbiome, small RNA-seq libraries, single-cell RNA-seq), use a compositional method like:
+
+- **ALDEx2** or **ANCOM-BC** (recommended)
+- CLR-based analysis (compositions package)
+- NOISeq (non-parametric, rank-based approach)
+
+These approaches explicitly recognize the compositional nature of RNA-seq data and appropriately model relative abundance.
+
+---
+
+#### Quick Summary Table:
+
+| Method            | Type                        | Strengths                                            | R package example(s)  |
+|-------------------|-----------------------------|------------------------------------------------------|-----------------------|
+| **ALDEx2**        | Bayesian CoDA               | Explicitly compositional; robust against sparsity    | `ALDEx2`              |
+| **ANCOM-BC**      | Compositional testing       | Handles zero-inflation and compositionality          | `ANCOMBC`             |
+| **CLR/ALR/ILR**   | Log-ratio transforms (CoDA) | Flexible; allows conventional statistical methods    | `compositions`        |
+| **DESeq2 (RLE)**  | Normalization               | Standard RNA-seq workflow, reflects relative expression implicitly | `DESeq2`      |
+| **NOISeq**        | Non-parametric              | Rank-based; minimal assumptions                      | `NOISeq`              |
+
+---
+
+#### **Conclusion:**
+
+The most robust and explicitly compositional methods currently recommended for RNA-seq within-sample relative expression comparisons across multiple samples are **ALDEx2**, **ANCOM-BC**, and log-ratio transformations (CLR).
+
+
+### Concensus {-}
+
+* Query:
+   - what are RNA-Seq methods to compare across samples the within sample relative expression
+
+* **Response**
+
+
 # SPLASH - Data and Analysis  {.tabset}
 
 ## Home {-}
@@ -552,7 +692,7 @@ and combined into a set.
 
 <p><p/>
 * A set of **targets** - k-mers which appear among the reads at locations a few loci
-down from the anchers - is also compiled.
+down from the anchors - is also compiled.
 
 <p><p/>
 * The analysis dataset consists of a set of tables, one for each anchor:
@@ -588,7 +728,7 @@ counts as random.
 
 <br/>
 
-## calcuation of p-values {-}
+## calculation of p-values {-}
 
 * For a fixed anchor, we have a contingency table of counts: rows are targets, 
 columns are samples.  The following computation steps are followed:
@@ -597,6 +737,7 @@ columns are samples.  The following computation steps are followed:
 1. **Random Selection Vector (f):**  
    Each target is randomly mapped to values in `{0,1}` with equal probability.
 
+<br/>
 2. **Compute Global Mean (\(\hat{m}\)):**  
    Compute the overall mean of all targets across all samples:
 \begin{equation}
@@ -604,6 +745,7 @@ columns are samples.  The following computation steps are followed:
 (\#eq:global-mean)
 \end{equation}
 
+<br/>
 3. **Compute Sample Means (\(\hat{m}_j\)):**  
    Calculate the mean within each sample \( j \):
 \begin{equation}
@@ -611,8 +753,7 @@ columns are samples.  The following computation steps are followed:
 (\#eq:sample-means)
 \end{equation}
 
-
-
+<br/>
 4. **Anchor-Sample Scores (\(S_j\)):**  
    Calculate scores for each sample, scaled by square root of total counts per sample:
 \begin{equation}
@@ -634,10 +775,7 @@ sizes.
 * this works well as long as there are no high coverage targets with
 different levels in different samples.
 
-
-
-
- 
+<br/>
 5. **Final Statistic (\(S\)):**  
    Scores from all samples are weighted by a class-assignment vector \( c_j \), and summed to produce a single statistic:
 \begin{equation}
@@ -716,6 +854,43 @@ This statistical method evaluates if observed variations in target frequencies a
 # OASIS - Data and Analysis
 
 ## TBD
+
+# The Chi-squared test in RNA-Seq
+
+In typical RNA-seq analysis, the Chi-square test is rarely used directly for feature identification because RNA-seq count data are usually modeled with negative binomial or Poisson distributions due to the inherent variability (overdispersion) in counts.
+
+However, there are scenarios and some less-common or exploratory approaches that employ Chi-square or similar methods. Generally, Chi-square tests might appear in RNA-seq workflows for categorical or proportion comparisons rather than the standard count-based feature identification.
+
+## Known R packages using Chi-square tests in RNA-seq context:
+
+- **NOISeq**:
+  - Primarily uses non-parametric approaches, but it includes methods that use Fisher’s exact or Chi-square-based tests for differential expression identification as part of exploratory analyses.
+
+- **edgeR** and **DESeq2**:
+  - These two prominent packages primarily use negative binomial models and likelihood ratio or Wald tests. However, users occasionally perform Chi-square-based post hoc or exploratory tests manually to analyze categorical proportions (e.g., enrichment analysis).
+
+- **baySeq**:
+  - Primarily Bayesian, but some exploratory downstream analyses may apply Chi-square tests (outside primary differential expression methods) for categorical or GO enrichment comparisons.
+
+## Typical Usage Scenario:
+- Chi-square tests might be used explicitly in RNA-seq analyses to test enrichment (e.g., gene ontology enrichment, KEGG pathway enrichment) rather than feature selection itself.
+
+## Common Alternatives (Preferred Approaches):
+- **DESeq2** (Negative Binomial, Wald test)
+- **edgeR** (Negative Binomial, Likelihood Ratio test)
+- **limma-voom** (Linear modeling with empirical Bayes)
+
+## Recommendation:
+- For direct **feature identification** (gene selection), Chi-square tests are uncommon and generally not recommended due to assumptions violations (independence and expected frequency conditions).
+- For categorical or proportion-based testing, Chi-square tests are occasionally applicable post-DE analysis (enrichment analysis).
+
+If you explicitly want to explore categorical relationships or perform enrichment analysis with Chi-square-based methods in RNA-seq context, you can use:
+
+- **GOstats**
+- **topGO**
+- **clusterProfiler** (which primarily uses hypergeometric tests or Fisher’s exact test, but Chi-square can sometimes be implemented manually).
+
+In summary, no mainstream RNA-seq differential expression package explicitly uses Chi-square for primary gene selection due to its statistical limitations with RNA-seq count data, but Chi-square tests occasionally find use in downstream enrichment or categorical analyses.
 
     
 ***
@@ -2419,9 +2594,9 @@ Here's the summary of the sections on pages 37–39 from the attached document, 
 
 ### Option A {-}
 
-#### 6. Discussion: Stability, Robustness, and Geometry of OASIS vs. Log-Linear Models
+#### 6. Discussion: Stability, Robustness, and Geometry of OASIS vs. Log-Linear Models {-}
 
-##### 6.1 Stability at Low Counts
+##### 6.1 Stability at Low Counts {-}
 
 While OASIS provides **finite-sample valid p-value bounds** using classical concentration inequalities, this does **not guarantee statistical stability**. In sparse contingency tables where row and column totals are small:
 
@@ -2431,7 +2606,7 @@ While OASIS provides **finite-sample valid p-value bounds** using classical conc
 
 Thus, OASIS is **valid but not necessarily stable** under low-count perturbations.
 
-##### 6.2 Overdispersion and Sensitivity to Outliers
+##### 6.2 Overdispersion and Sensitivity to Outliers {-}
 
 OASIS's reliance on raw count differences means that **overdispersed counts** — i.e., rare but large deviations — can **heavily influence the test statistic**. In real biological data, this may amplify the signal from noise or contamination:
 
@@ -2444,7 +2619,7 @@ OASIS's reliance on raw count differences means that **overdispersed counts** �
 
 Therefore, while OASIS is robust in theory (due to finite-sample control), it may be **more sensitive to outliers in practice** than the log-likelihood ratio.
 
-##### 6.3 Geometric Interpretability
+##### 6.3 Geometric Interpretability {-}
 
 The term "geometric" has been used to describe OASIS due to its **bilinear structure**:
 \[
@@ -2463,11 +2638,11 @@ Thus, log-linear models are **more inherently geometric** in the biological and 
 <br/>
 <br/>
 
-### Option B {- .tabset}
+### Option B {-} 
 
 * Appendix: Nuanced Comparisons Between OASIS and Log-Linear Models
 
-#### A.1 Stability in Low-Count Regimes
+#### A.1 Stability in Low-Count Regimes {-}
 
 Although OASIS provides closed-form p-value bounds valid for any number of observations, its **statistic may not be stable** in sparse settings. This is because:
 
@@ -2478,7 +2653,7 @@ By contrast, log-linear models — when estimable — often **smooth out such va
 
 <br/>
 
-#### A.2 Sensitivity to Overdispersion
+#### A.2 Sensitivity to Overdispersion {-}
 
 OASIS's linear formulation makes it **more sensitive to extreme residuals** than log-linear approaches:
 
@@ -2491,7 +2666,7 @@ OASIS's linear formulation makes it **more sensitive to extreme residuals** than
 
 Hence, while OASIS is theoretically robust to some forms of noise, it may be **practically vulnerable to heavy-tailed count distributions**.
 
-### A.3 What Makes a Method "Geometric"?
+### A.3 What Makes a Method "Geometric"? {-}
 
 OASIS’s bilinear test statistic can be interpreted as a **projection** of the normalized contingency table, akin to PCA or correspondence analysis.
 
