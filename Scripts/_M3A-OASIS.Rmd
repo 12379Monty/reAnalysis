@@ -1,0 +1,576 @@
+---
+title:  "OASIS - Optimized Adaptive Statistic for Inferring Structure"
+#subtitle: "SUBTITLE goes here"
+author: "[Francois Collin](https://www.linkedin.com/in/francoisz/)"
+date: "`r format(Sys.time(), '%B %d, %Y')`"
+always_allow_html: yes
+output:
+  # for use of .tabset
+  bookdown::html_document2:
+  #bookdown::html_book:
+  #html_document:
+    code_folding: hide
+    code_download: true
+    toc: true
+    toc_depth: 2
+    # does this have an effect
+    fig_caption: yes
+    # this has no effect
+    number_sections: yes
+    # css: ['../_css/pandoc3.css', '../_css/myMargins.css']
+bibliography: [../_bibFiles/_healthy_aging.bib, ../_bibFiles/_ref_free_genom_inf.bib, ../../_bibFiles/_Breiman.bib, ../../_bibFiles/_Yu.bib, ../../_bibFiles/_Freedman.bib, ../../_bibFiles/_RUV.bib, ../../_bibFiles/_Yu.bib]
+csl: ../_csl/cell-numeric.csl
+link-citations: true
+---
+
+```{css sidenote, echo = FALSE}
+
+.main-container {
+    margin-left: 250px;
+}
+.sidenote, .marginnote { 
+  float: right;
+  clear: right;
+  margin-right: -40%;
+  width: 37%;         # best between 50% and 60%
+  margin-top: 0;
+  margin-bottom: 0;
+  font-size: 1.1rem;
+  line-height: 1.3;
+  vertical-align: baseline;
+  position: relative;
+  }
+```
+
+
+<style>
+@import url('https://fonts.googleapis.com/css?family=Raleway');
+@import url('https://fonts.googleapis.com/css?family=Oxygen');
+@import url('https://fonts.googleapis.com/css?family=Raleway:bold');
+@import url('https://fonts.googleapis.com/css?family=Oxygen:bold');
+
+.main-container {
+  max-width: 1400px !important;
+}
+
+body{
+  font-family: 'Oxygen', sans-serif;
+  font-size: 16px;
+  line-height: 24px;
+}
+
+h1,h2,h3,h4 {
+  font-family: 'Raleway', sans-serif;
+}
+
+.container { width: 1400px; }
+
+caption {
+  font-size: 20px;
+  caption-side: top;
+  text-indent: 30px;
+  background-color: lightgrey;
+  color: black;
+  margin-top: 5px;
+}
+
+g-table-intro h4 {
+  text-indent: 0px;
+}
+</style>
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(echo = TRUE,
+                      comment = NA,
+                      warning = FALSE,
+                      error = FALSE,
+                      message = FALSE,
+                      cache = FALSE,
+                      fig.width = 8,
+                      fig.height = 4)
+```
+
+```{r m3a-GlobalOptions, results="hide", include=FALSE, cache=FALSE}
+
+knitr::opts_knit$set(stop_on_error = 2L) #really make it stop
+options(knitr.table.format = 'html')
+
+options(stringsAsFactors=F)
+
+ #knitr::dep_auto()
+
+```
+<!-- ######################################################################## -->
+
+
+```{r m3a-Prelims,  include=FALSE, echo=FALSE, results='hide', message=FALSE} 
+
+FN <- "_M3A-OASIS"
+if(sum(grepl(FN, list.files()))==0) stop("Check FN")
+
+ suppressMessages(require(rmarkdown))
+ suppressMessages(require(knitr))
+
+ suppressPackageStartupMessages(require(methods))
+ suppressPackageStartupMessages(require(bookdown))
+
+ suppressPackageStartupMessages(require(data.table))
+ options(datatable.fread.datatable=F)
+
+ suppressPackageStartupMessages(require(plyr))
+ suppressPackageStartupMessages(require(dplyr))
+ suppressPackageStartupMessages(require(magrittr))
+
+ # Shotcuts for knitting and rendering while in R session (Invoke interactive R from R/Scripts folder)
+ kk <- function(n='') knitr::knit2html(paste("t", n, sep=''), envir=globalenv(),
+       output=paste(FN,".html", sep=''))
+
+ rr <- function(n='') rmarkdown::render(paste("t", n, sep=''), envir=globalenv(),
+       output_file=paste(FN,".html", sep='')) ##, output_dir='Scripts')
+
+ bb <- function(n='') browseURL(paste(FN,".html", sep=''))
+
+ # The usual shortcuts
+ zz <- function(n='') source(paste("t", n, sep=''))
+
+
+ WRKDIR <- '..'
+ if(!file.exists(WRKDIR)) stop("WRKDIR ERROR", WRKDIR)
+
+ # do once
+
+ # Shotcuts for knitting and rendering while in R session
+ kk <- function(n='') knitr::knit2html(paste("t", n, sep=''), envir=globalenv(),
+       output=paste('',FN,".html", sep=''))
+
+ rr <- function(n='') render(paste("t", n, sep=''), envir=globalenv(),
+       output_file=paste(FN,".html", sep=''), output_dir='Scripts')
+
+ bb <- function(n='') browseURL(paste('',FN,".html", sep=''))
+
+ # The usual shorcuts
+ zz <- function(n='') source(paste('', "t", n, sep=''))
+
+ # file rmarkdown file management options: cache, figures
+ cache_DIR <- file.path(WRKDIR,'Scripts', 'cache/M3A/')
+ suppressMessages(dir.create(cache_DIR, recursive=T))
+ opts_chunk$set(cache.path=cache_DIR)
+
+ figures_DIR <- file.path(WRKDIR,'Scripts', 'figures/M3A/')
+ suppressMessages(dir.create(figures_DIR, recursive=T))
+ opts_chunk$set(fig.path=figures_DIR)
+
+ #tables_DIR <- file.path(WRKDIR,'Scripts', 'tables/M3A/')
+ #suppressMessages(dir.create(table_DIR, recursive=T))
+ #opts_chunk$set(fig.path=table_DIR)
+ 
+ # need a local copy of help_DIR
+ #help_DIR <- file.path(WRKDIR,'Scripts', 'help_files')
+ help_DIR <- file.path('.', 'help_files')
+ suppressMessages(dir.create(help_DIR, recursive=T))
+ 
+ temp_DIR <- file.path(WRKDIR,'Scripts', 'temp_files')
+ suppressMessages(dir.create(temp_DIR, recursive=T))
+
+```
+<!-- ######################################################################## -->
+
+*** 
+
+```{r m3a-utilityFns, echo=FALSE}
+ # Here we define some utility functions
+source('r/utilityFns.r')
+
+```
+
+<!-- ######################################################################## -->
+
+
+<!-- SKIP THIS 
+# Params {#params}
+
+## Input params {-}
+-->
+
+```{r m3a-input-params-all, echo = FALSE, results = "asis", eval=F, echo=F}
+ # print out original input params
+data.frame(
+param_name=names(params),
+param_value=unlist(params),
+param_class=sapply(params, class), row.names=NULL) %>%
+  knitr::kable(caption="Input Parameters")
+```
+
+<!--
+* Breiman: [@Breiman:1984aa; @Breiman:2001aa]
+* Freedman: [@Freedman:2008aa; @Freedman:2008ad; @Freedman:2008ac; @Freedman:2009ac]
+-->
+
+<style>
+    hr {
+        border: none;
+        height: 2px;
+        background: none;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.5);
+    }
+</style>
+
+<br/>
+<br/>
+
+## Outline  {-}
+
+<p><p/>
+* The [Salzman Lab](https://salzmanlab.stanford.edu/) 
+develop and apply new **statistical algorithms** for **biological inference**
+on fundamental questions in the evolution of genomes.
+
+<p><p/> 
+* Here we through the details of 1 paper from the [Salzman Lab](https://salzmanlab.stanford.edu/):
+   - OASIS: 
+An interpretable, finite-sample valid alternative to Pearson’s X2 
+for scientific discovery
+[URL](https://www.pnas.org/doi/10.1073/pnas.2304671121),
+[Code](https://github.com/refresh-bio/SPLASH) [@Baharav:2024aa]
+
+
+<br/>
+<br/>
+
+---
+
+# Problem Formulation {#problem-formulation}
+
+<p><p/>
+* As is standard in contingency table analysis, the observed matrix of counts
+is taken as \( X \in \mathbb{N}^{I \times J} \).
+
+<p><p/>
+* Defining \([m] = \{1, 2, \dots, m\}\), a contingency table is then defined by
+pairs of observations of:
+   - a row (\([I]\)-valued) categorical random variable, and 
+   - a column (\([J]\)-valued) categorical random variable.
+
+<p><p/>
+* In this work, we focus on the case where the 
+   - **columns correspond to biological samples** (explanatory random variable) and
+   - the **rows correspond to the response variable (targets)**.
+
+* Thus, we are interested in whether the conditional row distribution is the same for each column.
+
+* Define \( X^{(j)} \) as the \( j \)-th column of \( X \), and 
+* \( n_j = \sum_{i=1}^{I} X_{ij} \) as
+the total number of counts in column \( j \). 
+
+* Let \( M = \sum_j n_j \) be the total number of counts in the table,
+equivalently obtainable by summing row or column sums.
+
+The null model studied is:
+
+**Definition 1 (Null Model).**  
+Conditional on the column totals \(\{n_j\}_{j=1}^{J}\),
+each column of the contingency table \(X\) is 
+\[ X^{(j)} \sim \text{multinomial}(n_j, p), \]
+drawn independently for all \(j\), for some common
+vector of (unknown) row probabilities \(p\).
+
+Notationally:
+
+- \(\|\cdot\|\) denotes the vector \(\ell_2\)^[
+also known as the Euclidean norm for vectors measures the square root of the sum of squared values]
+norm or spectral^[
+the square root of the largest eigenvalue of A]
+norm for matrices, unless otherwise specified.
+- \(\|A\|_F\) denotes the Frobenius^[
+The Frobenius norm of a matrix is a way to measure its "size" or "magnitude," calculated as the square root of the sum of the squares of all its elements.]
+norm of a matrix \(A\).
+- \(v_{\text{max}}(A)\) denotes a principal eigenvector of a symmetric matrix
+\(A\) (any unit eigenvector with maximal eigenvalue).
+- The operation \(\text{diag}(\cdot)\) maps a length \(n\) vector \(v\)
+to an \(n \times n\) matrix \(A\), where all off-diagonal entries of \(A\) are 0 and \(A_{ii} = v_i\) for \(i \in [n]\).
+- \(A^{(j)}\) denotes the \(j\)-th column of a matrix.
+- When applied to a vector, scalar operators (such as \(\sqrt{\cdot}\) or \(1/\cdot\)) are applied entrywise.
+- \(1\) (\(0\)) is the all-ones (zeros) vector of appropriate dimension.
+- \(\Phi\) denotes the CDF of a standard Gaussian random variable, and we use \(\xrightarrow{D}\) to denote convergence in distribution.
+- For two probability distributions \(p, q\) over \([I]\),   define
+the total variation distance between the two
+$\ell_{\text{TV}}(p, q) = \frac{1}{2}\|p - q\|_1$ 
+and the symmetric chi-squared distance
+$\chi^2(p,q) = 2\sum_i\frac{(p_i - q_i)^2}{p_i + q_i}$.
+
+<p><p/>
+- \(\text{sign}(x)\) is 1 if \(x > 0\), 0 if \(x = 0\), and \(-1\) if \(x < 0\).
+
+<br/>
+<br/>
+
+<font color="darkgreen">
+
+## Alternative Nulls  {-}
+
+* Is the multinomial correct?
+* What are alternatives to the conditional multinomial?
+
+Recall data description.
+
+
+### Data Desc
+
+<p><p/>
+* The goal of SPLASH is to detect sequence variation between a set of samples.
+
+<p><p/>
+* Each sample is represented by a separate file of sequencing data (FASTQ).
+
+<p><p/>
+* To detect variation (in the sense of genomic sequence differences between samples)
+a set of **anchors** - k-mers which appear among the reads - are identified
+and combined into a set.
+
+<p><p/>
+* A set of **targets** - k-mers which appear among the reads at locations a few loci
+down from the anchors - is also compiled.
+
+<p><p/>
+* The analysis dataset consists of a set of tables, one for each anchor:
+   - The columns of the table correspond to samples
+   - The rows of the table correspond to targets
+   - The entries in the tables are the number of anchor reads
+with the target for each sample.
+
+<p><p/>
+*  The goal is to interrogate the read counts in order
+to distinghish two scenarios:
+   - 1. the reads for all samples were generated by a common source. eg the same biological
+units, or units from the same group.
+   - 2. the reads for the samples  were generated by more than one source.
+
+<font color="darkgreen">
+
+* What the sampling scheme is deserves some thought, especially if we want to make inference
+from p/q-values.
+
+<p><p/>
+* Without any further information about the samples in the form of meta-data sample description
+we have to assume that the sample set Is the population.
+   - in this case p-values are making inference to **re-sampling reads from the samples in the dataset**.
+
+</font>
+
+<br/>
+
+
+
+</font>
+
+
+<br/>
+<br/>
+
+# OASIS Test Statistic {#oasis-test-stat}
+
+<font color="darkgreen">
+
+* The counts for each sample are "normalized" or scaled by the total counts for the sample.
+It was seen in RNA-Seq that this scaling was often the wrong thing to do.
+   - this scaling assumes a single multiplicative factor accounts for all differences
+between samples.
+
+</font>
+
+
+* The OASIS test statistic provides a linear algebraic approach for testing deviations in contingency tables.
+
+<p><p/>
+* It evaluates whether the observed data can be significantly partitioned according to 
+embedding vectors \( f \in \mathbb{R}^I \) (rows) and \( c \in \mathbb{R}^J \) (columns). 
+   - These embeddings can be chosen randomly, through optimization, or using metadata.
+
+Given an observed contingency table \( X \in \mathbb{N}^{I \times J} \), define:
+
+- The **expected matrix** \( E \in \mathbb{R}^{I \times J} \):
+\[
+E = \frac{1}{M}X \mathbf{1}\mathbf{1}^\top X,
+\]
+
+- The **centered and normalized table** \( \tilde{X} \in \mathbb{R}^{I \times J} \):
+\[
+\tilde{X} = (X - E)\,\text{diag}\left(1 \,/\, \sqrt{X^\top \mathbf{1}}\right),
+\]
+
+- The **OASIS test statistic** \( S \):
+\[
+S = S(f,c) = f^\top \tilde{X} c.
+\]
+
+* The normalization in \( \tilde{X} \) ensures constant variance across columns under
+the null hypothesis, enabling finite-sample valid P-value bounds for fixed embeddings \( f, c \).
+
+* In previous work, random vectors were used (referred to as OASIS-rand).
+In this paper, embeddings \( f, c \) are optimized explicitly to improve statistical power.
+
+## 2.1 Comparison with Pearson's \(X^2\)
+
+* **Why is this the comparator?**
+
+* Pearson's chi-squared (\(X^2\)) statistic is defined by summing normalized squared residuals:
+\[
+X^2 = \sum_{i,j}\frac{(X_{ij}-E_{ij})^2}{E_{ij}} = M\|X_{\text{corr}}\|_F^2,
+\]
+
+where the standardized residual matrix \(X_{\text{corr}}\) is:
+\[
+X_{\text{corr}} = \text{diag}\left(1 \,/\, \sqrt{X\mathbf{1}}\right)(X - E)\, \text{diag}\left(1 \,/\, \sqrt{X^\top\mathbf{1}}\right).
+\]
+
+Key differences between OASIS and Pearson’s \(X^2\):
+
+1. **Normalization approach**: OASIS normalizes only by column totals given by the model, while \(X^2\) normalizes using both row and column totals, emphasizing deviations in low-count rows.
+2. **Residual aggregation**: OASIS computes a bilinear form, allowing unstructured deviations to average out, whereas \(X^2\) sums squared residuals, making it sensitive to minor deviations in large tables.
+
+Additionally, while the \(X^2\) test provides limited interpretability of rejections, OASIS naturally generates interpretable embeddings, providing direct insight into why the null hypothesis is rejected.
+
+<br/>
+<br/>
+
+## Details {-}
+
+The term \(\sqrt{X^\top 1}\) is a vector that arises from the contingency table \(X\). To unpack it clearly:
+
+<p><p/>
+- Recall that \(X \in \mathbb{N}^{I \times J}\) is a counts matrix where:
+  - Rows index response categories.
+  - Columns index samples (or explanatory categories).
+
+- Define \(1\) as the all-ones vector of length \(I\). Then:
+  \[
+  X^\top 1
+  \]
+  is a \(J\)-dimensional vector whose entries are the sums of columns of the matrix \(X\). Specifically, it is:
+  \[
+  X^\top 1 = 
+  \begin{bmatrix}
+  \sum_{i=1}^{I} X_{i1} \\
+  \sum_{i=1}^{I} X_{i2} \\
+  \vdots \\
+  \sum_{i=1}^{I} X_{iJ}
+  \end{bmatrix}
+  =
+  \begin{bmatrix}
+  n_1 \\
+  n_2 \\
+  \vdots \\
+  n_J
+  \end{bmatrix}.
+  \]
+
+  Thus, each entry of \(X^\top 1\) is simply the total counts in the corresponding column (or equivalently, in each sample).
+
+- Taking the square root \(\sqrt{X^\top 1}\) means applying the square root operation entry-wise. Thus:
+  \[
+  \sqrt{X^\top 1} = 
+  \begin{bmatrix}
+  \sqrt{n_1} \\
+  \sqrt{n_2} \\
+  \vdots \\
+  \sqrt{n_J}
+  \end{bmatrix}.
+  \]
+
+This operation captures the scale of each column (sample) in the counts table. Specifically, the normalization by \(\sqrt{X^\top 1}\) ensures each column contributes equally to the test statistic, controlling for variations in sample sizes.
+
+---
+
+## Detailed Expansion of \(\tilde{X}\):  {-}
+
+The definition given previously was:
+
+\[
+\tilde{X} = (X - E) \; \text{diag}\left(\frac{1}{\sqrt{X^\top 1}}\right)
+\]
+
+Expanding it explicitly step-by-step, we have:
+
+- First, recall that the **expected matrix** \(E\) is:
+\[
+E = \frac{1}{M} X 1 1^\top X.
+\]
+
+  To make this even clearer, note that:
+  - \(X 1\) is a vector of row-sums: each entry is the sum over columns for that row.
+  - \(1^\top X\) is a vector of column-sums (\(n_j\)) transposed, i.e., row vector of column-sums.
+  - Thus explicitly:
+  \begin{aligned}
+  E_{ij} & = \frac{\left(\sum_{j'} X_{ij'}\right)\left(\sum_{i'} X_{i'j}\right)}{M} \\
+         & = \frac{n_{i.} \cdot n_{.j}}{M} 
+  \end{aligned}
+
+- The centered matrix is:
+\[
+X - E,
+\]
+explicitly:
+\begin{aligned}
+(X - E)_{ij} & = X_{ij} - \frac{\left(\sum_{j'} X_{ij'}\right)\left(\sum_{i'} X_{i'j}\right)}{M} \\
+             & = X_{ij} - \frac{n_{i.} \cdot n_{.j}}{M} 
+\end{aligned}
+
+- Then, the normalized matrix \(\tilde{X}\) is obtained by right-multiplying by the diagonal matrix of \(1/\sqrt{X^\top 1}\):
+
+\begin{aligned}
+\tilde{X}_{ij} 
+ & = \frac{(X - E)_{ij}}{\sqrt{n_j}} 
+= \frac{X_{ij} - \frac{\left(\sum_{j'} X_{ij'}\right)\left(\sum_{i'} X_{i'j}\right)}{M}}{\sqrt{\sum_{i'} X_{i'j}}} \\
+ & =  \frac{X_{ij} - \frac{n_{.j} \cdot n_{i.})}{M}}{\sqrt{n_{.j}}} 
+\end{aligned}
+
+This fully expanded form shows clearly that \(\tilde{X}\) is the matrix obtained by centering the observed counts by their expectation under the null hypothesis (assuming independence), and then normalizing each column by the square root of the total counts in that column. 
+
+---
+
+In short:
+
+- \(\sqrt{X^\top 1}\) is the element-wise square root of column totals, serving to standardize or normalize the counts.
+- \(\tilde{X}\) explicitly is the **centered** (by subtracting the expected values under the null) and **column-wise normalized** version of the observed counts matrix.
+
+
+---
+
+# Analysis of OASIS  {
+
+***
+
+## References {-} 
+<div id="refs"></div>
+    
+<br/>
+
+<!-- 
+### Parameter settings {-}
+  * WRKDIR = `r normalizePath(WRKDIR)`
+  * FN = `r FN`
+  * Scripts = Scripts
+  * RUN DATE = `r date()`
+
+```{r m3a-session-info, echo=T, eval=F}
+ sessionInfo()
+```
+-->
+
+```{r, echo=FALSE}
+  knit_exit()
+```
+
+#######################################################################
+## ARCHIVAL
+#######################################################################
+
+
+<!-- To run
+## nohup Rscript -e "knitr::knit2html('_M3A-OASIS.Rmd')" > _M3A-OASIS.log  &
+
+## Or
+## nohup Rscript -e "rmarkdown::render('_M3A-OASIS.Rmd')" > _M3A-OASIS.log  &
+
+-->
+
