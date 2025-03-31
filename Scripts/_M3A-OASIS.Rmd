@@ -268,7 +268,7 @@ equivalently obtainable by summing row or column sums.
 The null model studied is:
 
 **Definition 1 (Null Model).**  
-Conditional on the column totals \(\{n_j\}_{j=1}^{J}\),
+~~Conditional on~~ Given the column totals \(\{n_j\}_{j=1}^{J}\),
 each column of the contingency table \(X\) is 
 \[ X^{(j)} \sim \text{multinomial}(n_j, p), \]
 drawn independently for all \(j\), for some common
@@ -310,6 +310,8 @@ $\chi^2(p,q) = 2\sum_i\frac{(p_i - q_i)^2}{p_i + q_i}$.
 
 * Is the multinomial correct?
 * What are alternatives to the conditional multinomial?
+
+<br/>
 
 Recall data description.
 
@@ -354,6 +356,8 @@ from p/q-values.
 * Without any further information about the samples in the form of meta-data sample description
 we have to assume that the sample set Is the population.
    - in this case p-values are making inference to **re-sampling reads from the samples in the dataset**.
+   - this is analogous to the Neyman model in which the analysis dataset IS the population
+([@Splawa-Neyman:1990aa; @Lin:2024aa; @Freedman:2008aa].
 
 </font>
 
@@ -409,7 +413,7 @@ the null hypothesis, enabling finite-sample valid P-value bounds for fixed embed
 * In previous work, random vectors were used (referred to as OASIS-rand).
 In this paper, embeddings \( f, c \) are optimized explicitly to improve statistical power.
 
-## 2.1 Comparison with Pearson's \(X^2\)
+## Comparison with Pearson's \(X^2\)M   {-}
 
 * **Why is this the comparator?**
 

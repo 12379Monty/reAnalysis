@@ -509,7 +509,6 @@ we have to assume that the sample set Is the population.
 
 </font>
 
-
 <br/>
 
 ## Feature Score: p-values 
@@ -666,7 +665,7 @@ likelihood of the tail events if $S_n \sim \text{Binomial}(T_n, p)$.
    - the null is $S_n \sim \text{Binomial}(T_n, p)$.  What is the alternative?
 
 <p><p/>
-* Without a fully specified alternatife hypothesis, we don't have a proper
+* Without a fully specified alternative hypothesis, we don't have a proper
 significance test.
    
 </font>
