@@ -1,11 +1,17 @@
 #!/bin/bash
 
+
+# Makes two fimes: _site.yml and _index.Rmd 
+# index.Rmd needs to be updated each time a new html file
+# - typically a rendered Rmd script - is added to the folder
+
+
 OUTPUT="_site.yml"
-TITLE="Re-Analysis"
+TITLE="Training and Data Re-Analysis"
 
 #DESCRIPTION="Put subtitle here"
 
-echo 'name: "England-England"' > $OUTPUT
+echo 'name: "reAnalysis"' > $OUTPUT
 echo 'output_dir: "."' >> $OUTPUT
 echo 'navbar:' >> $OUTPUT
 echo '  title: '$TITLE >> $OUTPUT
@@ -13,8 +19,7 @@ echo '  left:' >> $OUTPUT
 echo '    - text: "Home"' >> $OUTPUT
 echo '      href: index.html' >> $OUTPUT
 
-
-OUTPUT="index.Rmd"
+OUTPUT="_index.Rmd"    ####  will build index.Rmd
 
 echo '---' > $OUTPUT
 echo 'title: '$TITLE >> $OUTPUT

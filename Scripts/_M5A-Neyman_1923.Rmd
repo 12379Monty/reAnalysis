@@ -1,0 +1,598 @@
+---
+title: "Making Neyman (1923) insights accessible"
+#subtitle: ""
+author: "[Francois Collin](https://www.linkedin.com/in/francoisz/)"
+#date: '`r format(Sys.time(), "%a %b %d", tz="America/Los_Angeles")`'
+always_allow_html: yes
+output:
+  html_document:
+    code_folding: hide
+    code_download: true
+    toc: true
+    toc_depth: 2
+    # does this have an effect
+    fig_caption: yes
+    # this has no effect
+    number_sections: yes
+    # css: ['../_css/pandoc3.css', '../_css/myMargins.css']
+bibliography: [../../../_bibFiles/_Normalization.bib,../../../_bibFiles/_RUV.bib,../../Refs/rand_cause_inf/_rand_cause_inf.bib]
+csl: ../../../_csl/cell-numeric.csl
+link-citations: true
+---
+
+<!--
+title: "Randomization Based Inference: Neyman (1923) On the Application of Prob Theory"
+-->
+
+`r DT_TABLES <- F`
+
+```{css sidenote, echo = FALSE}
+
+.main-container {
+    margin-left: 250px;
+}
+.sidenote, .marginnote { 
+  float: right;
+  clear: right;
+  margin-right: -40%;
+  width: 37%;         # best between 50% and 60%
+  margin-top: 0;
+  margin-bottom: 0;
+  font-size: 1.1rem;
+  line-height: 1.3;
+  vertical-align: baseline;
+  position: relative;
+  }
+```
+
+
+<style>
+@import url('https://fonts.googleapis.com/css?family=Raleway');
+@import url('https://fonts.googleapis.com/css?family=Oxygen');
+@import url('https://fonts.googleapis.com/css?family=Raleway:bold');
+@import url('https://fonts.googleapis.com/css?family=Oxygen:bold');
+
+.main-container {
+  max-width: 1400px !important;
+}
+
+body{
+  font-family: 'Oxygen', sans-serif;
+  font-size: 16px;
+  line-height: 24px;
+}
+
+h1,h2,h3,h4 {
+  font-family: 'Raleway', sans-serif;
+}
+
+.container { width: 1400px; }
+
+caption {
+  font-size: 20px;
+  caption-side: top;
+  text-indent: 30px;
+  background-color: lightgrey;
+  color: black;
+  margin-top: 5px;
+}
+
+g-table-intro h4 {
+  text-indent: 0px;
+}
+</style>
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(echo = TRUE,
+                      comment = NA,
+                      warning = FALSE,
+                      error = FALSE,
+                      message = FALSE,
+                      cache = FALSE,
+                      fig.width = 8,
+                      fig.height = 4)
+```
+
+```{r m5a-GlobalOptions, results="hide", include=FALSE, cache=FALSE}
+
+knitr::opts_knit$set(stop_on_error = 2L) #really make it stop
+options(knitr.table.format = 'html')
+
+options(stringsAsFactors=F)
+
+ #knitr::dep_auto()
+
+```
+<!-- ######################################################################## -->
+
+
+```{r m5a-Prelims,  include=FALSE, echo=FALSE, results='hide', message=FALSE} 
+
+FN <- "_M5A-Neyman_1923"
+if(sum(grepl(FN, list.files()))==0) stop("Check FN")
+
+ suppressMessages(require(rmarkdown))
+ suppressMessages(require(knitr))
+
+ suppressPackageStartupMessages(require(methods))
+ suppressPackageStartupMessages(require(bookdown))
+
+ suppressPackageStartupMessages(require(data.table))
+ options(datatable.fread.datatable=F)
+
+ suppressPackageStartupMessages(require(plyr))
+ suppressPackageStartupMessages(require(dplyr))
+ suppressPackageStartupMessages(require(magrittr))
+
+ # Shotcuts for knitting and rendering while in R session (Invoke interactive R from R/Scripts folder)
+ kk <- function(n='') knitr::knit2html(paste("t", n, sep=''), envir=globalenv(),
+       output=paste(FN,".html", sep=''))
+
+ rr <- function(n='') rmarkdown::render(paste("t", n, sep=''), envir=globalenv(),
+       output_file=paste(FN,".html", sep='')) ##, output_dir='Scripts')
+
+ bb <- function(n='') browseURL(paste(FN,".html", sep=''))
+
+ # The usual shortcuts
+ zz <- function(n='') source(paste("t", n, sep=''))
+
+
+ WRKDIR <- '..'
+ if(!file.exists(WRKDIR)) stop("WRKDIR ERROR", WRKDIR)
+
+ # do once
+
+ # Shotcuts for knitting and rendering while in R session
+ kk <- function(n='') knitr::knit2html(paste("t", n, sep=''), envir=globalenv(),
+       output=paste('',FN,".html", sep=''))
+
+ rr <- function(n='') render(paste("t", n, sep=''), envir=globalenv(),
+       output_file=paste(FN,".html", sep=''), output_dir='Scripts')
+
+ bb <- function(n='') browseURL(paste('',FN,".html", sep=''))
+
+ # The usual shorcuts
+ zz <- function(n='') source(paste('', "t", n, sep=''))
+
+ # file rmarkdown file management options: cache, figures
+ cache_DIR <- file.path(WRKDIR,'Scripts', 'cache/M5A/')
+ suppressMessages(dir.create(cache_DIR, recursive=T))
+ opts_chunk$set(cache.path=cache_DIR)
+
+ figures_DIR <- file.path(WRKDIR,'Scripts', 'figures/M5A/')
+ suppressMessages(dir.create(figures_DIR, recursive=T))
+ opts_chunk$set(fig.path=figures_DIR)
+
+ #tables_DIR <- file.path(WRKDIR,'Scripts', 'tables/M5A/')
+ #suppressMessages(dir.create(table_DIR, recursive=T))
+ #opts_chunk$set(fig.path=table_DIR)
+ 
+ # need a local copy of help_DIR
+ #help_DIR <- file.path(WRKDIR,'Scripts', 'help_files')
+ help_DIR <- file.path('.', 'help_files')
+ suppressMessages(dir.create(help_DIR, recursive=T))
+ 
+ temp_DIR <- file.path(WRKDIR,'Scripts', 'temp_files')
+ suppressMessages(dir.create(temp_DIR, recursive=T))
+
+```
+<!-- ######################################################################## -->
+
+*** 
+
+```{r m5a-utilityFns, echo=FALSE}
+ # Here we define some utility functions
+source('r/utilityFns.r')
+
+```
+
+<!-- ######################################################################## -->
+
+
+<!-- SKIP THIS 
+# Params {#params}
+
+## Input params {-}
+-->
+
+```{r m5a-input-params-all, echo = FALSE, results = "asis", eval=F, echo=F}
+ # print out original input params
+data.frame(
+param_name=names(params),
+param_value=unlist(params),
+param_class=sapply(params, class), row.names=NULL) %>%
+  knitr::kable(caption="Input Parameters")
+```
+
+<br/>
+
+<!-- DNA
+# Preliminaries {-}
+ 
+## Read Support Data {-} 
+# To Do
+
+-->
+
+# Introduction  {#intro}
+
+* This article is a summary of 
+*From urn models to box models: Making Neyman's (1923) insights accessible*
+[@Lin:2024aa].
+
+* Neyman’s 1923 paper introduced the potential outcomes framework and the 
+foundations of randomization-based inference about average treatment effects. 
+([@Splawa-Neyman:1990aa;@Speed:1990aa;@Rubin:1990aa]).
+
+* In the context of an agricultural experiment, Neyman assumes that the assignment of treatments
+(crop varieties) to units (plots of land) is analogous to randomly drawing balls from urns without
+replacement, so that each treatment group is a simple random sample from the finite population
+of experimental units.
+
+* Although he does not propose randomization in a literal sense [2,3], his urn model is
+equivalent to a completely randomized experiment, and he considers the problem of estimating
+the average effect of treatment i relative to treatment j.
+
+<p><p/>
+* In his framework for statistical inference, the units in the experiment are not assumed
+to be a random sample from a larger target population.
+   - Instead, the experimental units are the target population, and random assignment
+of treatment is the sole source of randomness.
+
+<br/>
+<br/>
+
+# Results  
+
+<p><p/>
+* Neyman’s first key result follows immediately from the properties of simple random samples:
+   - the difference in mean outcomes between treatment groups i and j is an unbiased estimator
+of the average treatment effect:
+      - $\widehat{ATE} = \widehat{\bar{y(1)}} -  \widehat{\bar{y(0)}}$
+
+
+<p><p/>
+* Consider the usual estimator of the variance of the difference-in-means estimator: 
+   - $\frac{s_i^2}{n_i}+\frac{s_j^2}{n_j}$
+   - A traditional justification for this formula assumes
+**two independent random samples from two infinite populations**.  
+
+<p><p/>
+* Neyman’s framework violates these assumptions:
+   - the population is **finite** and the treatment groups are mutually exclusive, **not independent**
+   - but surprisingly, he finds that:
+      -  the usual variance estimator is unbiased 
+if there is a constant additive treatment effect and 
+      - the usual variance estimator is conservatively biased
+if there are heterogeneous treatment effects.
+
+
+<br/>
+
+# Details
+
+## Setup
+
+<p><p/>
+* N subjects; Two disjoint simple random samples of fixed sizes 
+$n_1$ and $n_0$ are assigned to Treatment and Control groups.
+
+<p><p/>
+* Constants:
+   - $y_i(1)$, $y_i(0)$ denote subject $i$'s potential outcomes under 
+treatment and control, resp..
+
+<p><p/>
+* Random variables:
+   - $(T_i = 1)  \text{ if subject i is in Treatment group}$
+$(T_i = 0)  \text{ Otherwise}$
+   - $(C_i = 1)  \text{ if subject i is in Control group}$
+$(C_i = 0)  \text{ Otherwise}$
+
+<br/>
+
+* The true Average Treatment Effect is:
+
+
+\begin{equation}
+\mathrm{ATE}=\bar{y}(1)-\bar{y}(0)
+\end{equation}
+
+where
+\begin{equation}
+\bar{y}(1)=\frac{1}{N} \sum_{i=1}^N y_i(1) \text { and } \\
+\bar{y}(0)=\frac{1}{N} \sum_{i=1}^N y_i(0)
+\end{equation}
+
+
+* The difference-in-means estimator of ATE
+is defined as follows:
+
+\begin{equation}
+\begin{aligned}
+&\widehat{\mathrm{ATE}}=\widehat{\bar{y}}(1)-\widehat{\bar{y}}(0)
+\end{aligned}
+\end{equation}
+
+where 
+\begin{equation}
+\begin{aligned}
+&\widehat{\bar{y}}(1)=\frac{1}{n_1} \sum_{i=1}^N T_i y_i(1) \text { and } \\
+&\widehat{\bar{y}}(0)=\frac{1}{n_0} \sum_{i=1}^N C_i y_i(0) 
+\end{aligned}
+\end{equation}
+
+
+
+<br/>
+<br/>
+
+## Unbiased estimation of the average treatment effect
+
+* The calculation  hinges on the assumption that treatment assignment is random and that the probability of assignment is uniform across units.
+
+<br/>
+
+### **Expectation of $T_i$ under Random Assignment** {-}
+
+* Assuming each unit is assigned to treatment independently with probability
+$\frac{n_1}{N}$.
+
+$$E(T_i) = P(T_i = 1) = \frac{n_1}{N}$$
+
+<br/>
+
+### **Substitute E($T_i$) and Simplify**:   {-}
+
+\begin{equation}
+E[\widehat{\bar{y}}(1)]=\frac{1}{n_1} \sum_{i=1}^N E\left[T_i\right] y_i(1)=\frac{1}{n_1} \sum_{i=1}^N \frac{n_1}{N} y_i(1)=\bar{y}(1) .
+\end{equation}
+
+
+<br/>
+<br/>
+
+
+## True variance of the difference-in-means estimator
+
+
+* See online article: https://www.degruyter.com/document/doi/10.1515/jci-2023-0073/html?srsltid=AfmBOoofY9z3KKX243onbmNVppAih3V8XeECOaaNXAGjsMpi4qQLRK7C#j_jci-2023-0073_ref_037
+
+* The variance of the difference-in-means estimator is
+
+\begin{equation}
+\operatorname{Var}\left(\widehat{\operatorname{ATE}}\right)=\operatorname{Var}(\widehat{\bar{y}}(1))+\operatorname{Var}(\widehat{\bar{y}}(0))-2 \operatorname{Cov}(\widehat{\bar{y}}(1), \widehat{\bar{y}}(0))
+\end{equation}
+
+* Using well-known formulas for the **variance of the sample mean**
+under simple random sampling without replacement
+
+\begin{equation}
+\operatorname{Var}(\widehat{\bar{y}}(1))=\left(1-\frac{n_1-1}{N-1}\right) \frac{\sigma_1^2}{n_1}=\left(1-\frac{n_1}{N}\right) \frac{\tilde{\sigma}_1^2}{n_1},
+\end{equation}
+
+where
+\begin{equation}
+\sigma_1^2=\frac{1}{N} \sum_{i=1}^N\left[y_i(1)-\bar{y}(1)\right]^2   \text { and } \\
+\tilde{\sigma}_1^2=\frac{1}{N-1} \sum_{i=1}^N\left[y_i(1)-\bar{y}(1)\right]^2
+\end{equation}
+
+Similarly for $\operatorname{Var}(\widehat{\bar{y}}(0))$
+
+\begin{equation}
+\operatorname{Cov}(\widehat{\bar{y}}(1), \widehat{\bar{y}}(0))=-\frac{1}{N-1} \sigma_{1,0}=-\frac{1}{N} \tilde{\sigma}_{1,0}
+\end{equation}
+
+where 
+\begin{equation}
+\sigma_{1,0}=\frac{1}{N} \sum_{i=1}^N\left[y_i(1)-\bar{y}(1)\right]\left[y_i(0)-\bar{y}(0)\right]
+    \text { and } \\
+\tilde{\sigma}_{1,0}=\frac{1}{N-1} \sum_{i=1}^N\left[y_i(1)-\bar{y}(1)\right]\left[y_i(0)-\bar{y}(0)\right]
+\end{equation}
+
+
+
+For proof see online article:
+[From urn models to box models: Making Neyman's (1923) insights accessible](https://www.degruyter.com/document/doi/10.1515/jci-2023-0073/html?srsltid=AfmBOoofY9z3KKX243onbmNVppAih3V8XeECOaaNXAGjsMpi4qQLRK7C#j_jci-2023-0073_ref_037)
+
+
+
+<br/>
+<br/>
+
+* **Putting it all together**
+
+\usepackage{amsmath}
+\begin{equation}
+\tag{A.1}
+\operatorname{Var}\left(\widehat{\mathrm{ATE}}\right) =
+\left(1-\frac{n_1}{N}\right) \frac{\tilde{\sigma}_1^2}{n_1} +
+\left(1-\frac{n_0}{N}\right) \frac{\tilde{\sigma}_0^2}{n_0} +
+2 \frac{\tilde{\sigma}_{1,0}}{N}
+\label{eq:var-ate-hat}
+\end{equation}
+
+
+* **Rearranging**
+
+\begin{equation}
+
+\operatorname{Var}\left(\widehat{\mathrm{ATE}}\right)=\frac{\tilde{\sigma}_1^2}{n_1}+\frac{\tilde{\sigma}_0^2}{n_0}-\frac{\tilde{\sigma}_1^2+\tilde{\sigma}_0^2-2 \tilde{\sigma}_{1,0}}{N}
+
+\end{equation}
+
+* which simplifies to
+
+\begin{equation}
+\tag{A.2}
+\operatorname{Var}\left(\widehat{\mathrm{ATE}}\right)=\frac{\tilde{\sigma}_1^2}{n_1}+\frac{\tilde{\sigma}_0^2}{n_0}-\frac{\tilde{\sigma}_{\Delta}^2}{N}
+
+\end{equation}
+
+where  
+$$\tilde{\sigma}_{\Delta}^2=\frac{1}{N-1} \sum_{i=1}^N\left[y_i(1)-y_i(0)-\mathrm{ATE}\right]^2$$
+is the population variance of the treatment effect
+(thinking of the N subjects as the finite population,
+and again using the denominator N − 1).
+
+<br/>
+<br/>
+
+## Unbiased or conservatively biased estimation of the variance
+
+
+
+* The usual estimator for $\operatorname{Var}]\left(\widehat{\mathrm{ATE}}\right)$ is:
+
+\begin{equation}
+\tag{A.3}
+\widehat{\operatorname{Var}}\left(\widehat{\mathrm{ATE}}\right)=\frac{s_1^2}{n_1}+\frac{s_0^2}{n_0}
+\end{equation}
+
+where
+\begin{equation}
+s_1^2=\frac{1}{n_1-1} \sum_{i=1}^N T_i\left[y_i(1)-\widehat{\bar{y}}(1)\right]^2 
+    \text { and } \\
+s_0^2=\frac{1}{n_0-1} \sum_{i=1}^N C_i\left[y_i(0)-\widehat{\bar{y}}(0)\right]^2
+\end{equation}
+
+are the sample variances of the observed outcome in the treatment group and control group.
+
+* From finite-population sampling theory, $s_1^2$ and $s_0^2$ are unbiased estimators of $\tilde{\sigma}_1^2$ and $\tilde{\sigma}_0^2$.  Thus,
+
+\usepackage{amsmath}
+\begin{equation}
+\tag{A.4}
+E[\widehat{\operatorname{Var}}(\widehat{\mathrm{ATE}})]=\frac{\tilde{\sigma}_1^2}{n_1}+\frac{\tilde{\sigma}_0^2}{n_0}
+\label{eq:exp-var-hat-ate-hat}
+\end{equation}
+
+
+<p><p/>
+* Comparing A.4 with A.1 we can see that in average,
+$\widehat{\operatorname{Var}}(\widehat{\mathrm{ATE}})$
+makes two mistakes: finite populations and positive correlations:
+   -  The first mistake is conservative: it ignores the finite-population correction factors,
+(1 - $n_1$/N) and (1 - $n_0$/N).
+   - second mistake is anticonservative if the two potential outcomes are
+positively correlated in the population of N subjects
+
+
+<p><p/>
+* Comparing A.4 with A.2, we  can see the **net effect of the two mistakes**. 
+   - the net effect is nil **if there is a constant additive treatment effect**: 
+$y_i(1) - y_i(0)$ = k.
+   - Otherwise $\widehat{\mathrm{Var}}(\widehat{\mathrm{ATE}})$
+has a conservative bias and undersattes the true variability by
+$\tilde{\sigma}_{\Delta}^2 / N$.
+
+<p><p/>
+* The pooled estimator of $\operatorname{Var}(\widehat{\mathrm{ATE}})$:
+
+\begin{equation}
+\tag{A.5}
+\widehat{\operatorname{Var}}(\widehat{\mathrm{ATE}})_p = 
+\frac{\left(n_1-1\right) s_1^2+\left(n_0-1\right) s_0^2}{n_1+n_0-2}\left[\frac{1}{n_1}+\frac{1}{n_0}\right] .
+\end{equation}
+
+
+* A5 is identical to  A3 if $n_0 = n_1$ and is unbiased if
+there is a constant additive treatment effect.
+
+* If $n_0 \neq n_1$ and there are heterogeneous treatment effects,
+the pooled estimator may be either conservative or anticonservative.
+
+<br/>
+<br/>
+
+# References {#references}
+<div id="refs"></div>
+    
+<br/> 
+
+```{r , eval=T}
+pander::pander(sessionInfo())
+```
+
+  * WRKDIR = `r normalizePath(WRKDIR)`
+  * FN = `r FN`
+  * Scripts = Scripts
+  * RUN DATE = `r date()`
+
+```{r , echo=FALSE}
+  knit_exit()
+```
+
+##########################################################
+### ARCHIVE
+##########################################################
+
+### **Definition of the Estimator**: {-}
+
+\begin{equation}
+
+\widehat{\bar{y(1)}} = \frac{\sum_{i=1}^N T_i y_i(1)}{n_1}
+
+\end{equation}
+
+<br/>
+
+### **Taking Expectation**:  {-}
+
+\begin{equation}
+
+E \left[ \widehat{\bar{y(1)}} \right] = E \left[  \frac{\sum_{i=1}^N T_i y_i(1)}{n_1} \right]
+
+\end{equation}
+
+<br/>
+
+### **By linearity of Expectation**   {-}
+
+\begin{equation}
+
+E  \left[  \frac{\sum_{i=1}^N T_i y_i(1)}{n_1} \right] =
+\frac{1}{n_1} \sum_{i=1}^N E(T_i) y_i(1)  
+
+\end{equation}
+
+<br/>
+
+* The (true) Average Treatment Effect is given by:
+
+<p><p/>
+\begin{equation}
+\begin{aligned}
+\mathrm{ATE} & =y \overline{(1)}-y \overline{(0)} \\
+\overline{y(1)} & =\frac{\sum_{i=1}^N y_i(1)}{N} \\
+\overline{y(0)} & =\frac{\sum_{i=1}^N y_i(0)}{N}
+\end{aligned}
+\end{equation}
+
+* The (true) Average Treatment Effect is given by:
+
+\begin{equation}
+\text{ATE} = \bar{y(1)} - \bar{y(0)} \\
+\bar{y(1)} = \frac{\sum_{i=1}^N y_i(1)}{N} \\
+\bar{y(0)} = \frac{\sum_{i=1}^N y_i(0)}{N} \\
+\label{eq:ATE-def}
+\end{equation}
+* The difference-in-means estimator of ATE:
+
+\begin{equation}
+\widehat{\text{ATE}} = \widehat{\bar{y(1)}} - \widehat{\bar{y(0)}} \\
+\widehat{\bar{y(1)}} = \frac{\sum_{i=1}^N T_i y_i(1)}{n_1} \\
+\widehat{\bar{y(0)}} = \frac{\sum_{i=1}^N C_i y_i(0)}{n_0} \\
+\label{eq:DME-ATE-def}
+\end{equation}
+
+
+
+<!-- To run
+# nohup Rscript -e "knitr::knit2html('_M5A-Neyman_1923.Rmd')" > _M5A-Neyman_1923.log  &
+
+# Or
+# nohup Rscript -e "rmarkdown::render('_M5A-Neyman_1923.Rmd')" > _M5A-Neyman_1923.log  &
+
+
+-->

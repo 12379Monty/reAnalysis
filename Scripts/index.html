@@ -9,11 +9,12 @@
 <meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
 
 
+<meta name="author" content="Francois Collin" />
 
+<meta name="date" content="2025-04-24" />
 
-<title>Re-Analysis</title>
+<title>Statistics Training and Data Re-Analysis</title>
 
-<script src="site_libs/header-attrs-2.29/header-attrs.js"></script>
 <script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <link href="site_libs/bootstrap-3.3.5/css/bootstrap.min.css" rel="stylesheet" />
@@ -30,6 +31,8 @@
        code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
        pre:not([class]) { background-color: white }</style>
 <script src="site_libs/navigation-1.1/tabsets.js"></script>
+<script src="site_libs/navigation-1.1/codefolding.js"></script>
+<script src="site_libs/navigation-1.1/sourceembed.js"></script>
 <link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
 <script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
 
@@ -56,7 +59,34 @@ if (window.hljs) {
 
 
 
+<style type="text/css">
+#rmd-source-code {
+  display: none;
+}
+</style>
 
+<style type="text/css">
+/* for pandoc --citeproc since 2.11 */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+}
+.hanging div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}
+</style>
 
 
 
@@ -216,6 +246,9 @@ $(document).ready(function () {
 </style>
 
 <!-- code folding -->
+<style type="text/css">
+.code-folding-btn { margin-bottom: 4px; }
+</style>
 
 
 
@@ -238,7 +271,7 @@ $(document).ready(function () {
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <a class="navbar-brand" href="index.html">Re-Analysis</a>
+      <a class="navbar-brand" href="index.html">Training and Data Re-Analysis</a>
     </div>
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
@@ -255,26 +288,177 @@ $(document).ready(function () {
 
 <div id="header">
 
-
-
-<h1 class="title toc-ignore">Re-Analysis</h1>
-
+<div class="btn-group pull-right float-right">
+<button type="button" class="btn btn-default btn-xs btn-secondary btn-sm dropdown-toggle" data-toggle="dropdown" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span>Code</span> <span class="caret"></span></button>
+<ul class="dropdown-menu dropdown-menu-right" style="min-width: 50px;">
+<li><a id="rmd-show-all-code" href="#">Show All Code</a></li>
+<li><a id="rmd-hide-all-code" href="#">Hide All Code</a></li>
+<li role="separator" class="divider"></li>
+<li><a id="rmd-download-source" href="#">Download Rmd</a></li>
+</ul>
 </div>
 
 
+
+<h1 class="title toc-ignore">Statistics Training and Data Re-Analysis</h1>
+<h4 class="author"><a href="https://www.linkedin.com/in/francoisz/">Francois Collin</a></h4>
+<h4 class="date">April 24, 2025</h4>
+
+</div>
+
+<div id="TOC">
+<ul>
+<li><a href="#introduction" id="toc-introduction">Introduction</a></li>
+<li><a href="#statistics-training" id="toc-statistics-training"><span class="toc-section-number">1</span> Statistics Training</a>
+<ul>
+<li><a href="#section" id="toc-section"><span class="toc-section-number">1.1</span> [</a></li>
+</ul></li>
+<li><a href="#references" id="toc-references"><span class="toc-section-number">2</span> References</a></li>
+<li><a href="#appendix-full-list-of-reports" id="toc-appendix-full-list-of-reports"><span class="toc-section-number">3</span> Appendix: Full list of reports</a></li>
+</ul>
+</div>
+
+<style type="text/css">
+
+.main-container {
+    margin-left: 250px;
+}
+.sidenote, .marginnote { 
+  float: right;
+  clear: right;
+  margin-right: -40%;
+  width: 37%;         # best between 50% and 60%
+  margin-top: 0;
+  margin-bottom: 0;
+  font-size: 1.1rem;
+  line-height: 1.3;
+  vertical-align: baseline;
+  position: relative;
+  }
+</style>
+<style>
+@import url('https://fonts.googleapis.com/css?family=Raleway');
+@import url('https://fonts.googleapis.com/css?family=Oxygen');
+@import url('https://fonts.googleapis.com/css?family=Raleway:bold');
+@import url('https://fonts.googleapis.com/css?family=Oxygen:bold');
+
+.main-container {
+  max-width: 1400px !important;
+}
+
+body{
+  font-family: 'Oxygen', sans-serif;
+  font-size: 16px;
+  line-height: 24px;
+}
+
+h1,h2,h3,h4 {
+  font-family: 'Raleway', sans-serif;
+}
+
+.container { width: 1400px; }
+
+caption {
+  font-size: 20px;
+  caption-side: top;
+  text-indent: 30px;
+  background-color: lightgrey;
+  color: black;
+  margin-top: 5px;
+}
+
+g-table-intro h4 {
+  text-indent: 0px;
+}
+</style>
+<!-- ######################################################################## -->
+<!-- ######################################################################## -->
+<hr />
+<!-- ######################################################################## -->
+<p><br/></p>
+<!--
+* Breiman: [@Breiman:1984aa; @Breiman:2001aa]
+* Freedman: [@Freedman:2008aa; @Freedman:2008ad; @Freedman:2008ac; @Freedman:2009ac]
+-->
+<div id="introduction" class="section level1 unnumbered">
+<h1>Introduction</h1>
+<p>In this folder we have reports for …</p>
+<p><br/></p>
+<ul>
+<li>Statistics Training
+<ul>
+<li><a href="./_M1A-prof_dev_plan.html">_M1A-prof_dev_plan.html</a> - an outline for a professional development
+program for experienced statisticians</li>
+<li><a href="./_M1B-fc__dev_plan.html">_M1B-fc__dev_plan.html</a> - plan specifically for FC</li>
+</ul></li>
+<li>Courses
+<ul>
+<li>Gen AI</li>
+</ul></li>
+</ul>
+<p><br/></p>
+<p>
+<p/>
+<ul>
+<li>Data Re-Analysis Projects
+<ul>
+<li>Reference-Free Genomic Inference with SPLASH and OASIS
+<ul>
+<li><a href="./_M2A-RFGI_v1.html">_M2A-RFGI_v1.html</a> -</li>
+<li><a href="./_M2B-RFGI_v2.html">_M2B-RFGI_v2.html</a> -</li>
+<li><a href="./_M3A-OASIS.html">_M3A-OASIS.html</a> -</li>
+</ul></li>
+</ul></li>
+</ul>
+<p>
+<p/>
+<ul>
+<li>Miscellanious
+<ul>
+<li><a href="./_M4A-intro_IUV.html">_M4A-intro_IUV.html</a></li>
+<li>[_M5A-cf_ddPCR_seq.html]</li>
+<li>[_M6A-randomness_in_calls.html]</li>
+<li>[_M7A-interimSampleSizeAnalysis.html]
+<ul>
+<li>[_M3A_study_design_CB_notes.pdf]</li>
+</ul></li>
+</ul></li>
+</ul>
+<p><br/></p>
+</div>
+<div id="statistics-training" class="section level1" number="1">
+<h1><span class="header-section-number">1</span> Statistics Training</h1>
+<div id="section" class="section level2" number="1.1">
+<h2><span class="header-section-number">1.1</span> [</h2>
+<hr />
+<p><br/></p>
+</div>
+</div>
+<div id="references" class="section level1" number="2">
+<h1><span class="header-section-number">2</span> References</h1>
+<div id="refs">
+
+</div>
+<p><br/></p>
+</div>
+<div id="appendix-full-list-of-reports" class="section level1" number="3">
+<h1><span class="header-section-number">3</span> Appendix: Full list of reports</h1>
 <li>
-<a href="_M1A-healthy_aging_genes.html">_M1A-healthy_aging_genes.html</a>
+<a href="_M0A-healthy_aging_genes.html">_M0A-healthy_aging_genes.html</a>
 </li>
 <li>
-<a href="_M2A-ref_free_genomic_inf_v1.html">_M2A-ref_free_genomic_inf_v1.html</a>
-</li>
-<li>
-<a href="_M2B-ref_free_genomic_inf_v2.html">_M2B-ref_free_genomic_inf_v2.html</a>
+<a href="_M1A-prof_dev_plan.html">_M1A-prof_dev_plan.html</a>
 </li>
 <li>
 <a href="_M3A-OASIS.html">_M3A-OASIS.html</a>
 </li>
+<li>
+<a href="_prof_dev_plan.html">_prof_dev_plan.html</a>
+</li>
+<p><br/></p>
+</div>
 
+<div id="rmd-source-code">LS0tCnRpdGxlOiBTdGF0aXN0aWNzIFRyYWluaW5nIGFuZCBEYXRhIFJlLUFuYWx5c2lzCiNzdWJ0aXRsZTogImEgdGFsZSBvZiB0d28gc2Nob29scyIKYXV0aG9yOiAiW0ZyYW5jb2lzIENvbGxpbl0oaHR0cHM6Ly93d3cubGlua2VkaW4uY29tL2luL2ZyYW5jb2lzei8pIgpkYXRlOiAiYHIgZm9ybWF0KFN5cy50aW1lKCksICclQiAlZCwgJVknKWAiCmFsd2F5c19hbGxvd19odG1sOiB5ZXMKb3V0cHV0OgogICMgZm9yIHVzZSBvZiAudGFic2V0CiAgYm9va2Rvd246Omh0bWxfZG9jdW1lbnQyOgogICNodG1sX2RvY3VtZW50OgogICAgY29kZV9mb2xkaW5nOiBoaWRlCiAgICBjb2RlX2Rvd25sb2FkOiB0cnVlCiAgICB0b2M6IHRydWUKICAgIHRvY19kZXB0aDogMwogICAgIyBkb2VzIHRoaXMgaGF2ZSBhbiBlZmZlY3QKICAgIGZpZ19jYXB0aW9uOiB5ZXMKICAgICMgdGhpcyBoYXMgbm8gZWZmZWN0CiAgICBudW1iZXJfc2VjdGlvbnM6IHllcwogICAgIyBjc3M6IFsnLi4vX2Nzcy9wYW5kb2MzLmNzcycsICcuLi9fY3NzL215TWFyZ2lucy5jc3MnXQpiaWJsaW9ncmFwaHk6IFsuLi9fYmliRmlsZXMvX2hlYWx0aHlfYWdpbmcuYmliLCAuLi8uLi9fYmliRmlsZXMvX0JyZWltYW4uYmliLCAuLi8uLi9fYmliRmlsZXMvX1l1LmJpYl0KY3NsOiAuLi9fY3NsL2NlbGwtbnVtZXJpYy5jc2wKbGluay1jaXRhdGlvbnM6IHRydWUKLS0tCgpgYGB7Y3NzIHNpZGVub3RlLCBlY2hvID0gRkFMU0V9CgoubWFpbi1jb250YWluZXIgewogICAgbWFyZ2luLWxlZnQ6IDI1MHB4Owp9Ci5zaWRlbm90ZSwgLm1hcmdpbm5vdGUgeyAKICBmbG9hdDogcmlnaHQ7CiAgY2xlYXI6IHJpZ2h0OwogIG1hcmdpbi1yaWdodDogLTQwJTsKICB3aWR0aDogMzclOyAgICAgICAgICMgYmVzdCBiZXR3ZWVuIDUwJSBhbmQgNjAlCiAgbWFyZ2luLXRvcDogMDsKICBtYXJnaW4tYm90dG9tOiAwOwogIGZvbnQtc2l6ZTogMS4xcmVtOwogIGxpbmUtaGVpZ2h0OiAxLjM7CiAgdmVydGljYWwtYWxpZ246IGJhc2VsaW5lOwogIHBvc2l0aW9uOiByZWxhdGl2ZTsKICB9CmBgYAoKCjxzdHlsZT4KQGltcG9ydCB1cmwoJ2h0dHBzOi8vZm9udHMuZ29vZ2xlYXBpcy5jb20vY3NzP2ZhbWlseT1SYWxld2F5Jyk7CkBpbXBvcnQgdXJsKCdodHRwczovL2ZvbnRzLmdvb2dsZWFwaXMuY29tL2Nzcz9mYW1pbHk9T3h5Z2VuJyk7CkBpbXBvcnQgdXJsKCdodHRwczovL2ZvbnRzLmdvb2dsZWFwaXMuY29tL2Nzcz9mYW1pbHk9UmFsZXdheTpib2xkJyk7CkBpbXBvcnQgdXJsKCdodHRwczovL2ZvbnRzLmdvb2dsZWFwaXMuY29tL2Nzcz9mYW1pbHk9T3h5Z2VuOmJvbGQnKTsKCi5tYWluLWNvbnRhaW5lciB7CiAgbWF4LXdpZHRoOiAxNDAwcHggIWltcG9ydGFudDsKfQoKYm9keXsKICBmb250LWZhbWlseTogJ094eWdlbicsIHNhbnMtc2VyaWY7CiAgZm9udC1zaXplOiAxNnB4OwogIGxpbmUtaGVpZ2h0OiAyNHB4Owp9CgpoMSxoMixoMyxoNCB7CiAgZm9udC1mYW1pbHk6ICdSYWxld2F5Jywgc2Fucy1zZXJpZjsKfQoKLmNvbnRhaW5lciB7IHdpZHRoOiAxNDAwcHg7IH0KCmNhcHRpb24gewogIGZvbnQtc2l6ZTogMjBweDsKICBjYXB0aW9uLXNpZGU6IHRvcDsKICB0ZXh0LWluZGVudDogMzBweDsKICBiYWNrZ3JvdW5kLWNvbG9yOiBsaWdodGdyZXk7CiAgY29sb3I6IGJsYWNrOwogIG1hcmdpbi10b3A6IDVweDsKfQoKZy10YWJsZS1pbnRybyBoNCB7CiAgdGV4dC1pbmRlbnQ6IDBweDsKfQo8L3N0eWxlPgoKYGBge3Igc2V0dXAsIGluY2x1ZGUgPSBGQUxTRX0Ka25pdHI6Om9wdHNfY2h1bmskc2V0KGVjaG8gPSBUUlVFLAogICAgICAgICAgICAgICAgICAgICAgY29tbWVudCA9IE5BLAogICAgICAgICAgICAgICAgICAgICAgd2FybmluZyA9IEZBTFNFLAogICAgICAgICAgICAgICAgICAgICAgZXJyb3IgPSBGQUxTRSwKICAgICAgICAgICAgICAgICAgICAgIG1lc3NhZ2UgPSBGQUxTRSwKICAgICAgICAgICAgICAgICAgICAgIGNhY2hlID0gRkFMU0UsCiAgICAgICAgICAgICAgICAgICAgICBmaWcud2lkdGggPSA4LAogICAgICAgICAgICAgICAgICAgICAgZmlnLmhlaWdodCA9IDQpCmBgYAoKYGBge3IgaW5mZXgtR2xvYmFsT3B0aW9ucywgcmVzdWx0cz0iaGlkZSIsIGluY2x1ZGU9RkFMU0UsIGNhY2hlPUZBTFNFfQoKa25pdHI6Om9wdHNfa25pdCRzZXQoc3RvcF9vbl9lcnJvciA9IDJMKSAjcmVhbGx5IG1ha2UgaXQgc3RvcApvcHRpb25zKGtuaXRyLnRhYmxlLmZvcm1hdCA9ICdodG1sJykKCm9wdGlvbnMoc3RyaW5nc0FzRmFjdG9ycz1GKQoKICNrbml0cjo6ZGVwX2F1dG8oKQoKYGBgCjwhLS0gIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIC0tPgoKCmBgYHtyIGluZmV4LVByZWxpbXMsICBpbmNsdWRlPUZBTFNFLCBlY2hvPUZBTFNFLCByZXN1bHRzPSdoaWRlJywgbWVzc2FnZT1GQUxTRX0gCgoKRk4gPC0gImluZGV4IgppZihzdW0oZ3JlcGwoRk4sIGxpc3QuZmlsZXMoKSkpPT0wKSBzdG9wKCJDaGVjayBGTiIpCgpQUkVGSVggPC0gImluZGV4IiAjLSByZXBsYWNlIGJ5IEZMT1dDRUxMPz8/Cgogc3VwcHJlc3NNZXNzYWdlcyhyZXF1aXJlKHJtYXJrZG93bikpCiBzdXBwcmVzc01lc3NhZ2VzKHJlcXVpcmUoa25pdHIpKQoKIHN1cHByZXNzUGFja2FnZVN0YXJ0dXBNZXNzYWdlcyhyZXF1aXJlKG1ldGhvZHMpKQogc3VwcHJlc3NQYWNrYWdlU3RhcnR1cE1lc3NhZ2VzKHJlcXVpcmUoYm9va2Rvd24pKQoKIHN1cHByZXNzUGFja2FnZVN0YXJ0dXBNZXNzYWdlcyhyZXF1aXJlKGRhdGEudGFibGUpKQogb3B0aW9ucyhkYXRhdGFibGUuZnJlYWQuZGF0YXRhYmxlPUYpCgogc3VwcHJlc3NQYWNrYWdlU3RhcnR1cE1lc3NhZ2VzKHJlcXVpcmUocGx5cikpCiBzdXBwcmVzc1BhY2thZ2VTdGFydHVwTWVzc2FnZXMocmVxdWlyZShkcGx5cikpCiBzdXBwcmVzc1BhY2thZ2VTdGFydHVwTWVzc2FnZXMocmVxdWlyZShtYWdyaXR0cikpCgogIyBTaG90Y3V0cyBmb3Iga25pdHRpbmcgYW5kIHJlbmRlcmluZyB3aGlsZSBpbiBSIHNlc3Npb24gKEludm9rZSBpbnRlcmFjdGl2ZSBSIGZyb20gUi9TY3JpcHRzIGZvbGRlcikKIGtrIDwtIGZ1bmN0aW9uKG49JycpIGtuaXRyOjprbml0Mmh0bWwocGFzdGUoInQiLCBuLCBzZXA9JycpLCBlbnZpcj1nbG9iYWxlbnYoKSwKICAgICAgIG91dHB1dD1wYXN0ZShGTiwiLmh0bWwiLCBzZXA9JycpKQoKIHJyIDwtIGZ1bmN0aW9uKG49JycpIHJtYXJrZG93bjo6cmVuZGVyKHBhc3RlKCJ0Iiwgbiwgc2VwPScnKSwgZW52aXI9Z2xvYmFsZW52KCksCiAgICAgICBvdXRwdXRfZmlsZT1wYXN0ZShGTiwiLmh0bWwiLCBzZXA9JycpKSAjIywgb3V0cHV0X2Rpcj0nU2NyaXB0cycpCgogYmIgPC0gZnVuY3Rpb24obj0nJykgYnJvd3NlVVJMKHBhc3RlKEZOLCIuaHRtbCIsIHNlcD0nJykpCgogIyBUaGUgdXN1YWwgc2hvcnRjdXRzCiB6eiA8LSBmdW5jdGlvbihuPScnKSBzb3VyY2UocGFzdGUoInQiLCBuLCBzZXA9JycpKQoKCiBXUktESVIgPC0gJy4uJwogaWYoIWZpbGUuZXhpc3RzKFdSS0RJUikpIHN0b3AoIldSS0RJUiBFUlJPUiIsIFdSS0RJUikKCiAjIGRvIG9uY2UKCiAjIFNob3RjdXRzIGZvciBrbml0dGluZyBhbmQgcmVuZGVyaW5nIHdoaWxlIGluIFIgc2Vzc2lvbgoga2sgPC0gZnVuY3Rpb24obj0nJykga25pdHI6OmtuaXQyaHRtbChwYXN0ZSgidCIsIG4sIHNlcD0nJyksIGVudmlyPWdsb2JhbGVudigpLAogICAgICAgb3V0cHV0PXBhc3RlKCcnLEZOLCIuaHRtbCIsIHNlcD0nJykpCgogcnIgPC0gZnVuY3Rpb24obj0nJykgcmVuZGVyKHBhc3RlKCJ0Iiwgbiwgc2VwPScnKSwgZW52aXI9Z2xvYmFsZW52KCksCiAgICAgICBvdXRwdXRfZmlsZT1wYXN0ZShGTiwiLmh0bWwiLCBzZXA9JycpLCBvdXRwdXRfZGlyPSdTY3JpcHRzJykKCiBiYiA8LSBmdW5jdGlvbihuPScnKSBicm93c2VVUkwocGFzdGUoJycsRk4sIi5odG1sIiwgc2VwPScnKSkKCiAjIFRoZSB1c3VhbCBzaG9yY3V0cwogenogPC0gZnVuY3Rpb24obj0nJykgc291cmNlKHBhc3RlKCcnLCAidCIsIG4sIHNlcD0nJykpCgogIyBmaWxlIHJtYXJrZG93biBmaWxlIG1hbmFnZW1lbnQgb3B0aW9uczogY2FjaGUsIGZpZ3VyZXMKIGNhY2hlX0RJUiA8LSBmaWxlLnBhdGgoV1JLRElSLCdTY3JpcHRzJywgJ2NhY2hlL00xQS8nKQogc3VwcHJlc3NNZXNzYWdlcyhkaXIuY3JlYXRlKGNhY2hlX0RJUiwgcmVjdXJzaXZlPVQpKQogb3B0c19jaHVuayRzZXQoY2FjaGUucGF0aD1jYWNoZV9ESVIpCgogZmlndXJlc19ESVIgPC0gZmlsZS5wYXRoKFdSS0RJUiwnU2NyaXB0cycsICdmaWd1cmVzL00xQS8nKQogc3VwcHJlc3NNZXNzYWdlcyhkaXIuY3JlYXRlKGZpZ3VyZXNfRElSLCByZWN1cnNpdmU9VCkpCiBvcHRzX2NodW5rJHNldChmaWcucGF0aD1maWd1cmVzX0RJUikKCiAjdGFibGVzX0RJUiA8LSBmaWxlLnBhdGgoV1JLRElSLCdTY3JpcHRzJywgJ3RhYmxlcy9NMUEvJykKICNzdXBwcmVzc01lc3NhZ2VzKGRpci5jcmVhdGUodGFibGVfRElSLCByZWN1cnNpdmU9VCkpCiAjb3B0c19jaHVuayRzZXQoZmlnLnBhdGg9dGFibGVfRElSKQogCiAjIG5lZWQgYSBsb2NhbCBjb3B5IG9mIGhlbHBfRElSCiAjaGVscF9ESVIgPC0gZmlsZS5wYXRoKFdSS0RJUiwnU2NyaXB0cycsICdoZWxwX2ZpbGVzJykKIGhlbHBfRElSIDwtIGZpbGUucGF0aCgnLicsICdoZWxwX2ZpbGVzJykKIHN1cHByZXNzTWVzc2FnZXMoZGlyLmNyZWF0ZShoZWxwX0RJUiwgcmVjdXJzaXZlPVQpKQogCiB0ZW1wX0RJUiA8LSBmaWxlLnBhdGgoV1JLRElSLCdTY3JpcHRzJywgJ3RlbXBfZmlsZXMnKQogc3VwcHJlc3NNZXNzYWdlcyhkaXIuY3JlYXRlKHRlbXBfRElSLCByZWN1cnNpdmU9VCkpCgpgYGAKPCEtLSAjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMgLS0+CgoqKiogCgpgYGB7ciBpbmZleC11dGlsaXR5Rm5zLCBlY2hvPUZBTFNFfQogIyBIZXJlIHdlIGRlZmluZSBzb21lIHV0aWxpdHkgZnVuY3Rpb25zCnNvdXJjZSgnci91dGlsaXR5Rm5zLnInKQoKYGBgCgo8IS0tICMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyAtLT4KCmBgYHtyIGluZmV4LWlucHV0LXBhcmFtcy1hbGwsIGVjaG8gPSBGQUxTRSwgcmVzdWx0cyA9ICJhc2lzIiwgZXZhbD1GLCBlY2hvPUZ9CiAjIHByaW50IG91dCBvcmlnaW5hbCBpbnB1dCBwYXJhbXMKZGF0YS5mcmFtZSgKcGFyYW1fbmFtZT1uYW1lcyhwYXJhbXMpLApwYXJhbV92YWx1ZT11bmxpc3QocGFyYW1zKSwKcGFyYW1fY2xhc3M9c2FwcGx5KHBhcmFtcywgY2xhc3MpLCByb3cubmFtZXM9TlVMTCkgJT4lCiAga25pdHI6OmthYmxlKGNhcHRpb249IklucHV0IFBhcmFtZXRlcnMiKQpgYGAKCjxici8+CgoKPCEtLQoqIEJyZWltYW46IFtAQnJlaW1hbjoxOTg0YWE7IEBCcmVpbWFuOjIwMDFhYV0KKiBGcmVlZG1hbjogW0BGcmVlZG1hbjoyMDA4YWE7IEBGcmVlZG1hbjoyMDA4YWQ7IEBGcmVlZG1hbjoyMDA4YWM7IEBGcmVlZG1hbjoyMDA5YWNdCi0tPgoKCgojIEludHJvZHVjdGlvbiB7LX0KCkluIHRoaXMgZm9sZGVyIHdlIGhhdmUgcmVwb3J0cyBmb3IgLi4uCgo8YnIvPgoKKiBTdGF0aXN0aWNzIFRyYWluaW5nCiAgIC0gW19NMUEtcHJvZl9kZXZfcGxhbi5odG1sXSguL19NMUEtcHJvZl9kZXZfcGxhbi5odG1sKSAtIGFuIG91dGxpbmUgZm9yIGEgcHJvZmVzc2lvbmFsIGRldmVsb3BtZW50CnByb2dyYW0gZm9yIGV4cGVyaWVuY2VkIHN0YXRpc3RpY2lhbnMKICAgLSBbX00xQi1mY19fZGV2X3BsYW4uaHRtbF0oLi9fTTFCLWZjX19kZXZfcGxhbi5odG1sKSAtIHBsYW4gc3BlY2lmaWNhbGx5IGZvciBGQwoKIAoqIENvdXJzZXMKICAgLSBHZW4gQUkKCjxici8+Cgo8cD48cC8+CiogRGF0YSBSZS1BbmFseXNpcyBQcm9qZWN0cwogICAtIFJlZmVyZW5jZS1GcmVlIEdlbm9taWMgSW5mZXJlbmNlIHdpdGggU1BMQVNIIGFuZCBPQVNJUwogICAgICAtIFtfTTJBLVJGR0lfdjEuaHRtbF0oLi9fTTJBLVJGR0lfdjEuaHRtbCkgLQogICAgICAtIFtfTTJCLVJGR0lfdjIuaHRtbF0oLi9fTTJCLVJGR0lfdjIuaHRtbCkgLQogICAgICAtIFtfTTNBLU9BU0lTLmh0bWxdKC4vX00zQS1PQVNJUy5odG1sKSAtCgoKPHA+PHAvPgoqIE1pc2NlbGxhbmlvdXMKICAtIFtfTTRBLWludHJvX0lVVi5odG1sXSguL19NNEEtaW50cm9fSVVWLmh0bWwpIAogIC0gW19NNUEtY2ZfZGRQQ1Jfc2VxLmh0bWxdCiAgLSBbX002QS1yYW5kb21uZXNzX2luX2NhbGxzLmh0bWxdIAogIC0gW19NN0EtaW50ZXJpbVNhbXBsZVNpemVBbmFseXNpcy5odG1sXQogICAgICAtIFtfTTNBX3N0dWR5X2Rlc2lnbl9DQl9ub3Rlcy5wZGZdCgoKPGJyLz4KCiMgU3RhdGlzdGljcyBUcmFpbmluZyAgCgoKIyMgWyAKCioqKgoKCjxici8+CgojIFJlZmVyZW5jZXMKPGRpdiBpZD0icmVmcyI+PC9kaXY+CgoKPGJyLz4KCiMgQXBwZW5kaXg6IEZ1bGwgbGlzdCBvZiByZXBvcnRzIAoKYGBge3IgLCBjaGlsZD1jKCdfaW5kZXguUm1kJyl9CmBgYAoKCjxici8+CgoKCgpgYGB7ciwgZWNobz1GQUxTRX0KICBrbml0cjo6a25pdF9leGl0KCkKYGBgCgoK</div>
 
 
 
@@ -308,6 +492,12 @@ $(document).ready(function () {
 </script>
 
 <!-- code folding -->
+<script>
+$(document).ready(function () {
+  window.initializeSourceEmbed("index.Rmd");
+  window.initializeCodeFolding("hide" === "show");
+});
+</script>
 
 
 <!-- dynamically load mathjax for compatibility with self-contained -->

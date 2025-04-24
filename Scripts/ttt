@@ -1,16 +1,54 @@
+## Contingency Tables and Multinomial Distribution
 
-Hi Sam,
+### Contingency Tables
 
-As promised, I'm recruiting you into my informal focus group for feedback on my self-marketing campaign. If you don't have the time, I completely understand (though declining might negatively impact your standing in the afterlife). Just let me know either way, so I can move ahead with other screening sessions.
+A **contingency table** (or cross-tabulation) displays frequencies of observations across two or more categorical variables. It summarizes how categories of one variable relate to categories of another.
 
-I'd greatly appreciate your candid feedback on my self-description below. Since you know me personally, your insights would be valuable from that perspective. Additionally, if you're comfortable, I'd love your thoughts on how someone in your professional role might respond—though I realize that could be asking a lot.
+**Important Clarification:**
+- A contingency table is primarily for display purposes, summarizing the observed counts in categorical data.
 
-I'm currently recovering from surgery, which was successful, leaving no residual health issues (abdominal surgery in late December following earlier intestinal surgeries). My recent professional experience was at GRAIL, a place with incredible potential for me to make a significant impact. There were numerous opportunities to enhance experimental design, data analysis, and reporting practices—improvements that would have greatly benefited the company and its analysts. Unfortunately, enhancing data analysis methodologies wasn't within the scope of the group that hired me, and I wasn't able to influence management to prioritize these critical improvements. Perhaps the resistance came from an "Atlas Shrugged" mindset—everyone focusing solely on immediate personal credit rather than collaborative, long-term benefits, even when measurable short-term dividends weren't clear.
+**Example:**
 
-Ultimately, my contract ended in December and wasn't renewed. Now I'm faced with the challenging task of marketing expertise that many organizations may not realize they need. Nonetheless, I'm optimistic and determined.
+|                | Disease | No Disease | **Total** |
+|----------------|---------|------------|-----------|
+| **Smoker**     | 30      | 70         | **100**   |
+| **Non-Smoker** | 10      | 90         | **100**   |
+| **Total**      | **40**  | **160**    | **200**   |
 
-Here's the blurb I'm considering for email introductions and the basis for my web landing page:
+### Assumptions for Compiling a Contingency Table
 
-[Insert your blurb here]
+A contingency table is meaningful under the following assumptions about the provenance of the data:
+
+- Observations are independently classified into mutually exclusive categories.
+- Each observation is classified according to well-defined categorical variables.
+- Data collection is systematic, ensuring that the displayed counts accurately reflect observed frequencies.
+
+### Multinomial Distribution
+
+The multinomial distribution generalizes the binomial distribution to multiple categories. Given:
+
+- \( n \): total number of independent trials.
+- \( k \): number of categories, each with probability \( p_i \), where \( \sum_{i=1}^{k} p_i = 1 \).
+
+The probability mass function (PMF) is:
+
+\[
+P(X_1=x_1, X_2=x_2, \dots, X_k=x_k) = \frac{n!}{x_1!x_2!\dots x_k!}p_1^{x_1}p_2^{x_2}\dots p_k^{x_k}
+\]
+
+with the constraint:
+\[
+x_1 + x_2 + \dots + x_k = n
+\]
+
+### Assumption for the Multinomial Model
+
+If we measure a categorical attribute on a random sample drawn from a population, the vector of category counts will follow a multinomial distribution under the assumption that:
+
+- The observations are independently and identically distributed (i.i.d.) draws from the population.
+
+If the observations are independently and identically distributed (i.i.d.) draws from the population, then the cell entries of the contingency table can be modeled as a multinomial random variable.
+
+---
 
 

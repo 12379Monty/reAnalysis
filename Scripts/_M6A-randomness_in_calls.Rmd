@@ -1,0 +1,1426 @@
+---
+title:  "The Beta-Binomial Model for Dichotomous Data"
+#author: "xxx"
+date: '`r format(Sys.time(), "%a %b %d", tz="America/Los_Angeles")`'
+always_allow_html: yes
+output:
+  bookdown::html_document2:
+    code_folding: hide
+    code_download: true
+    toc: true
+    # does this have an effect
+    fig_caption: yes
+    # this has no effect
+    number_sections: yes
+    # css: ['../_css/pandoc3.css', '../_css/myMargins.css']
+bibliography: [../../../_bibFiles/_Breiman.bib,../../../_bibFiles/_betaBinomial.bib]
+csl: ../../../_csl/cell-numeric.csl
+link-citations: true
+---
+
+
+`r DT_TABLES <- F`
+
+
+<style>
+@import url('https://fonts.googleapis.com/css?family=Raleway');
+@import url('https://fonts.googleapis.com/css?family=Oxygen');
+@import url('https://fonts.googleapis.com/css?family=Raleway:bold');
+@import url('https://fonts.googleapis.com/css?family=Oxygen:bold');
+
+.main-container {
+  max-width: 1400px !important;
+}
+
+body{
+  font-family: 'Oxygen', sans-serif;
+  font-size: 16px;
+  line-height: 24px;
+}
+
+h1,h2,h3,h4 {
+  font-family: 'Raleway', sans-serif;
+}
+
+.container { width: 1400px; }
+
+caption {
+  font-size: 20px;
+  caption-side: top;
+  text-indent: 30px;
+  background-color: lightgrey;
+  color: black;
+  margin-top: 5px;
+}
+
+g-table-intro h4 {
+  text-indent: 0px;
+}
+</style>
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(echo = TRUE,
+                      comment = NA,
+                      warning = FALSE,
+                      error = FALSE,
+                      message = FALSE,
+                      cache = FALSE,
+                      fig.width = 8,
+                      fig.height = 4)
+```
+
+```{r m1a-GlobalOptions, results="hide", include=FALSE, cache=FALSE}
+
+knitr::opts_knit$set(stop_on_error = 2L) #really make it stop
+options(knitr.table.format = 'html')
+
+options(stringsAsFactors=F)
+
+ #knitr::dep_auto()
+
+```
+<!-- ######################################################################## -->
+
+
+```{r m1a-Prelims,  include=FALSE, echo=FALSE, results='hide', message=FALSE} 
+
+FN <- "_M1A-randomness_in_calls"
+if(sum(grepl(FN, list.files()))==0) stop("Check FN")
+
+ suppressMessages(require(rmarkdown))
+ suppressMessages(require(knitr))
+
+ suppressPackageStartupMessages(require(methods))
+ suppressPackageStartupMessages(require(bookdown))
+
+ suppressPackageStartupMessages(require(data.table))
+ options(datatable.fread.datatable=F)
+
+ suppressPackageStartupMessages(require(plyr))
+ suppressPackageStartupMessages(require(dplyr))
+ suppressPackageStartupMessages(require(magrittr))
+
+ # Shotcuts for knitting and rendering while in R session (Invoke interactive R from R/Scripts folder)
+ kk <- function(n='') knitr::knit2html(paste("t", n, sep=''), envir=globalenv(),
+       output=paste(FN,".html", sep=''))
+
+ rr <- function(n='') rmarkdown::render(paste("t", n, sep=''), envir=globalenv(),
+       output_file=paste(FN,".html", sep='')) ##, output_dir='Scripts')
+
+ bb <- function(n='') browseURL(paste(FN,".html", sep=''))
+
+ # The usual shortcuts
+ zz <- function(n='') source(paste("t", n, sep=''))
+
+
+ WRKDIR <- '..'
+ if(!file.exists(WRKDIR)) stop("WRKDIR ERROR", WRKDIR)
+
+ # do once
+
+ # Shotcuts for knitting and rendering while in R session
+ kk <- function(n='') knitr::knit2html(paste("t", n, sep=''), envir=globalenv(),
+       output=paste('',FN,".html", sep=''))
+
+ rr <- function(n='') render(paste("t", n, sep=''), envir=globalenv(),
+       output_file=paste(FN,".html", sep=''), output_dir='Scripts')
+
+ bb <- function(n='') browseURL(paste('',FN,".html", sep=''))
+
+ # The usual shorcuts
+ zz <- function(n='') source(paste('', "t", n, sep=''))
+
+ # file rmarkdown file management options: cache, figures
+ cache_DIR <- file.path(WRKDIR,'Scripts', 'cache/M1A/')
+ suppressMessages(dir.create(cache_DIR, recursive=T))
+ opts_chunk$set(cache.path=cache_DIR)
+
+ figures_DIR <- file.path(WRKDIR,'Scripts', 'figures/M1A/')
+ suppressMessages(dir.create(figures_DIR, recursive=T))
+ opts_chunk$set(fig.path=figures_DIR)
+
+ #tables_DIR <- file.path(WRKDIR,'Scripts', 'tables/M1A/')
+ #suppressMessages(dir.create(table_DIR, recursive=T))
+ #opts_chunk$set(fig.path=table_DIR)
+ 
+ # need a local copy of help_DIR
+ #help_DIR <- file.path(WRKDIR,'Scripts', 'help_files')
+ help_DIR <- file.path('.', 'help_files')
+ suppressMessages(dir.create(help_DIR, recursive=T))
+ 
+ temp_DIR <- file.path(WRKDIR,'Scripts', 'temp_files')
+ suppressMessages(dir.create(temp_DIR, recursive=T))
+
+```
+<!-- ######################################################################## -->
+
+*** 
+
+```{r m1a-utilityFns, echo=FALSE}
+ # Here we define some utility functions
+source('r/utilityFns.r')
+
+```
+
+<!-- ######################################################################## -->
+
+
+<!-- SKIP THIS 
+# Params {#params}
+
+## Input params {-}
+-->
+
+```{r m1a-input-params-all, echo = FALSE, results = "asis", eval=F, echo=F}
+ # print out original input params
+data.frame(
+param_name=names(params),
+param_value=unlist(params),
+param_class=sapply(params, class), row.names=NULL) %>%
+  knitr::kable(caption="Input Parameters")
+```
+
+<br/>
+
+<!-- DNA
+# Preliminaries {-}
+ 
+## Read Support Data {-} 
+-->
+
+# Introduction  {#intro}
+
+* We seek some realistic model to capture the observed variability in
+cancer calls as samples are classified coming off the pipeline.
+
+* Having a good model ensures that we have accurate estimates of uncertainty
+around estimated parameters such as repeatability, reproducibility,
+sensitivity and specificity.  This in turn ensures that study designs specify
+adequate data collection for the task at hand, and that we have reliable
+expectations regarding future events.
+
+* The current practice is to assume that when we collect cancer calls for a set of
+samples used in a study, the cancer calls are independent and have
+a common underlying rate of being correct.  We call this the `iid model`.
+
+* This model is certainly incorrect (plates, rows, columns, etc.)
+and under-states the variability.
+In this note we derive some results to specify
+an alternative model for the variability in the calls, one which 
+incorporates  dependencies among samples.  
+
+* Suggesting an alternative to the iid model is easy. From
+George Box's Law we know that the alternative will be wrong as well.
+Determining how wrong each of the models are is the challenge. 
+
+<br/>
+
+# The beta-binomial model 
+
+*  **Note** Overlaying densities of discrete (binomial) and continuous (beta)
+random variables is a bit tricky.   
+   - Compare distributions with qq plots or cdf instead?
+   - Return to this later.
+   
+
+
+## Literature Review {.tabset}
+
+### Hide {-}
+
+<br/>
+<br/>
+
+### Show {-}
+
+
+* [Bayesian Foundations](https://www.bayesrulesbook.com/chapter-3) - 
+Chapter 3 of bayesrulesbook.
+
+* The beta-binomial distribution is one option which may provide a
+more realistic model of variability in cancer calls for samples coming 
+off the pipeline.  
+
+* We focus here on a set of calls for samples
+which as we say are "coming off the pipeline" because it is the structure
+that exists in the processing of the samples which introduces correlations
+through shared exposure to disturbances.  
+
+*** 
+
+* Recent and relevant - Yang (2012) [@Yang:2012aa]
+
+* Foundational - Williamn (1982) [@Williams:1982aa], Prentice (1986) [@Prentice:1986aa],
+and Crowder (1978) [@Crowder:1978aa].
+
+
+* Potentially interesting: Moore (1987)  [@Moore:1987aa], 
+Moore (2001) [@Moore:2001aa]
+
+* The rest are related to biometric data analysis and design.
+
+   -  The biometric identification problem shares a feature with making cancer calls
+in that the underluying porbibility of matching or calling tested samples correctly
+varies from sample to sample.
+
+   -  The beta-binomial distribution is frequently used to model
+variability in the matching performance of biometric identification devices.
+Examples of biometric identification include the matching of samples based on
+DNA profiles, facial recognition, finger prints, and many more.
+      -   Schuclers (2002) [@Schuckers:2002aa],
+Kiura-Njuki et. al. (2024)   [@Njuki:2022aa]
+and Werner and Hanka (2015) [@Werner:2015aa] provide a brief description of the
+beta-binomial model and illustrate the usage in some examples.  
+      -  Schuckers (2002) illustrates an approach to construct 
+confidence intervals when no successes (no failures) are observed.
+      -  Schuckers et. al. (2007) [@Schuckers:2007aa] propose an early stopping rule
+when there is opportunity to do so in the collection or data to estimate error
+rates in bionetric devices.
+      -  Schuckers et. al. (2004) compare methods of evaluting
+the matching performance of biometric devices.
+   - Schuckers (2009) propose a paremetric model for the
+assessment of biometric classification error rates.  
+      -  also see [@Atkinson:2004aa;@Ulery:2012aa;@Dunstone:2009aa;@Schuckers:2003aa].
+
+
+   -  The beta-binomial distribution can be more generally applied to any binomial data
+showing signs of extra-binomial variability [@Ascari:2021aa;@Guimaraes:2005aa;@Prentice:1986aa;@Pham:2010aa;@Palm:2021aa;@Gorgi:2020aa].
+
+   -  Models in which the underlying binomial  probability varies over time have also 
+been studied 
+[@Gorgi:2020aa;@Kuchibhatla:2003aa;@Pham:2010aa;@Schildcrout:2005aa].
+
+   -  Finally methods  to simulate binary data which occur with collinearity
+have been studied [@Ascari:2021aa;@Atkinson:2004aa;@Headrick:2002aa;@Kruppa:2018aa;@Palm:2021aa;@Preisser:2014aa;@Schuckers:2003aa]
+
+
+## The Beta-binomial Sampling Distribution {.tabset}
+
+### Hide {-}
+
+<br/>
+<br/>
+
+
+### Preliminaries {-}
+
+#### Gamma {-}
+
+\begin{equation}
+    
+\Gamma(x) = \int_0^\infty t^{x-1}exp(-t) dt
+
+(\#eq:gamma)
+\end{equation}
+
+\begin{equation}
+
+\Gamma(x) = (x - 1)!
+
+(\#eq:gamma)
+\end{equation}
+
+
+#### Beta {-}
+
+\begin{equation}
+
+\mathcal{B}(a, b)   = \int_0^1 t^{a-1} (1-t)^{b-1} \, dt       \\
+              = \frac{\Gamma(a) \cdot \Gamma(b)}{\Gamma(a + b)}
+              
+(\#eq:beta)
+\end{equation}
+
+<!--
+\begin{equation}
+
+\mathcal{B}(x, y) = \frac{\Gamma(x) \cdot \Gamma(y)}{\Gamma(x + y)}
+
+(\#eq:beta)
+\end{equation}
+-->
+
+#### factorial(x) {-}
+
+\begin{equation}
+
+\text{factorial}(x) \equiv x! \,\,\,\text{   for integer x}   \\
+                    = \Gamma(x+1)
+
+(\#eq:factorial)
+\end{equation}
+
+\begin{equation}
+
+\binom{n}{k} = \frac{n!}{(n-k)!\cdot k!}   \\
+             = \prod_{i=1}^k \frac{n + 1 - i}{i}
+(\#eq:n-ch-k)
+\end{equation}
+
+
+<br/>
+
+### From `extraDistr` {- .tabset}
+
+If   
+$$P \propto Beta(\alpha, \beta)$$     
+and     
+$$(X | P=p) \propto Binomial(n, p)$$    
+thena     
+$$X \propto BetaBinomial(n, \alpha, \beta)$$  
+
+
+
+
+
+$BetaBinomial(n, \alpha, \beta)$ has the following properties:
+
+
+#### Probability Mass Function {-}
+
+\begin{equation}
+
+P(X = x | n, \alpha, \beta) = 
+ \frac{\Gamma(\alpha + \beta)}{\Gamma(\alpha)\cdot\Gamma(\beta)} \cdot
+ \binom{n}{x} \frac{\Gamma(\alpha +  x)\cdot\Gamma(\beta + n - x)}
+   {\Gamma(\alpha + \beta + n)}    \\
+   =  \binom{n}{x} \cdot \frac{\mathcal{B}(\alpha +  x, \beta + n - x)}{\mathcal{B}(\alpha, \beta)}
+
+(\#eq:bb-pmf)
+\end{equation}
+
+<br/>     
+  
+#### Cumulativde Distribution Function {-}
+
+Equations \@ref(eq:gamma),  \@ref(eq:beta) and \@ref(eq:n-ch-k)  
+enable us to rewrite the  probability mass function as
+
+
+\begin{equation}
+
+
+f(\bf{x} \, | \,\alpha, \beta, \bf{n})
+    = \frac{\Gamma(\alpha + \beta)}{\Gamma(\alpha)\cdot\Gamma(\beta)} \cdot
+       \binom{n}{x} \frac{\Gamma(\alpha +  x)\cdot\Gamma(\beta + n - x)}
+   {\Gamma(\alpha + \beta + n)}   \\
+  
+   =  \prod_{i=1}^x \frac{n + 1 - i}{i} \cdot
+ \frac{(((\alpha+x-1)!*(\beta+n-x-1)!)/((\alpha+\beta+n+1)!))}{B(\alpha, \beta)}
+
+(\#eq:bb-pmf)
+\end{equation}
+
+
+Taking advantage of recursivity, we can write:
+
+
+\begin{equation}
+
+F(x) = f(0)+...+f(x)                        
+
+  
+(\#eq:bb-cdf)
+\end{equation}
+
+
+<br/>
+
+### The Beta-binomial {-}
+
+* A sampling distribution connotes that the units of analysis,
+or measurements, come from a random sample taken from a population.
+The more samples we have, the closer to the population we should get.
+
+
+*  In this section (taken from Schuckers (2002) [@Schuckers:2002aa])
+we introduce the Beta-binomial distribution.
+We will use this parametric distribution as the sampling
+distribution of test results for cohorts under study. 
+
+The Beta-binomial is <ins>derived</ins> in the following manner.
+
+<p><p/>
+* Suppose that we have $m$ individuals and each of those individuals
+is tested $n_i$ times where i = 1,...,m.
+Assume that:
+   -  $X_i  \, | \, n_i, p_i \propto Bin(n_i, p_i)$
+where $X_i$ is the number of failures^[
+the failures in this scenario play the role of successes
+in the usual binomial variability lexicon].  That is:
+
+   -  the occurrence of observable failures has a distribution
+across indiduals which is described by the
+following equation:
+
+\begin{equation}
+
+P(X_i = x_i) = \binom{n_i}{x_i} p_i^{x_i} \cdot (1 - p_i)^{n_i-x_i}
+ \;\;\;\;  for \; x_i \in (0, 1, ..., n_i) \quad  and  \quad i \in (1, ..., m)
+   
+(\#eq:binom-prob2)
+\end{equation}
+ 
+
+* We then further model each of the $p_i$’s as (conditionally) independent^[
+The $p_i$'s are thought as having sampled from a prior distribution.
+It isn't clear what the conditioning event or variable is here.  Maybe
+*conditionally* isn't needed.]
+draws from a Beta distribution. The Beta distribution is a continuous
+distribution on the interval [0,1] which can be parametrized by two
+quantities, $\alpha$ and $\beta$.  If $p$ has a Beta distribution,
+the probability density function for $p$  has the following form
+
+
+\begin{align}
+
+f(p  \, | \, \alpha,\; \beta) & = \frac{\Gamma(\alpha + \beta)}{\Gamma(\alpha)\cdot\Gamma(\beta)}
+      \cdot p^{\alpha-1} (1 -  p)^{\beta-1}   \\
+    & = \frac{p^{\alpha-1} (1 -  p)^{\beta-1} }{B(\alpha,\; \beta)}
+
+(\#eq:beta-prob2)
+\end{align}
+
+* Furthermore, if $P \propto f(p  \, | \, \alpha,\; \beta)$ is a Beta random variable,
+then with $\pi = \alpha / (\alpha + \beta)$ we have
+
+
+\begin{align}
+
+
+E(P)  & = \pi    \\
+Var(P) &  = \frac{\pi(1-\pi)}{\alpha + \beta + 1}
+
+(\#eq:beta-mean-var)
+\end{align}
+
+From the identity $f(x,y) \equiv f(x \, | \,y)f(y)$, we can derive the form of
+the joint distribution $f(\bf{x},\bf{p} \, | \,\alpha, \beta, \bf{n})$:
+
+<!-- BACK-SLASHusepackage{bm} -->
+
+\begin{align}
+
+f(\bf{x}, \bf{p} \, | \,\alpha, \beta, \bf{n}) & = f(\bf{x}  \, | \, \bf{p, n}) f(\bf{p}  \, | \,\alpha, \beta) \\
+    & = \prod_{i=1}^m \binom{n_i}{x_i} p_i^{x_i} \cdot (1 - p_i)^{n_i-x_i}    \\
+    &  \times \prod_{i=1}^m \frac{\Gamma(\alpha + \beta)}{\Gamma(\alpha)\cdot\Gamma(\beta)}
+      \cdot p_i^{\alpha-1} (1 -  p_i)^{\beta-1}
+
+(\#eq:joint-dist)
+\end{align}
+
+where $\bf{p}$ = $(p_1, p_2, ..., p_m)^T$,
+similarly for $\bf{x}$ and $\bf{n}$. Note that at this juncture both the
+observations ($\bf{x}$) and the parameters of the binomial model which
+describes the probabilities of observable outcomes are subject to random variability.
+
+
+As we are interested in the overall probability of success, we average or integrate
+$f(\bf{x}, \bf{p} \, | \,\alpha, \beta, \bf{n})$ over $\bf{p}$: 
+
+
+\begin{align}
+
+f(\bf{x} \, | \,\alpha, \beta, \bf{n})
+    & = \int_{\bf{p}} f(\bf{x}, \bf{p} \, | \,\alpha, \beta, \bf{n})d\bf{p} \\
+
+    & =  \int_{\bf{p}}  f(\bf{x}  \, | \, \bf{p, n}) f(\bf{p}  \, | \,\alpha, \beta) d\bf{p}   \\
+ 
+    & =  \int_{\bf{p}}  \left( \prod_{i=1}^m \binom{n_i}{x_i} p_i^{x_i} \cdot (1 - p_i)^{n_i-x_i}    \\
+      \times \prod_{i=1}^m \frac{\Gamma(\alpha + \beta)}{\Gamma(\alpha)\cdot\Gamma(\beta)}
+      \cdot p_i^{\alpha-1} (1 -  p_i)^{\beta-1} \right) d\bf(p)    \\
+
+    & = \frac{\Gamma(\alpha + \beta)}{\Gamma(\alpha)\cdot\Gamma(\beta)} \cdot 
+       \prod_{i=1}^m  \binom{n_i}{x_i} 
+         \int_{\bf{p}} p_i^{x_i+\alpha-1} \cdot (1 - p_i)^{n_i + \beta - x_i - 1}  d\bf{p}   \\
+
+   & = \frac{\Gamma(\alpha + \beta)}{\Gamma(\alpha)\cdot\Gamma(\beta)} \cdot
+ \prod_{i=1}^m \binom{n_i}{x_i} \frac{\Gamma(\alpha +  x_i)\cdot\Gamma(\beta + n_i - x_i)}
+   {\Gamma(\alpha + \beta + n_i)}
+    
+
+(\#eq:beta-binomial-dist)
+
+\end{align}
+    
+
+Equation \@ref(eq:beta-binomial-dist) is referred to as a joint Beta-binomial distribution
+or the product of Beta-binomial distributions. 
+
+Under the Beta-binomial distribution:
+
+\begin{align}
+
+E[X_i] & = n_i \frac{\alpha}{\alpha + \beta} = n_i \pi  \\
+Var[X_i] & = n_i \pi (1 - \pi) \cdot C_i  \\
+
+C_i & = \frac{\alpha + \beta + n_i}{\alpha + \beta + 1}
+      
+(\#eq:bb-mean-var)
+
+\end{align}
+
+<br/>
+<br/>
+
+### Comments {-}
+
+* The Beta-binomial distribution is often
+called an extravariation model. The reason for this is that
+it allows for greater variability among the variates, $x_i$,
+than the binomial distribution. 
+
+* The additional term, $C_i$, allows for
+additional variability beyond the
+$n_i\pi(1-\pi)$  that is found under the binomial model. 
+
+<p><p/>
+* Letting $\gamma = \alpha + \beta$, $\gamma$  determines
+the amount of variability in the Beta-binomial random variable
+beyond that found in the binomial. 
+   - the smaller $\alpha + \beta$ is, the greater is the boost in excess variability,
+
+
+* If the Beta-binomial model is correct and the binomial model is used then the
+variance will be understated by a factor of C and, hence,
+confidence intervals will be understated by a factor of $C^{1/2}$.
+   - $1 \le C  \le n_i$
+
+
+* If $\gamma$ is large, then C ≈ 1 and the variability
+approaches $n_i\pi(1-\pi)$
+   - Large $\gamma$ indicates that
+individual probabilities, the p′s, are very similar and hence 
+the variability resembles that of the binomial distribution.
+   - when  $\gamma$ is small,  $C_i \approx n_i$ and the variability approaches
+$n_i^2 \pi(1-\pi)$
+
+<br/>
+<br/>
+
+### Posterior beta-binomial  {-}
+
+<p><p/>
+* whenever we have a beta prior and a binomial likelihood,
+the posterior distribution will also be beta with parameters 
+   - $\alpha` = \alpha + x$ 
+   - #\beta` = \beta + n - x$  
+
+
+<br/>
+<br/>
+
+
+Define Functions ...
+
+
+```{r m1a-define-functions, cache=F, eval=T}
+
+## plot beta distribution 
+## Source: https://stat.ethz.ch/R-manual/R-devel/library/stats/html/Beta.html
+pl.beta <- function(a,b, asp = if(isLim) 1, ylim = if(isLim) c(0,1.1), 
+                    Xlim=c(0,1),  Lty=1, Lwd=2, Legend=F) {
+  if(isLim <- a == 0 || b == 0 || a == Inf || b == Inf) {
+    eps <- 1e-10
+    x <- c(0, eps, (1:7)/16, 1/2+c(-eps,0,eps), (9:15)/16, 1-eps, 1)
+  } else {
+    x <- seq(0, 1, length.out = 1025)
+  }
+  fx <- cbind(dbeta(x, a,b))####, pbeta(x, a,b), qbeta(x, a,b))
+  f <- fx; f[fx == Inf] <- 1e100
+  matplot(x, f, ylab="", type="l", ylim=ylim, xlim=Xlim, asp=asp, lty=Lty, lwd=Lwd,
+          main = bquote(alpha == .(a) ~    beta == .(b)))  
+  abline(0, 1,    col="gray", lty=3)
+  abline(h = 0:1, col="gray", lty=3)
+  if(Legend)
+  legend("top", paste0(c("d","p","q"), "beta(x, a,b)"), horiz=T,
+         col=1:3, lty=1, bty = "n", lwd=Lwd)
+  invisible(cbind(x, fx))
+}# pl.beta
+ ####################################################
+## plot dbeta distribution 
+## Source: https://stat.ethz.ch/R-manual/R-devel/library/stats/html/Beta.html
+pl.dbeta <- function(a,b, Ylim = NULL, Xlim=c(0,1), Lty=1, Lwd=2){
+  if(isLim <- a == 0 || b == 0 || a == Inf || b == Inf) {
+    eps <- 1e-10
+    x <- c(0, eps, (1:7)/16, 1/2+c(-eps,0,eps), (9:15)/16, 1-eps, 1)
+  } else {
+    x <- seq(0, 1, length.out = 1025)
+  }
+  fx <-dbeta(x, a,b)
+  f <- fx; f[fx == Inf] <- 1e100
+  plot(x, f, ylab="", type="l", ylim=Ylim, xlim=Xlim, lty=Lty, lwd=Lwd,
+       main = bquote(alpha == .(a) ~    beta == .(b)))  
+  invisible(cbind(x, fx))
+}# pl.dbeta
+ ####################################################
+
+DEBUG <- function() {
+
+alpha = 95
+beta = 5
+n = 100
+
+}
+
+pl.betabinomial <- function(alpha, beta, n, R = 10000, T = 10000) {
+  #library(VGAM)
+
+  x <- matrix(NA,R+T,2)
+  colnames(x) <- c("binom_n", "beta")
+
+  x[1,] <- c(binom_n = 1, beta=.5)
+
+  for(i in 2:(R+T)) {
+    x[i, "beta"] <- rbeta(1,alpha,beta)
+    x[i,"binom_n"] <- rbinom(1,n,x[i, "beta"])
+  }
+  x <- x[(R+1):(R+T),]
+
+  plot(table(x[, "binom_n"])/T, col="sienna4",type="p",pch=20)
+
+  betabinomialdensity <- function(x,n,alpha,beta) {
+     choose(n, x)*beta(alpha+x,beta+n-x)/beta(alpha,beta)}
+
+  points(0:n,betabinomialdensity(0:n,n,alpha,beta),type="o", pch=22, lty=2, col="red")     
+
+  AvgDraws = mean(x[, "binom_n"])
+  TheoreticalExpectedValue = n*alpha/(alpha+beta)
+
+}#pl.betabinomial
+######################################
+DEBUG <- function() {
+Alpha = 95
+Beta = 5
+N = 100
+LoTail = 0.90
+Xlim=c(0.75, 1)
+Ylim=c(0,.20)
+}
+
+compare_beta_binom_f <- function(N, Alpha, Beta, LoTail = 0.90, Plot = T,
+   Xlim=NULL, Ylim = NULL) {
+
+  betabinomialdensity <- function(x,n,alpha,beta) {
+     choose(n, x)*beta(alpha+x,beta+n-x)/beta(alpha,beta)}
+
+# extraDistr::dbbinom(x, size, alpha = 1, beta = 1, log = FALSE)
+
+#VGAM::dbetabinom.ab(x, size, shape1, shape2, log = FALSE,
+              #Inf.shape = exp(20), limit.prob = 0.5)
+
+
+  # beta
+  ##############
+  beta_mean <- integrate(function(x) x * dbeta(x, shape1=Alpha, shape2=Beta) , 0, 1)$value
+  beta_var <- integrate(function(x) (x - beta_mean)^2 *  dbeta(x, shape1=Alpha, shape2=Beta) , 0, 1)$value
+
+  beta_sd <- sqrt(beta_var)
+
+if(Plot) {
+  curve(dbeta(x, shape1=Alpha, shape2=Beta), lty=1, lwd=2, col = "grey", type='l', 
+       from = 85*LoTail/100, to = 1, yaxt='n', #ylim=Ylim,   
+       xlab=latex2exp::TeX("$\\hat{\\pi}$  or $\\pi$"), 
+       ylab='density or prob', 
+       ####ylim = range(c(beta_frm$d, beta_binom_frm$d, binom_frm$d)),
+       main = bquote(N == .(N) ~ ~  alpha == .(Alpha) ~ ~  beta == .(Beta))
+       )
+}  #
+
+  # binom - rescaled to 0:1
+  ##############
+  binom_mean <- weighted.mean(x = (0:N)/N, w = dbinom(x = 0:N, size = N, prob = Alpha/(Alpha + Beta)))
+  binom_var <- weighted.mean(x = ((0:N)/N - binom_mean)^2, 
+       w = dbinom(x = 0:N, size = N, prob = Alpha/(Alpha + Beta)))
+  binom_sd <- sqrt(binom_var)
+  binom_se <- sqrt(binom_var/N)
+  binom_95_onesidelcb <- (0:N)[
+   min(which(pbinom(q = 0:N, size = N, prob = Alpha/(Alpha + Beta)) > .05))]/N
+
+  binom_tail_prob <-  sum(dbinom(x = round(LoTail*N):N, size = N, prob = Alpha/(Alpha + Beta)))
+
+if(Plot) {
+  probs_vec <- dbinom(x = 0:N, size = N, prob = Alpha/(Alpha + Beta))
+  par(new=T)
+  plot(x = (0:N)/N, y= probs_vec, type= 'l', col='green', lwd=2,
+       xlim = c(85*LoTail/100, 1), yaxt='n')
+}
+
+  # beta-binom - rescaled to 0:1
+  ##############
+  beta_binom_mean <- weighted.mean(x = (0:N)/N, 
+  w = extraDistr::dbbinom(x = 0:N, size = N, alpha = Alpha, beta=Beta, log=F))
+
+  beta_binom_var <- weighted.mean(x = ((0:N)/N - beta_binom_mean)^2,
+       w =  extraDistr::dbbinom(x = 0:N, size = N, alpha = Alpha, beta=Beta, log=F))
+     
+  beta_binom_sd <- sqrt(beta_binom_var)
+  beta_binom_se <- sqrt(beta_binom_var/N)
+
+  beta_binom_95_onesidelcb <- (0:N)[
+   min(which(extraDistr::pbbinom(q = 0:N, size = N, alpha = Alpha, beta=Beta, log=F) > 0.05))]/N
+
+  beta_binom_tail_prob <-  sum(extraDistr::dbbinom(x = round(LoTail*N):N, 
+                             size = N, alpha = Alpha, beta=Beta, log=F))
+if(Plot) {
+  probs_vec <-  extraDistr::dbbinom(x = 0:N, size = N, alpha = Alpha, beta=Beta, log=F)
+  par(new=T)
+  plot(x = (0:N)/N, y= probs_vec, type= 'l', col='lightblue', lwd=2,
+       xlim = c(85*LoTail/100, 1), yaxt='n')
+} 
+
+  # Verify Equation \@ref(eq:bb-mean-var)
+  #########################
+  C1 <- (Alpha + Beta + N)/(Alpha + Beta + 1)
+  C1_check <- beta_binom_var/binom_var
+
+  distr_moments_frm <- data.frame(
+  model = c("beta", "binom", "betabinom"),
+   mean = round(c(beta_mean, binom_mean, beta_binom_mean), 3),
+   #var = round(c(beta_var, binom_var, beta_binom_var), 3),
+     sd = round(c(beta_sd, binom_sd, beta_binom_sd), 3),
+   tail = round(c(NA, binom_tail_prob, beta_binom_tail_prob), 3),
+  LCB95 = round(c(NA, binom_95_onesidelcb, beta_binom_95_onesidelcb), 3)
+     )
+  col_frm <- data.frame(
+  beta = c("grey", rep("white", ncol(distr_moments_frm)-1)),
+  binom = c("green", rep("white", ncol(distr_moments_frm)-1)),
+   betabinom = c("lightblue", rep("white", ncol(distr_moments_frm)-1))
+   )
+   
+  plotrix::addtable2plot("topleft", table=t(distr_moments_frm), 
+  bg = col_frm, display.rownames=T)
+
+SKIP <- function() {
+  legend("topleft", text.col = c("grey", "darkgreen", "blue"), title.col=1, bty='n',
+  title = paste("Model: mean, sd, prob >", LoTail, " 95% LCB"),
+  legend = c(paste0("beta: ", round(beta_mean,2), 
+                    ", ", round(beta_sd, 2)),
+             paste0("binomial: ", round(binom_mean,2), 
+                    ", ", round(binom_sd, 2),
+                    ", ", round(binom_tail_prob, 2),
+                    ", ", round(binom_95_onesidelcb, 2)),
+             paste0("beta-binomial: ", round(beta_binom_mean,2), 
+                    ", ", round(beta_binom_sd, 2),
+                    ", ", round(beta_binom_tail_prob, 2),
+                    ", ", round(beta_binom_95_onesidelcb, 2))
+           )
+   )
+}# SKIP
+
+   invisible(list(call = match.call(),
+                  moments = distr_moments_frm,
+                  CC = c(C1=C1, C1_check=C1_check)
+             ))
+
+}
+
+
+```
+
+## Beta Distribution Examples  {.tabset}
+
+
+### Hide {-}
+
+<br/>
+<br/>
+
+### Beta prior:  {-}
+
+   
+\begin{align}
+
+f(p  \, | \, \alpha,\; \beta) & = \frac{\Gamma(\alpha + \beta)}{\Gamma(\alpha)\cdot\Gamma(\beta)}
+      \cdot p^{\alpha-1} (1 -  p)^{\beta-1}   \\
+    & = \frac{p^{\alpha-1} (1 -  p)^{\beta-1} }{B(\alpha,\; \beta)}
+
+(\#eq:beta-probr3)
+\end{align}
+
+   - R: f(x) = dbeta(x, shape1=Alpha, shape2=Beta) 
+
+
+<br/>
+<br/>
+
+### Binomial:  {-}
+
+\begin{equation}
+
+f(x  \, | \, n \, p)  = \binom{n}{x} p^{x} \cdot (1 - p)^{n-x}
+ \;\;\;\;  for \; x \in (0, 1, ..., n) \quad 
+     
+(\#eq:binom-prob3)
+\end{equation}
+
+   - R: f(x) = dbinom(x, size = N, prob = Alpha/(Alpha + Beta))
+
+
+<br/>
+<br/>
+
+### BetaBinomial:  {-}
+  
+\begin{align}
+
+f(\bf{x} \, | \,\alpha, \beta, \bf{n})
+   & = \frac{\Gamma(\alpha + \beta)}{\Gamma(\alpha)\cdot\Gamma(\beta)} \cdot
+ \prod_{i=1}^m \binom{n_i}{x_i} \frac{\Gamma(\alpha +  x_i)\cdot\Gamma(\beta + n_i - x_i)}
+   {\Gamma(\alpha + \beta + n_i)}
+
+(\#eq:beta-binomial-dist-2)
+
+\end{align}
+    
+   - R:  f(x) = extraDistr::dbbinom(x in 0:N, size = N, alpha = Alpha, beta=Beta, log=F)
+  
+  
+<br/>
+<br/>
+  
+### Beta posterior :  {-}
+
+Under a model with Beta(p| $\alpha,\; \beta$) **prior**:
+
+
+\begin{align}
+
+f(p  \, | \, \alpha,\; \beta) & = \frac{\Gamma(\alpha + \beta)}{\Gamma(\alpha)\cdot\Gamma(\beta)}
+      \cdot p^{\alpha-1} (1 -  p)^{\beta-1}   \\
+    & = \frac{p^{\alpha-1} (1 -  p)^{\beta-1} }{B(\alpha,\; \beta)}
+
+(\#eq:beta-probr4)
+\end{align}
+
+and observable **likelihood** Binomial(x; n, p):
+
+
+\begin{equation}
+
+f(x  \, | \, n \, p)  = \binom{n}{x} p^{x} \cdot (1 - p)^{n-x}
+ \;\;\;\;  for \; x \in (0, 1, ..., n) \quad
+
+(\#eq:binom-prob4)
+\end{equation}
+
+the **posterior** distribution given observed x, n 
+is Beta(p| $\alpha + x,\; \beta + n - x$):
+
+
+
+\begin{align}
+   
+f(p  \, | x, \, \alpha,\; \beta) & = 
+  \frac{\Gamma(\alpha + \beta + n)}{\Gamma(\alpha + x)\cdot\Gamma(\beta + n - x)}
+      \cdot p^{\alpha+x-1} (1 -  p)^{\beta+n-x-1}   \\
+    & = \frac{p^{\alpha+x-1} (1 -  p)^{\beta+n-x-1} }{B(\alpha+x,\; \beta+n-x)}
+
+(\#eq:beta-probr4)
+\end{align}
+
+
+   - R: f(y) = dbeta(y, shape1=Alpha+x, shape2=Beta+n-x)
+
+<br/>
+<br/>
+
+
+### Examples {-} 
+
+* We leave the posterior out of the visualisations  as it is a function of the
+oibserved count and would be plotted on a different x-axis.
+
+```{r m1a-beta-dist-plots, cache=T, cache.vars='', fig.height=8, fig.width=11, fig.cap = "Beta Desnsity - Examples"}
+
+par(mfrow=c(3,2), mar=c(2,2,2,1), oma=c(2,2,2,0))
+
+N100_p90 <- compare_beta_binom_f(N = 100, Alpha = 90, Beta = 10, LoTail = 0.90,
+   Xlim=c(0.75, 1), Ylim = c(0, 0.20))
+N400_p90 <- compare_beta_binom_f(N = 400, Alpha = 90, Beta = 10, LoTail = 0.90,
+   Xlim=c(0.75, 1), Ylim = c(0, 0.20))
+   
+N100_p95 <- compare_beta_binom_f(N = 100, Alpha = 95, Beta = 5, LoTail = 0.90,
+   Xlim=c(0.75, 1), Ylim = c(0, 0.20))
+N400_p95 <- compare_beta_binom_f(N = 400, Alpha = 95, Beta = 5, LoTail = 0.90,
+   Xlim=c(0.75, 1), Ylim = c(0, 0.20))
+   
+N100_p97 <- compare_beta_binom_f(N = 100, Alpha = 98, Beta = 2, LoTail = 0.95,
+   Xlim=c(0.75, 1), Ylim = c(0, 0.30))
+N400_p97 <- compare_beta_binom_f(N = 400, Alpha = 98, Beta = 2, LoTail = 0.95,
+   Xlim=c(0.75, 1), Ylim = c(0, 0.30))
+   
+mtext(side = 1, outer = T, latex2exp::TeX("$\\hat{\\pi}$  or $\\pi$"))
+mtext(side = 2, outer = T, "Density or Probability")
+
+
+```
+
+<br/>
+<br/>
+
+## Posterior Estimation: Examples 
+
+Posterior Estimation for the Beta-binomial
+
+* Once the distribution of the data is chosen - for binomial
+data the beta-binomial distrubution is a family which offers
+a lot of flexibility - a prior density over the parameter space
+of the parameter  of interest, $\pi$, must be selected.
+We look at some examples next.
+
+###  Schuckers (2002) {-}
+ 
+See  Schuckers (2002) [@Schuckers:2002aa] 
+
+Schuckers (2002) [@Schuckers:2002aa] chose a distribution
+that is flat on the proportion, $\pi$, and 
+fairly uninformative about the sum of the parameters 
+$\alpha$ and $\beta$:
+
+$$ f(\alpha, \beta) \propto e^{\frac{\alpha + \beta}{10}}$$
+
+This leads to the posterior distribution:
+
+
+\begin{align}
+
+f(\alpha, \beta | X)  \propto e^{\frac{\alpha + \beta}{10}}                          
+      \times \left\{\prod_{i=1}^m \frac{\Gamma(\alpha + \beta)}{\Gamma(\alpha)\cdot\Gamma(\beta)}  
+      \times \frac{\Gamma(\alpha +  x_i)\cdot\Gamma(\beta + n_i - x_i)}
+   {\Gamma(\alpha + \beta + n_i)}   \right\}
+
+(\#eq:beta-binomial-prior-1)
+
+\end{align}
+
+Evaluating \@ref(eq:beta-binomial-prior-1) is not a straightforward task.
+The integral is not of a known form and, conse- quently, we cannot arrive
+at an analytic solution. We can, however, use simulation methods to obtain
+the quantities of interest about this distribution. Specifically we can use
+Markov chain Monte Carlo (MCMC) techniques to obtain the quantities of interest.
+
+
+<br/>
+<br/>
+
+
+# Appendix  {.tabset}
+
+## Home {-}
+
+<br/>
+<br/>
+
+## Bayesian Inference - Theoretical background {-}
+
+* Independence of events:  Let A and B represent two events defined on
+some probability space.  We say that A and B are independent if
+
+\begin{equation}
+
+P(A \cap B) = P(A)\cdot P(B)
+
+(\#eq:indep)
+\end{equation}
+
+
+* Conditional probability: The conditional probability of event A occruring
+if event B has occured is given by
+
+
+\begin{equation}
+
+P(A  \, | \, B ) = \frac{P( A \cap B)}{P(B)}
+
+(\#eq:cond-prob)
+\end{equation}
+
+* From \@ref(eq:indep) and \@ref(eq:cond-prob),
+if A and B are independent we have then $P(A  \, | \, B ) = P(A)$
+
+* From \@ref(eq:cond-prob) we have
+
+\begin{equation}
+
+P(A \cap B ) = P(A  \, | \, B ) \cdot P(B) = P(B  \, | \, A) \cdot P(A)
+
+
+(\#eq:cond-prob2)
+\end{equation}
+ 
+Or equivalently
+
+\begin{equation}
+
+P(A  \, | \, B ) = \frac{P(B  \, | \, A) \cdot P(A)}{P(B)}
+
+
+(\#eq:bayes)
+\end{equation}
+ 
+
+* Equation \@ref(eq:bayes) is a statement of Baye's Rule which is a
+useful equality if one has sound knowledge about P(B  \, | \, A) and P(A), but
+not about P(A  \, | \, B ).  
+
+* In many applications, the interest in the relative likelihood
+of $P(A_i  \, | \, B)$ for $A_1, A_2, ...$.  In those scenarios P(B) 
+can be treated as a constant and is not needed to answer the question of interest.
+
+* To explain Bayesian inference we begin with the frequentist version of
+inference.  In that notion when a probability distribution of some observable
+random variate is known to depend on some parameter of interest^[
+Usually this dependency has a parametric form, but that's not necessary as long
+as there is a way to obtain the relative frequency of the observable for 
+all possible values of the parameter of interest.]
+inference can be made about the parameter given the observed value of the variate.
+
+* Suppose that we are interested in the proportion of cancer samples
+which would test positive by some fixed test.
+Seems reasonable that the result of testing a sample set of cancer
+samples should give us useful information: we can use
+the proportion in our sample set as an estimate of the proportion in *all* cancer
+samples. But that's not enough - we want some notion of how close our estimate is
+to the population or true value, in some notion of closeness.
+This is the inference problem.
+
+*  To make inferences, we build a probability model which describes
+the relative frequencies of some observable - the number of samples 
+correctly classified as cancer in a sample set - 
+in terms of the parameter of interest - the proportion of cancer samples which
+would test positive *in the population*^[
+We will assume that population is fixed and obvious, which is rarely the case.].
+
+<p><p/>
+* Building a probability model means defining a probability law which
+relates the probability of observables - the number of tested samples testing positive -
+to the parameter of interest - the proportion of samples in the population
+which will test positive.  For the cancer test problem,
+a probability model is straight forward to define
+under the following assumptions:
+   - the samples in our test set, or our sample set, are drawn at random
+from the population.  *At random* here means that every sample in the
+population has an equal chance of being selected^[This is never the case
+in reality.  In practice we can describe the "population", or the inference
+space, based on the sample selection process, which is never at random.]
+   - all of the samples in the population share a common probability
+of testing positive.
+   - the outcome for each sample - testing positive of not - is independent
+of the outcome for all other samples in the sample set.
+
+<p><p/>
+* Let's assume that these assumptions are tenable^[
+To quote George Box's lesser known but more useful dogma:
+"Since all models are wrong the scientist must be alert to what is importantly wrong"
+[@Box:1976aa;@Stark:2022aa].  We should always go through the exercise of
+cataloging the meaningful differences between the assumptions and reality,
+and be on the lookout for situations in which important differences
+exist between the model and reality.].
+In this case we can write the probability law or probability distribution
+of the observable outcome, the number or samples which test positive.
+Let $X$ be the number of samples which test positive out of the $N$ samples
+selected at random, and let $\theta$ be the proportion of samples which
+would test positive.  Then we can write:
+
+
+\begin{equation}
+
+P_\theta(X = x) = \binom{N}{x} \theta^x \cdot (1 - \theta)^{N-x}
+ \text{   for x = 0, 1, ..., N}
+
+   
+(\#eq:binom-prob)
+\end{equation}
+ 
+
+* In the frequentist framework, equation \@ref(eq:binom-prob) is the whole story,
+and inference about $\theta$ is made in relation to the observed values of X.
+Point estimates, confidence intervals, etc, are all based on statements
+about the probable outcomes, X, for different values of  $\theta$.
+The maximum likelihood estimate is the value of $\theta$ which gives
+the observed X, x, the highest probability, and confidence intervals are
+values of $\theta$ which give the observed X reasonably high probability.
+Everything revolves around $P_\theta(X=x)$.
+
+* The Bayesian framework adds a layer to the model to posit a distribution
+function which regulates the values which the parameters indexing the
+family of distribution functions which regulate the  frequency of observables.
+The full model specification has two stochastic pieces: one for the
+observables for fixed values of the parameter and one for the values of
+the parameters.  In equation \@ref(eq:binom-prob), we would write
+$P_\theta(X = x)$ as $P(X = x \, | \, \Theta = \theta)$ as in this framework
+parameter values are treated like random variables, and the probabilities
+of observables are conditional probabilities:
+
+* prior distribution of $\Theta$: $P(\Theta = \theta) = p(\theta)$
+* conditional distribution of X given $\Theta$: $P(X = x  \, | \, \Theta = \theta) = p(x \, | \,\theta)$
+
+
+<p><p/>
+*  `p` in these equations is for a generic probability or density
+function which will have different forms when it is used to stand
+for different components of the model:
+   -  the prior distribution for $\Theta$: $p(\theta)$
+   -  the conditional distribution of X given $\Theta$: $p(x \, | \,\theta)$
+   -  the posterior  distribution for $\Theta$ given X: $p(\theta  \, | \, x)$
+
+*  To obtain the posterior  distribution for $\Theta$ given X we apply
+Bayes Rule:
+
+
+\begin{equation}
+
+p(\theta  \, | \, x) = \frac{p(x \, | \,\theta) \cdot p(\theta)}{p(x)}
+
+(\#eq:theta-posterior)
+\end{equation}
+
+* The posterior distribution involves the marginal distribution of X:
+
+\begin{align}
+
+p(x) & = \int_\theta p(x, \theta)d\theta   \\
+     & = \int_\theta p(x  \, | \, \theta) \cdot p(\theta)d\theta
+
+\end{align}
+
+
+* In many cases we don't need to compute that integral to get p(x) as
+it only contributes a constant to the posterior which will be recognizable
+from the form of the numerator.
+
+<p><p/>
+* Inference about the parameter $\theta$ is made from values derived from 
+the posterior distribution: 
+  - the mode or the mean as a point estimate
+  - intervals with appropriate probabilities of inclusion
+for credible intervals, the Bayes equivalent to the
+frequentist confidence interval.
+
+
+***
+   
+## The beta-binomial {-}
+
+* Let's work backwards. We start with the conditional distribution
+of X given $\Theta = \theta$ - the binomoial distribiution: 
+
+$$p(x \, | \,\theta) = \binom{N}{x} \theta^x \cdot (1 - \theta)^{N-x}$$
+
+
+* As a prior on  $\Theta$ we assume the beta distribution because
+it provides flexibility to model many prossible scenario for the
+variability in $\Theta$, which for us is the probability
+of cancer samples testing positive:
+
+$$p(\theta) = \frac{\theta^{(\alpha - 1)} (1 - \theta)^{(\beta -1)}}{B(\alpha, \beta)}$$
+
+
+* The beta($\alpha, \beta$) distribution has the following properties:
+
+\begin{equation}
+
+E[\Theta] = \frac{\alpha}{\alpha + \beta} = \frac{\alpha}{k} \\
+
+Var[\Theta] =  \frac{\alpha \beta}{(\alpha + \beta)^2 \cdot (\alpha + \beta +1)}  =
+    \frac{\alpha \beta}{k^2(k + 1)}
+
+
+(\#eq:beta-mean-var)
+\end{equation}
+
+* Note the parallel with the binomial distribution:
+   - If $X \propto Bin(N, p)$ and letting q = 1 - p
+
+\begin{equation}
+
+E \left[ \frac{X}{N} \right ] = p     \\
+Var \left[ \frac{X}{N} \right ]  = \frac{p \cdot q}{N}
+
+(\#eq:binomial-mean-var)
+\end{equation}
+
+
+***
+
+* The posterior can be derived from the following:
+
+$$p(\theta \, | \,x) \propto p(\theta) \cdot p(x \, | \,\theta)
+  \propto  theta^{(\alpha - 1)} (1 - \theta)^{(\beta -1) \cdot  
+  \theta^x \cdot (1 - \theta)^{N-x} = \theta^{\alpha - 1 + x} (1-\thets^{\beta+N-x-1}$$
+
+* So the posterior has a $beta(\alpha + x, \beta + N - x)$ distribution
+with:
+
+\begin{equation}
+
+E[\Theta  \, | \, X = x] = \frac{\alpha+x}{\alpha + \beta + N} = \frac{\alpha+x}{k + N}  \\
+
+Var[\Theta  \, | \, X = x] =  \frac{(\alpha+x) (\beta+N-x)}{(N+k)^2(N + k + 1)}
+
+  
+(\#eq:beta-mean-var)
+\end{equation}
+
+* cf. compare to \@ref(eq:beta-mean-var).  
+
+<br/>
+<br/>
+
+## How to pick $\alpha$ and $\beta$ {-}
+
+
+* $\alpha = 20 \cdot \beta$ so that $E[\Theta]  \approx 0.95$.
+
+* Then var = ...
+
+```{r m1a-beta-defs}
+
+
+expect_f <- function(a,b) a/(a+b)
+
+var_f <- function(a,b) a*b/((a+b)^2*(a+b+1))
+
+alpha_beta_frm <- data.frame()
+
+for(jj in  c((1:10)/10, 2:10))
+alpha_beta_frm <- rbind(alpha_beta_frm,
+data.frame(a = 20*jj, b = jj, mean = expect_f(a=20*jj, b=jj),
+    var = var_f(a=20*jj, b=jj),
+    lcb95 = qbeta(.05, 20*jj, jj),
+    row.names=NULL
+   ))
+
+alpha_beta_frm %>%
+knitr::kable(
+caption = "beta distribution moments"
+   ) %>%
+  kableExtra::kable_styling(full_width = F)
+
+```
+
+<br/>
+<br/>
+
+
+## Gamma, Beta {-}
+
+
+
+Recall that the Gamma function is defined , for $\alpha > 0$, as 
+
+$$\Gamma(\alpha) = \int_0^\infty x^{\alpha - 1} e^{-x} dx$$
+
+Recall that the Beta function is defined , for a, b > 0, as
+
+$$B(a, b) = \int_0^1 x^{a - 1} (1-x)^{b-1} dx$$
+
+Tha Gamma and Beta functions are related as
+
+
+$$B(a, b) = \frac{\Gamma(a)\cdot\Gamma(b)}{\Gamma(a + b)}$$
+
+
+
+
+
+
+
+
+# References {#references}
+<div id="refs"></div>
+    
+<br/> 
+
+```{r , eval=T}
+pander::pander(sessionInfo())
+```
+
+  * WRKDIR = `r normalizePath(WRKDIR)`
+  * FN = `r FN`
+  * Scripts = Scripts
+  * RUN DATE = `r date()`
+
+```{r , echo=FALSE}
+  knit_exit()
+```
+
+############################################################
+## ARCHIVED CODE BELOW {-}
+############################################################
+
+  prob_bins_vec <- (0:N)/N
+  bin_100_vec <- (0:100)/100
+  prob_bins_100_vec <- cut(prob_bins_vec, bin_100_vec)
+
+  probs_bin_100_lst <- split(probs_vec, prob_bins_100_vec)
+  probs_bin_100_vec <- sapply(probs_bin_100_lst, sum)
+
+  bin_val_vec <- (rev(rev(bin_100_vec)[-1]) + bin_100_vec[-1]) / 2
+
+  par(new=T)
+  plot(bin_val_vec, probs_bin_100_vec, type= 'l', col='green', lwd=2)
+
+
+Recall Equation \@ref(eq:beta-mean-var),
+if $X \propto f(p  \, | \, \alpha,\; \beta)$ is a Beta random variable,
+then with $\pi = \alpha / (\alpha + \beta)$ we have
+    
+\begin{align}
+    
+  
+E(X)  & = \pi    \\
+Var(X) &  = \frac{\pi(1-\pi)}{\alpha + \beta + 1}
+  
+(\#eq:beta-mean-var2)
+\end{align} 
+  
+
+REPLACE_ALL_THIS <- function() {
+   # to compute mean and sd
+   # we need to use more refined approx for beta, which is cts
+  M <- 1024
+  beta2_frm <- data.frame(x = 1:M/M, d=diff(pbeta(0:M/M, shape1=Alpha, shape2=Beta)))
+
+   # For plotting, keep N the same
+  beta_frm <- data.frame(x = 1:N/N, d=(1/N)*diff(pbeta(0:N/N, shape1=Alpha, shape2=Beta)))
+  binom_frm <- data.frame(x = 0:N/N, d = dbinom(0:N, size=N, p=Alpha/(Alpha + Beta)))
+  beta_binom_frm <- data.frame(x = 0:N/N, d = betabinomialdensity(0:N, n=N, alpha=Alpha, beta=Beta))
+
+ beta_binom_frm <- data.frame(x = 1:N/N, 
+     d=diff(extraDistr::dbbinom(0:N, size=N, alpha=Alpha, beta=Beta, log=F)))
+
+  # beta2 is on a finer grid...
+  beta_mean <- with(beta2_frm, sum(x * d))
+  beta_var <- with(beta2_frm, sum(x^2 * d) - sum(x * d)^2)
+  beta_sd <- sqrt(beta_var)
+
+  binom_mean <- with(binom_frm, sum(x * d))
+  binom_var <- with(binom_frm, sum(x^2 * d) - sum(x * d)^2)
+  binom_sd <- sqrt(binom_var)
+  binom_se <- sqrt(binom_var/N)
+  binom_95_onesidelcb <- with(binom_frm, x[min(which(cumsum(d) > 0.05))] )
+
+
+  beta_binom_mean <- with(beta_binom_frm, sum(x * d))
+  beta_binom_var <- with(beta_binom_frm, sum(x^2 * d) - sum(x * d)^2)
+  beta_binom_sd <- sqrt(beta_binom_var)
+  beta_binom_se <- sqrt(beta_binom_var/N)
+  beta_binom_95_onesidelcb <- with(beta_binom_frm, x[min(which(cumsum(d) > 0.05))] )
+
+
+  beta_binom_tail_prob <-  with(beta_binom_frm %>% dplyr::filter( x > LoTail),
+                          sum(d))
+  binom_tail_prob <-  with(binom_frm %>% dplyr::filter( x > LoTail),
+                          sum(d))
+  
+}#REPLACE
+
+<!-- To run
+# nohup Rscript -e "knitr::knit2html('_M1A-randomness_in_calls.Rmd')" > _M1A-randomness_in_calls.log  &
+
+# Or
+# nohup Rscript -e "rmarkdown::render('_M1A-randomness_in_calls.Rmd')" > _M1A-randomness_in_calls.log  &
+
+

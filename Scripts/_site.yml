@@ -1,7 +1,7 @@
-name: "England-England"
+name: "reAnalysis"
 output_dir: "."
 navbar:
-  title: Re-Analysis
+  title: Training and Data Re-Analysis
   left:
     - text: "Home"
       href: index.html
