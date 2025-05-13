@@ -1,11 +1,11 @@
 ---
-title: Statistics Training and Data Re-Analysis
+title: Statistics Training and Data Re-Analysis for Better Results
 #subtitle: "a tale of two schools"
 author: "[Francois Collin](https://www.linkedin.com/in/francoisz/)"
 date: "`r format(Sys.time(), '%B %d, %Y')`"
 always_allow_html: yes
 output:
-  # for use of .tabset
+  # for gtanse of .tabset
   bookdown::html_document2:
   #html_document:
     code_folding: hide
@@ -17,7 +17,7 @@ output:
     # this has no effect
     number_sections: yes
     # css: ['../_css/pandoc3.css', '../_css/myMargins.css']
-bibliography: [../_bibFiles/_healthy_aging.bib, ../../_bibFiles/_Breiman.bib, ../../_bibFiles/_Yu.bib]
+bibliography: [../_bibFiles/_healthy_aging.bib, ../../_bibFiles/_Breiman.bib, ../../_bibFiles/_Freedman.bib, ../../_bibFiles/_Yu.bib, ../../_bibFiles/_RUV.bib, ../../_bibFiles/_RMA.bib]
 csl: ../_csl/cell-numeric.csl
 link-citations: true
 ---
@@ -206,33 +206,129 @@ param_class=sapply(params, class), row.names=NULL) %>%
 
 
 
-# Introduction {-}
+# Challenges in Statistical Analysis {-}
 
-In this folder we have reports for ...
+
+Results of statistical data analysis can be improved for various reasons:
+<p><p/>
+* the analysis relies on **inappropriate statistical models** - Freedman: 
+[@Freedman:2008aa; @Freedman:2008ad; @Freedman:2008ac; @Freedman:2009ac]
+   - Professor Freedman focused on the use of models in the social sciences
+   - Inappropriate modeling is not limited to the social sciences
+      - in biotech, the unchecked use of logistic regression whenever the
+response is binary is ubiquitous.
+         - the results of such analyses could be misleading due to the biases
+illustrated in Freedman (2008) [@Freedman:2008aa]
+
+<p><p/>
+* the analysis can be improved with the key to improvement being a
+**valid assessment of performance** - Speed:
+[@Irizarry:2003aa; @Bolstad:2004aa;@Gagnon-Bartsch:2012aa;@Gandolfo:2018aa;@Irizarry:2006aa;@Jacob:2018aa;@Risso:2014aa;@Yuan:2019aa]
+
+<p><p/>
+* the analysis is flawed due to the reliance on **standard textbook methods** which
+have a limited range of applicability - Breiman:
+[@Breiman:1984aa; @Breiman:2001aa]
+   - as regression models are used to answer almost every question
+that come up in the internal analyses conducted by companies in industry,
+many are going to be flawed.  
+      - For a review of how regression models go wrong see
+[@Freedman:2009aa;@Freedman:2010aa;@Freedman:2008ac;@Freedman:2008ad;@Freedman:2004aa;@Freedman:2008aa;@Freedman:2008ab]
+
+For the first two categories, documentation can be found in the published
+literature.  The third category of delinquent analyses are typically not 
+part of the published literature.
 
 <br/>
 
-* Statistics Training
-   - [_M1A-prof_dev_plan.html](./_M1A-prof_dev_plan.html) - an outline for a professional development
-program for experienced statisticians
-   - [_M1B-fc__dev_plan.html](./_M1B-fc__dev_plan.html) - plan specifically for FC
+## Clinical Validation Studies for a Complex Omic Diagnostic Instrument {-}
+
+Some sources of errors in the clinical validation study analyses are:
+
+<p><p/>
+* the samples in the study may not be representative of the target population.
+   - there is rarely any explicit randomness in the selection of the study samples
+so inference to any superset of the study samples is iffy at best.
+   - dependency structure among samples processed in batches is often complex
+      - a run may be treated as a batch with internal structure or sub-batches.
+   - N is often small 
+   - contrived samples may not be interpretable as intended or required
+   - other???
+
+<p><p/>
+* there are many constraints which make the usual hypothesis testing or 
+estimation paradigm untenable yet it is used ubiquitously
+   - demonstrate with examples 
+
+
+<br/>
+
+# Statistics Training {-}
+
+
+## Design Training Program  with AI {-}
+
+As an exercise working witch claude.ai, we design a training program for experienced statisticians.
+The training is meant to bring statisticians up to speed with novel statistical methods and techniques.
+
+* [stats-pd-plan-final-v35.html](./_M1C-stats-pd-plan-final-v35.html) - final version of the
+professional development program.
+
+* [stats-pd-plan-change-log.html](./_M1C-stats-pd-plan-change-log.html)  -
+detailed change log documenting the development process
+
+* [ai-assistant-guide](./ai-assistant-guide.html) - outline
+principles which apply broadly to working with AI assistants on complex projects.
 
  
-* Courses
-   - Gen AI
+## Training Resources  {-}
+
+* Gen AI
+
+* Deep Learning Models
+
+
+<br/>
+
+# Beyond RUV {-}
+
+Can the methodology which enables the basic RUV analysis be adapted to
+other applications?
+
+<p><p/>
+* IUV - identification of unwanted variability
+   - the automated high throughput processing of samples necessary
+to get the omic based readouts used to diagnose samples is carried out by
+a pipeline which strings together numerous steps (typically hundreds).
+      - eg. Cell-Free DNA Methylation Profiling Analysis
+   - As samples proceed through the pipeline they will be organized in various configurations
+giving rise to various groupings:
+      - plasma isolation
+      - cfDNA extraction 
+      - amplification, conversion, ...
+   - measurements are recorded as samples travel through the pipeline, each
+measurement potentially having its own shared variability or dependency structure 
+   - a real problem is to identify the factors giving rise to excessive variability
+in the downstream read-outs
+
+
+<p><p/>
+* QUV - quantification of unwanted variability
+   - can RUV methodology be adapted to provide quantification of reproducibility?
 
 <br/>
 
 <p><p/>
-* Data Re-Analysis Projects
-   - Reference-Free Genomic Inference with SPLASH and OASIS
+# Data (Re-)Analysis Projects {-}
+
+## Reference-Free Genomic Inference with SPLASH and OASIS {-}
       - [_M2A-RFGI_v1.html](./_M2A-RFGI_v1.html) -
       - [_M2B-RFGI_v2.html](./_M2B-RFGI_v2.html) -
       - [_M3A-OASIS.html](./_M3A-OASIS.html) -
 
 
 <p><p/>
-* Miscellanious
+## Miscellanious  {-}
   - [_M4A-intro_IUV.html](./_M4A-intro_IUV.html) 
   - [_M5A-cf_ddPCR_seq.html]
   - [_M6A-randomness_in_calls.html] 
