@@ -7,7 +7,9 @@ title: Training and Data Re-Analysis
 <li><a href="_M0A-healthy_aging_genes.html">_M0A-healthy_aging_genes.html</a></li>
 <li><a href="_M1A-prof_dev_plan_v1.html">_M1A-prof_dev_plan_v1.html</a></li>
 <li><a href="_M1B-prof_dev_plan.html">_M1B-prof_dev_plan.html</a></li>
+<li><a href="_M1C-ai-assistant-guide.html">_M1C-ai-assistant-guide.html</a></li>
 <li><a href="_M1C-stats-pd-plan-change-log.html">_M1C-stats-pd-plan-change-log.html</a></li>
 <li><a href="_M1C-stats-pd-plan-final-v35.html">_M1C-stats-pd-plan-final-v35.html</a></li>
+<li><a href="_M1C-stats-pd-plan-final-v35_old.html">_M1C-stats-pd-plan-final-v35_old.html</a></li>
 <li><a href="_M3A-OASIS.html">_M3A-OASIS.html</a></li>
 <li><a href="_prof_dev_plan.html">_prof_dev_plan.html</a></li>

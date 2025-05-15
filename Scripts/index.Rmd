@@ -206,7 +206,7 @@ param_class=sapply(params, class), row.names=NULL) %>%
 
 
 
-# Challenges in Statistical Analysis {-}
+# Challenges in Statistical Analysis of Genomic Data {-}
 
 
 Results of statistical data analysis can be improved for various reasons:
@@ -221,11 +221,6 @@ response is binary is ubiquitous.
 illustrated in Freedman (2008) [@Freedman:2008aa]
 
 <p><p/>
-* the analysis can be improved with the key to improvement being a
-**valid assessment of performance** - Speed:
-[@Irizarry:2003aa; @Bolstad:2004aa;@Gagnon-Bartsch:2012aa;@Gandolfo:2018aa;@Irizarry:2006aa;@Jacob:2018aa;@Risso:2014aa;@Yuan:2019aa]
-
-<p><p/>
 * the analysis is flawed due to the reliance on **standard textbook methods** which
 have a limited range of applicability - Breiman:
 [@Breiman:1984aa; @Breiman:2001aa]
@@ -234,31 +229,42 @@ that come up in the internal analyses conducted by companies in industry,
 many are going to be flawed.  
       - For a review of how regression models go wrong see
 [@Freedman:2009aa;@Freedman:2010aa;@Freedman:2008ac;@Freedman:2008ad;@Freedman:2004aa;@Freedman:2008aa;@Freedman:2008ab]
-
-For the first two categories, documentation can be found in the published
-literature.  The third category of delinquent analyses are typically not 
-part of the published literature.
-
-<br/>
-
-## Clinical Validation Studies for a Complex Omic Diagnostic Instrument {-}
-
-Some sources of errors in the clinical validation study analyses are:
-
-<p><p/>
-* the samples in the study may not be representative of the target population.
-   - there is rarely any explicit randomness in the selection of the study samples
+   - clinical validation studies for complex omic Dx instruments that are designed 
+according to FDA guidelines will make use of the classical Neyman-Pearson hypothesis
+testing context which is often invalid:
+      - the samples in the study may not be representative of the target population.
+         - there is rarely any explicit randomness in the selection of the study samples
 so inference to any superset of the study samples is iffy at best.
-   - dependency structure among samples processed in batches is often complex
-      - a run may be treated as a batch with internal structure or sub-batches.
-   - N is often small 
-   - contrived samples may not be interpretable as intended or required
-   - other???
+      - dependency structure among samples processed in batches is often complex
+         - a run may be treated as a batch with internal structure or sub-batches.
+      - N is often small 
+      - contrived samples may not be interpretable as intended or required
+      - other???
 
 <p><p/>
-* there are many constraints which make the usual hypothesis testing or 
-estimation paradigm untenable yet it is used ubiquitously
-   - demonstrate with examples 
+* many analyses may be improved with the help of
+**valid assessments of performance** - Speed:
+[@Irizarry:2003aa; @Bolstad:2004aa;@Gagnon-Bartsch:2012aa;@Gandolfo:2018aa;@Irizarry:2006aa;@Jacob:2018aa;@Risso:2014aa;@Yuan:2019aa]
+   - *valid* here means that the assessment provides a direct indicator of performance 
+on a meaningful scale or end point.
+      - when normalizing RNASeq gene expression profiles, one can measure the effectiveness of
+the normalization step by examining the similarities among gene expression profiles before
+and after normalization.  Although this is a sensible way to assess the effect of the 
+normalization step, it is not a good metric to assess the impact normalization has on
+the ultimate goal of the analysis - DGE analysis.
+      - when comparing two sequencing instruments in terms of their ability to carry-out
+a reagent QC protocol designed to assess reagent quality:
+         - although the appropriate assessment probably calls for an assessment of
+performance against the truth, and a comparison of these performance parameters between
+instruments, regulatory compliance may call for an equivalency assessment
+            - it should not take much reflecting realize that an equivalency assessment
+creates unnecessary complications and can go wrong in many ways:
+               -  an obvious problem being drift.
+               - down sampling to make the two instruments comparable is another obvious
+problem
+      - using an upstream measurement to predict unconverted fraction
+         -SCALE, SCALE, SCALE
+
 
 
 <br/>
@@ -277,10 +283,12 @@ professional development program.
 * [stats-pd-plan-change-log.html](./_M1C-stats-pd-plan-change-log.html)  -
 detailed change log documenting the development process
 
-* [ai-assistant-guide](./ai-assistant-guide.html) - outline
+* [ai-assistant-guide](./_M1C-ai-assistant-guide.html) - outline
 principles which apply broadly to working with AI assistants on complex projects.
 
  
+<br/>
+
 ## Training Resources  {-}
 
 * Gen AI
@@ -322,10 +330,12 @@ in the downstream read-outs
 # Data (Re-)Analysis Projects {-}
 
 ## Reference-Free Genomic Inference with SPLASH and OASIS {-}
-      - [_M2A-RFGI_v1.html](./_M2A-RFGI_v1.html) -
-      - [_M2B-RFGI_v2.html](./_M2B-RFGI_v2.html) -
-      - [_M3A-OASIS.html](./_M3A-OASIS.html) -
 
+* [_M2A-RFGI_v1.html](./_M2A-RFGI_v1.html) -
+* [_M2B-RFGI_v2.html](./_M2B-RFGI_v2.html) -
+* [_M3A-OASIS.html](./_M3A-OASIS.html) -
+
+<br/>
 
 <p><p/>
 ## Miscellanious  {-}

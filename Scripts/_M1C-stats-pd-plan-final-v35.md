@@ -1,3 +1,13 @@
+<style>
+/* Fix for table of contents numbering - force decimal for all nested lists */
+ol ol { 
+  list-style: decimal !important; 
+}
+ol ol ol { 
+  list-style: decimal !important; 
+}
+</style>
+
 # Professional Development Plan for Experienced Statisticians
 ## Bridging Traditional Methods with Modern Approaches
 
