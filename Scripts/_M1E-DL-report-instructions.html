@@ -11,7 +11,7 @@
 
 
 
-<title>_M1C-stats-pd-plan-change-log</title>
+<title>_M1E-DL-report-instructions</title>
 
 <script>// Pandoc 2.9 adds attributes on both header and div. We remove the former (to
 // be compatible with the behavior of Pandoc < 2.8).
@@ -449,180 +449,287 @@ display: none;
 </div>
 
 
-<div id="professional-development-plan-for-experienced-statisticians---change-log" class="section level1">
-<h1>Professional Development Plan for Experienced Statisticians - Change
-Log</h1>
-<div id="document-development-history" class="section level2">
-<h2>Document Development History</h2>
-<div id="version-1.0---initial-creation" class="section level3">
-<h3>Version 1.0 - Initial Creation</h3>
-<ul>
-<li>Created comprehensive professional development plan structure</li>
-<li>Established three main learning tracks:
+<div id="instructions-for-generating-html-reports-from-markdown" class="section level1">
+<h1>Instructions for Generating HTML Reports from Markdown</h1>
+<p>This guide explains how to generate professional HTML reports from
+markdown files for presenting deep learning analyses of omics data.</p>
+<div id="overview-of-the-process" class="section level2">
+<h2>Overview of the Process</h2>
 <ol style="list-style-type: decimal">
-<li>Modern Statistical Methods and Approaches</li>
-<li>Modern Reporting and Communication<br />
-</li>
-<li>Reproducibility of Statistical Analysis</li>
-</ol></li>
-<li>Added Appendix with Computing Environment Modernization</li>
-<li>Included Implementation Plan, Assessment Strategy, Resource
-Requirements, and Extension Activities</li>
-</ul>
+<li>Write your report content in markdown format</li>
+<li>Convert markdown to HTML using Pandoc</li>
+<li>Apply custom CSS styling</li>
+<li>Add interactive elements (optional)</li>
+<li>Publish or share the report</li>
+</ol>
 </div>
-<div id="version-2.0---content-reorganization" class="section level3">
-<h3>Version 2.0 - Content Reorganization</h3>
+<div id="detailed-instructions" class="section level2">
+<h2>Detailed Instructions</h2>
+<div id="prerequisites" class="section level3">
+<h3>1. Prerequisites</h3>
+<p>Install the following tools:</p>
 <ul>
-<li>Moved Implementation Plan, Assessment Strategy, Resource
-Requirements, and Extension Activities to Appendix as subsections
-5.2-5.5</li>
-<li>Changed terminology from “Learning Tracks” to “Sections”
-throughout</li>
-<li>Removed “Section X:” prefix from section titles for cleaner
-formatting</li>
-</ul>
-</div>
-<div id="version-3.0---section-reordering" class="section level3">
-<h3>Version 3.0 - Section Reordering</h3>
+<li><strong>Pandoc</strong>: Universal document converter
 <ul>
-<li>Reordered sections to place “Modern Reporting and Communication”
-before the Appendix</li>
-<li>Updated section numbering throughout document to reflect new
-structure</li>
-</ul>
-</div>
-<div id="version-4.0---aillm-integration-updates" class="section level3">
-<h3>Version 4.0 - AI/LLM Integration Updates</h3>
+<li>Download from <a href="https://pandoc.org/installing.html">pandoc.org</a></li>
+</ul></li>
+<li><strong>Python</strong> (if you want to add interactive
+visualizations)
 <ul>
-<li>Rewrote AI/LLM Integration introduction focusing on impact on data
-summarization</li>
-<li>Updated objective to: “Gain an understanding of the strengths and
-limitations of AI assistants and large language models”</li>
-<li>Added Yu and Kumbier’s PQRS framework (Population, Question,
-Representativeness, Scrutiny)</li>
-<li>Added note that PQRS framework applies to both AI and machine
-learning contexts</li>
-<li>Added third paragraph on practical applications for experienced
-statisticians</li>
+<li>Python 3.7+ recommended</li>
+<li>Packages: jupyter, nbconvert, plotly, matplotlib, seaborn</li>
+</ul></li>
 </ul>
 </div>
-<div id="version-5.0---machine-learning-and-bayesian-updates" class="section level3">
-<h3>Version 5.0 - Machine Learning and Bayesian Updates</h3>
+<div id="preparing-your-markdown-file" class="section level3">
+<h3>2. Preparing Your Markdown File</h3>
+<p>Start with the provided markdown template
+(<code>markdown-template.md</code>). Fill in your analysis details,
+including:</p>
 <ul>
-<li>Created comparison table for Machine Learning vs. Traditional
-Statistical Methods</li>
-<li>Added “Examples” row to comparison table (linear regression, ANOVA
-vs. random forests, neural networks)</li>
-<li>Clarified meaning of “integrate machine learning with traditional
-statistical approaches”</li>
-<li>Reordered sections: Bayesian Methods moved after Machine
-Learning</li>
-<li>Updated Bayesian introduction: changed “accessible” to
-“prevalent”</li>
-<li>Added Frequentist vs. Bayesian comparison table</li>
-<li>Replaced “Parameters” with “Estimand” in comparison table</li>
-<li>Updated Small Sample Performance description to clarify that
-Bayesian precision comes from assumptions</li>
-<li>Added David Freedman’s critical perspective on both Bayesian and
-frequentist approaches</li>
+<li>Executive summary</li>
+<li>Methods and model architecture</li>
+<li>Results and visualizations</li>
+<li>Discussions and conclusions</li>
 </ul>
+<div id="code-for-embedding-visualizations" class="section level4">
+<h4>Code for Embedding Visualizations</h4>
+<p>You can include code blocks for visualizations that will be rendered
+when converted:</p>
+<pre class="markdown"><code>```python
+import matplotlib.pyplot as plt
+import seaborn as sns
+import pandas as pd
+
+# Your visualization code
+plt.figure(figsize=(10, 6))
+sns.heatmap(correlation_matrix, annot=True, cmap=&#39;viridis&#39;)
+plt.title(&#39;Feature Correlation Matrix&#39;)
+plt.savefig(&#39;correlation_heatmap.png&#39;)
+```</code></pre>
 </div>
-<div id="version-6.0---causal-inference-enhancement" class="section level3">
-<h3>Version 6.0 - Causal Inference Enhancement</h3>
+</div>
+<div id="basic-conversion-with-pandoc" class="section level3">
+<h3>3. Basic Conversion with Pandoc</h3>
+<p>Open a terminal/command prompt and run:</p>
+<pre class="bash"><code>pandoc report.md -o report.html --standalone --metadata title=&quot;Deep Learning Omics Analysis&quot;</code></pre>
+<p>This creates a basic HTML file from your markdown.</p>
+</div>
+<div id="applying-custom-css" class="section level3">
+<h3>4. Applying Custom CSS</h3>
+<p>For a professional look, use the provided CSS file:</p>
+<pre class="bash"><code>pandoc report.md -o report.html --standalone --metadata title=&quot;Deep Learning Omics Analysis&quot; --css report-styles.css</code></pre>
+<p>Make sure <code>report-styles.css</code> is in the same directory or
+provide the full path.</p>
+</div>
+<div id="advanced-html-report-with-template" class="section level3">
+<h3>5. Advanced HTML Report with Template</h3>
+<p>For even better results, create an HTML template with proper
+structure and navigation:</p>
+<ol style="list-style-type: decimal">
+<li>Create a file named <code>template.html</code> with this
+structure:</li>
+</ol>
+<pre class="html"><code>&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;en&quot;&gt;
+&lt;head&gt;
+    &lt;meta charset=&quot;UTF-8&quot;&gt;
+    &lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1.0&quot;&gt;
+    &lt;title&gt;$title$&lt;/title&gt;
+    &lt;link rel=&quot;stylesheet&quot; href=&quot;$css$&quot;&gt;
+    $if(math)$
+    &lt;script src=&quot;https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS_HTML-full&quot;&gt;&lt;/script&gt;
+    $endif$
+&lt;/head&gt;
+&lt;body&gt;
+    &lt;header&gt;
+        &lt;h1&gt;$title$&lt;/h1&gt;
+        &lt;p&gt;$date$&lt;/p&gt;
+    &lt;/header&gt;
+    
+    &lt;nav&gt;
+        &lt;ul&gt;
+            &lt;li&gt;&lt;a href=&quot;#introduction&quot;&gt;Introduction&lt;/a&gt;&lt;/li&gt;
+            &lt;li&gt;&lt;a href=&quot;#methodology&quot;&gt;Methodology&lt;/a&gt;&lt;/li&gt;
+            &lt;li&gt;&lt;a href=&quot;#results&quot;&gt;Results&lt;/a&gt;&lt;/li&gt;
+            &lt;li&gt;&lt;a href=&quot;#discussion&quot;&gt;Discussion&lt;/a&gt;&lt;/li&gt;
+            &lt;li&gt;&lt;a href=&quot;#conclusions&quot;&gt;Conclusions&lt;/a&gt;&lt;/li&gt;
+        &lt;/ul&gt;
+    &lt;/nav&gt;
+    
+    &lt;div class=&quot;container&quot;&gt;
+        $body$
+    &lt;/div&gt;
+    
+    &lt;footer&gt;
+        &lt;p&gt;Generated on $date$&lt;/p&gt;
+        &lt;p&gt;Author: $author$&lt;/p&gt;
+    &lt;/footer&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code></pre>
+<ol start="2" style="list-style-type: decimal">
+<li>Convert your markdown with the template:</li>
+</ol>
+<pre class="bash"><code>pandoc report.md -o report.html --standalone --template template.html --metadata title=&quot;Deep Learning Omics Analysis&quot; --metadata author=&quot;Your Name&quot; --metadata date=&quot;$(date +&quot;%B %d, %Y&quot;)&quot; --css report-styles.css --mathjax</code></pre>
+</div>
+<div id="adding-interactive-visualizations" class="section level3">
+<h3>6. Adding Interactive Visualizations</h3>
+<p>For interactive visualizations, you have several options:</p>
+<div id="option-1-using-jupyter-notebooks-and-nbconvert" class="section level4">
+<h4>Option 1: Using Jupyter Notebooks and nbconvert</h4>
+<ol style="list-style-type: decimal">
+<li>Create your analysis and visualizations in a Jupyter notebook</li>
+<li>Add markdown cells for report text</li>
+<li>Convert to HTML:</li>
+</ol>
+<pre class="bash"><code>jupyter nbconvert --to html --template full analysis.ipynb --output report.html</code></pre>
+</div>
+<div id="option-2-using-plotly-and-html" class="section level4">
+<h4>Option 2: Using Plotly and HTML</h4>
+<ol style="list-style-type: decimal">
+<li>Generate interactive plots with Plotly in Python</li>
+<li>Save as standalone HTML:</li>
+</ol>
+<pre class="python"><code>import plotly.express as px
+import pandas as pd
+
+# Create interactive plot
+fig = px.scatter(df, x=&quot;feature1&quot;, y=&quot;feature2&quot;, color=&quot;class&quot;, 
+                 hover_data=[&quot;sample_id&quot;])
+
+# Save as HTML
+fig.write_html(&quot;plot.html&quot;)</code></pre>
+<ol start="3" style="list-style-type: decimal">
+<li>Embed the HTML in your report or link to it</li>
+</ol>
+</div>
+<div id="option-3-using-r-markdown-if-you-work-with-r" class="section level4">
+<h4>Option 3: Using R Markdown (if you work with R)</h4>
+<ol style="list-style-type: decimal">
+<li>Create an R Markdown file (.Rmd)</li>
+<li>Include your analysis and plots</li>
+<li>Knit to HTML with:</li>
+</ol>
+<pre class="r"><code>rmarkdown::render(&quot;analysis.Rmd&quot;, output_format = &quot;html_document&quot;)</code></pre>
+</div>
+</div>
+<div id="enhancing-reports-with-javascript-libraries" class="section level3">
+<h3>7. Enhancing Reports with JavaScript Libraries</h3>
+<p>To add more advanced visualizations, consider these libraries:</p>
 <ul>
-<li>Expanded introduction to Causal Inference section</li>
-<li>Added references to David A. Freedman (2009) and Erich L. Lehmann’s
-reservations about causal claims</li>
-<li>Modified objectives and activities to include critical evaluation of
-causal inference limitations</li>
+<li><strong>D3.js</strong>: For custom data visualizations</li>
+<li><strong>BioJS</strong>: For biological data visualization</li>
+<li><strong>Vega-Lite</strong>: For declarative interactive
+visualizations</li>
 </ul>
+<p>Include them in your template’s head section:</p>
+<pre class="html"><code>&lt;script src=&quot;https://d3js.org/d3.v7.min.js&quot;&gt;&lt;/script&gt;
+&lt;script src=&quot;https://cdn.jsdelivr.net/npm/vega@5&quot;&gt;&lt;/script&gt;
+&lt;script src=&quot;https://cdn.jsdelivr.net/npm/vega-lite@5&quot;&gt;&lt;/script&gt;
+&lt;script src=&quot;https://cdn.jsdelivr.net/npm/vega-embed@6&quot;&gt;&lt;/script&gt;</code></pre>
 </div>
-<div id="version-7.0---reproducibility-section-overhaul" class="section level3">
-<h3>Version 7.0 - Reproducibility Section Overhaul</h3>
+<div id="creating-a-table-of-contents" class="section level3">
+<h3>8. Creating a Table of Contents</h3>
+<p>Add a table of contents with this pandoc option:</p>
+<pre class="bash"><code>pandoc report.md -o report.html --standalone --template template.html --toc --toc-depth=3 --css report-styles.css</code></pre>
+</div>
+<div id="generating-pdfs-if-needed" class="section level3">
+<h3>9. Generating PDFs (if needed)</h3>
+<p>You can also generate PDF reports:</p>
+<pre class="bash"><code>pandoc report.md -o report.pdf --pdf-engine=wkhtmltopdf --css report-styles.css</code></pre>
+<p>Or with LaTeX for better math rendering:</p>
+<pre class="bash"><code>pandoc report.md -o report.pdf --pdf-engine=xelatex</code></pre>
+</div>
+<div id="sample-automation-script" class="section level3">
+<h3>10. Sample Automation Script</h3>
+<p>Here’s a bash script to automate the process:</p>
+<pre class="bash"><code>#!/bin/bash
+
+# Variables
+REPORT_MD=&quot;report.md&quot;
+OUTPUT_HTML=&quot;report.html&quot;
+OUTPUT_PDF=&quot;report.pdf&quot;
+CSS_FILE=&quot;report-styles.css&quot;
+AUTHOR=&quot;Your Name&quot;
+TITLE=&quot;Deep Learning Analysis of Omics Data&quot;
+
+# Generate HTML report
+echo &quot;Generating HTML report...&quot;
+pandoc &quot;$REPORT_MD&quot; -o &quot;$OUTPUT_HTML&quot; \
+  --standalone \
+  --template template.html \
+  --toc --toc-depth=3 \
+  --metadata title=&quot;$TITLE&quot; \
+  --metadata author=&quot;$AUTHOR&quot; \
+  --metadata date=&quot;$(date +&quot;%B %d, %Y&quot;)&quot; \
+  --css &quot;$CSS_FILE&quot; \
+  --mathjax
+
+# Generate PDF report
+echo &quot;Generating PDF report...&quot;
+pandoc &quot;$REPORT_MD&quot; -o &quot;$OUTPUT_PDF&quot; \
+  --pdf-engine=xelatex \
+  --toc --toc-depth=3 \
+  --metadata title=&quot;$TITLE&quot; \
+  --metadata author=&quot;$AUTHOR&quot; \
+  --metadata date=&quot;$(date +&quot;%B %d, %Y&quot;)&quot; \
+  --css &quot;$CSS_FILE&quot;
+
+echo &quot;Done! Reports generated: $OUTPUT_HTML and $OUTPUT_PDF&quot;</code></pre>
+</div>
+</div>
+<div id="tips-for-creating-effective-reports" class="section level2">
+<h2>Tips for Creating Effective Reports</h2>
+<ol style="list-style-type: decimal">
+<li><strong>Start with a clear structure</strong>: Follow the template’s
+organization</li>
+<li><strong>Be concise</strong>: Use bullet points and clear summaries
+for key findings</li>
+<li><strong>Visualize data</strong>: Include relevant plots and
+diagrams</li>
+<li><strong>Explain methods</strong>: Describe your deep learning
+approach clearly</li>
+<li><strong>Provide context</strong>: Relate your findings to the
+biological question</li>
+<li><strong>Include limitations</strong>: Acknowledge constraints of
+your analysis</li>
+<li><strong>Add references</strong>: Cite relevant literature</li>
+<li><strong>Use consistent formatting</strong>: Follow a consistent
+style throughout</li>
+</ol>
+</div>
+<div id="troubleshooting" class="section level2">
+<h2>Troubleshooting</h2>
 <ul>
-<li>Added comprehensive introduction to Section 3 on
-Reproducibility</li>
-<li>Defined and distinguished reproducibility, replicability, and
-repeatability</li>
-<li>Added references to replication crisis (Open Science Collaboration,
-2015; Begley &amp; Ellis, 2012; Camerer et al., 2016)</li>
-<li>Included RNA-Seq example with Molania et al. (2023) reference</li>
-<li>Corrected author from “Bin Lu” to “Bin Yu” throughout document</li>
-<li>Rewrote section 3.2 as “Bin Yu’s Veridical Data Science
-Framework”</li>
-<li>Added primary reference: Yu &amp; Kumbier (2020) PNAS paper</li>
-<li>Updated activities to focus on PCS (Perturbation, Computation,
-Stability) framework</li>
+<li><strong>Missing dependencies</strong>: Run
+<code>pandoc --version</code> to check installation</li>
+<li><strong>CSS not applied</strong>: Ensure the path to CSS file is
+correct</li>
+<li><strong>Visualization issues</strong>: Try different formats (PNG,
+SVG) for static images</li>
+<li><strong>TOC not working</strong>: Check heading structure in
+markdown</li>
+<li><strong>Math rendering issues</strong>: Ensure MathJax is included
+correctly</li>
 </ul>
 </div>
-<div id="version-8.0---introduction-enhancements" class="section level3">
-<h3>Version 8.0 - Introduction Enhancements</h3>
+<div id="resources" class="section level2">
+<h2>Resources</h2>
 <ul>
-<li>Added introductory paragraphs to all subsections</li>
-<li>Enhanced each introduction to provide context and rationale</li>
-<li>Improved transitions between sections</li>
+<li><a href="https://pandoc.org/MANUAL.html">Pandoc
+Documentation</a></li>
+<li><a href="https://www.markdownguide.org/basic-syntax/">Markdown
+Syntax Guide</a></li>
+<li><a href="https://plotly.com/python/">Plotly Python
+Documentation</a></li>
+<li><a href="https://matplotlib.org/stable/contents.html">Matplotlib
+Documentation</a></li>
+<li><a href="https://jupyter-notebook.readthedocs.io/en/stable/">Jupyter
+Notebook Documentation</a></li>
 </ul>
-</div>
-<div id="version-9.0---css-and-formatting" class="section level3">
-<h3>Version 9.0 - CSS and Formatting</h3>
-<ul>
-<li>Created initial CSS file for document styling</li>
-<li>Fixed line width issues (increased max-width to 1000px)</li>
-<li>Resolved enumerated list formatting problems</li>
-<li>Added table styling CSS for proper borders and grid lines</li>
-<li>Created responsive design elements</li>
-</ul>
-</div>
-<div id="version-10.0---final-refinements" class="section level3">
-<h3>Version 10.0 - Final Refinements</h3>
-<ul>
-<li>Fixed duplication of sections 4.1-4.3 after Appendix heading</li>
-<li>Added comprehensive References section at end of document</li>
-<li>Created this change log</li>
-<li>Ensured all cross-references and section numbers are correct</li>
-</ul>
-</div>
-</div>
-<div id="key-contributors-to-document-evolution" class="section level2">
-<h2>Key Contributors to Document Evolution</h2>
-<ul>
-<li>Initial requirements specified experienced statisticians (10-15+
-years)</li>
-<li>Emphasis on practical applications over theoretical knowledge</li>
-<li>Focus on integration of new methods with existing expertise</li>
-<li>Corrections from subject matter experts (e.g., Yu vs. Lu, PQRS
-framework application)</li>
-</ul>
-</div>
-<div id="technical-implementation-notes" class="section level2">
-<h2>Technical Implementation Notes</h2>
-<ul>
-<li>Document format: Markdown</li>
-<li>Styling: Custom CSS</li>
-<li>Conversion tool: Pandoc</li>
-<li>Command:
-<code>pandoc -s stats-pd-plan-final.md -c stats-pd-plan-css-tables.css -o professional-development-plan.html</code></li>
-</ul>
-</div>
-<div id="future-considerations" class="section level2">
-<h2>Future Considerations</h2>
-<ul>
-<li>Document designed to be modular for customization</li>
-<li>Can be adapted for different experience levels</li>
-<li>Framework allows for addition of new technologies and methods</li>
-<li>References section enables ongoing updates with new literature</li>
-</ul>
-<hr />
-<p>Last Updated: [Current Date] Version: 10.0 Final <br /> Current Date
-is: 2025-05-12 <br /> Current Date is: 2025-05-13 <br /> Current Date is:
-2025-05-13 <br /> Current Date is: 2025-05-13 <br /> Current Date is:
-2025-05-13 <br /> Current Date is: 2025-05-13 <br /> Current Date is:
-2025-05-13 <br /> Current Date is: 2025-05-13 <br /> Current Date is:
-2025-05-13 <br /> Current Date is: 2025-05-13 <br /> Current Date is:
-2025-05-13 <br /> Current Date is: 2025-05-13 <br /> Current Date is:
-2025-05-13 <br /> Current Date is: 2025-05-13 <br /> Current Date is:
-2025-05-13 <br /> Current Date is: 2025-05-14 <br /> Current Date is:
-2025-05-16</p>
+<p>By following these instructions, you can create professional-grade
+HTML reports to effectively communicate your deep learning analyses of
+omics data.</p>
 </div>
 </div>
 

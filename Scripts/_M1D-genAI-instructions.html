@@ -11,7 +11,7 @@
 
 
 
-<title>_M1C-stats-pd-plan-change-log</title>
+<title>_M1D-genAI-instructions</title>
 
 <script>// Pandoc 2.9 adds attributes on both header and div. We remove the former (to
 // be compatible with the behavior of Pandoc < 2.8).
@@ -449,180 +449,164 @@ display: none;
 </div>
 
 
-<div id="professional-development-plan-for-experienced-statisticians---change-log" class="section level1">
-<h1>Professional Development Plan for Experienced Statisticians - Change
-Log</h1>
-<div id="document-development-history" class="section level2">
-<h2>Document Development History</h2>
-<div id="version-1.0---initial-creation" class="section level3">
-<h3>Version 1.0 - Initial Creation</h3>
-<ul>
-<li>Created comprehensive professional development plan structure</li>
-<li>Established three main learning tracks:
+<div id="instructions-for-creating-the-final-report" class="section level1">
+<h1>Instructions for Creating the Final Report</h1>
+<p>Follow these steps to create a professional-looking final report from
+the provided Markdown and CSS files.</p>
+<div id="option-1-creating-an-html-report" class="section level2">
+<h2>Option 1: Creating an HTML Report</h2>
 <ol style="list-style-type: decimal">
-<li>Modern Statistical Methods and Approaches</li>
-<li>Modern Reporting and Communication<br />
-</li>
-<li>Reproducibility of Statistical Analysis</li>
-</ol></li>
-<li>Added Appendix with Computing Environment Modernization</li>
-<li>Included Implementation Plan, Assessment Strategy, Resource
-Requirements, and Extension Activities</li>
-</ul>
-</div>
-<div id="version-2.0---content-reorganization" class="section level3">
-<h3>Version 2.0 - Content Reorganization</h3>
+<li><strong>Create HTML file:</strong>
 <ul>
-<li>Moved Implementation Plan, Assessment Strategy, Resource
-Requirements, and Extension Activities to Appendix as subsections
-5.2-5.5</li>
-<li>Changed terminology from “Learning Tracks” to “Sections”
-throughout</li>
-<li>Removed “Section X:” prefix from section titles for cleaner
-formatting</li>
-</ul>
-</div>
-<div id="version-3.0---section-reordering" class="section level3">
-<h3>Version 3.0 - Section Reordering</h3>
+<li>Save the Markdown content as
+<code>generative-ai-resources.md</code></li>
+<li>Create a new file named
+<code>generative-ai-resources.html</code></li>
+<li>Create a file named <code>styles.css</code> with the CSS
+content</li>
+</ul></li>
+<li><strong>Convert Markdown to HTML:</strong>
 <ul>
-<li>Reordered sections to place “Modern Reporting and Communication”
-before the Appendix</li>
-<li>Updated section numbering throughout document to reflect new
-structure</li>
-</ul>
-</div>
-<div id="version-4.0---aillm-integration-updates" class="section level3">
-<h3>Version 4.0 - AI/LLM Integration Updates</h3>
+<li><p>You can use a Markdown converter like Pandoc:</p>
+<pre><code>pandoc generative-ai-resources.md -o generative-ai-resources.html</code></pre></li>
+<li><p>Or use an online converter like <a href="https://markdowntohtml.com/">Markdown to HTML</a></p></li>
+</ul></li>
+<li><strong>Link the CSS:</strong>
 <ul>
-<li>Rewrote AI/LLM Integration introduction focusing on impact on data
-summarization</li>
-<li>Updated objective to: “Gain an understanding of the strengths and
-limitations of AI assistants and large language models”</li>
-<li>Added Yu and Kumbier’s PQRS framework (Population, Question,
-Representativeness, Scrutiny)</li>
-<li>Added note that PQRS framework applies to both AI and machine
-learning contexts</li>
-<li>Added third paragraph on practical applications for experienced
-statisticians</li>
-</ul>
-</div>
-<div id="version-5.0---machine-learning-and-bayesian-updates" class="section level3">
-<h3>Version 5.0 - Machine Learning and Bayesian Updates</h3>
+<li><p>Add this line in the <code>&lt;head&gt;</code> section of your
+HTML file:</p>
+<pre class="html"><code>&lt;link rel=&quot;stylesheet&quot; href=&quot;styles.css&quot;&gt;</code></pre></li>
+</ul></li>
+<li><strong>Final touches:</strong>
 <ul>
-<li>Created comparison table for Machine Learning vs. Traditional
-Statistical Methods</li>
-<li>Added “Examples” row to comparison table (linear regression, ANOVA
-vs. random forests, neural networks)</li>
-<li>Clarified meaning of “integrate machine learning with traditional
-statistical approaches”</li>
-<li>Reordered sections: Bayesian Methods moved after Machine
-Learning</li>
-<li>Updated Bayesian introduction: changed “accessible” to
-“prevalent”</li>
-<li>Added Frequentist vs. Bayesian comparison table</li>
-<li>Replaced “Parameters” with “Estimand” in comparison table</li>
-<li>Updated Small Sample Performance description to clarify that
-Bayesian precision comes from assumptions</li>
-<li>Added David Freedman’s critical perspective on both Bayesian and
-frequentist approaches</li>
-</ul>
+<li><p>Add a metadata section to the HTML file:</p>
+<pre class="html"><code>&lt;head&gt;
+  &lt;meta charset=&quot;UTF-8&quot;&gt;
+  &lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1.0&quot;&gt;
+  &lt;title&gt;Comprehensive Introduction to Generative AI Resources&lt;/title&gt;
+  &lt;link rel=&quot;stylesheet&quot; href=&quot;styles.css&quot;&gt;
+&lt;/head&gt;</code></pre></li>
+</ul></li>
+</ol>
 </div>
-<div id="version-6.0---causal-inference-enhancement" class="section level3">
-<h3>Version 6.0 - Causal Inference Enhancement</h3>
+<div id="option-2-using-a-markdown-editor-with-css-support" class="section level2">
+<h2>Option 2: Using a Markdown Editor with CSS Support</h2>
+<ol style="list-style-type: decimal">
+<li><strong>Use Visual Studio Code:</strong>
 <ul>
-<li>Expanded introduction to Causal Inference section</li>
-<li>Added references to David A. Freedman (2009) and Erich L. Lehmann’s
-reservations about causal claims</li>
-<li>Modified objectives and activities to include critical evaluation of
-causal inference limitations</li>
-</ul>
-</div>
-<div id="version-7.0---reproducibility-section-overhaul" class="section level3">
-<h3>Version 7.0 - Reproducibility Section Overhaul</h3>
+<li><p>Install Visual Studio Code</p></li>
+<li><p>Install the “Markdown Preview Enhanced” extension</p></li>
+<li><p>Create a file called <code>generative-ai-resources.md</code> with
+the Markdown content</p></li>
+<li><p>At the top of the file, add:</p>
+<pre><code>---
+css: styles.css
+---</code></pre></li>
+<li><p>Save the CSS content as <code>styles.css</code> in the same
+directory</p></li>
+<li><p>Use the preview function to see the styled document</p></li>
+<li><p>Export as HTML or PDF using the extension’s features</p></li>
+</ul></li>
+<li><strong>Use Typora (alternative Markdown editor):</strong>
 <ul>
-<li>Added comprehensive introduction to Section 3 on
-Reproducibility</li>
-<li>Defined and distinguished reproducibility, replicability, and
-repeatability</li>
-<li>Added references to replication crisis (Open Science Collaboration,
-2015; Begley &amp; Ellis, 2012; Camerer et al., 2016)</li>
-<li>Included RNA-Seq example with Molania et al. (2023) reference</li>
-<li>Corrected author from “Bin Lu” to “Bin Yu” throughout document</li>
-<li>Rewrote section 3.2 as “Bin Yu’s Veridical Data Science
-Framework”</li>
-<li>Added primary reference: Yu &amp; Kumbier (2020) PNAS paper</li>
-<li>Updated activities to focus on PCS (Perturbation, Computation,
-Stability) framework</li>
-</ul>
+<li>Download and install Typora (<a href="https://typora.io" class="uri">https://typora.io</a>)</li>
+<li>Create a file with the Markdown content</li>
+<li>Go to Themes and select “Custom Theme”</li>
+<li>Copy the CSS content into the theme file</li>
+<li>The document will render with your custom styling</li>
+<li>Export as HTML or PDF from the File menu</li>
+</ul></li>
+</ol>
 </div>
-<div id="version-8.0---introduction-enhancements" class="section level3">
-<h3>Version 8.0 - Introduction Enhancements</h3>
+<div id="option-3-using-pandoc-for-pdf-generation" class="section level2">
+<h2>Option 3: Using Pandoc for PDF Generation</h2>
+<ol style="list-style-type: decimal">
+<li><strong>Install Pandoc and a PDF engine:</strong>
 <ul>
-<li>Added introductory paragraphs to all subsections</li>
-<li>Enhanced each introduction to provide context and rationale</li>
-<li>Improved transitions between sections</li>
-</ul>
-</div>
-<div id="version-9.0---css-and-formatting" class="section level3">
-<h3>Version 9.0 - CSS and Formatting</h3>
+<li>Install Pandoc from <a href="https://pandoc.org/installing.html" class="uri">https://pandoc.org/installing.html</a></li>
+<li>Install a PDF engine like wkhtmltopdf or LaTeX</li>
+</ul></li>
+<li><strong>Create a YAML metadata block:</strong>
 <ul>
-<li>Created initial CSS file for document styling</li>
-<li>Fixed line width issues (increased max-width to 1000px)</li>
-<li>Resolved enumerated list formatting problems</li>
-<li>Added table styling CSS for proper borders and grid lines</li>
-<li>Created responsive design elements</li>
-</ul>
-</div>
-<div id="version-10.0---final-refinements" class="section level3">
-<h3>Version 10.0 - Final Refinements</h3>
+<li><p>At the top of your Markdown file, add:</p>
+<pre class="yaml"><code>---
+title: &quot;Comprehensive Introduction to Generative AI Resources&quot;
+author: &quot;Your Name&quot;
+date: &quot;May 19, 2025&quot;
+css: styles.css
+---</code></pre></li>
+</ul></li>
+<li><strong>Generate PDF:</strong>
 <ul>
-<li>Fixed duplication of sections 4.1-4.3 after Appendix heading</li>
-<li>Added comprehensive References section at end of document</li>
-<li>Created this change log</li>
-<li>Ensured all cross-references and section numbers are correct</li>
-</ul>
+<li><p>Run the following command:</p>
+<pre><code>pandoc generative-ai-resources.md -o generative-ai-resources.pdf --css=styles.css</code></pre></li>
+</ul></li>
+</ol>
 </div>
-</div>
-<div id="key-contributors-to-document-evolution" class="section level2">
-<h2>Key Contributors to Document Evolution</h2>
+<div id="option-4-using-github" class="section level2">
+<h2>Option 4: Using GitHub</h2>
+<ol style="list-style-type: decimal">
+<li><strong>Create a GitHub repository:</strong>
 <ul>
-<li>Initial requirements specified experienced statisticians (10-15+
-years)</li>
-<li>Emphasis on practical applications over theoretical knowledge</li>
-<li>Focus on integration of new methods with existing expertise</li>
-<li>Corrections from subject matter experts (e.g., Yu vs. Lu, PQRS
-framework application)</li>
-</ul>
-</div>
-<div id="technical-implementation-notes" class="section level2">
-<h2>Technical Implementation Notes</h2>
+<li>Create a new repository</li>
+<li>Upload both the Markdown file and CSS file</li>
+<li>Enable GitHub Pages in the repository settings</li>
+</ul></li>
+<li><strong>Create a Jekyll site:</strong>
 <ul>
-<li>Document format: Markdown</li>
-<li>Styling: Custom CSS</li>
-<li>Conversion tool: Pandoc</li>
-<li>Command:
-<code>pandoc -s stats-pd-plan-final.md -c stats-pd-plan-css-tables.css -o professional-development-plan.html</code></li>
-</ul>
-</div>
-<div id="future-considerations" class="section level2">
-<h2>Future Considerations</h2>
+<li><p>Create a <code>_config.yml</code> file with:</p>
+<pre class="yaml"><code>theme: jekyll-theme-minimal
+title: Generative AI Resources</code></pre></li>
+</ul></li>
+<li><strong>Link your CSS:</strong>
 <ul>
-<li>Document designed to be modular for customization</li>
-<li>Can be adapted for different experience levels</li>
-<li>Framework allows for addition of new technologies and methods</li>
-<li>References section enables ongoing updates with new literature</li>
-</ul>
-<hr />
-<p>Last Updated: [Current Date] Version: 10.0 Final <br /> Current Date
-is: 2025-05-12 <br /> Current Date is: 2025-05-13 <br /> Current Date is:
-2025-05-13 <br /> Current Date is: 2025-05-13 <br /> Current Date is:
-2025-05-13 <br /> Current Date is: 2025-05-13 <br /> Current Date is:
-2025-05-13 <br /> Current Date is: 2025-05-13 <br /> Current Date is:
-2025-05-13 <br /> Current Date is: 2025-05-13 <br /> Current Date is:
-2025-05-13 <br /> Current Date is: 2025-05-13 <br /> Current Date is:
-2025-05-13 <br /> Current Date is: 2025-05-13 <br /> Current Date is:
-2025-05-13 <br /> Current Date is: 2025-05-14 <br /> Current Date is:
-2025-05-16</p>
+<li><p>Add this to the top of your Markdown file:</p>
+<pre><code>---
+layout: default
+---
+&lt;link rel=&quot;stylesheet&quot; href=&quot;styles.css&quot;&gt;</code></pre></li>
+</ul></li>
+</ol>
+</div>
+<div id="best-practices" class="section level2">
+<h2>Best Practices</h2>
+<ol style="list-style-type: decimal">
+<li><strong>Testing:</strong>
+<ul>
+<li>Always preview your document before finalizing</li>
+<li>Check that all links work correctly</li>
+<li>Ensure formatting is consistent throughout the document</li>
+</ul></li>
+<li><strong>Updating:</strong>
+<ul>
+<li>Keep the Markdown file as your source of truth</li>
+<li>Update the HTML or PDF when the content changes</li>
+<li>Version your documents with dates</li>
+</ul></li>
+<li><strong>Distribution:</strong>
+<ul>
+<li>For online sharing, use the HTML version</li>
+<li>For formal distribution, use the PDF version</li>
+<li>Include both files in a repository for collaborative work</li>
+</ul></li>
+<li><strong>Responsive Design:</strong>
+<ul>
+<li>The provided CSS includes responsive design for various screen
+sizes</li>
+<li>Test on multiple devices to ensure readability</li>
+</ul></li>
+</ol>
+</div>
+<div id="final-notes" class="section level2">
+<h2>Final Notes</h2>
+<p>The CSS file provided is designed to create a professional,
+academic-looking document with clear hierarchy and readability. It
+includes styles for printing to ensure the document looks good in both
+digital and physical formats.</p>
+<p>If you need to make adjustments to the styles, the CSS file uses CSS
+variables (at the top of the file) which make it easy to customize
+colors, fonts, and spacing throughout the document by changing just a
+few values.</p>
 </div>
 </div>
 

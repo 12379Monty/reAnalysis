@@ -11,5 +11,15 @@ title: Training and Data Re-Analysis
 <li><a href="_M1C-stats-pd-plan-change-log.html">_M1C-stats-pd-plan-change-log.html</a></li>
 <li><a href="_M1C-stats-pd-plan-final-v35.html">_M1C-stats-pd-plan-final-v35.html</a></li>
 <li><a href="_M1C-stats-pd-plan-final-v35_old.html">_M1C-stats-pd-plan-final-v35_old.html</a></li>
+<li><a href="_M1D-genAI-changelog.html">_M1D-genAI-changelog.html</a></li>
+<li><a href="_M1D-genAI-instructions.html">_M1D-genAI-instructions.html</a></li>
+<li><a href="_M1D-genAI-report-html.html">_M1D-genAI-report-html.html</a></li>
+<li><a href="_M1D-genAI-report-updated.html">_M1D-genAI-report-updated.html</a></li>
+<li><a href="_M1E-DL-changelog.html">_M1E-DL-changelog.html</a></li>
+<li><a href="_M1E-DL-deep-learning-resources.html">_M1E-DL-deep-learning-resources.html</a></li>
+<li><a href="_M1E-DL-markdown-template.html">_M1E-DL-markdown-template.html</a></li>
+<li><a href="_M1E-DL-rendering-instructions.html">_M1E-DL-rendering-instructions.html</a></li>
+<li><a href="_M1E-DL-report-instructions.html">_M1E-DL-report-instructions.html</a></li>
+<li><a href="_M1E-DL-repository-setup.html">_M1E-DL-repository-setup.html</a></li>
 <li><a href="_M3A-OASIS.html">_M3A-OASIS.html</a></li>
 <li><a href="_prof_dev_plan.html">_prof_dev_plan.html</a></li>

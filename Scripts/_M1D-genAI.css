@@ -1,0 +1,113 @@
+/* Styles for the Generative AI Resources Document */
+
+:root {
+  --primary-color: #2c3e50;
+  --secondary-color: #3498db;
+  --accent-color: #e74c3c;
+  --background-color: #f9f9f9;
+  --text-color: #333;
+  --link-color: #2980b9;
+  --border-color: #ddd;
+  --section-padding: 20px;
+  --heading-font: 'Helvetica Neue', Arial, sans-serif;
+  --body-font: 'Georgia', serif;
+}
+
+body {
+  font-family: var(--body-font);
+  line-height: 1.6;
+  color: var(--text-color);
+  background-color: var(--background-color);
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 30px;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--heading-font);
+  color: var(--primary-color);
+  margin-top: 1.5em;
+  margin-bottom: 0.5em;
+}
+
+h1 {
+  font-size: 2.2em;
+  text-align: center;
+  border-bottom: 2px solid var(--secondary-color);
+  padding-bottom: 0.5em;
+  margin-bottom: 1em;
+}
+
+h2 {
+  font-size: 1.8em;
+  border-bottom: 1px solid var(--border-color);
+  padding-bottom: 0.3em;
+}
+
+h3 {
+  font-size: 1.4em;
+  color: var(--secondary-color);
+}
+
+a {
+  color: var(--link-color);
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+ul {
+  padding-left: 20px;
+}
+
+li {
+  margin-bottom: 10px;
+}
+
+/* Reference section styling */
+#references {
+  margin-top: 50px;
+  border-top: 2px solid var(--border-color);
+  padding-top: 20px;
+}
+
+#references p {
+  text-indent: -20px;
+  padding-left: 20px;
+  margin-bottom: 10px;
+}
+
+/* Print-specific styles */
+@media print {
+  body {
+    font-size: 12pt;
+    max-width: 100%;
+    padding: 0;
+    margin: 0;
+  }
+  
+  h1 {
+    font-size: 18pt;
+  }
+  
+  h2 {
+    font-size: 16pt;
+  }
+  
+  h3 {
+    font-size: 14pt;
+  }
+  
+  a {
+    color: black;
+    text-decoration: none;
+  }
+  
+  a[href]:after {
+    content: " (" attr(href) ")";
+    font-size: 10pt;
+    font-weight: normal;
+  }
+}
