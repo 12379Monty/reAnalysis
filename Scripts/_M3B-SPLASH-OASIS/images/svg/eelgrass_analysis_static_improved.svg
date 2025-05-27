@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="800" height="600" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background - Increased height further to 600px -->
+  <rect width="800" height="600" fill="#f5f8fa" rx="8" ry="8"/>
+  
+  <!-- Title -->
+  <text x="400" y="40" text-anchor="middle" font-family="Arial" font-size="22" font-weight="bold" fill="#2c3e50">Eelgrass Geographic and Seasonal Variation</text>
+  <text x="400" y="65" text-anchor="middle" font-family="Arial" font-size="16" fill="#7f8c8d">Novel biology discovered without complete reference genome</text>
+  
+  <!-- Tab Headers -->
+  <rect x="50" y="80" width="200" height="30" rx="4" ry="4" fill="#3498db"/>
+  <text x="150" y="100" text-anchor="middle" font-family="Arial" font-size="14" font-weight="bold" fill="white">Geographic Variation</text>
+  
+  <rect x="255" y="80" width="200" height="30" rx="4" ry="4" fill="#ecf0f1"/>
+  <text x="355" y="100" text-anchor="middle" font-family="Arial" font-size="14" fill="#7f8c8d">Seasonal Variation</text>
+  
+  <!-- Map Section -->
+  <g transform="translate(50, 120)">
+    <rect x="0" y="0" width="250" height="200" rx="8" ry="8" fill="#d6eaf8"/>
+    
+    <!-- Map Shapes -->
+    <rect x="60" y="100" width="80" height="60" rx="10" ry="10" fill="#bdc3c7"/>
+    <text x="100" y="180" text-anchor="middle" font-family="Arial" font-size="12" fill="#2c3e50">France</text>
+    
+    <rect x="170" y="30" width="50" height="100" rx="10" ry="10" fill="#bdc3c7"/>
+    <text x="195" y="145" text-anchor="middle" font-family="Arial" font-size="12" fill="#2c3e50">Norway</text>
+    
+    <!-- Sample Points -->
+    <circle cx="90" y="110" r="8" fill="#e74c3c" stroke="white" stroke-width="2"/>
+    <circle cx="190" y="70" r="8" fill="#3498db" stroke="white" stroke-width="2"/>
+    
+    <!-- Legend -->
+    <rect x="20" y="20" width="12" height="12" fill="#e74c3c"/>
+    <text x="40" y="30" font-family="Arial" font-size="12" fill="#2c3e50">France</text>
+    
+    <rect x="20" y="40" width="12" height="12" fill="#3498db"/>
+    <text x="40" y="50" font-family="Arial" font-size="12" fill="#2c3e50">Norway</text>
+  </g>
+  
+  <!-- Example Buttons -->
+  <g transform="translate(50, 330)">
+    <rect x="0" y="0" width="230" height="35" rx="4" ry="4" fill="#3498db"/>
+    <text x="115" y="23" text-anchor="middle" font-family="Arial" font-size="14" font-weight="bold" fill="white">Diatom Association</text>
+    
+    <rect x="0" y="40" width="230" height="35" rx="4" ry="4" fill="#ecf0f1"/>
+    <text x="115" y="63" text-anchor="middle" font-family="Arial" font-size="14" fill="#7f8c8d">Temperature Stress Response</text>
+  </g>
+  
+  <!-- Main Content -->
+  <g transform="translate(320, 120)">
+    <text x="0" y="0" font-family="Arial" font-size="18" font-weight="bold" fill="#2c3e50">Diatom Association</text>
+    <text x="0" y="25" font-family="Arial" font-size="14" fill="#7f8c8d">Detection of diatom sequences associated with eelgrass</text>
+    
+    <!-- Bar Chart -->
+    <g transform="translate(0, 40)">
+      <text x="0" y="0" font-family="Arial" font-size="16" font-weight="bold" fill="#2c3e50">Diatom Abundance by Location</text>
+      
+      <!-- Chart Background -->
+      <rect x="30" y="20" width="350" height="200" rx="4" ry="4" fill="white"/>
+      
+      <!-- Axes -->
+      <line x1="50" y1="180" x2="350" y2="180" stroke="#bdc3c7" stroke-width="2"/>
+      <line x1="50" y1="40" x2="50" y2="180" stroke="#bdc3c7" stroke-width="2"/>
+      
+      <!-- Bars -->
+      <rect x="125" y="180" width="40" height="-117" fill="#e74c3c"/>
+      <text x="145" y="195" text-anchor="middle" font-family="Arial" font-size="12" fill="#7f8c8d">France</text>
+      <text x="145" y="55" text-anchor="middle" font-family="Arial" font-size="12" font-weight="bold" fill="#e74c3c">78%</text>
+      
+      <rect x="225" y="180" width="40" height="-48" fill="#3498db"/>
+      <text x="245" y="195" text-anchor="middle" font-family="Arial" font-size="12" fill="#7f8c8d">Norway</text>
+      <text x="245" y="125" text-anchor="middle" font-family="Arial" font-size="12" font-weight="bold" fill="#3498db">32%</text>
+      
+      <!-- Y-axis labels -->
+      <text x="40" y="180" text-anchor="end" font-family="Arial" font-size="10" fill="#7f8c8d">0%</text>
+      <text x="40" y="140" text-anchor="end" font-family="Arial" font-size="10" fill="#7f8c8d">25%</text>
+      <text x="40" y="100" text-anchor="end" font-family="Arial" font-size="10" fill="#7f8c8d">50%</text>
+      <text x="40" y="60" text-anchor="end" font-family="Arial" font-size="10" fill="#7f8c8d">75%</text>
+      <text x="40" y="20" text-anchor="end" font-family="Arial" font-size="10" fill="#7f8c8d">100%</text>
+    </g>
+    
+    <!-- Sequence Section -->
+    <g transform="translate(0, 280)">
+      <text x="0" y="0" font-family="Arial" font-size="16" font-weight="bold" fill="#2c3e50">Fucoxanthin Chlorophyll Protein (FCP)</text>
+      <text x="0" y="20" font-family="Arial" font-size="12" fill="#7f8c8d">Diatom-specific light-harvesting protein detected in eelgrass samples</text>
+      
+      <rect x="0" y="30" width="430" height="100" rx="4" ry="4" fill="#f8f9fa"/>
+      
+      <!-- Anchor -->
+      <text x="10" y="50" font-family="Arial" font-size="12" font-weight="bold" fill="#2c3e50">Anchor:</text>
+      <rect x="80" y="38" width="330" height="20" rx="2" ry="2" fill="#3498db"/>
+      <text x="245" y="53" text-anchor="middle" font-family="monospace" font-size="11" fill="white">GACTCAAGCTCGTAGACCACTGAGG</text>
+      
+      <!-- Target 1 -->
+      <text x="10" y="80" font-family="Arial" font-size="12" font-weight="bold" fill="#2c3e50">Target 1:</text>
+      <rect x="80" y="68" width="280" height="20" rx="2" ry="2" fill="#e74c3c"/>
+      <text x="220" y="83" text-anchor="middle" font-family="monospace" font-size="11" fill="white">CTGACTGCTTACGCCAAGGTCGCCT</text>
+      <text x="370" y="83" font-family="Arial" font-size="10" fill="#7f8c8d">France dominant</text>
+      
+      <!-- Target 2 -->
+      <text x="10" y="110" font-family="Arial" font-size="12" font-weight="bold" fill="#2c3e50">Target 2:</text>
+      <rect x="80" y="98" width="280" height="20" rx="2" ry="2" fill="#3498db"/>
+      <text x="220" y="113" text-anchor="middle" font-family="monospace" font-size="11" fill="white">GAGGCTGCCCAACGCTATGCTCAAG</text>
+      <text x="370" y="113" font-family="Arial" font-size="10" fill="#7f8c8d">Norway dominant</text>
+    </g>
+  </g>
+  
+  <!-- Key Findings - Moved to bottom margin of the figure with adjusted position -->
+  <g transform="translate(50, 550)">
+    <rect x="0" y="-25" width="700" height="65" rx="4" ry="4" fill="#e8f4f8"/>
+    <text x="20" y="5" font-family="Arial" font-size="16" font-weight="bold" fill="#2c3e50">Key Findings</text>
+    <!-- Reorganized in two columns with more space -->
+    <text x="20" y="25" font-family="Arial" font-size="12" fill="#2c3e50">• Discovered diatom association with eelgrass</text>
+    <text x="370" y="25" font-family="Arial" font-size="12" fill="#2c3e50">• Found circadian regulation in photosynthesis</text>
+    <text x="20" y="45" font-family="Arial" font-size="12" fill="#2c3e50">• Identified geographic adaptations</text>
+    <text x="370" y="45" font-family="Arial" font-size="12" fill="#2c3e50">• Detected seasonal variation in stress responses</text>
+  </g>
+  
+  <!-- BLAST Result Section -->
+  <g transform="translate(50, 470)">
+    <rect x="0" y="0" width="700" height="70" rx="4" ry="4" fill="#f8f9fa"/>
+    
+    <text x="20" y="20" font-family="Arial" font-size="14" font-weight="bold" fill="#2c3e50">BLAST Result</text>
+    <text x="20" y="40" font-family="Arial" font-size="12" fill="#2c3e50">Phaeodactylum tricornutum fucoxanthin chlorophyll a/c protein</text>
+    <text x="20" y="60" font-family="Arial" font-size="12" fill="#2c3e50">95% identity (42/44 amino acids)</text>
+    
+    <!-- Statistics -->
+    <text x="400" y="20" font-family="Arial" font-size="12" font-weight="bold" fill="#2c3e50">OASIS p-value: 3.2e-17</text>
+    <text x="400" y="40" font-family="Arial" font-size="12" font-weight="bold" fill="#2c3e50">Effect Size: 0.89</text>
+    <text x="400" y="60" font-family="Arial" font-size="12" font-weight="bold" fill="#2c3e50">Day/Night Variation: 60% reduction at night</text>
+  </g>
+</svg>

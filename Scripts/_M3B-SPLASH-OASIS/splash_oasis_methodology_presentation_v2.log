@@ -1,0 +1,15 @@
+
+
+processing file: splash_oasis_methodology_presentation_v2.Rmd
+1/1
+output file: splash_oasis_methodology_presentation_v2.knit.md
+
+/usr/local/bin/pandoc +RTS -K512m -RTS splash_oasis_methodology_presentation_v2.knit.md --to revealjs --from markdown+autolink_bare_uris+tex_math_single_backslash-implicit_figures --output splash_oasis_methodology_presentation_v2.html --lua-filter /Library/Frameworks/R.framework/Versions/4.4-x86_64/Resources/library/rmarkdown/rmarkdown/lua/pagebreak.lua --lua-filter /Library/Frameworks/R.framework/Versions/4.4-x86_64/Resources/library/rmarkdown/rmarkdown/lua/latex-div.lua --lua-filter /Library/Frameworks/R.framework/Versions/4.4-x86_64/Resources/library/rmarkdown/rmarkdown/lua/table-classes.lua --embed-resources --standalone --template /Library/Frameworks/R.framework/Versions/4.4-x86_64/Resources/library/revealjs/rmarkdown/templates/revealjs_presentation/resources/default.html --variable center=false --slide-level 1 --variable theme-dark --variable theme=moon --variable transition=slide --variable backgroundTransition=fade --variable history=true --mathjax --variable 'mathjax-url=https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML' --include-in-header /var/folders/jk/d24lm6n944q5y650lph85m7w0000gp/T//RtmpUXrP6o/rmarkdown-str6d881436e07a.html --variable revealjs-url=/Library/Frameworks/R.framework/Versions/4.4-x86_64/Resources/library/revealjs/reveal.js-4.2.1 --highlight-style pygments 
+[WARNING] Could not fetch resource images/oasis_mathematical_formulation.svg
+[WARNING] Could not fetch resource images/performance_comparison_static.svg
+[WARNING] Could not fetch resource images/sarscov2_analysis_static.svg
+[WARNING] Could not fetch resource images/single_cell_splicing_static.svg
+[WARNING] Could not fetch resource images/octopus_transcripts_static.svg
+[WARNING] Could not fetch resource images/eelgrass_analysis_static.svg
+
+Output created: splash_oasis_methodology_presentation_v2.html

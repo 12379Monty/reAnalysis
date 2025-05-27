@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="800" height="350" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background - Increased height -->
+  <rect width="800" height="350" fill="#f5f8fa" rx="8" ry="8"/>
+  
+  <!-- Title -->
+  <text x="400" y="40" text-anchor="middle" font-family="Arial" font-size="22" font-weight="bold" fill="#2c3e50">Mathematical Formulation of OASIS: Problem Setup</text>
+  <text x="400" y="65" text-anchor="middle" font-family="Arial" font-size="16" fill="#7f8c8d">Section 2 from OASIS Paper (Baharav et al., 2024)</text>
+  
+  <!-- Problem Setup Section - Made taller -->
+  <g transform="translate(50, 100)">
+    <rect x="0" y="-10" width="700" height="220" rx="8" ry="8" fill="white" stroke="#e0e0e0" stroke-width="1"/>
+    
+    <text x="20" y="20" font-family="Arial" font-size="20" font-weight="bold" fill="#2c3e50">Problem Setup</text>
+    
+    <!-- Fixed spacing in table N definition -->
+    <text x="20" y="60" font-family="Arial" font-size="16" fill="#2c3e50">Given a contingency table N = [n</text>
+    <text x="245" y="56" font-family="Arial" font-size="12" fill="#2c3e50">i,j</text>
+    <text x="260" y="60" font-family="Arial" font-size="16" fill="#2c3e50">] with:</text>
+    
+    <g transform="translate(20, 20)">
+      <text x="20" y="60" font-family="Arial" font-size="16" fill="#2c3e50">• Rows representing targets (sequences)</text>
+      <text x="20" y="90" font-family="Arial" font-size="16" fill="#2c3e50">• Columns representing samples/conditions</text>
+      
+      <text x="350" y="60" font-family="Arial" font-size="16" fill="#2c3e50">• Cells containing counts of anchor-target pairs</text>
+      <text x="350" y="90" font-family="Arial" font-size="16" fill="#2c3e50">• Row sums r</text>
+      <text x="452" y="86" font-family="Arial" font-size="12" fill="#2c3e50">i</text>
+      <text x="458" y="90" font-family="Arial" font-size="16" fill="#2c3e50"> and column sums c</text>
+      <text x="588" y="86" font-family="Arial" font-size="12" fill="#2c3e50">j</text>
+    </g>
+    
+    <!-- Adjusted position to fit within the box -->
+    <text x="20" y="160" font-family="Arial" font-size="16" fill="#2c3e50">This formulation allows us to analyze the association between targets and samples</text>
+    <text x="20" y="190" font-family="Arial" font-size="16" fill="#2c3e50">while accounting for the inherent structure of biological variation.</text>
+  </g>
+</svg>
