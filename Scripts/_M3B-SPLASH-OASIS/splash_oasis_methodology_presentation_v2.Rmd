@@ -14,7 +14,7 @@ output:
     transition: slide
     self_contained: true
     fig_height: 8
-    fig_width: 10
+    fig_width: 11
     slide_level: 1
 ---
 
@@ -168,9 +168,8 @@ of raw sequence data using anchor-target structure
    - Cells: Counts of anchor-target pairs
 
 3. **Apply statistical test**
-   - Originally used chi-squared test
-   - Now uses OASIS for more robust results
-   - Identifies statistically significant sample-specific variation
+   - Originally used chi-squared test; Now uses IASIUS
+   - Identifies **statistically significant** sample-specific variation
 
 ---
 
@@ -200,7 +199,12 @@ of raw sequence data using anchor-target structure
 
 ## Mathematical Formulation of OASIS
 
-![OASIS Mathematical Formulation](images/oasis_mathematical_formulation.svg)
+![OASIS Mathematical Formulation 1](images/oasis_math_1_problem_setup.png)
+![OASIS Mathematical Formulation 1](images/oasis_math_1_problem_setup.png)
+![OASIS Mathematical Formulation 1](images/oasis_math_1_problem_setup.png)
+![OASIS Mathematical Formulation 1](images/oasis_math_1_problem_setup.png)
+
+---
 
 - **Problem setup**: Given contingency table $N = [n_{i,j}]$ with row sums $r_i$ and column sums $c_j$
   - Rows represent targets (sequences)
@@ -214,6 +218,8 @@ of raw sequence data using anchor-target structure
   - $P$ is the column-normalized table: $p_{i,j} = \frac{n_{i,j}}{c_j}$
   - $P_0$ is the independence model: $p^0_{i,j} = \frac{r_i}{n}$
   - $f$ and $c$ are vectors to be optimized
+
+---
 
 - **Interpretation**: Measures deviation from independence model, optimized for maximum statistical power
 
@@ -230,6 +236,8 @@ of raw sequence data using anchor-target structure
   - OASIS uses singular value decomposition (SVD) of normalized residual matrix
   - $f$ is the left singular vector corresponding to largest singular value
   - $c$ is the right singular vector corresponding to largest singular value
+
+---
 
 - **Computational advantages**:
   - Closed-form solution via SVD
@@ -255,7 +263,9 @@ This approach provides both statistical rigor and biological interpretability.
 
 ## Comparing Methodologies: OASIS vs Chi-Squared
 
-![Performance Comparison](images/performance_comparison_static.svg)
+![Performance Comparison](images/svg/performance_comparison_static.png)
+
+---
 
 | Feature | Chi-Squared Test | OASIS |
 |---------|-----------------|-------|
@@ -270,7 +280,7 @@ This approach provides both statistical rigor and biological interpretability.
 
 ## For Biologists: Why This Matters
 
-- **Unbiased discovery**
+- **Unbiased discovery** + **Unbiased false discovery**
   - Not limited to what's in reference genomes
   - Captures biological variation missed by standard methods
 
@@ -279,7 +289,7 @@ This approach provides both statistical rigor and biological interpretability.
   - Sample-specific sequence variation relates directly to biological function
 
 - **Applied examples**:
-  - Detection of RNA splicing variations across cell types
+  - Detection of RNA splicing variations 
   - Identification of pathogen strain differences
   - Analysis of immune receptor diversity
 
@@ -291,7 +301,7 @@ This approach provides both statistical rigor and biological interpretability.
   - Avoids computationally expensive alignment
   - Scales to large datasets
 
-- **Statistical robustness**
+- **Statistical Benefits** ???
   - OASIS provides finite-sample valid statistics
   - Closed-form P-value calculations avoid permutation testing
   - Controls for multiple testing
@@ -302,20 +312,27 @@ This approach provides both statistical rigor and biological interpretability.
 
 ---
 
+# Examples
+
+
 ## Example 1: SARS-CoV-2 Variant Detection
 
-![SARS-CoV-2 Analysis](images/sarscov2_analysis_static.svg)
+![SARS-CoV-2 Analysis](images/svg/sarscov2_analysis_static_improved.png)
+
+---
 
 - **Discovery process**:
   - SPLASH identified anchors with sample-specific targets across SARS-CoV-2 sequences
   - Without reference genome or metadata, detected strain-defining mutations
   
+---
+
 - **Anchor-target advantage**:
   - Anchors located in conserved regions (same across strains)
   - Targets captured variant-specific mutations
-  - Statistical testing showed which variants were significantly associated with different samples/timepoints
+  - Statistical testing showed which variants were **significantly associated with** different samples/timepoints
   
-- **Biological insight**:
+- **Biological insight**  (how often does a biologist not)
   - Protein domain profiling revealed key affected proteins (spike, ORF7a, etc.)
   - Detected mutations in functional domains like receptor binding domain
   - Clustered samples by strain without prior knowledge of strain definitions
@@ -324,7 +341,9 @@ This approach provides both statistical rigor and biological interpretability.
 
 ## Example 2: Single-Cell RNA Alternative Splicing
 
-![Single-Cell Splicing](images/single_cell_splicing_static.svg)
+![Single-Cell Splicing](images/svg/single_cell_splicing_static.png)
+
+---
 
 - **Discovery process**:
   - SPLASH applied to Smart-Seq2 single-cell RNA-seq data
@@ -345,7 +364,9 @@ This approach provides both statistical rigor and biological interpretability.
 
 ## Example 3: Octopus Tissue-Specific Transcripts
 
-![Octopus Transcripts](images/octopus_transcripts_static.svg)
+![Octopus Transcripts](images/svg/octopus_transcripts_static_svg_improved.png)
+
+---
 
 - **Discovery process**:
   - SPLASH applied to RNA-seq from different octopus tissues
@@ -366,7 +387,9 @@ This approach provides both statistical rigor and biological interpretability.
 
 ## Example 4: Eelgrass Geographic and Seasonal Variation
 
-![Eelgrass Analysis](images/eelgrass_analysis_static.svg)
+![Eelgrass Analysis](images/eelgrass_analysis_static_improved.png)
+
+---
 
 - **Discovery process**:
   - SPLASH applied to RNA-seq from eelgrass collected at different locations and seasons
@@ -385,7 +408,7 @@ This approach provides both statistical rigor and biological interpretability.
 
 ---
 
-## Conclusion: A New Paradigm
+## Conclusion: A New Paradigm which may or may not...
 
 - **Unified approach** to genomic analysis
 - **Reference-free discovery** enables novel findings
@@ -396,13 +419,14 @@ This approach provides both statistical rigor and biological interpretability.
 
 ---
 
-## Need for Comprehensive Assessment Methods
+## Need for More Rigorous Assessments
 
 - **Current evaluation approaches are insufficient for omics-scale methods**:
   - Limited benchmarks that don't reflect real-world complexity
-  - Overfitting to specific test cases
-  - Lack of diverse metrics to evaluate performance
 
+   - need a battery of objective benchmarks
+which reflect meaningful endpoints
+ 
 - **A holistic assessment framework should include**:
   - Datasets reflecting end-to-end process variability
   - Samples from varied sources and conditions
@@ -410,9 +434,18 @@ This approach provides both statistical rigor and biological interpretability.
   - Comprehensive comparison with all competing methods
   - Evaluation of both statistical power and biological relevance
 
-- **Beyond accuracy**: Assessment must consider computational efficiency, interpretability, and adaptability to new biological contexts
 
 ---
+
+## TO DO
+
+- Everything that this study glossed over -
+variability regimes which come with the omic territory
+
+- PNAS paper has 100 pages of theory
+
+
+
 
 ## References
 
