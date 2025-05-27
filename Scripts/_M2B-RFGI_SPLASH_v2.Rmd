@@ -105,7 +105,7 @@ options(stringsAsFactors=F)
 
 ```{r m2b-Prelims,  include=FALSE, echo=FALSE, results='hide', message=FALSE} 
 
-FN <- "_M2B-ref_free_genomic_inf_v2"
+FN <- "_M2B-RFGI_SPLASH_v2"
 if(sum(grepl(FN, list.files()))==0) stop("Check FN")
 
  suppressMessages(require(rmarkdown))
@@ -3363,10 +3363,10 @@ Please include these facts in the conclusions to be drawn form these data.
 
 
 <!-- To run
-## nohup Rscript -e "knitr::knit2html('_M2B-ref_free_genomic_inf_v2.Rmd')" > _M2B-ref_free_genomic_inf_v2.log  &
+## nohup Rscript -e "knitr::knit2html('_M2B-RFGI_SPLASH_v2.Rmd')" > _M2B-RFGI_SPLASH_v2.log  &
 
 ## Or
-## nohup Rscript -e "rmarkdown::render('_M2B-ref_free_genomic_inf_v2.Rmd')" > _M2B-ref_free_genomic_inf_v2.log  &
+## nohup Rscript -e "rmarkdown::render('_M2B-RFGI_SPLASH_v2.Rmd')" > _M2B-RFGI_SPLASH_v2.log  &
 
 -->
 

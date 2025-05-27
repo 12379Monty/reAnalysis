@@ -1,0 +1,11 @@
+
+# Create an R Markdown file header and add to the markdown:
+cat _M3B-SPLASH-OASIS-yaml > splash_oasis_presentation.Rmd << 'EOF'
+
+---
+title: "SPLASH and OASIS: Reference-Free Genomic Analysis"
+subtitle: "A Critical Assessment of Statistical Methods"
+author: "Your Name"
+date: "`r Sys.Date()`"
+output:
+ 

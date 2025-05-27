@@ -275,7 +275,6 @@ we have to assume that the sample set Is the population.
 
 ### Raw Data {-}
 
-
 <p><p/>
 * To detect variation (in the sense of genomic sequence differences between samples)
 a set of **anchors** - k-mers which appear among the reads - are identified
@@ -392,7 +391,7 @@ of all of the sources of variability.
 that's variability
    - the data of interest in this case are the anchor and target sequences
 which can be read off  of the reads
-   - all variability in this dataset come from the **selection of fastq files**
+   - *all variability in this dataset* come from the **selection of fastq files**
       - fastq sample 
    - each fastq contains a set of reads which can be considered a simple random
 sample from a **population of reads**.
@@ -417,6 +416,10 @@ specific parts of the pipeline of variability.
 
 ### Contingency Tables and The Multinomial Distribution {-}
 
+The following describes the variability in counts when these
+result from counting occuresnces based on a simple random sample 
+taken with replacement, or without replacement when the populations
+are very large.
 
 <p><p/>
 * (Two dimentional) Contingency tables are simply a way to display counts of samples
@@ -430,25 +433,29 @@ to assume that there is no measurement error so that
 all of the variability in the data comes from the
 randomness in the selection process.
    - If the sample selection is done by simple random sampling with replacement:
-      - if $nA = {\sum_{k=1}^m {A_k == a_r}, r = 1, ..., I} = {na_1, na_2, ..., na_I}$
-$nA \sym Multinommial(m, p_A)$ where $p_A =  {pa_1, pa_2, ..., pa_I}$ are the population
-proportions of samples with $A == a_i$
-      - Similarly $nB \sym Multinommial(m, p_B)$ where $p_B =  {pb_1, pb_2, ..., pb_I}$ are the population
-proportions of samples with $B == b_j$
-      - $if nAB = {\sum_{k=1}^m {A_k == a_r, B_k == b_c}, r = 1, ..., I, c = 1=, ..., J} = {nab_1_1, nab_1_2, ..., nab_I_J}
-$nAB \sym Multinommial(m, p_AB)$ where $p_AB =  {pab_1_1, pab_1_2, ..., pab_I_J}$ are the population
-proportions of samples with $A == a_r & B == b_c$
+      - if $nA = \{\sum_{k=1}^m (A_k == a_r), r = 1, ..., I\} = \{na_1, na_2, ..., na_I\}$
+         - $nA \sim Multinommial(m, p_A)$   
+where $p_A =  \{pa_1, pa_2, ..., pa_I\}$ are the population proportions of samples with $A == a_i$
+
+      - Similarly $nB \sim Multinommial(m, p_B)$   
+where $p_B =  \{pb_1, pb_2, ..., pb_I\}$ are the population proportions of samples with $B == b_j$
+
+      - if $nAB = \{\sum_{k=1}^m (A_k == a_r, B_k == b_c), r = 1, ..., I, c = 1=, ..., J\} =  
+   \{nab_{1,1} nab_{1,2}, ..., nab_{I,J}\}$
+         - $nAB \sim Multinommial(m, p_{AB})$    
+where $p_{AB} =  \{pab_{1,1}, pab_{1,2}, ..., pab_{I,J}\}$ are the population
+proportions of samples with $(A == a_r), (B == b_c)$
+
    - The distributional results - the distribution of the bi-factor counts and the uni-factor, or marginal
 distributions being multinomial - are direct results of simple random sampling.
-   - In theory SRS is simple:  put the population ISs in a large urn, after stirring thoroughly, pick a ball,
-note thr sample ID.  Repeat.
+   - In theory SRS is simple:  put the population IDs in a large urn, after stirring 
+horoughly, pick a ball,
+note the sample ID.  Repeat.
    - In practice it may be very challenging to execute such a sampling scheme^[
 and too often the relationship between population and sample set is left unexamined.]
    - In the case of processed samples interrogated on an Omic scale, 
-the population can be taken to be a very large set of reads from a
+ahe population can be taken to be a very large set of reads from a
 a very deeply sequenced instance  of the source material.
-
-
 
 
 
@@ -461,9 +468,6 @@ a very deeply sequenced instance  of the source material.
 | **Non-Smoker** | 20      | 180        | **200**   |
 | **Total**      | **70**  | **350**    | **420**   |
 
-
-
-``
 
 
 * Is the multinomial correct?

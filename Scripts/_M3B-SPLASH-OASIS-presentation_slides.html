@@ -1,0 +1,802 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SPLASH and OASIS: Reference-Free Genomic Analysis</title>
+    <style>
+        /* Embedded CSS for slide presentation */
+        :root {
+            --primary-color: #2c3e50;
+            --secondary-color: #3498db;
+            --accent-color: #e74c3c;
+            --success-color: #27ae60;
+            --warning-color: #f39c12;
+            --light-bg: #ecf0f1;
+            --dark-bg: #34495e;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #333;
+        }
+
+        .slideshow-container {
+            max-width: 1200px;
+            position: relative;
+            margin: auto;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+
+        .slide {
+            display: none;
+            padding: 40px;
+            min-height: 600px;
+            position: relative;
+            animation: fadeIn 0.5s;
+        }
+
+        .slide.active {
+            display: block;
+        }
+
+        .slide h1 {
+            color: var(--primary-color);
+            font-size: 2.5em;
+            margin-bottom: 0.5em;
+            border-bottom: 3px solid var(--secondary-color);
+            padding-bottom: 0.3em;
+        }
+
+        .slide h2 {
+            color: var(--secondary-color);
+            font-size: 2em;
+            margin-top: 1em;
+            border-left: 4px solid var(--secondary-color);
+            padding-left: 0.5em;
+        }
+
+        .slide h3 {
+            color: var(--primary-color);
+            font-size: 1.5em;
+            margin-top: 1em;
+        }
+
+        .two-column {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2em;
+            margin: 1em 0;
+        }
+
+        .callout {
+            padding: 1em;
+            margin: 1em 0;
+            border-radius: 8px;
+            border-left: 4px solid;
+        }
+
+        .callout-warning {
+            background-color: #fff3e0;
+            border-color: var(--warning-color);
+        }
+
+        .callout-error {
+            background-color: #ffebee;
+            border-color: var(--accent-color);
+        }
+
+        .callout-success {
+            background-color: #e8f5e8;
+            border-color: var(--success-color);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1em 0;
+            font-size: 0.9em;
+        }
+
+        th, td {
+            padding: 8px 12px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        th {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        .navigation {
+            text-align: center;
+            padding: 20px;
+            background-color: var(--dark-bg);
+        }
+
+        .nav-button {
+            background-color: var(--secondary-color);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            margin: 0 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        .nav-button:hover {
+            background-color: var(--primary-color);
+        }
+
+        .nav-button:disabled {
+            background-color: #bdc3c7;
+            cursor: not-allowed;
+        }
+
+        .slide-counter {
+            color: white;
+            margin: 0 20px;
+            font-size: 16px;
+        }
+
+        ul {
+            line-height: 1.8;
+        }
+
+        .highlight {
+            background-color: #fff3cd;
+            padding: 2px 4px;
+            border-radius: 3px;
+            font-weight: bold;
+        }
+
+        .code-block {
+            background-color: #f8f9fa;
+            border: 1px solid #e9ecef;
+            border-radius: 5px;
+            padding: 1em;
+            font-family: 'Courier New', monospace;
+            margin: 1em 0;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body>
+
+<div class="slideshow-container">
+
+    <!-- Slide 1: Title -->
+    <div class="slide active">
+        <div style="text-align: center; padding: 2em;">
+            <h1>SPLASH and OASIS</h1>
+            <h2 style="color: var(--secondary-color); border: none; padding: 0;">Reference-Free Genomic Analysis</h2>
+            <h3 style="color: var(--accent-color);">A Critical Assessment of Statistical Methods</h3>
+            <div style="margin-top: 2em; font-size: 1.2em;">
+                <p><strong>Chaung et al. 2023</strong> (SPLASH) + <strong>Baharav et al. 2024</strong> (OASIS)</p>
+                <p style="color: var(--muted-color);">Statistical Framework for Biological Discovery</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Slide 2: The Problem -->
+    <div class="slide">
+        <h1>The Problem with Current Approaches</h1>
+        
+        <div class="two-column">
+            <div>
+                <h3>Traditional Genomics Workflow</h3>
+                <ol>
+                    <li><strong>Reference Alignment</strong> → Computational bottleneck</li>
+                    <li><strong>Chi-squared (χ²) Test</strong> → Statistical limitations</li>
+                    <li><strong>Post-hoc Analysis</strong> → No built-in interpretability</li>
+                </ol>
+            </div>
+            <div>
+                <h3>Modern RNA-seq Best Practices</h3>
+                <ol>
+                    <li><strong>Count Transformation</strong> (log, VST)</li>
+                    <li><strong>Normalization</strong> (library size, composition)</li>
+                    <li><strong>Batch Correction</strong> (RUV, ComBat)</li>
+                    <li><strong>Statistical Modeling</strong> (DESeq2, edgeR)</li>
+                </ol>
+            </div>
+        </div>
+
+        <div class="callout callout-error">
+            <strong>Critical Issue:</strong> χ² comparison ignores 25+ years of RNA-seq methodology advances
+        </div>
+    </div>
+
+    <!-- Slide 3: Inadequate Comparator -->
+    <div class="slide">
+        <h1>Critical Assessment: Why χ² is an Inadequate Comparator</h1>
+        
+        <div class="callout callout-warning">
+            <strong>χ² represents 1990s methodology</strong> - not current best practices
+        </div>
+
+        <table>
+            <tr>
+                <th>Aspect</th>
+                <th>χ² Test (Used)</th>
+                <th>Modern RNA-seq (Should Use)</th>
+            </tr>
+            <tr>
+                <td><strong>Count Transformation</strong></td>
+                <td>❌ Raw counts</td>
+                <td>✅ Log, variance stabilization</td>
+            </tr>
+            <tr>
+                <td><strong>Normalization</strong></td>
+                <td>❌ None</td>
+                <td>✅ Library size, composition bias</td>
+            </tr>
+            <tr>
+                <td><strong>Batch Correction</strong></td>
+                <td>❌ Ignored</td>
+                <td>✅ RUV, ComBat, sva</td>
+            </tr>
+            <tr>
+                <td><strong>Statistical Model</strong></td>
+                <td>❌ Simple Poisson</td>
+                <td>✅ Negative binomial GLMs</td>
+            </tr>
+            <tr>
+                <td><strong>Multiple Testing</strong></td>
+                <td>❌ Basic correction</td>
+                <td>✅ Empirical Bayes, FDR</td>
+            </tr>
+        </table>
+    </div>
+
+    <!-- Slide 4: What Should Have Been Compared -->
+    <div class="slide">
+        <h1>What Should Have Been Compared</h1>
+        
+        <h2>Appropriate Comparators (Risso et al. 2014 framework)</h2>
+        
+        <div class="two-column">
+            <div>
+                <h3>Bulk RNA-seq Methods</h3>
+                <ul>
+                    <li><strong>DESeq2</strong> - Negative binomial GLMs</li>
+                    <li><strong>edgeR</strong> - Empirical Bayes moderated</li>
+                    <li><strong>limma-voom</strong> - Variance modeling</li>
+                    <li><strong>RUVSeq</strong> - Remove unwanted variation</li>
+                    <li><strong>sva/ComBat</strong> - Surrogate variables</li>
+                </ul>
+            </div>
+            <div>
+                <h3>Single-cell Methods</h3>
+                <ul>
+                    <li><strong>scran/scater</strong> - Single-cell normalization</li>
+                    <li><strong>Seurat</strong> - Clustering and DE</li>
+                    <li><strong>MAST</strong> - Single-cell modeling</li>
+                    <li><strong>zinbwave</strong> - Zero-inflated models</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="code-block">
+Raw Counts → Filtering → Normalization → Transformation → 
+Batch Correction → Differential Analysis → Multiple Testing
+        </div>
+    </div>
+
+    <!-- Slide 5: Missing Benchmarking -->
+    <div class="slide">
+        <h1>Missing Benchmarking Components</h1>
+        
+        <table>
+            <tr>
+                <th>Aspect</th>
+                <th>Current Paper</th>
+                <th>What's Needed</th>
+            </tr>
+            <tr>
+                <td><strong>Comparator</strong></td>
+                <td>χ² test (outdated)</td>
+                <td>DESeq2, edgeR, limma-voom</td>
+            </tr>
+            <tr>
+                <td><strong>Data Selection</strong></td>
+                <td>Curated examples</td>
+                <td>Comprehensive benchmarks</td>
+            </tr>
+            <tr>
+                <td><strong>Metrics</strong></td>
+                <td>P-values only</td>
+                <td>Sensitivity, specificity, FDR</td>
+            </tr>
+            <tr>
+                <td><strong>Validation</strong></td>
+                <td>Selected datasets</td>
+                <td>Multiple independent studies</td>
+            </tr>
+            <tr>
+                <td><strong>Scalability</strong></td>
+                <td>Not assessed</td>
+                <td>Runtime, memory, large-scale</td>
+            </tr>
+        </table>
+
+        <div class="callout callout-error">
+            <strong>Bottom Line:</strong> The evaluation lacks the rigor expected for a methods paper in 2024
+        </div>
+    </div>
+
+    <!-- Slide 6: OASIS Innovation -->
+    <div class="slide">
+        <h1>OASIS Innovation: What's Actually Novel</h1>
+        
+        <h2>Key Statistical Advances</h2>
+        
+        <div class="two-column">
+            <div>
+                <h3>Finite-Sample Validity</h3>
+                <ul>
+                    <li><span class="highlight">Closed-form P-value bounds</span></li>
+                    <li>Valid for ANY sample size</li>
+                    <li>No asymptotic approximations</li>
+                    <li>Mathematically guaranteed Type I error control</li>
+                </ul>
+            </div>
+            <div>
+                <h3>Structured Noise Robustness</h3>
+                <ul>
+                    <li><span class="highlight">Bilinear form averages out noise</span></li>
+                    <li>Focuses on biological signal</li>
+                    <li>Robust to overdispersion</li>
+                    <li>Built-in interpretability</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="code-block">
+OASIS Test Statistic: S = f^T X̃ c
+
+Where:
+• X̃ = centered and normalized contingency table
+• f = row embedding (binary: 0/1) 
+• c = column embedding (continuous)
+• P(|S| ≥ s) ≤ 2 exp(-2s²/(1-γ))
+        </div>
+    </div>
+
+    <!-- Slide 7: Biological Applications -->
+    <div class="slide">
+        <h1>Biological Applications: Where OASIS Shines</h1>
+        
+        <div class="two-column">
+            <div>
+                <h3>Pathogen Surveillance</h3>
+                <ul>
+                    <li><strong>SARS-CoV-2:</strong> 100% strain classification accuracy</li>
+                    <li><strong>M. tuberculosis:</strong> Sub-lineage identification</li>
+                    <li><strong>No reference genome</strong> required</li>
+                    <li><strong>Real-time</strong> outbreak detection</li>
+                </ul>
+
+                <h3>Single-Cell Genomics</h3>
+                <ul>
+                    <li><strong>Cell-type specific</strong> isoform detection</li>
+                    <li><strong>HLA allele-specific</strong> expression</li>
+                    <li><strong>Immune receptor</strong> diversity</li>
+                </ul>
+            </div>
+            <div>
+                <h3>Non-Model Organisms</h3>
+                <ul>
+                    <li><strong>Environmental genomics</strong> (eelgrass + diatoms)</li>
+                    <li><strong>Comparative studies</strong> (octopus tissues)</li>
+                    <li><strong>Conservation biology</strong> applications</li>
+                </ul>
+
+                <h3>Built-in Interpretability</h3>
+                <ul>
+                    <li><strong>Sample clustering</strong> (which are similar?)</li>
+                    <li><strong>Feature importance</strong> (what drives differences?)</li>
+                    <li><strong>Effect sizes</strong> (how large are effects?)</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- Slide 8: Unwanted Variability -->
+    <div class="slide">
+        <h1>Handling Unwanted Variability: The RUV Problem</h1>
+        
+        <h2>The Challenge in High-Throughput Data</h2>
+        
+        <div class="two-column">
+            <div>
+                <h3>Sources of Unwanted Variation</h3>
+                <ul>
+                    <li><strong>Batch effects</strong> - Different sequencing runs</li>
+                    <li><strong>Technical noise</strong> - Equipment variation</li>
+                    <li><strong>Overdispersion</strong> - Biological sampling noise</li>
+                    <li><strong>Contamination</strong> - Mixed samples</li>
+                    <li><strong>Library prep</strong> - Protocol differences</li>
+                </ul>
+            </div>
+            <div>
+                <h3>OASIS Solution</h3>
+                <div class="callout callout-success">
+                    <strong>Key Insight:</strong> Bilinear form f^T X̃ c averages out unstructured deviations while amplifying structured biological signals
+                </div>
+                <ul>
+                    <li><strong>Structured signal:</strong> Accumulates</li>
+                    <li><strong>Random noise:</strong> Cancels out</li>
+                    <li><strong>Technical artifacts:</strong> Minimized</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="callout callout-warning">
+            <strong>Critical Question:</strong> How does this compare to established RUV methods like RUVSeq, ComBat, or sva?
+        </div>
+    </div>
+
+    <!-- Slide 9: Performance Reality Check -->
+    <div class="slide">
+        <h1>Performance Reality Check</h1>
+        
+        <h2>What the Paper Shows vs What We Need</h2>
+        
+        <table>
+            <tr>
+                <th>Claim</th>
+                <th>Evidence Provided</th>
+                <th>What's Missing</th>
+            </tr>
+            <tr>
+                <td><strong>Better than χ²</strong></td>
+                <td>7.5% vs 95.7% false positive rate</td>
+                <td>Comparison with modern methods</td>
+            </tr>
+            <tr>
+                <td><strong>Biologically relevant</strong></td>
+                <td>Cosine similarity with metadata</td>
+                <td>Functional validation (qPCR, etc.)</td>
+            </tr>
+            <tr>
+                <td><strong>Computationally efficient</strong></td>
+                <td>500x reduction vs alignment</td>
+                <td>vs optimized RNA-seq pipelines</td>
+            </tr>
+            <tr>
+                <td><strong>Reference-free advantage</strong></td>
+                <td>Works without reference</td>
+                <td>vs well-normalized reference methods</td>
+            </tr>
+        </table>
+
+        <div class="callout callout-error">
+            <strong>Reality:</strong> We don't know how OASIS performs against methods actually used in 2024
+        </div>
+    </div>
+
+    <!-- Slide 10: Next Steps Framework -->
+    <div class="slide">
+        <h1>Proposed Rigorous Benchmarking Framework</h1>
+        
+        <h2>Phase 1: Proper Integration</h2>
+        <ul>
+            <li><strong>Library size normalization</strong> in SPLASH pipeline</li>
+            <li><strong>Variance stabilizing transformations</strong></li>
+            <li><strong>Batch effect correction</strong> capabilities</li>
+            <li><strong>Integration with RUVSeq</strong> framework</li>
+        </ul>
+
+        <h2>Phase 2: Comprehensive Benchmarking</h2>
+        <div class="two-column">
+            <div>
+                <h3>Benchmark Datasets</h3>
+                <ul>
+                    <li><strong>GEUVADIS</strong> - 1000 Genomes RNA-seq</li>
+                    <li><strong>GTEx</strong> - Multi-tissue atlas</li>
+                    <li><strong>TCGA</strong> - Cancer vs normal</li>
+                    <li><strong>Single-cell atlases</strong></li>
+                </ul>
+            </div>
+            <div>
+                <h3>Performance Metrics</h3>
+                <ul>
+                    <li><strong>Sensitivity/Specificity</strong> on ground truth</li>
+                    <li><strong>Area Under ROC Curve</strong></li>
+                    <li><strong>FDR control</strong> under null</li>
+                    <li><strong>Computational efficiency</strong></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- Slide 11: Critical Questions -->
+    <div class="slide">
+        <h1>Critical Questions for Future Work</h1>
+        
+        <div class="callout callout-warning">
+            <strong>Key Questions That Need Answers:</strong>
+        </div>
+
+        <ol style="font-size: 1.1em; line-height: 1.8;">
+            <li><strong>Performance with proper normalization:</strong> How does OASIS perform when DESeq2/edgeR get proper preprocessing?</li>
+            
+            <li><strong>Computational reality:</strong> What's the actual cost vs optimized RNA-seq pipelines?</li>
+            
+            <li><strong>Reference-free advantage:</strong> Does it really help, or do normalized reference methods work better?</li>
+            
+            <li><strong>Integration capability:</strong> Can OASIS work with existing QC frameworks?</li>
+            
+            <li><strong>Failure modes:</strong> When should you NOT use OASIS?</li>
+            
+            <li><strong>Scalability:</strong> How does it perform on truly large-scale datasets?</li>
+        </ol>
+    </div>
+
+    <!-- Slide 12: Validation Strategy -->
+    <div class="slide">
+        <h1>Comprehensive Validation Strategy</h1>
+        
+        <div class="two-column">
+            <div>
+                <h3>Ground Truth Validation</h3>
+                <ul>
+                    <li><strong>Spike-in controls</strong> (ERCC, SIRV)</li>
+                    <li><strong>qPCR validation</strong></li>
+                    <li><strong>Protein-level confirmation</strong></li>
+                    <li><strong>Functional assays</strong></li>
+                </ul>
+
+                <h3>Technical Validation</h3>
+                <ul>
+                    <li><strong>Cross-platform</strong> (Illumina, PacBio, ONT)</li>
+                    <li><strong>Cross-laboratory</strong> (SEQC, MAQC)</li>
+                    <li><strong>Technical replicates</strong></li>
+                </ul>
+            </div>
+            <div>
+                <h3>Biological Validation</h3>
+                <ul>
+                    <li><strong>Independent datasets</strong></li>
+                    <li><strong>Different tissue types</strong></li>
+                    <li><strong>Various species</strong></li>
+                    <li><strong>Disease vs healthy</strong></li>
+                </ul>
+
+                <h3>Statistical Validation</h3>
+                <ul>
+                    <li><strong>Null hypothesis simulations</strong></li>
+                    <li><strong>Power analysis</strong></li>
+                    <li><strong>Multiple testing burden</strong></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- Slide 13: Implementation Roadmap -->
+    <div class="slide">
+        <h1>Implementation Roadmap</h1>
+        
+        <div class="code-block">
+# Proposed R Analysis Framework
+oasis_vs_modern <- function(count_matrix, metadata) {
+  
+  # Modern RNA-seq preprocessing
+  dds <- DESeqDataSetFromMatrix(count_matrix, metadata, ~condition)
+  dds <- DESeq(dds)
+  deseq2_results <- results(dds)
+  
+  # OASIS with proper normalization
+  normalized_counts <- vst(dds)  # Variance stabilization
+  batch_corrected <- removeBatchEffect(normalized_counts, metadata$batch)
+  oasis_results <- run_oasis(batch_corrected)
+  
+  # Comprehensive comparison
+  comparison <- compare_methods(
+    methods = c("DESeq2", "edgeR", "limma-voom", "OASIS"),
+    metrics = c("sensitivity", "specificity", "FDR", "runtime")
+  )
+  
+  return(comparison)
+}
+        </div>
+    </div>
+
+    <!-- Slide 14: What We Actually Know -->
+    <div class="slide">
+        <h1>What We Actually Know vs What We Think We Know</h1>
+        
+        <div class="two-column">
+            <div class="callout callout-success">
+                <h3>✅ What We Know</h3>
+                <ul>
+                    <li>OASIS has finite-sample validity</li>
+                    <li>It's more robust than χ² to overdispersion</li>
+                    <li>It provides interpretable embeddings</li>
+                    <li>It works without reference genomes</li>
+                    <li>It can classify some viral strains well</li>
+                </ul>
+            </div>
+            <div class="callout callout-error">
+                <h3>❓ What We Don't Know</h3>
+                <ul>
+                    <li>Performance vs modern RNA-seq methods</li>
+                    <li>Behavior with proper normalization</li>
+                    <li>Failure modes and limitations</li>
+                    <li>Large-scale computational performance</li>
+                    <li>Generalizability across datasets</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="callout callout-warning">
+            <strong>The Gap:</strong> There's a large space between "better than χ²" and "useful in practice"
+        </div>
+    </div>
+
+    <!-- Slide 15: Recommendations -->
+    <div class="slide">
+        <h1>Recommendations</h1>
+        
+        <h2>For the Authors</h2>
+        <ol>
+            <li><strong>Acknowledge limitations</strong> of current evaluation</li>
+            <li><strong>Compare with modern methods</strong> (DESeq2, edgeR, limma-voom)</li>
+            <li><strong>Include proper normalization</strong> in comparisons</li>
+            <li><strong>Provide failure mode analysis</strong></li>
+            <li><strong>Test on comprehensive benchmarks</strong></li>
+        </ol>
+
+        <h2>For the Field</h2>
+        <ol>
+            <li><strong>Independent validation</strong> by other groups</li>
+            <li><strong>Integration studies</strong> with existing pipelines</li>
+            <li><strong>Comprehensive benchmarking</strong> initiatives</li>
+            <li><strong>Method comparison</strong> consortiums</li>
+        </ol>
+
+        <h2>For Users</h2>
+        <ol>
+            <li><strong>Wait for proper benchmarking</strong> before adoption</li>
+            <li><strong>Compare with existing methods</strong> on your data</li>
+            <li><strong>Validate results</strong> with orthogonal approaches</li>
+        </ol>
+    </div>
+
+    <!-- Slide 16: Conclusions -->
+    <div class="slide">
+        <h1>Conclusions</h1>
+        
+        <div class="two-column">
+            <div>
+                <h3>🔬 Scientific Merit</h3>
+                <ul>
+                    <li><strong>Novel statistical approach</strong> with theoretical foundation</li>
+                    <li><strong>Addresses real problems</strong> in genomics</li>
+                    <li><strong>Interpretable results</strong> - major advantage</li>
+                    <li><strong>Reference-free capability</strong> - potentially valuable</li>
+                </ul>
+            </div>
+            <div>
+                <h3>⚠️ Evaluation Concerns</h3>
+                <ul>
+                    <li><strong>Inadequate comparator</strong> (χ² vs modern methods)</li>
+                    <li><strong>Limited benchmarking</strong> scope</li>
+                    <li><strong>Cherry-picked examples</strong></li>
+                    <li><strong>Missing failure analysis</strong></li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="callout callout-warning" style="text-align: center; font-size: 1.2em;">
+            <strong>Bottom Line:</strong> Promising method that needs rigorous evaluation against modern standards
+        </div>
+    </div>
+
+    <!-- Slide 17: Discussion -->
+    <div class="slide">
+        <h1>Discussion</h1>
+        
+        <div style="text-align: center; margin: 2em 0;">
+            <h2 style="color: var(--secondary-color);">Questions for the Audience</h2>
+        </div>
+
+        <div class="two-column">
+            <div>
+                <h3>For Biologists</h3>
+                <ul>
+                    <li>What biological applications are most relevant to your research?</li>
+                    <li>How important is reference-free analysis for your work?</li>
+                    <li>What validation would convince you to adopt this method?</li>
+                </ul>
+
+                <h3>For Statisticians</h3>
+                <ul>
+                    <li>How should we design proper benchmarking studies?</li>
+                    <li>What are the most critical comparator methods?</li>
+                    <li>How do we assess biological relevance objectively?</li>
+                </ul>
+            </div>
+            <div>
+                <h3>For Method Developers</h3>
+                <ul>
+                    <li>How can OASIS integrate with existing pipelines?</li>
+                    <li>What computational optimizations are needed?</li>
+                    <li>How do we standardize method comparison?</li>
+                </ul>
+
+                <h3>For the Community</h3>
+                <ul>
+                    <li>Should we establish benchmarking consortiums?</li>
+                    <li>How do we prevent methodological overselling?</li>
+                    <li>What standards should methods papers meet?</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<!-- Navigation -->
+<div class="navigation">
+    <button class="nav-button" id="prevBtn" onclick="changeSlide(-1)">❮ Previous</button>
+    <span class="slide-counter" id="slideCounter">1 / 17</span>
+    <button class="nav-button" id="nextBtn" onclick="changeSlide(1)">Next ❯</button>
+</div>
+
+<script>
+let currentSlide = 1;
+const totalSlides = 17;
+
+function showSlide(n) {
+    const slides = document.getElementsByClassName("slide");
+    
+    if (n > totalSlides) currentSlide = 1;
+    if (n < 1) currentSlide = totalSlides;
+    
+    for (let i = 0; i < slides.length; i++) {
+        slides[i].classList.remove("active");
+    }
+    
+    slides[currentSlide - 1].classList.add("active");
+    
+    document.getElementById("slideCounter").innerHTML = currentSlide + " / " + totalSlides;
+    
+    document.getElementById("prevBtn").disabled = (currentSlide === 1);
+    document.getElementById("nextBtn").disabled = (currentSlide === totalSlides);
+}
+
+function changeSlide(n) {
+    currentSlide += n;
+    showSlide(currentSlide);
+}
+
+// Keyboard navigation
+document.addEventListener('keydown', function(event) {
+    if (event.key === 'ArrowRight' || event.key === ' ') {
+        changeSlide(1);
+    } else if (event.key === 'ArrowLeft') {
+        changeSlide(-1);
+    }
+});
+
+// Initialize
+showSlide(currentSlide);
+</script>
+
+</body>
+</html>
+                

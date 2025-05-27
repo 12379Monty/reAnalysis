@@ -1,0 +1,69 @@
+# General Remarks - SPLASH
+
+## On End to End Omic Scale Analysis {-}
+
+<p><p/>
+* Omic scale data refers to measurements taken in parallel over many features -
+from thousands of genes to millions of proteins.  Even though the result of
+interest, gene scores for example, may be obtained from analyzing
+features one at a time, the success of the design and analysis methods
+can only be assessed by taking a holistic look at the study data and results.
+
+* To have a holistic picture, the assessment must start with the input material
+and follow the sample set through all of the processing steps including QC assessment
+and filtering (if any), sample pre-processing  (further filtering and normalization),
+data analysis (compute the desired results and report the findings).
+
+* The publications provided the information needed to
+show that the technology works in principle, but to be able to appreciate
+how well the technology will work in practice, it has to be evaluated 
+in a way that fully reflects the  expected usage.
+
+* Having good comparator analysis methods is helpful, if not crucial.  I'm not sure that
+the chi-square test provides a good comparator.  I don't recall ever coming 
+across the chi-square test in the course of RNA-Seq related analyses, but
+my experience is limited to comparing gene expression levels across samples.
+There are a number of R packages which treat compositional data analysis
+which is analogous to the problem addressed in SPLASH.  Many options 
+are listed in Section \@ref(rna-seq-wi-samp); it should be possible to customize one or more
+to provide a comparator for SPLASH+OASIS.
+
+* Having a good dataset for assessment
+is also critical and could include control features, control samples,
+and samples providing engineered or designed truth.
+In addition to having built-in truth, the samples used to assess
+performance must also be representative of the actual samples
+which will be processed in production.
+
+<br/>
+
+## On inferential frameworks   {-}
+
+
+* An important feature of the SPLASH+OASIS data analyses pipeline is the
+finite sample valid statistical inference that it makes possible whereas other
+methods rely on asymptotically valid estimates. The value that this feature confers to 
+the method should be verified empirically with a proper omic level assessment.  Note that RNA-Seq
+methods rely heavily in these asymptotically valid estimates which have not been found
+to be problematic for small sample sizes  as the site-specific estimates are typically
+stabilized by shrinkage.
+
+
+* From a personal perspective I feel that the write-up of the papers puts a lot of stock
+in p- and q-values.  The statistical standard errors of measurement, or the sampling errors,
+are only one source of variability in data collected in a high throughput, massively
+parallel fashion. Other sources of variability such as reagent lots, instruments,
+operators, days (ie. day to day variability is variability that is not otherwise specified)
+will often dominate the total variability.  
+
+* In practice we select the analysis method which
+produces the best results as ascertained by omic scale assessments of accuracy
+based oin the analysis of real data.
+
+<br/>
+
+<!--
+nohup Rscript -e "rmarkdown::render('_M2B-Comments.Rmd')" > _M2B-Comments.log  &
+
+-->
+

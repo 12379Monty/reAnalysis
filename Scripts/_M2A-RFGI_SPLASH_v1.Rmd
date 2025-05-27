@@ -1,4 +1,4 @@
----
+yn
 title:  "Reference-Free Genomic Inference with SPLASH and OASIS"
 #subtitle: "a tale of two schools"
 author: "[Francois Collin](https://www.linkedin.com/in/francoisz/)"
@@ -105,7 +105,7 @@ options(stringsAsFactors=F)
 
 ```{r m2a-Prelims,  include=FALSE, echo=FALSE, results='hide', message=FALSE} 
 
-FN <- "_M2A-ref_free_genomic_inf_v1"
+FN <- "_M2A-RFGI_SPLASH_v1"
 if(sum(grepl(FN, list.files()))==0) stop("Check FN")
 
  suppressMessages(require(rmarkdown))
@@ -249,8 +249,7 @@ param_class=sapply(params, class), row.names=NULL) %>%
 <br/>
 
 
-# Synopsys  {-}
-
+<!-- ???
 <p><p/> 
 * The methodology used in OASIS is similar to that used in
 the RUV methodology [@Molania:2023aa; @Gerard:2021aa; @Jiang:2023aa].
@@ -267,6 +266,12 @@ these terms.
 * In high throughput data analysis, data summaries play a prominent role 
 such that almost every analysis is statistical in some sense so that attaching
 the label statistical to an analysis method has little descriptive value.
+
+-->
+
+
+
+# Synopsys/Comments  {-}
 
 <p><p/>
 * Outside of simulated data, p-values cannot be taken at face value
@@ -311,6 +316,9 @@ specified) will often dominate the variability.
    - The Bin Yu Group [@Yu:2024aa;Yu:2020aa;Yu:2013aa;Yu:2018aa] suggests the use of
 stability as a more comprehensive or inclusive measure of variability to monitor
 and optimize by study design or parameter setting.
+
+---
+
 
 <br/>
 
@@ -2507,10 +2515,10 @@ Please include these facts in the conclusions to be drawn form these data.
 
 
 <!-- To run
-## nohup Rscript -e "knitr::knit2html('_M2A-ref_free_genomic_inf_v1.Rmd')" > _M2A-ref_free_genomic_inf_v1.log  &
+## nohup Rscript -e "knitr::knit2html('_M2A-RFGI_SPLASH_v1.Rmd')" > _M2A-RFGI_SPLASH_v1.log  &
 
 ## Or
-## nohup Rscript -e "rmarkdown::render('_M2A-ref_free_genomic_inf_v1.Rmd')" > _M2A-ref_free_genomic_inf_v1.log  &
+## nohup Rscript -e "rmarkdown::render('_M2A-RFGI_SPLASH_v1.Rmd')" > _M2A-RFGI_SPLASH_v1.log  &
 
 -->
 

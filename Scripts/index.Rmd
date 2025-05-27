@@ -297,13 +297,14 @@ in the downstream read-outs
 ## Reference-Free Genomic Inference with SPLASH and OASIS 
 
 
+*  [Presentation](_M3B-SPLASH-OASIS/splash_oasis_methodology_presentation_v2.html)
+
 
 ### SPLASH {-}
 
-* Final Report
 
-* [_M2A-RFGI_v1.html](./_M2A-RFGI_v1.html) -
-* [_M2B-RFGI_v2.html](./_M2B-RFGI_v2.html) -
+* [_M2A-RFGI_SPLASH_v1.html](./_M2A-RFGI_SPLASH_v1.html) -
+* [_M2B-RFGI_SPLASH_v2.html](./_M2B-RFGI_SPLASH_v2.html) -
 * [_M3A-OASIS.html](./_M3A-OASIS.html) -
 
 <br/>

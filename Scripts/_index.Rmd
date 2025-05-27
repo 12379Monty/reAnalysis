@@ -21,5 +21,14 @@ title: Training and Data Re-Analysis
 <li><a href="_M1E-DL-rendering-instructions.html">_M1E-DL-rendering-instructions.html</a></li>
 <li><a href="_M1E-DL-report-instructions.html">_M1E-DL-report-instructions.html</a></li>
 <li><a href="_M1E-DL-repository-setup.html">_M1E-DL-repository-setup.html</a></li>
+<li><a href="_M2A-Comments.html">_M2A-Comments.html</a></li>
+<li><a href="_M2A-RFGI_SPLASH_v1.html">_M2A-RFGI_SPLASH_v1.html</a></li>
+<li><a href="_M2B-Comments.html">_M2B-Comments.html</a></li>
+<li><a href="_M2B-RFGI_SPLASH_v2.html">_M2B-RFGI_SPLASH_v2.html</a></li>
 <li><a href="_M3A-OASIS.html">_M3A-OASIS.html</a></li>
+<li><a href="_M3B-SPLASH-OASIS-changelog.html">_M3B-SPLASH-OASIS-changelog.html</a></li>
+<li><a href="_M3B-SPLASH-OASIS-markdown_source.html">_M3B-SPLASH-OASIS-markdown_source.html</a></li>
+<li><a href="_M3B-SPLASH-OASIS-presentation_slides.html">_M3B-SPLASH-OASIS-presentation_slides.html</a></li>
+<li><a href="_M3B-SPLASH-OASIS-splash_oasis_presentation.html">_M3B-SPLASH-OASIS-splash_oasis_presentation.html</a></li>
 <li><a href="_prof_dev_plan.html">_prof_dev_plan.html</a></li>
+<li><a href="splash_oasis_presentation.html">splash_oasis_presentation.html</a></li>
