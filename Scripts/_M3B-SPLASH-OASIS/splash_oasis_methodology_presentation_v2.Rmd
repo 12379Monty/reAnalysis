@@ -421,6 +421,8 @@ This approach provides both *statistical rigor* and *biological interpretability
   - Anchors with location-specific targets revealed geographic adaptations
   - Seasonal-specific target distributions identified circadian and seasonal regulation
   - Anchors with no matches to reference revealed novel biology
+
+---
   
 - **Biological insight**:
   - Discovered diatom association through protein domain analysis
@@ -455,7 +457,6 @@ which reflect meaningful endpoints
   - Battery of meaningful metrics measuring field performance
   - Comprehensive comparison with all competing methods
   - Evaluation of both statistical power and biological relevance
-
 
 ---
 
