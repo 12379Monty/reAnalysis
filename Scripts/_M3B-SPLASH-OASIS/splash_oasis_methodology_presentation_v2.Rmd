@@ -34,8 +34,8 @@ output:
 
 ::: {.incremental}
 
-> I thought that the worst thing in statistics was the p-value,
-> then came the q-value
+> I thought that the worst thing in statistics was the p-value.  
+> Then came the q-value.
 > `r tufte::quote_footer('--- Anonymous Statistician')`
 :::
 
@@ -98,6 +98,11 @@ output:
 
 ---
 
+Some may argue there are no statistics in this paper.
+Theres quite a bit of math, and some computation.
+
+---
+
 ## Why We Need a Reference-Free Approach
 
 - **Reference genomes have fundamental limitations**:
@@ -118,7 +123,7 @@ of raw sequence data using anchor-target structure
 
 ## Why the Anchor-Target Structure Works
 
-- **Biological signal is inherently structured**:
+- **Biological signal is inherently structured**: - the centrsl od=
   - Variation occurs in specific patterns adjacent to conserved regions
   - Most biological variation follows this pattern:
     - Alternative splicing: constant exons with variable junctions
@@ -142,6 +147,9 @@ of raw sequence data using anchor-target structure
 
 ---
 
+We need to define, and examine power.
+
+---
 
 ## SPLASH: The Fundamental Concept
 
@@ -199,10 +207,10 @@ of raw sequence data using anchor-target structure
 
 ## Mathematical Formulation of OASIS
 
-![OASIS Mathematical Formulation 1](images/oasis_math_1_problem_setup.png)
-![OASIS Mathematical Formulation 1](images/oasis_math_1_problem_setup.png)
-![OASIS Mathematical Formulation 1](images/oasis_math_1_problem_setup.png)
-![OASIS Mathematical Formulation 1](images/oasis_math_1_problem_setup.png)
+![OASIS Mathematical Formulation 1](images/svg/oasis_math_1_problem_setup.png)
+![OASIS Mathematical Formulation 2](images/svg/oasis_math_2_test_statistic.png)
+![OASIS Mathematical Formulation 3](images/svg/oasis_math_3_optimization.png)
+![OASIS Mathematical Formulation 4](images/svg/oasis_math_4_comparison.png)
 
 ---
 
@@ -223,6 +231,11 @@ of raw sequence data using anchor-target structure
 
 - **Interpretation**: Measures deviation from independence model, optimized for maximum statistical power
 
+
+> What is the trade off between power ans size?
+
+> Seems likely dependent in dataset size
+
 ---
 
 ## Optimization-Based Approach to $f$ and $c$
@@ -232,17 +245,17 @@ of raw sequence data using anchor-target structure
   - Must handle high-dimensional, sparse data efficiently
   - Need interpretable results for biological insight
 
+---
+
 - **Optimization method**:
   - OASIS uses singular value decomposition (SVD) of normalized residual matrix
   - $f$ is the left singular vector corresponding to largest singular value
   - $c$ is the right singular vector corresponding to largest singular value
 
----
-
 - **Computational advantages**:
   - Closed-form solution via SVD
   - Highly efficient even for large tables
-  - Provable guarantees on statistical power
+  - *Provable guarantees on statistical power*
 
 ---
 
@@ -257,9 +270,11 @@ Given a contingency table of anchor-target pairs across samples:
 5. **Compute test statistic** $T(N)$ using optimized $f$ and $c$
 6. **Calculate p-value** using closed-form bounds or asymptotic distribution
 
-This approach provides both statistical rigor and biological interpretability.
+This approach provides both *statistical rigor* and *biological interpretability*.
 
 ---
+
+<!-- 
 
 ## Comparing Methodologies: OASIS vs Chi-Squared
 
@@ -276,6 +291,8 @@ This approach provides both statistical rigor and biological interpretability.
 | Closed-form P-values | No | Yes |
 | Asymptotic validity | Yes | Yes |
 
+-->
+
 ---
 
 ## For Biologists: Why This Matters
@@ -287,6 +304,8 @@ This approach provides both statistical rigor and biological interpretability.
 - **Biological interpretation**
   - Protein domain profiling without reference
   - Sample-specific sequence variation relates directly to biological function
+
+---
 
 - **Applied examples**:
   - Detection of RNA splicing variations 
@@ -306,14 +325,13 @@ This approach provides both statistical rigor and biological interpretability.
   - Closed-form P-value calculations avoid permutation testing
   - Controls for multiple testing
 
+---
+
 - **Algorithmic implementation**
   - SPLASH2: C++/Python implementation with enhanced efficiency
   - Compactors: Statistical approach to local seed-based assembly
 
 ---
-
-# Examples
-
 
 ## Example 1: SARS-CoV-2 Variant Detection
 
@@ -347,12 +365,14 @@ This approach provides both statistical rigor and biological interpretability.
 
 - **Discovery process**:
   - SPLASH applied to Smart-Seq2 single-cell RNA-seq data
-  - Identified cell-type specific splicing without requiring reference transcriptome
+  - Identified cell-type specific splicing 
   
 - **Anchor-target advantage**:
   - Anchors captured exon-exon junctions
   - Different targets represented alternative splice events
   - Target distribution patterns revealed cell-type specificity
+
+---
   
 - **Biological insight**:
   - Detected known MYL6 alternative splicing as validation
@@ -377,6 +397,8 @@ This approach provides both statistical rigor and biological interpretability.
   - In-silico translation and protein domain analysis without reference
   - Detected novel splicing patterns missed by reference-based approaches
   
+---
+
 - **Biological insight**:
   - Identified neural-specific isoforms of tropomyosin
   - Discovered muscle-specific isoforms of myosins and actins
@@ -387,7 +409,7 @@ This approach provides both statistical rigor and biological interpretability.
 
 ## Example 4: Eelgrass Geographic and Seasonal Variation
 
-![Eelgrass Analysis](images/eelgrass_analysis_static_improved.png)
+![Eelgrass Analysis](images/svg/eelgrass_analysis_static_improved.png)
 
 ---
 
