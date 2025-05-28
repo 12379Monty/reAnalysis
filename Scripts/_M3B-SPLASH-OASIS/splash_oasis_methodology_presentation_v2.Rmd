@@ -98,8 +98,8 @@ output:
 
 ---
 
-Some may argue there are no statistics in this paper.
-Theres quite a bit of math, and some computation.
+Note that the alignment of reads to a known sequence has
+unstated data quality value - garbeg reads don't align.
 
 ---
 
