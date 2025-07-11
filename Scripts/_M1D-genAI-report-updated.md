@@ -1,5 +1,7 @@
 # Comprehensive Introduction to Generative AI Resources
 
+<br/>
+
 ## 1. Foundational Resources for All Professionals
 
 ### 1.1 Online Courses
@@ -35,6 +37,8 @@
 - "On the Opportunities and Risks of Foundation Models" (2021)
   > Bommasani, R., Hudson, D.A., Adeli, E., et al. (2021). "On the Opportunities and Risks of Foundation Models." arXiv preprint arXiv:2108.07258. Available at: https://arxiv.org/abs/2108.07258
 
+<br/>
+
 ## 2. Statistics Integration with AI (PQRS Framework)
 
 ### 2.1 Courses and Tutorials
@@ -55,6 +59,8 @@
 
 - "Statistical Modeling: The Two Cultures" by Leo Breiman
   > Breiman, L. (2001). "Statistical Modeling: The Two Cultures." Statistical Science, 16(3), 199-231. Available at: https://projecteuclid.org/euclid.ss/1009213726
+
+<br/>
 
 ## 3. Biotech and Omics-Specific Resources
 
@@ -77,6 +83,8 @@
 - "Applications of machine learning in drug discovery and development" (2019)
   > Vamathevan, J., Clark, D., Czodrowski, P., et al. (2019). "Applications of machine learning in drug discovery and development." Nature Reviews Drug Discovery, 18(6), 463-477. Available at: https://www.nature.com/articles/s41573-019-0024-5
 
+<br/>
+
 ## 4. Communicating PQRS Framework to Non-Statisticians
 
 ### 4.1 Accessible Resources
@@ -90,6 +98,8 @@
 - "Data Science for Biotech: A Guide" by Berkeley Data Science
   > Berkeley Data Science. (2023). "Data Science for Biotech: A Guide." Available at: https://data.berkeley.edu/education/biotech-resources
 
+<br/>
+
 ## 5. Ethical and Responsible AI Resources
 
 - "Ethics of AI in Context" by University of Toronto
@@ -98,9 +108,11 @@
 - "Responsible AI Practices" by Google AI
   > Google AI. (2023). "Responsible AI Practices." Available at: https://ai.google/responsibilities/responsible-ai-practices/
 
+<br/>
+
 ## 6. Graduate Courses in AI at Top Universities
 
-### 6.1 UC Berkeley Graduate AI Courses
+### 6.1 [UC Berkeley Graduate AI Courses](https://www2.eecs.berkeley.edu/Research/Areas/AI/)
 
 - CS C280: Computer Vision
   > UC Berkeley EECS Department. (2025). "CS C280: Computer Vision." Available at: https://www2.eecs.berkeley.edu/Research/Areas/AI/
@@ -133,6 +145,8 @@
 
 - CS 234: Reinforcement Learning
   > Stanford Computer Science Department. (2025). "CS 234: Reinforcement Learning." Available at: https://online.stanford.edu/programs/artificial-intelligence-graduate-certificate
+
+<br/>
 
 ## 7. Statistics Department AI Courses
 

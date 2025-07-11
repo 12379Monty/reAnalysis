@@ -9,12 +9,11 @@
 <meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
 
 
-<meta name="author" content="Francois Collin" />
 
-<meta name="date" content="2025-05-27" />
 
-<title>Statistical Analysis of Data in the Biotech Industry</title>
+<title>index.knit</title>
 
+<script src="site_libs/header-attrs-2.29/header-attrs.js"></script>
 <script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <link href="site_libs/bootstrap-3.3.5/css/bootstrap.min.css" rel="stylesheet" />
@@ -31,8 +30,6 @@
        code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
        pre:not([class]) { background-color: white }</style>
 <script src="site_libs/navigation-1.1/tabsets.js"></script>
-<script src="site_libs/navigation-1.1/codefolding.js"></script>
-<script src="site_libs/navigation-1.1/sourceembed.js"></script>
 <link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
 <script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
 
@@ -59,11 +56,6 @@ if (window.hljs) {
 
 
 
-<style type="text/css">
-#rmd-source-code {
-  display: none;
-}
-</style>
 
 <style type="text/css">
 /* for pandoc --citeproc since 2.11 */
@@ -246,9 +238,6 @@ $(document).ready(function () {
 </style>
 
 <!-- code folding -->
-<style type="text/css">
-.code-folding-btn { margin-bottom: 4px; }
-</style>
 
 
 
@@ -288,63 +277,83 @@ $(document).ready(function () {
 
 <div id="header">
 
-<div class="btn-group pull-right float-right">
-<button type="button" class="btn btn-default btn-xs btn-secondary btn-sm dropdown-toggle" data-toggle="dropdown" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span>Code</span> <span class="caret"></span></button>
-<ul class="dropdown-menu dropdown-menu-right" style="min-width: 50px;">
-<li><a id="rmd-show-all-code" href="#">Show All Code</a></li>
-<li><a id="rmd-hide-all-code" href="#">Hide All Code</a></li>
-<li role="separator" class="divider"></li>
-<li><a id="rmd-download-source" href="#">Download Rmd</a></li>
-</ul>
+
+
+
 </div>
 
 
-
-<h1 class="title toc-ignore">Statistical Analysis of Data in the Biotech Industry</h1>
-<h4 class="author"><a href="https://www.linkedin.com/in/francoisz/">Francois Collin</a></h4>
-<h4 class="date">May 27, 2025</h4>
-
-</div>
-
-<div id="TOC">
-<ul>
-<li><a href="#statistics-training" id="toc-statistics-training"><span class="toc-section-number">1</span> Statistics Training</a>
-<ul>
-<li><a href="#training-program-for-statisticians---a-collaboration-with-claude.ai" id="toc-training-program-for-statisticians---a-collaboration-with-claude.ai"><span class="toc-section-number">1.1</span> Training Program for Statisticians - a collaboration with claude.ai</a></li>
-<li><a href="#specific-training-resources" id="toc-specific-training-resources"><span class="toc-section-number">1.2</span> Specific Training Resources</a>
-<ul>
-<li><a href="#generative-ai" id="toc-generative-ai">Generative AI</a></li>
-<li><a href="#deep-learning-models" id="toc-deep-learning-models">Deep Learning Models</a></li>
-</ul></li>
-</ul></li>
-<li><a href="#data-re-analysis-by-topic" id="toc-data-re-analysis-by-topic"><span class="toc-section-number">2</span> Data (Re-)Analysis by Topic</a>
-<ul>
-<li><a href="#scrnaseq-umi-count-normalization" id="toc-scrnaseq-umi-count-normalization"><span class="toc-section-number">2.1</span> scRNAseq UMI count normalization</a></li>
-<li><a href="#ruv" id="toc-ruv"><span class="toc-section-number">2.2</span> RUV</a>
-<ul>
-<li><a href="#normalization-lit-review" id="toc-normalization-lit-review">Normalization Lit Review</a></li>
-<li><a href="#the-latest" id="toc-the-latest">The latest</a></li>
-<li><a href="#beyond-ruv" id="toc-beyond-ruv">Beyond RUV</a></li>
-</ul></li>
-<li><a href="#reference-free-genomic-inference-with-splash-and-oasis" id="toc-reference-free-genomic-inference-with-splash-and-oasis"><span class="toc-section-number">2.3</span> Reference-Free Genomic Inference with SPLASH and OASIS</a>
-<ul>
-<li><a href="#splash" id="toc-splash">SPLASH</a></li>
-<li><a href="#oasis" id="toc-oasis">OASIS</a></li>
-</ul></li>
-<li><a href="#miscellanious" id="toc-miscellanious">Miscellanious</a></li>
-</ul></li>
-<li><a href="#references" id="toc-references"><span class="toc-section-number">3</span> References</a></li>
-<li><a href="#appendix" id="toc-appendix"><span class="toc-section-number">4</span> Appendix:</a>
-<ul>
-<li><a href="#challenges-in-statistical-analysis" id="toc-challenges-in-statistical-analysis">Challenges in Statistical Analysis</a></li>
-</ul></li>
-<li><a href="#bad-analysis-by-example" id="toc-bad-analysis-by-example"><span class="toc-section-number">5</span> Bad Analysis by Example</a>
-<ul>
-<li><a href="#full-list-of-reports" id="toc-full-list-of-reports">Full list of reports</a></li>
-</ul></li>
-</ul>
-</div>
-
+<table>
+<tbody>
+<tr class="odd">
+<td>title: “Statistical Analysis of Data in the Biotech Industry”</td>
+</tr>
+<tr class="even">
+<td>###from 20 years of expererience”</td>
+</tr>
+<tr class="odd">
+<td>author: “<a href="https://www.linkedin.com/in/francoisz/">Francois
+Collin</a>”</td>
+</tr>
+<tr class="even">
+<td>date: “July 11, 2025”</td>
+</tr>
+<tr class="odd">
+<td>always_allow_html: yes</td>
+</tr>
+<tr class="even">
+<td>output:</td>
+</tr>
+<tr class="odd">
+<td># for gtanse of .tabset</td>
+</tr>
+<tr class="even">
+<td>bookdown::html_document2:</td>
+</tr>
+<tr class="odd">
+<td>#html_document:</td>
+</tr>
+<tr class="even">
+<td>code_folding: hide</td>
+</tr>
+<tr class="odd">
+<td>code_download: true</td>
+</tr>
+<tr class="even">
+<td>toc: true</td>
+</tr>
+<tr class="odd">
+<td>toc_depth: 3</td>
+</tr>
+<tr class="even">
+<td># does this have an effect</td>
+</tr>
+<tr class="odd">
+<td>fig_caption: yes</td>
+</tr>
+<tr class="even">
+<td># this has no effect</td>
+</tr>
+<tr class="odd">
+<td>number_sections: yes</td>
+</tr>
+<tr class="even">
+<td># css: [’../_css/pandoc3.css’, ’../_css/myMargins.css’]</td>
+</tr>
+<tr class="odd">
+<td>bibliography: [../_bibFiles/_healthy_aging.bib,
+../../_bibFiles/_Breiman.bib, ../../_bibFiles/_Freedman.bib,
+../../_bibFiles/_Yu.bib, ../../_bibFiles/_RUV.bib,
+../../_bibFiles/_RMA.bib, ../../_bibFiles/_scRNAseq_norm.bib]</td>
+</tr>
+<tr class="even">
+<td>csl: ../_csl/cell-numeric.csl</td>
+</tr>
+<tr class="odd">
+<td>link-citations: true</td>
+</tr>
+</tbody>
+</table>
 <style type="text/css">
 
 .main-container {
@@ -405,48 +414,92 @@ g-table-intro h4 {
 * Breiman: [@Breiman:1984aa; @Breiman:2001aa]
 * Freedman: [@Freedman:2008aa; @Freedman:2008ad; @Freedman:2008ac; @Freedman:2009ac]
 -->
-<div id="statistics-training" class="section level1" number="1">
-<h1><span class="header-section-number">1</span> Statistics Training</h1>
+<div id="preliminaries---leo-breiman" class="section level1 unnumbered">
+<h1 class="unnumbered">Preliminaries - Leo Breiman</h1>
+<p>Before machine learning became a household name for engineers and
+computer scientists interested in making predictions, before AI had any
+developed applications, and before the name “Data Science” was
+popularized to describe an area of statistical application which most
+statisticians ignored, Leo Breiman <span
+class="citation">[@Breiman:1984aa; @Breiman:2001aa]</span> was calling
+for the field of statistics to modernize or become irrelevant.</p>
+<p><a href="http://www.jstor.org/stable/2676681">Breiman, L. (2001).
+Statistical modeling: The two cultures. Statistical Science 16,
+199–215</a> is a must-read.</p>
+<p>My recent experience working in the context of specifying and
+validating an omic pipeline used to produce a molecular diagnostic test
+made it clear that even without AI, DS, and ML, statistical methods
+needed modernizing: the usual approach of using a named statistical
+procedure off the shelf will not yield accurate results in most cases -
+the esoteric error distributions which characterize modern datasets must
+be accounted for when analyzing these data. See <a
+href="https://breimansworld.netlify.app/">Where’s the Randomness?</a>
+for a description of this context.<a href="#fn1" class="footnote-ref"
+id="fnref1"><sup>1</sup></a></p>
+<p>Inspired and encouraged by Leo Breiman, Bin Yu has modernized the
+concept of variability in data to reflect the character of modern day
+data collection and analysis. The PQRS framework (Yu and Kumbier, Front
+Inform Technol Electron Eng 2018 19(1):6-9)) highlight 4 elements of
+statistical practice which remain crucially important for the successful
+analysis of modern day datasets: population (P), question of interest
+(Q), representativeness of training data (R), and scrutiny of results
+(S). These concepts have always been important, but very often neglected
+in practice.. These concepts have always been important, but very often
+neglected in practice.</p>
 <p><br/></p>
-<div id="training-program-for-statisticians---a-collaboration-with-claude.ai" class="section level2" number="1.1">
-<h2><span class="header-section-number">1.1</span> Training Program for Statisticians - a collaboration with claude.ai</h2>
-<p>As an exercise working with claude.ai, we design a training program for experienced statisticians.
-The professional development training is meant to bring statisticians up to speed with
-novel statistical methods and techniques which may be outsite of their expertise or
-sector of industry.</p>
+</div>
+<div id="statistics-training" class="section level1">
+<h1>Statistics Training</h1>
+<p><br/></p>
+<div
+id="training-program-for-statisticians---a-collaboration-with-claude.ai"
+class="section level2">
+<h2>Training Program for Statisticians - a collaboration with
+<strong>claude.ai</strong></h2>
+<p>As an exercise working with claude.ai, we design a training program
+for experienced statisticians. The professional development training is
+meant to bring statisticians up to speed with novel statistical methods
+and techniques which may be outsite of their expertise or sector of
+industry.</p>
 <ul>
-<li><p><a href="./_M1C-stats-pd-plan-final-v35.html">stats-pd-plan-final-v35.html</a> - final version of the
-professional development program.</p></li>
-<li><p><a href="./_M1C-stats-pd-plan-change-log.html">stats-pd-plan-change-log.html</a> -
-detailed change log documenting the development process</p></li>
-<li><p><a href="./_M1C-ai-assistant-guide.html">ai-assistant-guide</a> - outline
-principles which apply broadly to working with AI assistants on complex projects.</p></li>
+<li><p><a
+href="./_M1C-stats-pd-plan-final-v35.html">stats-pd-plan-final-v35.html</a>
+- final version of the professional development program.</p></li>
+<li><p><a
+href="./_M1C-stats-pd-plan-change-log.html">stats-pd-plan-change-log.html</a>
+- detailed change log documenting the development process</p></li>
+<li><p><a href="./_M1C-ai-assistant-guide.html">ai-assistant-guide</a> -
+outline principles which apply broadly to working with AI assistants on
+complex projects.</p></li>
 </ul>
 <p><br/></p>
 </div>
-<div id="specific-training-resources" class="section level2" number="1.2">
-<h2><span class="header-section-number">1.2</span> Specific Training Resources</h2>
+<div id="specific-training-resources" class="section level2">
+<h2>Specific Training Resources</h2>
 <div id="generative-ai" class="section level3 unnumbered">
-<h3>Generative AI</h3>
-<p>Resources - online courses, published papers, books, slide presentations - to learn
-about the areas of applications and development of AI that are most important to statisticians.
-These should include a basic set of learnings which all professionals interested in
-harnessing the powers of AI should know. In addition to this basic set, learnings
+<h3 class="unnumbered">Generative AI</h3>
+<p>Resources - online courses, published papers, books, slide
+presentations - to learn about the areas of applications and development
+of AI that are most important to statisticians. These should include a
+basic set of learnings which all professionals interested in harnessing
+the powers of AI should know. In addition to this basic set, learnings
 that are most relevant for the integration of AI with statistics.</p>
-<p>Yu and Kumbier (Front Inform Technol Electron Eng 2018 19(1):6-9) <span class="citation">[<a href="#ref-Yu:2018aa">1</a>]</span>
-provide a framework for integrating statistical ideas in AI work which they
-term the PQRS Workflow. In this framework, the statistical concepts of
-population (P), question of interest (Q), representativeness of training data (R),
-and scrutiny of results (S) remain critically important in the application
-of AI to data analysis. We should include any training which can help clarify the framework
-to non-statisticians, or help statisticians explain the framework to
-non-statisticians.</p>
-<p>If it helps to limit resources or choose among similar options, we can assume
-that the statisticians work with bio-tech companies which market molecular diagnostics
-devices which use omic-wide<a href="#fn1" class="footnote-ref" id="fnref1"><sup>1</sup></a>
-profiels as input.</p>
+<p>Yu and Kumbier (Front Inform Technol Electron Eng 2018 19(1):6-9)
+<span class="citation">[@Yu:2018aa]</span> provide a framework for
+integrating statistical ideas in AI work which they term the PQRS
+Workflow. In this framework, the statistical concepts of population (P),
+question of interest (Q), representativeness of training data (R), and
+scrutiny of results (S) remain critically important in the application
+of AI to data analysis. We should include any training which can help
+clarify the framework to non-statisticians, or help statisticians
+explain the framework to non-statisticians.</p>
+<p>If it helps to limit resources or choose among similar options, we
+can assume that the statisticians work with bio-tech companies which
+market molecular diagnostics devices which use omic-wide<a href="#fn2"
+class="footnote-ref" id="fnref2"><sup>2</sup></a> profiels as input.</p>
 <ul>
-<li>Report: <a href="./_M1D-genAI-report-updated.html">Comprehensive Introduction to Generative AI Resources</a></li>
+<li>Report: <a href="./_M1D-genAI-report-updated.html">Comprehensive
+Introduction to Generative AI Resources</a></li>
 </ul>
 <p>
 <p/>
@@ -454,25 +507,29 @@ profiels as input.</p>
 <li>Resources:
 <ul>
 <li><a href="./_M1D-genAI-changelog.html">Gen AI - ChangeLog</a></li>
-<li><a href="./_M1D-genAI-instructions.html">Gen AI - Instructions</a></li>
+<li><a href="./_M1D-genAI-instructions.html">Gen AI -
+Instructions</a></li>
 </ul></li>
 </ul>
 <p><br/></p>
 </div>
 <div id="deep-learning-models" class="section level3 unnumbered">
-<h3>Deep Learning Models</h3>
-<p>Resources - online courses, published papers, books, slide presentations - to learn
-about the development deep learning theiry ands applications
-that are most important to statisticians.
-These should include a basic set of learnings which all professionals interested in
-harnessing the powers of Deep Leaning should know. In addition to this basic set, learnings
-that are most relevant for the integration of Deep Learning with statistics.</p>
-<p>If it helps to limit resources or choose among similar options, we can assume
-that the statisticians work with bio-tech companies which market molecular diagnostics
-devices which use omic-wide<a href="#fn2" class="footnote-ref" id="fnref2"><sup>2</sup></a>
-profiels as input.</p>
+<h3 class="unnumbered">Deep Learning Models</h3>
+<p>Resources - online courses, published papers, books, slide
+presentations - to learn about the development deep learning theiry ands
+applications that are most important to statisticians. These should
+include a basic set of learnings which all professionals interested in
+harnessing the powers of Deep Leaning should know. In addition to this
+basic set, learnings that are most relevant for the integration of Deep
+Learning with statistics.</p>
+<p>If it helps to limit resources or choose among similar options, we
+can assume that the statisticians work with bio-tech companies which
+market molecular diagnostics devices which use omic-wide<a href="#fn3"
+class="footnote-ref" id="fnref3"><sup>3</sup></a> profiels as input.</p>
 <ul>
-<li>Report: <a href="./_M1E-DL-deep-learning-resources.html">Comprehensive Resources for Deep Learning in Statistics &amp; Biotech</a></li>
+<li>Report: <a
+href="./_M1E-DL-deep-learning-resources.html">Comprehensive Resources
+for Deep Learning in Statistics &amp; Biotech</a></li>
 </ul>
 <p>
 <p/>
@@ -481,71 +538,82 @@ profiels as input.</p>
 <ul>
 <li><a href="./_M1E-DL-changelog.html">ChangeLog</a></li>
 <li><a href="./_M1E-DL-repository-setup.html">Repository Setup</a></li>
-<li><a href="./_M1E-DL-rendering-instructions.html">Instructions for Rendering Reports and Changelog</a></li>
-<li><a href="./_M1E-DL-report-instructions.html">Generating HTML Reports from Markdown</a></li>
-<li><a href="./_M1E-DL-markdown-template.html">Markdown Template</a></li>
+<li><a href="./_M1E-DL-rendering-instructions.html">Instructions for
+Rendering Reports and Changelog</a></li>
+<li><a href="./_M1E-DL-report-instructions.html">Generating HTML Reports
+from Markdown</a></li>
+<li><a href="./_M1E-DL-markdown-template.html">Markdown
+Template</a></li>
 </ul></li>
 </ul>
 <p><br/></p>
 </div>
 </div>
 </div>
-<div id="data-re-analysis-by-topic" class="section level1" number="2">
-<h1><span class="header-section-number">2</span> Data (Re-)Analysis by Topic</h1>
-<div id="scrnaseq-umi-count-normalization" class="section level2" number="2.1">
-<h2><span class="header-section-number">2.1</span> scRNAseq UMI count normalization</h2>
+<div id="data-re-analysis-by-topic" class="section level1">
+<h1>Data (Re-)Analysis by Topic</h1>
+<div id="scrnaseq-umi-count-normalization" class="section level2">
+<h2>scRNAseq UMI count normalization</h2>
 <ul>
-<li><p>slide deck: OneDrive folder of Speed Lab Meeting: <a href="https://outlook.office365.com/mail/group/wehi.edu.au/speedlabmeeting/files" class="uri">https://outlook.office365.com/mail/group/wehi.edu.au/speedlabmeeting/files</a></p></li>
+<li><p>slide deck: OneDrive folder of Speed Lab Meeting: <a
+href="https://outlook.office365.com/mail/group/wehi.edu.au/speedlabmeeting/files"
+class="uri">https://outlook.office365.com/mail/group/wehi.edu.au/speedlabmeeting/files</a></p></li>
 <li><p>Reference:</p>
 <ul>
-<li>Ahlmann-Eltze and Huber (2023) <span class="citation">[<a href="#ref-Ahlmann-Eltze:2023aa">2</a>]</span></li>
+<li>Ahlmann-Eltze and Huber (2023) <span
+class="citation">[@Ahlmann-Eltze:2023aa]</span></li>
 </ul></li>
 <li><p>Other:</p>
 <ul>
-<li>Melms et. al. (2021) <span class="citation">[<a href="#ref-Melms:2021aa">3</a>]</span></li>
+<li>Melms et. al. (2021) <span
+class="citation">[@Melms:2021aa]</span></li>
 </ul></li>
 </ul>
 <p><br/></p>
 </div>
-<div id="ruv" class="section level2" number="2.2">
-<h2><span class="header-section-number">2.2</span> RUV</h2>
+<div id="ruv" class="section level2">
+<h2>RUV</h2>
 <div id="normalization-lit-review" class="section level3 unnumbered">
-<h3>Normalization Lit Review</h3>
+<h3 class="unnumbered">Normalization Lit Review</h3>
+<ul>
+<li>To Be Completed with an appropriate assistant.</li>
+</ul>
 <p><br/></p>
 </div>
-<div id="the-latest" class="section level3 unnumbered">
-<h3>The latest</h3>
+<div id="the-latest-ruv" class="section level3 unnumbered">
+<h3 class="unnumbered">The latest RUV</h3>
 <ul>
 <li>Link to Ramyar Molania presentations.</li>
 </ul>
 <p><br/></p>
 </div>
 <div id="beyond-ruv" class="section level3 unnumbered">
-<h3>Beyond RUV</h3>
-<p>Can the methodology which enables the basic RUV analysis be adapted to
-other applications?</p>
+<h3 class="unnumbered">Beyond RUV</h3>
+<p>Can the methodology which enables the basic RUV analysis be adapted
+to other applications?</p>
 <p>
 <p/>
 <ul>
 <li>IUV - identification of unwanted variability
 <ul>
-<li>the automated high throughput processing of samples necessary
-to get the omic based readouts used to diagnose samples is carried out by
-a pipeline which strings together numerous steps (typically hundreds).
+<li>the automated high throughput processing of samples necessary to get
+the omic based readouts used to diagnose samples is carried out by a
+pipeline which strings together numerous steps (typically hundreds).
 <ul>
 <li>eg. Cell-Free DNA Methylation Profiling Analysis</li>
 </ul></li>
-<li>As samples proceed through the pipeline they will be organized in various configurations
-giving rise to various groupings:
+<li>As samples proceed through the pipeline they will be organized in
+various configurations giving rise to various groupings:
 <ul>
 <li>plasma isolation</li>
 <li>cfDNA extraction</li>
 <li>amplification, conversion, …</li>
 </ul></li>
-<li>measurements are recorded as samples travel through the pipeline, each
-measurement potentially having its own shared variability or dependency structure</li>
-<li>a real problem is to identify the factors giving rise to excessive variability
-in the downstream read-outs</li>
+<li>measurements are recorded as samples travel through the pipeline,
+each measurement potentially having its own shared variability or
+dependency structure</li>
+<li>a real problem is to identify the factors giving rise to excessive
+variability in the downstream read-outs</li>
 </ul></li>
 </ul>
 <p>
@@ -553,33 +621,38 @@ in the downstream read-outs</li>
 <ul>
 <li>QUV - quantification of unwanted variability
 <ul>
-<li>can RUV methodology be adapted to provide quantification of reproducibility?</li>
+<li>can RUV methodology be adapted to provide quantification of
+reproducibility?</li>
 </ul></li>
 </ul>
 <p><br/></p>
 </div>
 </div>
-<div id="reference-free-genomic-inference-with-splash-and-oasis" class="section level2" number="2.3">
-<h2><span class="header-section-number">2.3</span> Reference-Free Genomic Inference with SPLASH and OASIS</h2>
+<div id="reference-free-genomic-inference-with-splash-and-oasis"
+class="section level2">
+<h2>Reference-Free Genomic Inference with SPLASH and OASIS</h2>
 <ul>
-<li><a href="_M3B-SPLASH-OASIS/splash_oasis_methodology_presentation_v2.html">Presentation</a></li>
+<li><a
+href="_M3B-SPLASH-OASIS/splash_oasis_methodology_presentation_v2.html">Presentation</a></li>
 </ul>
 <div id="splash" class="section level3 unnumbered">
-<h3>SPLASH</h3>
+<h3 class="unnumbered">SPLASH</h3>
 <ul>
-<li><a href="./_M2A-RFGI_SPLASH_v1.html">_M2A-RFGI_SPLASH_v1.html</a> -</li>
-<li><a href="./_M2B-RFGI_SPLASH_v2.html">_M2B-RFGI_SPLASH_v2.html</a> -</li>
+<li><a href="./_M2A-RFGI_SPLASH_v1.html">_M2A-RFGI_SPLASH_v1.html</a>
+-</li>
+<li><a href="./_M2B-RFGI_SPLASH_v2.html">_M2B-RFGI_SPLASH_v2.html</a>
+-</li>
 <li><a href="./_M3A-OASIS.html">_M3A-OASIS.html</a> -</li>
 </ul>
 <p><br/></p>
 </div>
 <div id="oasis" class="section level3 unnumbered">
-<h3>OASIS</h3>
+<h3 class="unnumbered">OASIS</h3>
 <p><br/></p>
 </div>
 </div>
 <div id="miscellanious" class="section level2 unnumbered">
-<h2>Miscellanious</h2>
+<h2 class="unnumbered">Miscellanious</h2>
 <ul>
 <li><a href="./_M4A-intro_IUV.html">_M4A-intro_IUV.html</a></li>
 <li>[_M5A-cf_ddPCR_seq.html]</li>
@@ -592,79 +665,18 @@ in the downstream read-outs</li>
 <p><br/></p>
 </div>
 </div>
-<div id="references" class="section level1" number="3">
-<h1><span class="header-section-number">3</span> References</h1>
-<div id="refs" class="references csl-bib-body">
-<div id="ref-Yu:2018aa" class="csl-entry">
-<div class="csl-left-margin">1. </div><div class="csl-right-inline">Yu, B., and Kumbier, K. (2018). Artificial intelligence and statistics. Frontiers of Information Technology &amp; Electronic Engineering <em>19</em>, 6–9. Available at: <a href="https://doi.org/10.1631/FITEE.1700813">https://doi.org/10.1631/FITEE.1700813</a>.</div>
-</div>
-<div id="ref-Ahlmann-Eltze:2023aa" class="csl-entry">
-<div class="csl-left-margin">2. </div><div class="csl-right-inline">Ahlmann-Eltze, C., and Huber, W. (2023). Comparison of transformations for single-cell RNA-seq data. Nature Methods <em>20</em>, 665–672. Available at: <a href="https://doi.org/10.1038/s41592-023-01814-1">https://doi.org/10.1038/s41592-023-01814-1</a>.</div>
-</div>
-<div id="ref-Melms:2021aa" class="csl-entry">
-<div class="csl-left-margin">3. </div><div class="csl-right-inline">Melms, J.C., Biermann, J., Huang, H., Wang, Y., Nair, A., Tagore, S., Katsyv, I., Rendeiro, AndréF., Amin, A.D., Schapiro, D., <em>et al.</em> (2021). A molecular single-cell lung atlas of lethal COVID-19. Nature <em>595</em>, 114–119. Available at: <a href="https://doi.org/10.1038/s41586-021-03569-1">https://doi.org/10.1038/s41586-021-03569-1</a>.</div>
-</div>
-<div id="ref-Freedman:2008aa" class="csl-entry">
-<div class="csl-left-margin">4. </div><div class="csl-right-inline">Freedman, D. (2008). <a href="https://doi.org/10.1214/08-STS262">Randomization does not justify logistic regression</a>. Statistical Science <em>23</em>.</div>
-</div>
-<div id="ref-Freedman:2008ad" class="csl-entry">
-<div class="csl-left-margin">5. </div><div class="csl-right-inline">Freedman, D.A. (2008). On regression adjustments to experimental data. Advances in Applied Mathematics <em>40</em>, 180–193. Available at: <a href="https://www.sciencedirect.com/science/article/pii/S019688580700005X">https://www.sciencedirect.com/science/article/pii/S019688580700005X</a>.</div>
-</div>
-<div id="ref-Freedman:2008ac" class="csl-entry">
-<div class="csl-left-margin">6. </div><div class="csl-right-inline">Freedman, D.A. (2008). On regression adjustments in experiments with several treatments. The Annals of Applied Statistics <em>2</em>, 176–196. Available at: <a href="https://doi.org/10.1214/07-AOAS143">https://doi.org/10.1214/07-AOAS143</a>.</div>
-</div>
-<div id="ref-Freedman:2009ac" class="csl-entry">
-<div class="csl-left-margin">7. </div><div class="csl-right-inline">Freedman, D. (2009). <a href="https://doi.org/10.1017/CBO9781139165495">Statistical models: Theory and practice</a>.</div>
-</div>
-<div id="ref-Breiman:1984aa" class="csl-entry">
-<div class="csl-left-margin">8. </div><div class="csl-right-inline">Breiman, L. (1984). Nail finders, edifices, and oz (University of California, Berkeley. Department of Statistics; Available at https://digitalassets.lib.berkeley.edu/sdtr/proof/pdfs/032.pdf).</div>
-</div>
-<div id="ref-Breiman:2001aa" class="csl-entry">
-<div class="csl-left-margin">9. </div><div class="csl-right-inline">Breiman, L. (2001). Statistical modeling: The two cultures. Statistical Science <em>16</em>, 199–215. Available at: <a href="http://www.jstor.org/stable/2676681">http://www.jstor.org/stable/2676681</a>.</div>
-</div>
-<div id="ref-Freedman:2009aa" class="csl-entry">
-<div class="csl-left-margin">10. </div><div class="csl-right-inline">Freedman, D. (2009). <a href="https://doi.org/10.1016/j.ijforecast.2009.05.004">Diagnostics cannot have much power against general alternatives</a>. International Journal of Forecasting <em>25</em>, 833–839.</div>
-</div>
-<div id="ref-Freedman:2010aa" class="csl-entry">
-<div class="csl-left-margin">11. </div><div class="csl-right-inline">Freedman, D.A., and Sekhon, J.S. (2010). Endogeneity in probit response models. Political Analysis <em>18</em>, 138–150. Available at: <a href="https://www.cambridge.org/core/product/240E6BF9D55788DD2E9D1254856D7D49">https://www.cambridge.org/core/product/240E6BF9D55788DD2E9D1254856D7D49</a>.</div>
-</div>
-<div id="ref-Freedman:2004aa" class="csl-entry">
-<div class="csl-left-margin">12. </div><div class="csl-right-inline">Freedman, D., Petitti, D., and Robins, J. (2004). <a href="https://doi.org/10.1093/ije/dyg275">On the efficacy of screening for breast cancer</a>. International journal of epidemiology <em>33</em>, 43–55.</div>
-</div>
-<div id="ref-Freedman:2008ab" class="csl-entry">
-<div class="csl-left-margin">13. </div><div class="csl-right-inline">Freedman, D.A. (2008). Survival analysis. The American Statistician <em>62</em>, 110–119. Available at: <a href="https://doi.org/10.1198/000313008X298439">https://doi.org/10.1198/000313008X298439</a>.</div>
-</div>
-<div id="ref-Irizarry:2003aa" class="csl-entry">
-<div class="csl-left-margin">14. </div><div class="csl-right-inline">Irizarry, R.A., Bolstad, B.M., Collin, F., Cope, L.M., Hobbs, B., and Speed, T.P. (2003). Summaries of affymetrix GeneChip probe level data. Nucleic Acids Research <em>31</em>, e15–e15. Available at: <a href="http://dx.doi.org/10.1093/nar/gng015">http://dx.doi.org/10.1093/nar/gng015</a>.</div>
-</div>
-<div id="ref-Bolstad:2004aa" class="csl-entry">
-<div class="csl-left-margin">15. </div><div class="csl-right-inline">Bolstad, B.M., Collin, F., Simpson, K.M., Irizarry, R.A., and Speed, T.P. (2004). Experimental design and low-level analysis of microarray data. In International review of neurobiology (Academic Press), pp. 25–58. Available at: <a href="http://www.sciencedirect.com/science/article/pii/S007477420460002X">http://www.sciencedirect.com/science/article/pii/S007477420460002X</a>.</div>
-</div>
-<div id="ref-Gagnon-Bartsch:2012aa" class="csl-entry">
-<div class="csl-left-margin">16. </div><div class="csl-right-inline">Gagnon-Bartsch, J.A., and Speed, T.P. (2012). Using control genes to correct for unwanted variation in microarray data. Biostatistics <em>13</em>, 539–552. Available at: <a href="http://dx.doi.org/10.1093/biostatistics/kxr034">http://dx.doi.org/10.1093/biostatistics/kxr034</a>.</div>
-</div>
-<div id="ref-Gandolfo:2018aa" class="csl-entry">
-<div class="csl-left-margin">17. </div><div class="csl-right-inline">Gandolfo, L.C., and Speed, T.P. (2018). RLE plots: Visualizing unwanted variation in high dimensional data. PloS one <em>13</em>, e0191629–e0191629. Available at: <a href="https://pubmed.ncbi.nlm.nih.gov/29401521">https://pubmed.ncbi.nlm.nih.gov/29401521</a>.</div>
-</div>
-<div id="ref-Irizarry:2006aa" class="csl-entry">
-<div class="csl-left-margin">18. </div><div class="csl-right-inline">Irizarry, R.A., Wu, Z., and Jaffee, H.A. (2006). Comparison of affymetrix GeneChip expression measures. Bioinformatics <em>22</em>, 789–794. Available at: <a href="https://doi.org/10.1093/bioinformatics/btk046">https://doi.org/10.1093/bioinformatics/btk046</a>.</div>
-</div>
-<div id="ref-Jacob:2018aa" class="csl-entry">
-<div class="csl-left-margin">19. </div><div class="csl-right-inline">Jacob, L., and Speed, T.P. (2018). The healthy ageing gene expression signature for alzheimer’s disease diagnosis: A random sampling perspective. Genome Biology <em>19</em>, 97. Available at: <a href="http://www.ncbi.nlm.nih.gov/pmc/articles/PMC6060554/">http://www.ncbi.nlm.nih.gov/pmc/articles/PMC6060554/</a>.</div>
-</div>
-<div id="ref-Risso:2014aa" class="csl-entry">
-<div class="csl-left-margin">20. </div><div class="csl-right-inline">Risso, D., Ngai, J., Speed, T.P., and Dudoit, S. (2014). Normalization of RNA-seq data using factor analysis of control genes or samples. Nature Biotechnology <em>32</em>, 896–902. Available at: <a href="https://doi.org/10.1038/nbt.2931">https://doi.org/10.1038/nbt.2931</a>.</div>
-</div>
-<div id="ref-Yuan:2019aa" class="csl-entry">
-<div class="csl-left-margin">21. </div><div class="csl-right-inline">Yuan, I., Topjian, A.A., Kurth, C.D., Kirschen, M.P., Ward, C.G., Zhang, B., and Mensinger, J.L. (2019). Guide to the statistical analysis plan. Pediatric Anesthesia <em>29</em>, 237–242. Available at: <a href="https://doi.org/10.1111/pan.13576">https://doi.org/10.1111/pan.13576</a>.</div>
-</div>
+<div id="references" class="section level1">
+<h1>References</h1>
+<div id="refs">
+
 </div>
 <p><br/></p>
 </div>
-<div id="appendix" class="section level1" number="4">
-<h1><span class="header-section-number">4</span> Appendix:</h1>
-<div id="challenges-in-statistical-analysis" class="section level2 unnumbered">
-<h2>Challenges in Statistical Analysis</h2>
+<div id="appendix" class="section level1">
+<h1>Appendix:</h1>
+<div id="challenges-in-statistical-analysis"
+class="section level2 unnumbered">
+<h2 class="unnumbered">Challenges in Statistical Analysis</h2>
 <p>`</p>
 <p>Types of errors:</p>
 <p>
@@ -672,59 +684,67 @@ in the downstream read-outs</li>
 <ul>
 <li>The question is wrong or inadequately posed
 <ul>
-<li>this is not that infrequent and is largely caused by
-folks phrasing the question in a form that anticipates the solution.
-eg, client expresses desire to know what a particular estimated regression
+<li>this is not that infrequent and is largely caused by folks phrasing
+the question in a form that anticipates the solution. eg, client
+expresses desire to know what a particular estimated regression
 coefficient is</li>
 <li>solution is easy: subject matter experts should think hard about the
-question which is then phrased using appropriate subject matter specific language.</li>
+question which is then phrased using appropriate subject matter specific
+language.</li>
 </ul></li>
 </ul>
 <p>
 <p/>
 <ul>
-<li>An inappropriate model is used as the analysis framework to
-address a question
+<li>An inappropriate model is used as the analysis framework to address
+a question
 <ul>
-<li>this is either due to common practice or inadequate statistical training</li>
-<li>David Freedman discussed the inappropriate use of
-statistical models in the social sciences
-<span class="citation">[<a href="#ref-Freedman:2008aa">4</a>–<a href="#ref-Freedman:2009ac">7</a>]</span></li>
+<li>this is either due to common practice or inadequate statistical
+training</li>
+<li>David Freedman discussed the inappropriate use of statistical models
+in the social sciences <span class="citation">[@Freedman:2008aa;
+@Freedman:2008ad; @Freedman:2008ac; @Freedman:2009ac]</span></li>
 <li>Inappropriate modeling is not limited to the social sciences
 <ul>
 <li>in biotech, the unchecked use of logistic regression whenever the
 response is binary is ubiquitous.
 <ul>
 <li>the results of such analyses could be misleading due to the biases
-illustrated in Freedman (2008) <span class="citation">[<a href="#ref-Freedman:2008aa">4</a>]</span></li>
+illustrated in Freedman (2008) <span
+class="citation">[@Freedman:2008aa]</span></li>
 </ul></li>
 </ul></li>
-<li>Leo Breiman pointed to inadequate training as the cause of
-the reliance on <strong>standard textbook methods</strong> which
-have a limited range of applicability - Breiman:
-<span class="citation">[<a href="#ref-Breiman:1984aa">8</a>,<a href="#ref-Breiman:2001aa">9</a>]</span></li>
-<li>as regression models are used to answer almost every question
-that come up in the internal analyses conducted by companies in industry,
+<li>Leo Breiman pointed to inadequate training as the cause of the
+reliance on <strong>standard textbook methods</strong> which have a
+limited range of applicability - Breiman: <span
+class="citation">[@Breiman:1984aa; @Breiman:2001aa]</span></li>
+<li>as regression models are used to answer almost every question that
+come up in the internal analyses conducted by companies in industry,
 many are going to be flawed.
 <ul>
-<li>For a review of how regression models go wrong see
-<span class="citation">[<a href="#ref-Freedman:2008aa">4</a>–<a href="#ref-Freedman:2008ac">6</a>,<a href="#ref-Freedman:2009aa">10</a>–<a href="#ref-Freedman:2008ab">13</a>]</span></li>
+<li>For a review of how regression models go wrong see <span
+class="citation">[@Freedman:2009aa;@Freedman:2010aa;@Freedman:2008ac;@Freedman:2008ad;@Freedman:2004aa;@Freedman:2008aa;@Freedman:2008ab]</span></li>
 </ul></li>
-<li>clinical validation studies for complex omic Dx instruments that are designed
-according to FDA guidelines will make use of the classical Neyman-Pearson hypothesis
-testing context which is often invalid:
+<li>clinical validation studies for complex omic Dx instruments that are
+designed according to FDA guidelines will make use of the classical
+Neyman-Pearson hypothesis testing context which is often invalid:
 <ul>
-<li>the samples in the study may not be representative of the target population.
+<li>the samples in the study may not be representative of the target
+population.
 <ul>
-<li>there is rarely any explicit randomness in the selection of the study samples
-so inference to any superset of the study samples is iffy at best.</li>
+<li>there is rarely any explicit randomness in the selection of the
+study samples so inference to any superset of the study samples is iffy
+at best.</li>
 </ul></li>
-<li>dependency structure among samples processed in batches is often complex
+<li>dependency structure among samples processed in batches is often
+complex
 <ul>
-<li>a run may be treated as a batch with internal structure or sub-batches.</li>
+<li>a run may be treated as a batch with internal structure or
+sub-batches.</li>
 </ul></li>
 <li>N is often small</li>
-<li>contrived samples may not be interpretable as intended or required</li>
+<li>contrived samples may not be interpretable as intended or
+required</li>
 <li>other???</li>
 </ul></li>
 </ul></li>
@@ -736,30 +756,35 @@ Improving in Analysis Results:
 <ul>
 <li>Assessment, Assessment, Assessment
 <ul>
-<li>the path to better results through improved methodology must go through
-<strong>valid assessments of performance</strong> - Speed:
-<span class="citation">[<a href="#ref-Irizarry:2003aa">14</a>–<a href="#ref-Yuan:2019aa">21</a>]</span></li>
-<li><em>valid</em> here means that the assessment provides a direct indicator of performance
-on a meaningful scale or end point.
+<li>the path to better results through improved methodology must go
+through <strong>valid assessments of performance</strong> - Speed: <span
+class="citation">[@Irizarry:2003aa;
+@Bolstad:2004aa;@Gagnon-Bartsch:2012aa;@Gandolfo:2018aa;@Irizarry:2006aa;@Jacob:2018aa;@Risso:2014aa;@Yuan:2019aa]</span></li>
+<li><em>valid</em> here means that the assessment provides a direct
+indicator of performance on a meaningful scale or end point.
 <ul>
-<li>when normalizing RNASeq gene expression profiles, one can measure the effectiveness of
-the normalization step by examining the similarities among gene expression profiles before
-and after normalization. Although this is a sensible way to assess the effect of the
-normalization step, it is not a good metric to assess the impact normalization has on
-the ultimate goal of the analysis - DGE analysis.</li>
-<li>when comparing two sequencing instruments in terms of their ability to carry-out
-a reagent QC protocol designed to assess reagent quality:
+<li>when normalizing RNASeq gene expression profiles, one can measure
+the effectiveness of the normalization step by examining the
+similarities among gene expression profiles before and after
+normalization. Although this is a sensible way to assess the effect of
+the normalization step, it is not a good metric to assess the impact
+normalization has on the ultimate goal of the analysis - DGE
+analysis.</li>
+<li>when comparing two sequencing instruments in terms of their ability
+to carry-out a reagent QC protocol designed to assess reagent quality:
 <ul>
-<li>although the appropriate assessment probably calls for an assessment of
-performance against the truth, and a comparison of these performance parameters between
-instruments, regulatory compliance may call for an equivalency assessment
+<li>although the appropriate assessment probably calls for an assessment
+of performance against the truth, and a comparison of these performance
+parameters between instruments, regulatory compliance may call for an
+equivalency assessment
 <ul>
-<li>it should not take much reflecting realize that an equivalency assessment
-creates unnecessary complications and can go wrong in many ways:
+<li>it should not take much reflecting realize that an equivalency
+assessment creates unnecessary complications and can go wrong in many
+ways:
 <ul>
 <li>an obvious problem being drift.</li>
-<li>down sampling to make the two instruments comparable is another obvious
-problem</li>
+<li>down sampling to make the two instruments comparable is another
+obvious problem</li>
 </ul></li>
 </ul></li>
 </ul></li>
@@ -771,15 +796,16 @@ problem</li>
 <p><br/></p>
 </div>
 </div>
-<div id="bad-analysis-by-example" class="section level1" number="5">
-<h1><span class="header-section-number">5</span> Bad Analysis by Example</h1>
+<div id="bad-analysis-by-example" class="section level1">
+<h1>Bad Analysis by Example</h1>
 <ul>
 <li><p>predict %unconverted with assistant tech</p></li>
 <li><p>DDpcr</p></li>
 </ul>
 <p><br/></p>
-<div id="full-list-of-reports" class="section level2 unnumbered">
-<h2>Full list of reports</h2>
+</div>
+<div id="section" class="section level1">
+<h1></h1>
 <li>
 <a href="_M0A-healthy_aging_genes.html">_M0A-healthy_aging_genes.html</a>
 </li>
@@ -796,10 +822,10 @@ problem</li>
 <a href="_M1C-stats-pd-plan-change-log.html">_M1C-stats-pd-plan-change-log.html</a>
 </li>
 <li>
-<a href="_M1C-stats-pd-plan-final-v35.html">_M1C-stats-pd-plan-final-v35.html</a>
+<a href="_M1C-stats-pd-plan-final-v35_old.html">_M1C-stats-pd-plan-final-v35_old.html</a>
 </li>
 <li>
-<a href="_M1C-stats-pd-plan-final-v35_old.html">_M1C-stats-pd-plan-final-v35_old.html</a>
+<a href="_M1C-stats-pd-plan-final-v35.html">_M1C-stats-pd-plan-final-v35.html</a>
 </li>
 <li>
 <a href="_M1D-genAI-changelog.html">_M1D-genAI-changelog.html</a>
@@ -866,18 +892,21 @@ problem</li>
 </li>
 <p><br/></p>
 </div>
-</div>
 <div class="footnotes footnotes-end-of-document">
 <hr />
 <ol>
-<li id="fn1"><p>
-transcriptomic, genomic, proteomic, methylomic<a href="#fnref1" class="footnote-back">↩︎</a></p></li>
-<li id="fn2"><p>
-transcriptomic, genomic, proteomic, methylomic<a href="#fnref2" class="footnote-back">↩︎</a></p></li>
+<li id="fn1"><p> Why the use of canned procedures persists is easily
+explained in the context of a client who is uncritical of the form of
+any proposed solution while being unflinchingly insistent on the timely
+release of the said solution.<a href="#fnref1"
+class="footnote-back">↩︎</a></p></li>
+<li id="fn2"><p> transcriptomic, genomic, proteomic, methylomic<a
+href="#fnref2" class="footnote-back">↩︎</a></p></li>
+<li id="fn3"><p> transcriptomic, genomic, proteomic, methylomic<a
+href="#fnref3" class="footnote-back">↩︎</a></p></li>
 </ol>
 </div>
 
-<div id="rmd-source-code">LS0tCnRpdGxlOiAiU3RhdGlzdGljYWwgQW5hbHlzaXMgb2YgRGF0YSBpbiB0aGUgQmlvdGVjaCBJbmR1c3RyeSIKIyMjXG5MZXNzb25zIGZyb20gMjAgeWVhcnMgb2YgZXhwZXJlcmllbmNlIgphdXRob3I6ICJbRnJhbmNvaXMgQ29sbGluXShodHRwczovL3d3dy5saW5rZWRpbi5jb20vaW4vZnJhbmNvaXN6LykiCmRhdGU6ICJgciBmb3JtYXQoU3lzLnRpbWUoKSwgJyVCICVkLCAlWScpYCIKYWx3YXlzX2FsbG93X2h0bWw6IHllcwpvdXRwdXQ6CiAgIyBmb3IgZ3RhbnNlIG9mIC50YWJzZXQKICBib29rZG93bjo6aHRtbF9kb2N1bWVudDI6CiAgI2h0bWxfZG9jdW1lbnQ6CiAgICBjb2RlX2ZvbGRpbmc6IGhpZGUKICAgIGNvZGVfZG93bmxvYWQ6IHRydWUKICAgIHRvYzogdHJ1ZQogICAgdG9jX2RlcHRoOiAzCiAgICAjIGRvZXMgdGhpcyBoYXZlIGFuIGVmZmVjdAogICAgZmlnX2NhcHRpb246IHllcwogICAgIyB0aGlzIGhhcyBubyBlZmZlY3QKICAgIG51bWJlcl9zZWN0aW9uczogeWVzCiAgICAjIGNzczogWycuLi9fY3NzL3BhbmRvYzMuY3NzJywgJy4uL19jc3MvbXlNYXJnaW5zLmNzcyddCmJpYmxpb2dyYXBoeTogWy4uL19iaWJGaWxlcy9faGVhbHRoeV9hZ2luZy5iaWIsIC4uLy4uL19iaWJGaWxlcy9fQnJlaW1hbi5iaWIsIC4uLy4uL19iaWJGaWxlcy9fRnJlZWRtYW4uYmliLCAuLi8uLi9fYmliRmlsZXMvX1l1LmJpYiwgLi4vLi4vX2JpYkZpbGVzL19SVVYuYmliLCAuLi8uLi9fYmliRmlsZXMvX1JNQS5iaWIsIC4uLy4uL19iaWJGaWxlcy9fc2NSTkFzZXFfbm9ybS5iaWJdCmNzbDogLi4vX2NzbC9jZWxsLW51bWVyaWMuY3NsCmxpbmstY2l0YXRpb25zOiB0cnVlCi0tLQoKYGBge2NzcyBzaWRlbm90ZSwgZWNobyA9IEZBTFNFfQoKLm1haW4tY29udGFpbmVyIHsKICAgIG1hcmdpbi1sZWZ0OiAyNTBweDsKfQouc2lkZW5vdGUsIC5tYXJnaW5ub3RlIHsgCiAgZmxvYXQ6IHJpZ2h0OwogIGNsZWFyOiByaWdodDsKICBtYXJnaW4tcmlnaHQ6IC00MCU7CiAgd2lkdGg6IDM3JTsgICAgICAgICAjIGJlc3QgYmV0d2VlbiA1MCUgYW5kIDYwJQogIG1hcmdpbi10b3A6IDA7CiAgbWFyZ2luLWJvdHRvbTogMDsKICBmb250LXNpemU6IDEuMXJlbTsKICBsaW5lLWhlaWdodDogMS4zOwogIHZlcnRpY2FsLWFsaWduOiBiYXNlbGluZTsKICBwb3NpdGlvbjogcmVsYXRpdmU7CiAgfQpgYGAKCgo8c3R5bGU+CkBpbXBvcnQgdXJsKCdodHRwczovL2ZvbnRzLmdvb2dsZWFwaXMuY29tL2Nzcz9mYW1pbHk9UmFsZXdheScpOwpAaW1wb3J0IHVybCgnaHR0cHM6Ly9mb250cy5nb29nbGVhcGlzLmNvbS9jc3M/ZmFtaWx5PU94eWdlbicpOwpAaW1wb3J0IHVybCgnaHR0cHM6Ly9mb250cy5nb29nbGVhcGlzLmNvbS9jc3M/ZmFtaWx5PVJhbGV3YXk6Ym9sZCcpOwpAaW1wb3J0IHVybCgnaHR0cHM6Ly9mb250cy5nb29nbGVhcGlzLmNvbS9jc3M/ZmFtaWx5PU94eWdlbjpib2xkJyk7CgoubWFpbi1jb250YWluZXIgewogIG1heC13aWR0aDogMTQwMHB4ICFpbXBvcnRhbnQ7Cn0KCmJvZHl7CiAgZm9udC1mYW1pbHk6ICdPeHlnZW4nLCBzYW5zLXNlcmlmOwogIGZvbnQtc2l6ZTogMTZweDsKICBsaW5lLWhlaWdodDogMjRweDsKfQoKaDEsaDIsaDMsaDQgewogIGZvbnQtZmFtaWx5OiAnUmFsZXdheScsIHNhbnMtc2VyaWY7Cn0KCi5jb250YWluZXIgeyB3aWR0aDogMTQwMHB4OyB9CgpjYXB0aW9uIHsKICBmb250LXNpemU6IDIwcHg7CiAgY2FwdGlvbi1zaWRlOiB0b3A7CiAgdGV4dC1pbmRlbnQ6IDMwcHg7CiAgYmFja2dyb3VuZC1jb2xvcjogbGlnaHRncmV5OwogIGNvbG9yOiBibGFjazsKICBtYXJnaW4tdG9wOiA1cHg7Cn0KCmctdGFibGUtaW50cm8gaDQgewogIHRleHQtaW5kZW50OiAwcHg7Cn0KPC9zdHlsZT4KCmBgYHtyIHNldHVwLCBpbmNsdWRlID0gRkFMU0V9CmtuaXRyOjpvcHRzX2NodW5rJHNldChlY2hvID0gVFJVRSwKICAgICAgICAgICAgICAgICAgICAgIGNvbW1lbnQgPSBOQSwKICAgICAgICAgICAgICAgICAgICAgIHdhcm5pbmcgPSBGQUxTRSwKICAgICAgICAgICAgICAgICAgICAgIGVycm9yID0gRkFMU0UsCiAgICAgICAgICAgICAgICAgICAgICBtZXNzYWdlID0gRkFMU0UsCiAgICAgICAgICAgICAgICAgICAgICBjYWNoZSA9IEZBTFNFLAogICAgICAgICAgICAgICAgICAgICAgZmlnLndpZHRoID0gOCwKICAgICAgICAgICAgICAgICAgICAgIGZpZy5oZWlnaHQgPSA0KQpgYGAKCmBgYHtyIGluZmV4LUdsb2JhbE9wdGlvbnMsIHJlc3VsdHM9ImhpZGUiLCBpbmNsdWRlPUZBTFNFLCBjYWNoZT1GQUxTRX0KCmtuaXRyOjpvcHRzX2tuaXQkc2V0KHN0b3Bfb25fZXJyb3IgPSAyTCkgI3JlYWxseSBtYWtlIGl0IHN0b3AKb3B0aW9ucyhrbml0ci50YWJsZS5mb3JtYXQgPSAnaHRtbCcpCgpvcHRpb25zKHN0cmluZ3NBc0ZhY3RvcnM9RikKCiAja25pdHI6OmRlcF9hdXRvKCkKCmBgYAo8IS0tICMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyAtLT4KCgpgYGB7ciBpbmZleC1QcmVsaW1zLCAgaW5jbHVkZT1GQUxTRSwgZWNobz1GQUxTRSwgcmVzdWx0cz0naGlkZScsIG1lc3NhZ2U9RkFMU0V9IAoKCkZOIDwtICJpbmRleCIKaWYoc3VtKGdyZXBsKEZOLCBsaXN0LmZpbGVzKCkpKT09MCkgc3RvcCgiQ2hlY2sgRk4iKQoKUFJFRklYIDwtICJpbmRleCIgIy0gcmVwbGFjZSBieSBGTE9XQ0VMTD8/PwoKIHN1cHByZXNzTWVzc2FnZXMocmVxdWlyZShybWFya2Rvd24pKQogc3VwcHJlc3NNZXNzYWdlcyhyZXF1aXJlKGtuaXRyKSkKCiBzdXBwcmVzc1BhY2thZ2VTdGFydHVwTWVzc2FnZXMocmVxdWlyZShtZXRob2RzKSkKIHN1cHByZXNzUGFja2FnZVN0YXJ0dXBNZXNzYWdlcyhyZXF1aXJlKGJvb2tkb3duKSkKCiBzdXBwcmVzc1BhY2thZ2VTdGFydHVwTWVzc2FnZXMocmVxdWlyZShtYWdyaXR0cikpCgogIyBTaG90Y3V0cyBmb3Iga25pdHRpbmcgYW5kIHJlbmRlcmluZyB3aGlsZSBpbiBSIHNlc3Npb24gKEludm9rZSBpbnRlcmFjdGl2ZSBSIGZyb20gUi9TY3JpcHRzIGZvbGRlcikKIGtrIDwtIGZ1bmN0aW9uKG49JycpIGtuaXRyOjprbml0Mmh0bWwocGFzdGUoInQiLCBuLCBzZXA9JycpLCBlbnZpcj1nbG9iYWxlbnYoKSwKICAgICAgIG91dHB1dD1wYXN0ZShGTiwiLmh0bWwiLCBzZXA9JycpKQoKIHJyIDwtIGZ1bmN0aW9uKG49JycpIHJtYXJrZG93bjo6cmVuZGVyKHBhc3RlKCJ0Iiwgbiwgc2VwPScnKSwgZW52aXI9Z2xvYmFsZW52KCksCiAgICAgICBvdXRwdXRfZmlsZT1wYXN0ZShGTiwiLmh0bWwiLCBzZXA9JycpKSAjIywgb3V0cHV0X2Rpcj0nU2NyaXB0cycpCgogYmIgPC0gZnVuY3Rpb24obj0nJykgYnJvd3NlVVJMKHBhc3RlKEZOLCIuaHRtbCIsIHNlcD0nJykpCgogIyBUaGUgdXN1YWwgc2hvcnRjdXRzCiB6eiA8LSBmdW5jdGlvbihuPScnKSBzb3VyY2UocGFzdGUoInQiLCBuLCBzZXA9JycpKQoKCgpgYGAKPCEtLSAjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMgLS0+Cgo8YnIvPgoKCjwhLS0KKiBCcmVpbWFuOiBbQEJyZWltYW46MTk4NGFhOyBAQnJlaW1hbjoyMDAxYWFdCiogRnJlZWRtYW46IFtARnJlZWRtYW46MjAwOGFhOyBARnJlZWRtYW46MjAwOGFkOyBARnJlZWRtYW46MjAwOGFjOyBARnJlZWRtYW46MjAwOWFjXQotLT4KCgoKIyBTdGF0aXN0aWNzIFRyYWluaW5nCgo8YnIvPgoKIyMgVHJhaW5pbmcgUHJvZ3JhbSBmb3IgU3RhdGlzdGljaWFucyAtIGEgY29sbGFib3JhdGlvbiB3aXRoIGNsYXVkZS5haQoKCkFzIGFuIGV4ZXJjaXNlIHdvcmtpbmcgd2l0aCBjbGF1ZGUuYWksIHdlIGRlc2lnbiBhIHRyYWluaW5nIHByb2dyYW0gZm9yIGV4cGVyaWVuY2VkIHN0YXRpc3RpY2lhbnMuClRoZSBwcm9mZXNzaW9uYWwgZGV2ZWxvcG1lbnQgdHJhaW5pbmcgaXMgbWVhbnQgdG8gYnJpbmcgc3RhdGlzdGljaWFucyB1cCB0byBzcGVlZCB3aXRoIApub3ZlbCBzdGF0aXN0aWNhbCBtZXRob2RzIGFuZCB0ZWNobmlxdWVzIHdoaWNoIG1heSBiZSBvdXRzaXRlIG9mIHRoZWlyIGV4cGVydGlzZSBvcgpzZWN0b3Igb2YgaW5kdXN0cnkuCgoqIFtzdGF0cy1wZC1wbGFuLWZpbmFsLXYzNS5odG1sXSguL19NMUMtc3RhdHMtcGQtcGxhbi1maW5hbC12MzUuaHRtbCkgLSBmaW5hbCB2ZXJzaW9uIG9mIHRoZQpwcm9mZXNzaW9uYWwgZGV2ZWxvcG1lbnQgcHJvZ3JhbS4KCiogW3N0YXRzLXBkLXBsYW4tY2hhbmdlLWxvZy5odG1sXSguL19NMUMtc3RhdHMtcGQtcGxhbi1jaGFuZ2UtbG9nLmh0bWwpICAtCmRldGFpbGVkIGNoYW5nZSBsb2cgZG9jdW1lbnRpbmcgdGhlIGRldmVsb3BtZW50IHByb2Nlc3MKCiogW2FpLWFzc2lzdGFudC1ndWlkZV0oLi9fTTFDLWFpLWFzc2lzdGFudC1ndWlkZS5odG1sKSAtIG91dGxpbmUKcHJpbmNpcGxlcyB3aGljaCBhcHBseSBicm9hZGx5IHRvIHdvcmtpbmcgd2l0aCBBSSBhc3Npc3RhbnRzIG9uIGNvbXBsZXggcHJvamVjdHMuCgogCjxici8+CgojIyBTcGVjaWZpYyBUcmFpbmluZyBSZXNvdXJjZXMgCgojIyMgR2VuZXJhdGl2ZSBBSSB7LX0KClJlc291cmNlcyAtIG9ubGluZSBjb3Vyc2VzLCBwdWJsaXNoZWQgcGFwZXJzLCBib29rcywgIHNsaWRlIHByZXNlbnRhdGlvbnMgLSB0byBsZWFybgphYm91dCB0aGUgYXJlYXMgb2YgYXBwbGljYXRpb25zIGFuZCBkZXZlbG9wbWVudCBvZiBBSSB0aGF0IGFyZSBtb3N0IGltcG9ydGFudCB0byBzdGF0aXN0aWNpYW5zLgpUaGVzZSBzaG91bGQgaW5jbHVkZSBhIGJhc2ljIHNldCBvZiBsZWFybmluZ3Mgd2hpY2ggYWxsIHByb2Zlc3Npb25hbHMgaW50ZXJlc3RlZCBpbgpoYXJuZXNzaW5nIHRoZSBwb3dlcnMgb2YgQUkgc2hvdWxkIGtub3cuICBJbiBhZGRpdGlvbiB0byB0aGlzIGJhc2ljIHNldCwgbGVhcm5pbmdzCnRoYXQgYXJlIG1vc3QgcmVsZXZhbnQgZm9yIHRoZSBpbnRlZ3JhdGlvbiBvZiBBSSB3aXRoIHN0YXRpc3RpY3MuCgpZdSBhbmQgS3VtYmllciAoRnJvbnQgSW5mb3JtIFRlY2hub2wgRWxlY3Ryb24gRW5nIDIwMTggMTkoMSk6Ni05KSBbQFl1OjIwMThhYV0gCnByb3ZpZGUgYSBmcmFtZXdvcmsgZm9yIGludGVncmF0aW5nIHN0YXRpc3RpY2FsIGlkZWFzIGluIEFJIHdvcmsgd2hpY2ggdGhleQp0ZXJtIHRoZSBQUVJTIFdvcmtmbG93LiAgSW4gdGhpcyBmcmFtZXdvcmssICB0aGUgc3RhdGlzdGljYWwgY29uY2VwdHMgb2YgCnBvcHVsYXRpb24gKFApLCBxdWVzdGlvbiBvZiBpbnRlcmVzdCAoUSksIHJlcHJlc2VudGF0aXZlbmVzcyBvZiB0cmFpbmluZyBkYXRhIChSKSwKYW5kIHNjcnV0aW55IG9mIHJlc3VsdHMgKFMpIHJlbWFpbiBjcml0aWNhbGx5IGltcG9ydGFudCBpbiB0aGUgYXBwbGljYXRpb24Kb2YgQUkgdG8gZGF0YSBhbmFseXNpcy4gIFdlIHNob3VsZCBpbmNsdWRlIGFueSB0cmFpbmluZyB3aGljaCBjYW4gaGVscCBjbGFyaWZ5IHRoZSBmcmFtZXdvcmsKdG8gbm9uLXN0YXRpc3RpY2lhbnMsIG9yIGhlbHAgc3RhdGlzdGljaWFucyBleHBsYWluIHRoZSBmcmFtZXdvcmsgdG8Kbm9uLXN0YXRpc3RpY2lhbnMuCgpJZiBpdCBoZWxwcyB0byBsaW1pdCByZXNvdXJjZXMgb3IgY2hvb3NlIGFtb25nIHNpbWlsYXIgb3B0aW9ucywgd2UgY2FuIGFzc3VtZQp0aGF0IHRoZSBzdGF0aXN0aWNpYW5zIHdvcmsgd2l0aCBiaW8tdGVjaCBjb21wYW5pZXMgd2hpY2ggbWFya2V0IG1vbGVjdWxhciBkaWFnbm9zdGljcwpkZXZpY2VzIHdoaWNoIHVzZSBvbWljLXdpZGVeWwp0cmFuc2NyaXB0b21pYywgZ2Vub21pYywgcHJvdGVvbWljLCBtZXRoeWxvbWljXQpwcm9maWVscyBhcyBpbnB1dC4KCiogUmVwb3J0OiBbQ29tcHJlaGVuc2l2ZSBJbnRyb2R1Y3Rpb24gdG8gR2VuZXJhdGl2ZSBBSSBSZXNvdXJjZXNdKC4vX00xRC1nZW5BSS1yZXBvcnQtdXBkYXRlZC5odG1sKQoKPHA+PHAvPgoqIFJlc291cmNlczoKICAgLSBbR2VuIEFJIC0gQ2hhbmdlTG9nXSguL19NMUQtZ2VuQUktY2hhbmdlbG9nLmh0bWwpCiAgIC0gW0dlbiBBSSAtIEluc3RydWN0aW9uc10oLi9fTTFELWdlbkFJLWluc3RydWN0aW9ucy5odG1sKQogICAKCgoKPGJyLz4KCiMjIyBEZWVwIExlYXJuaW5nIE1vZGVscyB7LX0KCgpSZXNvdXJjZXMgLSBvbmxpbmUgY291cnNlcywgcHVibGlzaGVkIHBhcGVycywgYm9va3MsICBzbGlkZSBwcmVzZW50YXRpb25zIC0gdG8gbGVhcm4KYWJvdXQgdGhlIGRldmVsb3BtZW50IGRlZXAgbGVhcm5pbmcgdGhlaXJ5IGFuZHMgYXBwbGljYXRpb25zCnRoYXQgYXJlIG1vc3QgaW1wb3J0YW50IHRvIHN0YXRpc3RpY2lhbnMuClRoZXNlIHNob3VsZCBpbmNsdWRlIGEgYmFzaWMgc2V0IG9mIGxlYXJuaW5ncyB3aGljaCBhbGwgcHJvZmVzc2lvbmFscyBpbnRlcmVzdGVkIGluCmhhcm5lc3NpbmcgdGhlIHBvd2VycyBvZiBEZWVwIExlYW5pbmcgc2hvdWxkIGtub3cuICBJbiBhZGRpdGlvbiB0byB0aGlzIGJhc2ljIHNldCwgbGVhcm5pbmdzCnRoYXQgYXJlIG1vc3QgcmVsZXZhbnQgZm9yIHRoZSBpbnRlZ3JhdGlvbiBvZiBEZWVwIExlYXJuaW5nIHdpdGggc3RhdGlzdGljcy4KCklmIGl0IGhlbHBzIHRvIGxpbWl0IHJlc291cmNlcyBvciBjaG9vc2UgYW1vbmcgc2ltaWxhciBvcHRpb25zLCB3ZSBjYW4gYXNzdW1lCnRoYXQgdGhlIHN0YXRpc3RpY2lhbnMgd29yayB3aXRoIGJpby10ZWNoIGNvbXBhbmllcyB3aGljaCBtYXJrZXQgbW9sZWN1bGFyIGRpYWdub3N0aWNzCmRldmljZXMgd2hpY2ggdXNlIG9taWMtd2lkZV5bCnRyYW5zY3JpcHRvbWljLCBnZW5vbWljLCBwcm90ZW9taWMsIG1ldGh5bG9taWNdCnByb2ZpZWxzIGFzIGlucHV0LgogICAgCiogUmVwb3J0OiBbQ29tcHJlaGVuc2l2ZSBSZXNvdXJjZXMgZm9yIERlZXAgTGVhcm5pbmcgaW4gU3RhdGlzdGljcyAmIEJpb3RlY2hdKC4vX00xRS1ETC1kZWVwLWxlYXJuaW5nLXJlc291cmNlcy5odG1sKQoKCjxwPjxwLz4KKiBSZXNvdXJjZXM6CiAgICAtIFtDaGFuZ2VMb2ddKC4vX00xRS1ETC1jaGFuZ2Vsb2cuaHRtbCkKICAgIC0gW1JlcG9zaXRvcnkgU2V0dXBdKC4vX00xRS1ETC1yZXBvc2l0b3J5LXNldHVwLmh0bWwpCiAgICAtIFtJbnN0cnVjdGlvbnMgZm9yIFJlbmRlcmluZyBSZXBvcnRzIGFuZCBDaGFuZ2Vsb2ddKC4vX00xRS1ETC1yZW5kZXJpbmctaW5zdHJ1Y3Rpb25zLmh0bWwpCiAgICAtIFtHZW5lcmF0aW5nIEhUTUwgUmVwb3J0cyBmcm9tIE1hcmtkb3duXSguL19NMUUtREwtcmVwb3J0LWluc3RydWN0aW9ucy5odG1sKQogICAgLSBbTWFya2Rvd24gVGVtcGxhdGVdKC4vX00xRS1ETC1tYXJrZG93bi10ZW1wbGF0ZS5odG1sKQoKCgoKCjxici8+CgojIERhdGEgKFJlLSlBbmFseXNpcyBieSBUb3BpYyAKCiMjIHNjUk5Bc2VxIFVNSSBjb3VudCBub3JtYWxpemF0aW9uIAoKKiBzbGlkZSBkZWNrOiAgT25lRHJpdmUgZm9sZGVyIG9mIFNwZWVkIExhYiBNZWV0aW5nOiBodHRwczovL291dGxvb2sub2ZmaWNlMzY1LmNvbS9tYWlsL2dyb3VwL3dlaGkuZWR1LmF1L3NwZWVkbGFibWVldGluZy9maWxlcwoKKiBSZWZlcmVuY2U6IAogICAtIEFobG1hbm4tRWx0emUgYW5kIEh1YmVyICgyMDIzKSBbQEFobG1hbm4tRWx0emU6MjAyM2FhXQoKCiogT3RoZXI6IAogICAtIE1lbG1zIGV0LiBhbC4gKDIwMjEpIFtATWVsbXM6MjAyMWFhXQoKPGJyLz4KCiMjIFJVVgoKIyMjIE5vcm1hbGl6YXRpb24gTGl0IFJldmlldyB7LX0KCjxici8+CgojIyMgVGhlIGxhdGVzdCB7LX0KCiogTGluayB0byBSYW15YXIgTW9sYW5pYSBwcmVzZW50YXRpb25zLgoKPGJyLz4KCiMjIyBCZXlvbmQgUlVWIHstfQoKQ2FuIHRoZSBtZXRob2RvbG9neSB3aGljaCBlbmFibGVzIHRoZSBiYXNpYyBSVVYgYW5hbHlzaXMgYmUgYWRhcHRlZCB0bwpvdGhlciBhcHBsaWNhdGlvbnM/Cgo8cD48cC8+CiogSVVWIC0gaWRlbnRpZmljYXRpb24gb2YgdW53YW50ZWQgdmFyaWFiaWxpdHkKICAgLSB0aGUgYXV0b21hdGVkIGhpZ2ggdGhyb3VnaHB1dCBwcm9jZXNzaW5nIG9mIHNhbXBsZXMgbmVjZXNzYXJ5CnRvIGdldCB0aGUgb21pYyBiYXNlZCByZWFkb3V0cyB1c2VkIHRvIGRpYWdub3NlIHNhbXBsZXMgaXMgY2FycmllZCBvdXQgYnkKYSBwaXBlbGluZSB3aGljaCBzdHJpbmdzIHRvZ2V0aGVyIG51bWVyb3VzIHN0ZXBzICh0eXBpY2FsbHkgaHVuZHJlZHMpLgogICAgICAtIGVnLiBDZWxsLUZyZWUgRE5BIE1ldGh5bGF0aW9uIFByb2ZpbGluZyBBbmFseXNpcwogICAtIEFzIHNhbXBsZXMgcHJvY2VlZCB0aHJvdWdoIHRoZSBwaXBlbGluZSB0aGV5IHdpbGwgYmUgb3JnYW5pemVkIGluIHZhcmlvdXMgY29uZmlndXJhdGlvbnMKZ2l2aW5nIHJpc2UgdG8gdmFyaW91cyBncm91cGluZ3M6CiAgICAgIC0gcGxhc21hIGlzb2xhdGlvbgogICAgICAtIGNmRE5BIGV4dHJhY3Rpb24gCiAgICAgIC0gYW1wbGlmaWNhdGlvbiwgY29udmVyc2lvbiwgLi4uCiAgIC0gbWVhc3VyZW1lbnRzIGFyZSByZWNvcmRlZCBhcyBzYW1wbGVzIHRyYXZlbCB0aHJvdWdoIHRoZSBwaXBlbGluZSwgZWFjaAptZWFzdXJlbWVudCBwb3RlbnRpYWxseSBoYXZpbmcgaXRzIG93biBzaGFyZWQgdmFyaWFiaWxpdHkgb3IgZGVwZW5kZW5jeSBzdHJ1Y3R1cmUgCiAgIC0gYSByZWFsIHByb2JsZW0gaXMgdG8gaWRlbnRpZnkgdGhlIGZhY3RvcnMgZ2l2aW5nIHJpc2UgdG8gZXhjZXNzaXZlIHZhcmlhYmlsaXR5CmluIHRoZSBkb3duc3RyZWFtIHJlYWQtb3V0cwoKCjxwPjxwLz4KKiBRVVYgLSBxdWFudGlmaWNhdGlvbiBvZiB1bndhbnRlZCB2YXJpYWJpbGl0eQogICAtIGNhbiBSVVYgbWV0aG9kb2xvZ3kgYmUgYWRhcHRlZCB0byBwcm92aWRlIHF1YW50aWZpY2F0aW9uIG9mIHJlcHJvZHVjaWJpbGl0eT8KCjxici8+CgojIyBSZWZlcmVuY2UtRnJlZSBHZW5vbWljIEluZmVyZW5jZSB3aXRoIFNQTEFTSCBhbmQgT0FTSVMgCgoKKiAgW1ByZXNlbnRhdGlvbl0oX00zQi1TUExBU0gtT0FTSVMvc3BsYXNoX29hc2lzX21ldGhvZG9sb2d5X3ByZXNlbnRhdGlvbl92Mi5odG1sKQoKCiMjIyBTUExBU0ggey19CgoKKiBbX00yQS1SRkdJX1NQTEFTSF92MS5odG1sXSguL19NMkEtUkZHSV9TUExBU0hfdjEuaHRtbCkgLQoqIFtfTTJCLVJGR0lfU1BMQVNIX3YyLmh0bWxdKC4vX00yQi1SRkdJX1NQTEFTSF92Mi5odG1sKSAtCiogW19NM0EtT0FTSVMuaHRtbF0oLi9fTTNBLU9BU0lTLmh0bWwpIC0KCjxici8+CgojIyMgT0FTSVMgey19Cgo8YnIvPgoKIyMgTWlzY2VsbGFuaW91cyAgey19CiAgLSBbX000QS1pbnRyb19JVVYuaHRtbF0oLi9fTTRBLWludHJvX0lVVi5odG1sKSAKICAtIFtfTTVBLWNmX2RkUENSX3NlcS5odG1sXQogIC0gW19NNkEtcmFuZG9tbmVzc19pbl9jYWxscy5odG1sXSAKICAtIFtfTTdBLWludGVyaW1TYW1wbGVTaXplQW5hbHlzaXMuaHRtbF0KICAgICAgLSBbX00zQV9zdHVkeV9kZXNpZ25fQ0Jfbm90ZXMucGRmXQoKCjxici8+CgoKIyBSZWZlcmVuY2VzCjxkaXYgaWQ9InJlZnMiPjwvZGl2PgoKPGJyLz4KCiMgQXBwZW5kaXg6IAoKCiMjIENoYWxsZW5nZXMgaW4gU3RhdGlzdGljYWwgQW5hbHlzaXMgIHstfQpgCgpUeXBlcyBvZiBlcnJvcnM6Cgo8cD48L3A+CiogVGhlIHF1ZXN0aW9uIGlzIHdyb25nIG9yIGluYWRlcXVhdGVseSBwb3NlZAogICAtIHRoaXMgaXMgbm90IHRoYXQgaW5mcmVxdWVudCBhbmQgaXMgbGFyZ2VseSBjYXVzZWQgYnkKZm9sa3MgcGhyYXNpbmcgdGhlIHF1ZXN0aW9uIGluIGEgZm9ybSB0aGF0IGFudGljaXBhdGVzIHRoZSBzb2x1dGlvbi4KZWcsIGNsaWVudCBleHByZXNzZXMgZGVzaXJlIHRvIGtub3cgd2hhdCBhIHBhcnRpY3VsYXIgZXN0aW1hdGVkIHJlZ3Jlc3Npb24KY29lZmZpY2llbnQgaXMKICAgLSBzb2x1dGlvbiBpcyBlYXN5OiBzdWJqZWN0IG1hdHRlciBleHBlcnRzIHNob3VsZCB0aGluayBoYXJkIGFib3V0IHRoZQpxdWVzdGlvbiB3aGljaCBpcyB0aGVuIHBocmFzZWQgdXNpbmcgYXBwcm9wcmlhdGUgc3ViamVjdCBtYXR0ZXIgc3BlY2lmaWMgbGFuZ3VhZ2UuCgoKPHA+PHAvPgoqIEFuIGluYXBwcm9wcmlhdGUgbW9kZWwgaXMgdXNlZCBhcyB0aGUgYW5hbHlzaXMgZnJhbWV3b3JrIHRvIAphZGRyZXNzIGEgIHF1ZXN0aW9uICAgICAgCiAgIC0gdGhpcyBpcyBlaXRoZXIgZHVlIHRvIGNvbW1vbiBwcmFjdGljZSBvciBpbmFkZXF1YXRlIHN0YXRpc3RpY2FsIHRyYWluaW5nIAogICAtIERhdmlkIEZyZWVkbWFuIGRpc2N1c3NlZCB0aGUgaW5hcHByb3ByaWF0ZSB1c2Ugb2YKc3RhdGlzdGljYWwgbW9kZWxzIGluIHRoZSBzb2NpYWwgc2NpZW5jZXMKW0BGcmVlZG1hbjoyMDA4YWE7IEBGcmVlZG1hbjoyMDA4YWQ7IEBGcmVlZG1hbjoyMDA4YWM7IEBGcmVlZG1hbjoyMDA5YWNdCiAgIC0gSW5hcHByb3ByaWF0ZSBtb2RlbGluZyBpcyBub3QgbGltaXRlZCB0byB0aGUgc29jaWFsIHNjaWVuY2VzCiAgICAgIC0gaW4gYmlvdGVjaCwgdGhlIHVuY2hlY2tlZCB1c2Ugb2YgbG9naXN0aWMgcmVncmVzc2lvbiB3aGVuZXZlciB0aGUKcmVzcG9uc2UgaXMgYmluYXJ5IGlzIHViaXF1aXRvdXMuCiAgICAgICAgIC0gdGhlIHJlc3VsdHMgb2Ygc3VjaCBhbmFseXNlcyBjb3VsZCBiZSBtaXNsZWFkaW5nIGR1ZSB0byB0aGUgYmlhc2VzCmlsbHVzdHJhdGVkIGluIEZyZWVkbWFuICgyMDA4KSBbQEZyZWVkbWFuOjIwMDhhYV0KICAgLSBMZW8gQnJlaW1hbiBwb2ludGVkIHRvIGluYWRlcXVhdGUgdHJhaW5pbmcgYXMgdGhlIGNhdXNlIG9mCnRoZSByZWxpYW5jZSBvbiAqKnN0YW5kYXJkIHRleHRib29rIG1ldGhvZHMqKiB3aGljaApoYXZlIGEgbGltaXRlZCByYW5nZSBvZiBhcHBsaWNhYmlsaXR5IC0gQnJlaW1hbjoKW0BCcmVpbWFuOjE5ODRhYTsgQEJyZWltYW46MjAwMWFhXQogICAtIGFzIHJlZ3Jlc3Npb24gbW9kZWxzIGFyZSB1c2VkIHRvIGFuc3dlciBhbG1vc3QgZXZlcnkgcXVlc3Rpb24KdGhhdCBjb21lIHVwIGluIHRoZSBpbnRlcm5hbCBhbmFseXNlcyBjb25kdWN0ZWQgYnkgY29tcGFuaWVzIGluIGluZHVzdHJ5LAptYW55IGFyZSBnb2luZyB0byBiZSBmbGF3ZWQuICAKICAgICAgLSBGb3IgYSByZXZpZXcgb2YgaG93IHJlZ3Jlc3Npb24gbW9kZWxzIGdvIHdyb25nIHNlZQpbQEZyZWVkbWFuOjIwMDlhYTtARnJlZWRtYW46MjAxMGFhO0BGcmVlZG1hbjoyMDA4YWM7QEZyZWVkbWFuOjIwMDhhZDtARnJlZWRtYW46MjAwNGFhO0BGcmVlZG1hbjoyMDA4YWE7QEZyZWVkbWFuOjIwMDhhYl0KICAgLSBjbGluaWNhbCB2YWxpZGF0aW9uIHN0dWRpZXMgZm9yIGNvbXBsZXggb21pYyBEeCBpbnN0cnVtZW50cyB0aGF0IGFyZSBkZXNpZ25lZCAKYWNjb3JkaW5nIHRvIEZEQSBndWlkZWxpbmVzIHdpbGwgbWFrZSB1c2Ugb2YgdGhlIGNsYXNzaWNhbCBOZXltYW4tUGVhcnNvbiBoeXBvdGhlc2lzCnRlc3RpbmcgY29udGV4dCB3aGljaCBpcyBvZnRlbiBpbnZhbGlkOgogICAgICAtIHRoZSBzYW1wbGVzIGluIHRoZSBzdHVkeSBtYXkgbm90IGJlIHJlcHJlc2VudGF0aXZlIG9mIHRoZSB0YXJnZXQgcG9wdWxhdGlvbi4KICAgICAgICAgLSB0aGVyZSBpcyByYXJlbHkgYW55IGV4cGxpY2l0IHJhbmRvbW5lc3MgaW4gdGhlIHNlbGVjdGlvbiBvZiB0aGUgc3R1ZHkgc2FtcGxlcwpzbyBpbmZlcmVuY2UgdG8gYW55IHN1cGVyc2V0IG9mIHRoZSBzdHVkeSBzYW1wbGVzIGlzIGlmZnkgYXQgYmVzdC4KICAgICAgLSBkZXBlbmRlbmN5IHN0cnVjdHVyZSBhbW9uZyBzYW1wbGVzIHByb2Nlc3NlZCBpbiBiYXRjaGVzIGlzIG9mdGVuIGNvbXBsZXgKICAgICAgICAgLSBhIHJ1biBtYXkgYmUgdHJlYXRlZCBhcyBhIGJhdGNoIHdpdGggaW50ZXJuYWwgc3RydWN0dXJlIG9yIHN1Yi1iYXRjaGVzLgogICAgICAtIE4gaXMgb2Z0ZW4gc21hbGwgCiAgICAgIC0gY29udHJpdmVkIHNhbXBsZXMgbWF5IG5vdCBiZSBpbnRlcnByZXRhYmxlIGFzIGludGVuZGVkIG9yIHJlcXVpcmVkCiAgICAgIC0gb3RoZXI/Pz8KCjxici8+CgpJbXByb3ZpbmcgaW4gQW5hbHlzaXMgUmVzdWx0czoKPHA+PHAvPgoqIEFzc2Vzc21lbnQsIEFzc2Vzc21lbnQsIEFzc2Vzc21lbnQKICAgLSB0aGUgcGF0aCB0byBiZXR0ZXIgcmVzdWx0cyB0aHJvdWdoIGltcHJvdmVkIG1ldGhvZG9sb2d5IG11c3QgZ28gdGhyb3VnaAoqKnZhbGlkIGFzc2Vzc21lbnRzIG9mIHBlcmZvcm1hbmNlKiogLSBTcGVlZDoKW0BJcml6YXJyeToyMDAzYWE7IEBCb2xzdGFkOjIwMDRhYTtAR2Fnbm9uLUJhcnRzY2g6MjAxMmFhO0BHYW5kb2xmbzoyMDE4YWE7QElyaXphcnJ5OjIwMDZhYTtASmFjb2I6MjAxOGFhO0BSaXNzbzoyMDE0YWE7QFl1YW46MjAxOWFhXQogICAtICp2YWxpZCogaGVyZSBtZWFucyB0aGF0IHRoZSBhc3Nlc3NtZW50IHByb3ZpZGVzIGEgZGlyZWN0IGluZGljYXRvciBvZiBwZXJmb3JtYW5jZSAKb24gYSBtZWFuaW5nZnVsIHNjYWxlIG9yIGVuZCBwb2ludC4KICAgICAgLSB3aGVuIG5vcm1hbGl6aW5nIFJOQVNlcSBnZW5lIGV4cHJlc3Npb24gcHJvZmlsZXMsIG9uZSBjYW4gbWVhc3VyZSB0aGUgZWZmZWN0aXZlbmVzcyBvZgp0aGUgbm9ybWFsaXphdGlvbiBzdGVwIGJ5IGV4YW1pbmluZyB0aGUgc2ltaWxhcml0aWVzIGFtb25nIGdlbmUgZXhwcmVzc2lvbiBwcm9maWxlcyBiZWZvcmUKYW5kIGFmdGVyIG5vcm1hbGl6YXRpb24uICBBbHRob3VnaCB0aGlzIGlzIGEgc2Vuc2libGUgd2F5IHRvIGFzc2VzcyB0aGUgZWZmZWN0IG9mIHRoZSAKbm9ybWFsaXphdGlvbiBzdGVwLCBpdCBpcyBub3QgYSBnb29kIG1ldHJpYyB0byBhc3Nlc3MgdGhlIGltcGFjdCBub3JtYWxpemF0aW9uIGhhcyBvbgp0aGUgdWx0aW1hdGUgZ29hbCBvZiB0aGUgYW5hbHlzaXMgLSBER0UgYW5hbHlzaXMuCiAgICAgIC0gd2hlbiBjb21wYXJpbmcgdHdvIHNlcXVlbmNpbmcgaW5zdHJ1bWVudHMgaW4gdGVybXMgb2YgdGhlaXIgYWJpbGl0eSB0byBjYXJyeS1vdXQKYSByZWFnZW50IFFDIHByb3RvY29sIGRlc2lnbmVkIHRvIGFzc2VzcyByZWFnZW50IHF1YWxpdHk6CiAgICAgICAgIC0gYWx0aG91Z2ggdGhlIGFwcHJvcHJpYXRlIGFzc2Vzc21lbnQgcHJvYmFibHkgY2FsbHMgZm9yIGFuIGFzc2Vzc21lbnQgb2YKcGVyZm9ybWFuY2UgYWdhaW5zdCB0aGUgdHJ1dGgsIGFuZCBhIGNvbXBhcmlzb24gb2YgdGhlc2UgcGVyZm9ybWFuY2UgcGFyYW1ldGVycyBiZXR3ZWVuCmluc3RydW1lbnRzLCByZWd1bGF0b3J5IGNvbXBsaWFuY2UgbWF5IGNhbGwgZm9yIGFuIGVxdWl2YWxlbmN5IGFzc2Vzc21lbnQKICAgICAgICAgICAgLSBpdCBzaG91bGQgbm90IHRha2UgbXVjaCByZWZsZWN0aW5nIHJlYWxpemUgdGhhdCBhbiBlcXVpdmFsZW5jeSBhc3Nlc3NtZW50CmNyZWF0ZXMgdW5uZWNlc3NhcnkgY29tcGxpY2F0aW9ucyBhbmQgY2FuIGdvIHdyb25nIGluIG1hbnkgd2F5czoKICAgICAgICAgICAgICAgLSAgYW4gb2J2aW91cyBwcm9ibGVtIGJlaW5nIGRyaWZ0LgogICAgICAgICAgICAgICAtIGRvd24gc2FtcGxpbmcgdG8gbWFrZSB0aGUgdHdvIGluc3RydW1lbnRzIGNvbXBhcmFibGUgaXMgYW5vdGhlciBvYnZpb3VzCnByb2JsZW0KICAgICAgLSB1c2luZyBhbiB1cHN0cmVhbSBtZWFzdXJlbWVudCB0byBwcmVkaWN0IHVuY29udmVydGVkIGZyYWN0aW9uCiAgICAgICAgIC1TQ0FMRSwgU0NBTEUsIFNDQUxFCgoKPGJyLz4KCiMgQmFkIEFuYWx5c2lzIGJ5IEV4YW1wbGUKCiogcHJlZGljdCAldW5jb252ZXJ0ZWQgd2l0aCBhc3Npc3RhbnQgdGVjaAoKKiBERHBjcgoKPGJyLz4KCiMjIEZ1bGwgbGlzdCBvZiByZXBvcnRzIHstfQoKYGBge3IgLCBjaGlsZD1jKCdfaW5kZXguUm1kJyl9CmBgYAoKCjxici8+CgoKCgpgYGB7ciwgZWNobz1GQUxTRX0KICBrbml0cjo6a25pdF9leGl0KCkKYGBgCgoK</div>
 
 
 
@@ -911,12 +940,6 @@ $(document).ready(function () {
 </script>
 
 <!-- code folding -->
-<script>
-$(document).ready(function () {
-  window.initializeSourceEmbed("index.Rmd");
-  window.initializeCodeFolding("hide" === "show");
-});
-</script>
 
 
 <!-- dynamically load mathjax for compatibility with self-contained -->

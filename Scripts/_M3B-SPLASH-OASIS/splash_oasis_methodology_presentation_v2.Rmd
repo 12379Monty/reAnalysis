@@ -207,9 +207,20 @@ We need to define, and examine power.
 
 ## Mathematical Formulation of OASIS
 
+---
+
 ![OASIS Mathematical Formulation 1](images/svg/oasis_math_1_problem_setup.png)
+
+---
+
 ![OASIS Mathematical Formulation 2](images/svg/oasis_math_2_test_statistic.png)
+
+---
+
 ![OASIS Mathematical Formulation 3](images/svg/oasis_math_3_optimization.png)
+
+---
+
 ![OASIS Mathematical Formulation 4](images/svg/oasis_math_4_comparison.png)
 
 ---
