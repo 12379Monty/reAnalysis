@@ -1,0 +1,31 @@
+
+
+processing file: _M0A-healthy_aging_genes.Rmd
+1/23                       
+2/23 [sidenote]            
+3/23                       
+4/23 [setup]               
+5/23                       
+6/23 [m1a-GlobalOptions]   
+7/23                       
+8/23 [m1a-Prelims]         
+9/23                       
+10/23 [m1a-utilityFns]      
+11/23                       
+12/23 [m1a-input-params-all]
+13/23                       
+14/23 [unnamed-chunk-1]     
+15/23                       
+16/23 [m1a-study-design]    
+17/23                       
+18/23 [m1a-article-review]  
+19/23                       
+20/23 [m1a-session-info]    
+21/23                       
+22/23 [unnamed-chunk-2]     
+output file: _M0A-healthy_aging_genes.knit.md
+
+/usr/local/bin/pandoc +RTS -K512m -RTS _M0A-healthy_aging_genes.knit.md --to html4 --from markdown+autolink_bare_uris+tex_math_single_backslash --output _M0A-healthy_aging_genes.html --lua-filter /Library/Frameworks/R.framework/Versions/4.4-x86_64/Resources/library/bookdown/rmarkdown/lua/custom-environment.lua --lua-filter /Library/Frameworks/R.framework/Versions/4.4-x86_64/Resources/library/rmarkdown/rmarkdown/lua/pagebreak.lua --lua-filter /Library/Frameworks/R.framework/Versions/4.4-x86_64/Resources/library/rmarkdown/rmarkdown/lua/latex-div.lua --lua-filter /Library/Frameworks/R.framework/Versions/4.4-x86_64/Resources/library/rmarkdown/rmarkdown/lua/table-classes.lua --embed-resources --standalone --wrap preserve --variable bs3=TRUE --section-divs --table-of-contents --toc-depth 3 --template /Library/Frameworks/R.framework/Versions/4.4-x86_64/Resources/library/rmarkdown/rmd/h/default.html --no-highlight --variable highlightjs=1 --number-sections --include-before-body /var/folders/jk/d24lm6n944q5y650lph85m7w0000gp/T//RtmpqHFyXy/rmarkdown-strc91c45c9b3d4.html --variable navbar=1 --variable theme=bootstrap --mathjax --variable 'mathjax-url=https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML' --include-in-header /var/folders/jk/d24lm6n944q5y650lph85m7w0000gp/T//RtmpqHFyXy/rmarkdown-strc91c3d3d4717.html --variable code_folding=hide --variable source_embed=_M0A-healthy_aging_genes.Rmd --include-after-body /var/folders/jk/d24lm6n944q5y650lph85m7w0000gp/T//RtmpqHFyXy/filec91c206566a.html --variable code_menu=1 --citeproc 
+[WARNING] Duplicate identifier 'references' at _M0A-healthy_aging_genes.knit.md line 953 column 1
+
+Output created: _M0A-healthy_aging_genes.html

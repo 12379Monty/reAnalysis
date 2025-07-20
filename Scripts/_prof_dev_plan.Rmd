@@ -1,0 +1,362 @@
+---
+title: Professional Development Plan for Experienced Statisticians
+subtitle: Bridging Traditional Methods with Modern Approaches
+output:
+  # for use of .tabset
+  bookdown::html_document2:
+    code_download: true
+    code_folding: hide
+    toc: false
+    fig_caption: yes
+    number_sections: yes
+    css: ../../css/pandoc3.css
+bibliography: [../_bibFiles/_healthy_aging.bib, ../_bibFiles/_ref_free_genom_inf.bib, ../../_bibFiles/_Breiman.bib, ../../_bibFiles/_Yu.bib, ../../_bibFiles/_Freedman.bib, ../../_bibFiles/_RUV.bib, ../../_bibFiles/_Yu.bib, ../../_bibFiles/_rand_cause_inf.bib]
+csl: ../_csl/cell-numeric.csl
+link-citations: true
+---
+
+ 
+
+<style>
+
+.watermark {
+  opacity: 0.2;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  font-size: 500%;
+  color: #00407d;
+}
+
+</style>
+
+---
+
+
+```{r GlobalOptions, results="hide", include=F, cache=FALSE}
+
+knitr::opts_knit$set(stop_on_error = 2L) #really make it stop
+options(knitr.table.format = 'html')
+
+```
+
+```{r prof-dev-plan-Prelims, include=F, echo=FALSE, results='hide', message=FALSE,cache=F}
+
+FN <- "_prof_dev_plan"
+if(sum(grepl(FN, list.files()))==0) stop("Check FN")
+
+PREFIX <- "_prof_dev_plan" #- replace by FLOWCELL???
+
+suppressPackageStartupMessages(require(methods))  
+suppressPackageStartupMessages(require(rmarkdown))  
+suppressPackageStartupMessages(require(bookdown))  
+
+suppressPackageStartupMessages(require(knitr))  
+options(stringsAsFactors=F)  
+
+suppressPackageStartupMessages(require(data.table)) 
+options(datatable.fread.datatable=F)
+
+suppressPackageStartupMessages(require(plyr))
+suppressPackageStartupMessages(require(dplyr))
+suppressPackageStartupMessages(require(magrittr))
+
+# Shotcuts for knitting and redering while in R session (Invoke interactive R from R/Scripts folder)
+kk <- function(n='') knitr::knit2html(paste("t", n, sep=''), envir=globalenv(),
+      output=paste(FN,".html", sep=''))
+
+rr <- function(n='') rmarkdown::render(paste("t", n, sep=''), envir=globalenv(),
+      output_file=paste(FN,".html", sep='')) ##, output_dir='Scripts')
+
+bb <- function(n='') browseURL(paste(FN,".html", sep=''))
+
+# The usual shotcuts
+zz <- function(n='') source(paste("t", n, sep=''))
+
+# Using relative paths:
+# Script will be invoked from R/Scripts folder.  Make 'R' the WRKDIR.
+WRKDIR <- ('..')
+
+# Not needed if path is relative ...
+if(!file.exists(WRKDIR)) stop("WRKDIR ERROR: ", WRKDIR)
+
+# do once
+#setwd(WRKDIR)
+
+# file rmarkdown file management options: cache, figures
+cache_DIR <- file.path(WRKDIR, 'Scripts', 'cache/index/')
+suppressMessages(dir.create(cache_DIR, recursive=T))
+opts_chunk$set(cache.path=cache_DIR)
+
+# NOTE: need to add FC to figures path
+# due to confluence "feature" of keeping the filename of embedded figures
+
+figures_DIR <- file.path(WRKDIR, 'Scripts', 'figures/index/')
+#figures_DIR <- file.path('figures/index')
+
+suppressMessages(dir.create(figures_DIR, recursive=T))
+opts_chunk$set(fig.path=paste0(figures_DIR))###, FC))
+
+tables_DIR <- file.path(WRKDIR, 'Scripts', 'tables/index/')
+suppressMessages(dir.create(tables_DIR, recursive=T))
+
+# need a local copy of help_DIR
+#help_DIR <- file.path(WRKDIR, 'Scripts', 'help_files')
+help_DIR <- file.path('.', 'help_files')
+suppressMessages(dir.create(help_DIR, recursive=T))
+
+#temp_DIR <- file.path(WRKDIR, 'Scripts', 'temp_files')
+#suppressMessages(dir.create(temp_DIR, recursive=T))
+
+
+```
+<!-- ######################################################################## -->
+
+
+```{r index-utilityFns, echo=T, include = F}
+
+ source('utilityFns.r')
+ #source('utilities/Mymva.r')
+
+round_df <- function(x, digits) {
+    # round all numeric variables
+    # x: data frame 
+    # digits: number of digits to round
+    numeric_columns <- sapply(x, mode) == 'numeric'
+    x[numeric_columns] <-  round(x[numeric_columns], digits)
+    x
+}
+```
+<!-- ######################################################################## -->
+
+This professional development plan is designed for statisticians with 10-15+ 
+years of experience who need to update their skills with the latest developments
+in:
+* statistical computing
+* analysis
+* reporting methods
+
+The professional development program 
+was created with assistance from Claude, an AI assistant developed by Anthropic.
+Claude helped structure the training modules, generate activity descriptions,
+and organize the implementation timeline based on current trends in statistical
+computing and modern methodologies. The AI incorporated feedback and
+made targeted revisions to sections about machine learning methodologies
+and computing environments, demonstrating how AI tools can be used
+collaboratively for curriculum development.
+
+<br/>
+
+## Learning Track 1: Modern Statistical Computing Environments 
+
+### Transition from Traditional Software to Modern Platforms
+**Format**: Hands-on workshop (3 hours)  
+
+**Objective**: Familiarize with modern statistical computing environments that complement or replace SAS, SPSS, or older R versions
+
+**Activities**: 
+
+- Comparative exercise: Solve the same analysis problem in traditional software and then in Python/modern R
+- Pair programming: Team up experienced statisticians with those already familiar with modern tools
+- Migration exercise: Convert an existing analysis script from legacy software to modern alternatives
+
+### Version Control and Reproducible Analysis
+**Format**: Interactive tutorial with practice (2 hours)
+
+**Objective**: Master Git/GitHub for code versioning and collaboration
+
+**Activities**: 
+
+- Set up personal GitHub repositories for statistical projects
+- Practice creating branches, commits, and pull requests
+- Implement a reproducible analysis workflow using Git, R Markdown or Jupyter Notebooks
+- Review each other's repositories and provide feedback on structure and documentation
+
+### Cloud Computing for Statistical Analysis
+**Format**: Guided exploration (2 hours)   
+
+**Objective**: Utilize cloud platforms for scalable statistical analysis
+
+**Activities**:  
+
+- Set up environments on platforms like AWS, Google Cloud, or Azure
+- Deploy and run statistical models on cloud infrastructure
+- Compare performance between local and cloud-based computation for large datasets
+- Collaborative challenge: Develop a cloud-based analysis pipeline for a complex dataset
+
+<br/>
+
+## Learning Track 2: Modern Statistical Methods and Approaches
+
+### AI and LLM Integration for Statistical Work
+**Format**: Workshop with hands-on exercises (4 hours)
+
+**Objective**: Leverage AI assistants and large language models to enhance statistical workflows
+
+**Activities**:  
+
+- Explore effective prompting techniques for statistical analysis with models like GPT-4 and Claude
+- Practice using AI assistants for code debugging, explanation, and optimization
+- Develop custom workflows that combine human statistical expertise with AI capabilities
+- Critical evaluation: Assess the limitations and potential biases when using AI for statistical work
+- Ethical considerations workshop: Discuss responsible AI use in professional statistical practice
+
+- Integration exercise: Design a hybrid workflow that leverages both traditional statistical methods and AI tools
+
+### Bayesian Methods in Practice
+**Format**: Case-study workshop (4 hours)   
+
+**Objective**: Apply Bayesian approaches to real-world statistical problems
+
+**Activities**:  
+
+- Compare frequentist vs. Bayesian approaches to the same problem
+- Implement Bayesian models using modern tools (Stan, PyMC3, brms)
+- Develop intuition for prior selection through interactive simulations
+- Group challenge: Design and implement a Bayesian solution to an industry-relevant problem
+
+### Machine Learning Integration
+**Format**: Project-based learning (6 hours split across multiple sessions)   
+
+**Objective**: Effectively integrate machine learning with traditional statistical approaches
+
+**Activities**:  
+
+- Identify appropriate use cases for ML vs. traditional statistical methods
+- Develop a taxonomy of problems and corresponding methodological approaches
+- Implement hybrid models that combine statistical rigor with ML flexibility
+- Critical evaluation exercise: Analyze published papers that use ML methods for statistical inference
+
+### Causal Inference Methods
+**Format**: Seminar with practical exercises (4 hours)   
+
+**Objective**: Master modern causal inference frameworks and methods
+
+**Activities**:  
+
+- Compare traditional regression approaches with modern causal inference methods
+- Implement causal graphs and identify assumptions using DAGitty or similar tools
+- Apply methods like propensity score matching, instrumental variables, and difference-in-differences
+- Design challenge: Develop a causal inference strategy for a complex observational dataset
+
+<br/>
+
+## Learning Track 3: Modern Reporting and Communication  {-}
+
+### Dynamic Reporting and Dashboards
+**Format**: Hands-on workshop (3 hours)   
+
+**Objective**: Create interactive statistical reports and dashboards
+
+**Activities**:  
+
+- Convert static reports to interactive documents using Shiny, Dash, or Observable
+- Develop parameterized reports that stakeholders can customize
+- Implement effective data visualization principles in interactive contexts
+- Peer review: Evaluate and provide feedback on each other's interactive reports
+
+### Communicating Uncertainty
+**Format**: Practice session with feedback (2 hours)
+**Objective**: Effectively communicate statistical uncertainty to non-technical stakeholders
+
+**Activities**:  
+
+- Develop visual representations of uncertainty beyond error bars and p-values
+- Create explanatory tools for Bayesian credible intervals and posterior distributions
+- Role-play exercise: Explain complex statistical results to simulated stakeholders
+- Design challenge: Create a one-page uncertainty summary for a complex analysis
+
+### Automated Reporting Pipelines
+**Format**: Project-based learning (4 hours)   
+
+**Objective**: Implement automated statistical reporting workflows
+
+**Activities**:  
+
+- Set up GitHub Actions or similar CI/CD tools for automated report generation
+- Create templated analyses that can be applied to regularly updated data
+- Develop quality control checks that run automatically
+- Team challenge: Design and implement an end-to-end automated analysis pipeline
+
+<br/>
+## Implementation Plan {-}
+
+### Month 1: Foundations
+- Week 1-2: Modern Computing Environments (Activities 1.1 and 1.2)
+- Week 3-4: AI Integration and Introduction to Modern Methods (Activities 2.1 and 2.2)
+
+### Month 2: Advanced Methods
+- Week 5-6: Machine Learning Integration (Activity 2.3)
+- Week 7-8: Causal Inference (Activity 2.4)
+
+### Month 3: Communication and Application
+- Week 9-10: Modern Reporting (Activities 3.1 and 3.2)
+- Week 11-12: Automated Pipelines and Integration (Activity 3.3)
+- Final Week: Capstone Project
+
+<br/>
+
+## Assessment Strategy
+
+### Formative Assessment
+- Regular peer feedback sessions
+- Self-assessment reflection logs
+- Incremental project milestones
+
+### Summative Assessment
+- Capstone project: Participants apply all learned skills to a real-world statistical problem
+- Portfolio of work demonstrating proficiency in new methods and tools
+- Presentation to peers on a chosen advanced topic
+
+<br/>
+
+## Resource Requirements
+
+### Technology
+- Access to cloud computing resources (AWS/GCP/Azure credits)
+- Modern statistical software installations (R/RStudio, Python/Jupyter)
+- Version control systems (Git)
+- Interactive reporting tools (R Shiny, Dash, Observable)
+
+### Personnel
+- Lead instructor with expertise in both traditional and modern statistical methods
+- Topic specialists for advanced sessions
+- Technical support for software installation and troubleshooting
+
+### Materials
+- Curated datasets representing diverse analytical challenges
+- Pre-configured computing environments to minimize setup time
+- Reference guides for transitioning between software platforms
+
+<br/>
+1
+## Extension Activities
+
+### Community of Practice
+- Establish a peer learning community for ongoing support
+- Regular journal club focused on emerging methods
+- Mentorship pairing between participants with complementary strengths
+
+### Continuous Learning Paths
+- Specialized deep-dive workshops on specific tools or methods
+- Advanced certification opportunities
+- Research collaboration opportunities
+
+---
+
+This professional development plan is designed to be modular, allowing participants to focus on areas most relevant to their specific needs while ensuring comprehensive coverage of modern statistical practices.
+
+```{r, echo=FALSE}
+  knitr::knit_exit()
+```
+
+
+<!-- To run
+# nohup Rscript -e "knitr::knit2html('_prof_dev_plan.Rmd')" > _prof_dev_plan.log  &
+    
+# Or
+# nohup Rscript -e "rmarkdown::render('_prof_dev_plan.Rmd')" > _prof_dev_plan.log  &
+
+-->
+
+

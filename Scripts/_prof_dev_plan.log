@@ -1,0 +1,17 @@
+
+
+processing file: _prof_dev_plan.Rmd
+1/9                        
+2/9 [GlobalOptions]        
+3/9                        
+4/9 [prof-dev-plan-Prelims]
+5/9                        
+6/9 [index-utilityFns]     
+7/9                        
+8/9 [unnamed-chunk-1]      
+output file: _prof_dev_plan.knit.md
+
+/usr/local/bin/pandoc +RTS -K512m -RTS _prof_dev_plan.knit.md --to html4 --from markdown+autolink_bare_uris+tex_math_single_backslash --output _prof_dev_plan.html --lua-filter /Library/Frameworks/R.framework/Versions/4.4-x86_64/Resources/library/bookdown/rmarkdown/lua/custom-environment.lua --lua-filter /Library/Frameworks/R.framework/Versions/4.4-x86_64/Resources/library/rmarkdown/rmarkdown/lua/pagebreak.lua --lua-filter /Library/Frameworks/R.framework/Versions/4.4-x86_64/Resources/library/rmarkdown/rmarkdown/lua/latex-div.lua --lua-filter /Library/Frameworks/R.framework/Versions/4.4-x86_64/Resources/library/rmarkdown/rmarkdown/lua/table-classes.lua --embed-resources --standalone --wrap preserve --variable bs3=TRUE --section-divs --template /Library/Frameworks/R.framework/Versions/4.4-x86_64/Resources/library/rmarkdown/rmd/h/default.html --no-highlight --variable highlightjs=1 --number-sections --include-before-body /var/folders/jk/d24lm6n944q5y650lph85m7w0000gp/T//RtmpBFlQvT/rmarkdown-strea237187fe6.html --variable navbar=1 --variable theme=bootstrap --css ../../css/pandoc3.css --mathjax --variable 'mathjax-url=https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML' --include-in-header /var/folders/jk/d24lm6n944q5y650lph85m7w0000gp/T//RtmpBFlQvT/rmarkdown-strea235974d8ad.html --variable code_folding=hide --variable source_embed=_prof_dev_plan.Rmd --include-after-body /var/folders/jk/d24lm6n944q5y650lph85m7w0000gp/T//RtmpBFlQvT/fileea2363d73bd.html --variable code_menu=1 --citeproc 
+[WARNING] Could not fetch resource ../../css/pandoc3.css
+
+Output created: _prof_dev_plan.html

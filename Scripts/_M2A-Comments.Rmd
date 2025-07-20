@@ -1,0 +1,51 @@
+SPLASH - Comments
+
+<p><p/>
+* Outside of simulated data, p-values cannot be taken at face value
+**without careful scrutiny of the data in every case**.  q-values even less so.
+   - In omic scale analyses it has not been possible to carefully examine
+modeling assumptions for every feature (when modeling is at the feature level).
+AI may change this.
+   - The shape of the distribution can be examined to ensure that it meets expectations.
+
+<p><p/>
+* p/q values may still provide useful guides for the purpose of ordering and
+selecting features, but some checks must be put in place to verify that
+this is the case. 
+
+<p><p/>
+* Theoretical properties of summaries can provide guidance for the design of
+analysis steps or components but they get their value from the properties
+they confer to the procedures.
+   - ie. the q-value filter is correct if the resulting procedure 
+achieves a good balance between sensitivity and specificity,
+ 
+<p><p/>
+* For the purpose of discovery or feature identification,
+it is the distribution of the summaries over the study dataset that matters most.
+   - Is the distribution of values of a statistic used to filter or select
+features peaked, flat, heavy-tailed.
+   - Is the shape consistent with expectations.
+
+<p><p/>
+* In high throughput analysis, including genomics, unwanted shared variability
+among features is to be expected.  An analysis is incomplete if it does not
+include a careful examination at the data to detect any sign of unwanted variability.
+See the RUV literature  [@Molania:2023aa; @Gerard:2021aa; @Jiang:2023aa].
+
+
+<p><p/>
+* The statistical standard errors of measurement, or the sampling errors, are only
+one source of variability in data collected in a high throughput
+massively parallel fashion.  Other sources of variability such as
+reagent lots, instruments, operators, days (ie. day to day but not otherwise
+specified) will often dominate the variability.
+   - The Bin Yu Group [@Yu:2024aa;Yu:2020aa;Yu:2013aa;Yu:2018aa] suggests the use of
+stability as a more comprehensive or inclusive measure of variability to monitor
+and optimize by study design or parameter setting.
+
+<!-- 
+  nohup Rscript -e "rmarkdown::render('_M2A-Comments.Rmd')" > _M2A-Comments.log  &
+
+-->
+

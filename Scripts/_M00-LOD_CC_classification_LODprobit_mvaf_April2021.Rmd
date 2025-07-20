@@ -1,0 +1,1311 @@
+---
+title: "AV2"
+author: "Starter Code from Constanza Rojo"
+subtitle: ""
+date: '`r format(Sys.time(), "%a %b %d %X %Y", tz="America/Los_Angeles")`' 
+always_allow_html: yes
+params:
+  input_path: "."
+  output_path: "rendered"
+  version: "latest"
+output:
+  html_document:
+    toc: yes
+    toc_float: yes
+    toc_depth: 3
+    code_folding: hide
+    number_sections: true
+  pdf_document:
+    toc: yes
+    number_sections: true
+    keep_tex: yes
+geometry: margin = 0.5 in
+---
+ 
+  <style>
+  @import url('https://fonts.googleapis.com/css?family=Raleway');
+@import url('https://fonts.googleapis.com/css?family=Oxygen');
+@import url('https://fonts.googleapis.com/css?family=Raleway:bold');
+@import url('https://fonts.googleapis.com/css?family=Oxygen:bold');
+
+.main-container {
+  max-width: 1400px !important;
+}
+
+body{
+  font-family: 'Oxygen', sans-serif;
+  font-size: 16px;
+  line-height: 24px;
+}
+
+h1,h2,h3,h4 {
+  font-family: 'Raleway', sans-serif;
+}
+
+.container { width: 1400px; }
+
+h2 {
+  background-color: #D4DAEC;
+    text-indent: 100px;
+}
+
+h3 {
+  background-color: #dddddd;
+}
+
+caption {
+  font-size: 20px;
+  caption-side: top;
+  text-indent: 30px;
+  background-color: lightgrey;
+  color: black;
+  margin-top: 5px;
+}
+
+g-table-intro h4 {
+  text-indent: 0px;
+}
+</style>
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(echo = TRUE,
+                      comment = NA,
+                      warning = FALSE,
+                      error = FALSE,
+                      message = FALSE,
+                      cache = FALSE,
+                      fig.width = 12,
+                      fig.height = 8)
+
+suppressMessages(library(dplyr))
+suppressMessages(library(broom))
+suppressMessages(library(tidyr))
+suppressMessages(library(stringr))
+suppressMessages(library(purrr))
+suppressMessages(library(Hmisc))
+suppressMessages(library(janitor))
+suppressMessages(library(DT))
+suppressMessages(library(DiagrammeR))
+suppressMessages(library(ggplot2))
+suppressMessages(library(pander))
+suppressMessages(library(RColorBrewer))
+#suppressMessages(library(kableExtra))
+panderOptions("knitr.auto.asis", FALSE)
+```
+
+
+
+```{r m2a-Prelims,  include=FALSE, echo=FALSE, results='hide', message=FALSE} 
+
+
+FN <- "_M1A-LOD_CC_classification_LODprobit_mvaf_April2021"
+if(sum(grepl(FN, list.files()))==0) stop("Check FN")
+
+ suppressMessages(require(rmarkdown))
+ suppressMessages(require(knitr))
+
+ suppressPackageStartupMessages(require(methods))
+ suppressPackageStartupMessages(require(bookdown))
+
+ suppressPackageStartupMessages(require(data.table))
+ options(datatable.fread.datatable=F)
+
+ suppressPackageStartupMessages(require(plyr))
+ suppressPackageStartupMessages(require(dplyr))
+ suppressPackageStartupMessages(require(magrittr))
+
+ # Shotcuts for knitting and redering while in R session (Invoke interactive R from R/Scripts folder)
+ kk <- function(n='') knitr::knit2html(paste("t", n, sep=''), envir=globalenv(),
+       output=paste(FN,".html", sep=''))
+
+ rr <- function(n='') rmarkdown::render(paste("t", n, sep=''), envir=globalenv(),
+       output_file=paste(FN,".html", sep='')) ##, output_dir='Scripts')
+
+ bb <- function(n='') browseURL(paste(FN,".html", sep=''))
+
+ # The usual shotcuts
+ zz <- function(n='') source(paste("t", n, sep=''))
+
+
+ WRKDIR <- '.'
+ if(!file.exists(WRKDIR)) stop("WRKDIR ERROR", WRKDIR)
+
+ # do once
+
+ # Shotcuts for knitting and redering while in R session
+ kk <- function(n='') knitr::knit2html(paste("t", n, sep=''), envir=globalenv(),
+       output=paste('',FN,".html", sep=''))
+
+ rr <- function(n='') render(paste("t", n, sep=''), envir=globalenv(),
+       output_file=paste(FN,".html", sep=''), output_dir='Scripts')
+
+ bb <- function(n='') browseURL(paste('',FN,".html", sep=''))
+
+ # The usual shorcuts
+ zz <- function(n='') source(paste('', "t", n, sep=''))
+
+ # file rmarkdown file management options: cache, figures
+ cache_DIR <- file.path(WRKDIR, 'cache/M1A/')
+ suppressMessages(dir.create(cache_DIR, recursive=T))
+ opts_chunk$set(cache.path=cache_DIR)
+
+ figures_DIR <- file.path(WRKDIR, 'figures/M1A/')
+ suppressMessages(dir.create(figures_DIR, recursive=T))
+ opts_chunk$set(fig.path=figures_DIR)
+
+ #tables_DIR <- file.path(WRKDIR, 'tables/M1A/')
+ #suppressMessages(dir.create(table_DIR, recursive=T))
+ #opts_chunk$set(fig.path=table_DIR)
+ 
+ # need a local copy of help_DIR
+ #help_DIR <- file.path(WRKDIR, 'help_files')
+ help_DIR <- file.path('.', 'help_files')
+ suppressMessages(dir.create(help_DIR, recursive=T))
+ 
+ temp_DIR <- file.path(WRKDIR, 'temp_files')
+ suppressMessages(dir.create(temp_DIR, recursive=T))
+
+```
+<!-- ######################################################################## -->
+
+
+*** 
+```{r m2a-utilityFns, out.width.px=1, out.height.px=1, echo=FALSE}
+ # Here we define some utility functions
+source('utilityFns.r')
+
+```
+
+<!-- ######################################################################## -->
+
+
+<!-- Overide include -->
+```{r m2a-load_functions, include = FALSE, include=T}
+#Find the LOD given the model and percent, like 95%.
+probX <- function(p, model) {
+  data.frame(prob = p,
+             xval = (qnorm(p) - coef(model)[1])/coef(model)[2])
+}
+
+# generic function to load a series of tsvs from an s3 path into a single dataframe
+load_tsvs <- function(s3_path, pattern) {
+  dfs <- grails3r::read_multiple_from_s3(
+    s3_path,
+    # Suppress col spec output by explicitly asking to guess cols.
+    read_func = function(path) {readr::read_tsv(path, col_types = readr::cols())},
+    includes = paste0("*", pattern),
+    excludes = "*",
+    s3_sync_args = list(ticket = "tickets/eng/dev/aws"))
+  df <- dplyr::bind_rows(lapply(seq_along(dfs), function(i) {
+    dfs[[i]] %>%
+      dplyr::mutate(file_name = basename(names(dfs)[i]))
+  }))
+  return(df)
+}
+```
+
+```{r m2a-load_data, cache=T, cache.vars=c('tf_tidy','dilution_expt','conta_expt','lob_expt','too_label_sap_2','raw_tfs','ccga2_tf_summary_data','variant_tf_path')}
+
+variant_tf_path <- "s3://grail-collin/projects/mrd/av_v2_lod/12_2_20/"
+ccga2_tf_summary_data <- "s3://grail-interpretation/tumor_fraction/ASCO_sample_summary_2020_05_15.tsv"
+
+tf_tidy <- tidydatar::get_tidyset(
+  dataset = "v2-classifier",
+  version = "v1.0",
+  tableset = "analysis",
+  filters = c(""))
+
+dilution_expt <- grails3r::read_from_s3(
+  "s3://grail-eng-multicancer-v2-av-bucket/AV2_datasets/AV2_LOD.tsv",
+  readr::read_tsv,
+  s3_cp_args = list(ticket = "tickets/eng/dev/aws"))
+
+
+SKIP <- function() {
+
+ View(conta_expt_trial %>% dplyr::select(sample_name, cancer_type_expected, clinical_stage, titration_level_pct, baseline_vaf))
+
+as.data.frame(
+ dilution_expt %>%
+   dplyr::group_by(sample_name, exclude, analysis_evaluability_av) %>%
+   dplyr::summarise(n = dplyr::n())
+)
+
+}#SKIP
+
+# the conta cc2 experiment uses the same samples as the lod experiment
+conta_expt <- grails3r::read_from_s3(
+  "s3://grail-eng-multicancer-v2-av-bucket/AV2_datasets/AV2_CC2.tsv",
+  readr::read_tsv,
+  s3_cp_args = list(ticket = "tickets/eng/dev/aws"))
+
+# load lob (limit of blank) experiment info
+lob_expt <- grails3r::read_from_s3(
+  "s3://grail-eng-multicancer-v2-av-bucket/AV2_datasets/AV2_LOB.tsv",
+  readr::read_tsv,
+  s3_cp_args = list(ticket = "tickets/eng/dev/aws"))
+
+too_label_sap_2 <- tf_tidy$table("clinical") %>%
+  dplyr::select(participant_id, too_label_sap_2)
+
+# load the raw tumor fraction estimates
+raw_tfs <- load_tsvs(variant_tf_path, "_biopsy_free.tf") %>%
+  dplyr::mutate(tf_type = "biopsy_free") %>%
+  dplyr::bind_rows(load_tsvs(variant_tf_path, "_biopsy_informed.tf") %>%
+                     dplyr::mutate(tf_type = "biopsy_informed")) %>%
+  # filter to estimate for the matched cfDNA (exclude non-cancer specificity estimates)
+  dplyr::filter(stringr::str_detect(string = file_name, pattern = sample)) %>%
+  dplyr::mutate(sample_id = stringr::str_split_fixed(file_name, "_", 2)[, 1])
+
+```
+
+```{r m2a-arrange_data, include = T}
+
+# ### Add targeted vaf to CC
+# conta_expt %>%
+#   dplyr::left_join(tf_tidy$table("clinical") %>%
+#                      dplyr::select(participant_id, too_label_sap_2))
+
+# add participant_id, too_label_sap_2, and mixture_fraction, titration_level,
+# cancer_type_expected, and cancer_is_detected to dilution samples
+# low_coverage_should_be_excluded <- c("P02AKQB")
+
+### add vaf
+conta_expt <- conta_expt %>%
+  dplyr::mutate(baseline_vaf = case_when(
+    str_detect(sample_name, "C1_") ~ dilution_expt %>%
+      dplyr::filter(sample_name == "C1_B") %>%
+      dplyr::select(targeted_vaf_percent) %>%
+      distinct() %>% as.numeric(),
+    str_detect(sample_name, "C3_") ~ dilution_expt %>%
+      dplyr::filter(sample_name == "C2_B") %>%
+      dplyr::select(targeted_vaf_percent) %>%
+      distinct() %>% as.numeric(),
+    str_detect(sample_name, "C2_") ~ dilution_expt %>%
+      dplyr::filter(sample_name == "C3_B") %>%
+      dplyr::select(targeted_vaf_percent) %>%
+      distinct() %>% as.numeric(),
+    str_detect(sample_name, "C4_") ~ dilution_expt %>%
+      dplyr::filter(sample_name == "C4_B") %>%
+      dplyr::select(targeted_vaf_percent) %>%
+      distinct() %>% as.numeric(),
+    str_detect(sample_name, "C7_") ~ dilution_expt %>%
+      dplyr::filter(sample_name == "C7_B") %>%
+      dplyr::select(targeted_vaf_percent) %>%
+      distinct() %>% as.numeric(),
+    str_detect(sample_name, "C8_") ~ dilution_expt %>%
+      dplyr::filter(sample_name == "C8_B") %>%
+      dplyr::select(targeted_vaf_percent) %>%
+      distinct() %>% as.numeric(),
+    str_detect(clinical_stage, "Non-cancer") ~ 0,
+    TRUE ~ NA_real_
+  ), 
+  mixture_fraction = titration_level_pct / 100,
+  targeted_vaf_percent = baseline_vaf * mixture_fraction) 
+
+dilution_tfs <- raw_tfs %>%
+  dplyr::inner_join(dplyr::bind_rows(dilution_expt,
+                                     conta_expt) %>%
+                      dplyr::filter(!exclude, analysis_evaluability_av == TRUE,
+                                    cancer_type_expected != "Non-cancer") %>%
+# !sample_id %in% low_coverage_should_be_excluded
+                      dplyr::mutate(participant_id = source_cancer_participant_id) %>%
+                      dplyr::select(study_name,
+                                    sample_name,
+                                    sample_id,
+                                    participant_id,
+                                    mixture_fraction,
+                                    titration_level,
+                                    cancer_type_expected,
+                                    cancer_is_detected,
+                                    cancer_is_expected,
+                                    cancer_type_prediction_is_correct,
+                                    analysis_linear_filtered_abnormal_coverage_cpg_mean,
+                                    targeted_vaf_percent,
+                                    non_cancer),
+                    by = "sample_id") %>%
+  dplyr::left_join(tf_tidy$table("clinical") %>%
+                     dplyr::select(participant_id, too_label_sap_2))
+
+  
+# View(dilution_tfs %>%
+#   filter(study_name == "AV2_LOD") %>%
+#   group_by(participant_id, sample_name) %>%
+#   summarise(n = n()))
+# add participant_id, too_label_sap_2, mixture_fraction, titration_level,
+# cancer_type_expected, and cancer_is_detected to lob non-cancer samples
+# use lims sample id as the participant_id here
+# sample_name coming out of reflow is the lims id concatenated with the too_label_sap_2
+# used for biopsy_free af estimation
+lob_tfs <- raw_tfs %>%
+  # filter to lob samples
+  dplyr::filter(sample_id %in% lob_expt$sample_id) %>%
+  dplyr::mutate(participant_id = stringr::str_match(sample, "([0-9A-Z]+)_(.*)")[, 2],
+                too_label_sap_2 = stringr::str_match(sample, "([0-9A-Z]+)_(.*)")[, 3],
+                mixture_fraction = 1,
+                titration_level = "baseline",
+                cancer_type_expected = "non-cancer") %>%
+  # get cancer_is_detected
+  dplyr::inner_join(lob_expt %>%
+                      dplyr::mutate(targeted_vaf_percent = 0) %>%
+                      dplyr::filter(!exclude, analysis_evaluability_av == TRUE) %>% ### PLACEHOLDER
+                      dplyr::select(sample_id, study_name, cancer_is_detected, cancer_is_expected,
+                                    cancer_type_prediction_is_correct,
+                                    analysis_linear_filtered_abnormal_coverage_cpg_mean, non_cancer,
+                                    targeted_vaf_percent),
+                    by = "sample_id")
+
+
+tfs <- dplyr::bind_rows(dilution_tfs, lob_tfs)
+# load small variant based tumor fraction estimates
+small_variant_ests <- grails3r::read_from_s3(
+  ccga2_tf_summary_data,
+  readr::read_tsv,
+  s3_cp_args = list(ticket = "tickets/eng/ccga2-analysis/aws")) %>%
+  dplyr::inner_join(tf_tidy$table("clinical") %>%
+                      dplyr::select(participant_id, too_label_sap_2)) %>%
+  dplyr::filter(!is.na(tumor_fraction_sv)) %>%
+  # estimate allele fraction as the mean tissue vaf times the tumor fraction
+  dplyr::mutate(
+    # allele fraction lower 95% credible interval bound
+    af_lcb_sv = mean_vaf_sv * lcb_sv,
+    # allele fraction median estimate
+    af_sv = mean_vaf_sv * tumor_fraction_sv,
+    # allele fraction upper 95% credible interval bound
+    af_ucb_sv = mean_vaf_sv * ucb_sv)
+
+## AF Estimate Concordance with Small Variant Ground Truth
+plot_data <- tfs %>%
+  dplyr::left_join(small_variant_ests %>%
+                     dplyr::select(participant_id, lcb_sv, ucb_sv, tumor_fraction_sv,
+                                   mean_vaf_sv),
+                   by = "participant_id")
+# compute methyl variant AF estimates as a undiluted methyl variant estimate times
+# dilution for dilution samples
+estimated_mv_afs <- plot_data %>%
+  dplyr::select(participant_id, tf_type, sample, mixture_fraction, too_label_sap_2, posterior_median, af_posterior_median, study_name, participant_id) %>%
+  dplyr::left_join(
+    plot_data %>%
+      dplyr::filter(mixture_fraction == 1) %>%
+      dplyr::group_by(participant_id, tf_type, too_label_sap_2) %>%
+      dplyr::summarise(af_posterior_median_mean = mean(af_posterior_median),
+                       posterior_median_mean = mean(posterior_median),
+                       af_lower_95pct_ci = mean(af_lower_95pct_ci),
+                       af_upper_95pct_ci = mean(af_upper_95pct_ci)) %>%
+      dplyr::ungroup(),
+    by = c("participant_id", "tf_type", "too_label_sap_2")) %>%
+  dplyr::mutate(titration_af_posterior_median = af_posterior_median_mean * mixture_fraction,
+                titration_posterior_median = posterior_median_mean * mixture_fraction,
+                titration_af_lower_95pct_ci = af_lower_95pct_ci * mixture_fraction,
+                titration_af_upper_95pct_ci = af_upper_95pct_ci * mixture_fraction) %>%
+  dplyr::select(sample, tf_type, titration_af_posterior_median, titration_posterior_median, posterior_median, af_posterior_median,
+                titration_af_lower_95pct_ci, titration_af_upper_95pct_ci, study_name, participant_id)
+
+
+score_vs_methyl_af <- tfs %>%
+  dplyr::left_join(tf_tidy$table("clinical") %>%
+                     dplyr::mutate(cancer_type_and_stage = paste(cancer_type_sap,
+                                                                 cstage_highest_display)) %>%
+                     dplyr::select(participant_id, cancer_type_and_stage)) %>%
+  dplyr::mutate(cancer_type_and_stage = dplyr::if_else(is.na(cancer_type_and_stage),
+                                                       "non-cancer",
+                                                       cancer_type_and_stage)) %>%
+  # filter out unneeded lob estimates using sarcoma_uterus methyl variants
+  # the sarcoma uterus samples did not end up having a complete dataset
+  dplyr::filter(!too_label_sap_2 %in% c("sarcoma_uterus"))
+
+
+final_data <- score_vs_methyl_af %>%
+  inner_join(
+    estimated_mv_afs
+  ) %>%
+  filter(
+    tf_type == "biopsy_free"
+  ) %>%
+  left_join(
+    tf_tidy$table("clinical") %>%
+      mutate(cancer_type_and_stage = paste(cancer_type_sap, cstage_highest_display)) %>%
+      dplyr::select(participant_id, cancer_type_and_stage, cancer_type_sap)
+  ) %>%
+  dplyr::select(
+    study_name,
+    participant_id,
+    mixture_fraction,
+    titration_level,
+    titration_af_posterior_median,
+    af_posterior_median,
+    posterior_median,
+    titration_posterior_median,
+    analysis_linear_filtered_abnormal_coverage_cpg_mean,
+    targeted_vaf_percent,
+    cancer_is_expected,
+    cancer_type_prediction_is_correct,
+    # classifier_score,
+    cancer_type_and_stage,
+    cancer_is_detected,
+    cancer_type_sap
+  ) %>%
+  # rbind(., expt2_seq_full) %>%
+  dplyr::mutate(cancer_type = case_when(
+    str_detect(cancer_type_and_stage, "colon_rectum") ~ "colon_rectum",
+    str_detect(cancer_type_and_stage, "lung") ~ "lung",
+    str_detect(cancer_type_and_stage, "pancreatic") ~ "pancreatic",
+    str_detect(cancer_type_and_stage, "breast") ~ "breast",
+    str_detect(cancer_type_and_stage, "head_and_neck") ~ "head_and_neck",
+    str_detect(cancer_type_and_stage, "stomach") ~ "stomach",
+    str_detect(cancer_type_and_stage, "non-cancer") ~ "non-cancer"
+  ),
+  sample_type = case_when(
+    str_detect(cancer_type_and_stage, "non-cancer") ~ "Non-cancer",
+    TRUE ~ "Clinical Sample")) %>%
+  dplyr::mutate(cancer_is_detected = as.character(cancer_is_detected),
+                cancer_is_detected = ifelse(cancer_is_detected == TRUE, 1, 0)) %>%
+  dplyr::mutate(cancer_detected_too_correct = ifelse(cancer_type_prediction_is_correct == TRUE &
+                                                cancer_is_expected, 1, 0)) %>%
+  dplyr::mutate(participant_id = case_when(
+    study_name == "AV2_LOB" ~ "NC_pool",
+    TRUE ~ participant_id
+  ))
+
+
+final_data$cancer_type_and_stage <- factor(final_data$cancer_type_and_stage,
+                                           levels = c("breast III",
+                                                      "colon_rectum III", "head_and_neck I",
+                                                      "lung II", "ovary III", "stomach II",
+                                                      "non-cancer"))
+final_data$study_name <- factor(final_data$study_name, levels = c("AV2_CC2", "AV2_LOD", "AV2_LOB"))
+```
+
+# Relevant Observarion
+
+There are some discrepancies in the results, when compared to AV2 reports:
+
+* The two non-cancer baselines from LOD do not have methyl variant information, so they are not acounted. 
+* ccga_12393 present in LOD and CC2 is not part of the analaysis due to missing tumor fraction data.
+
+
+# LOD + LOB Data Analysis 
+
+This analysis uses equivalent data as in the Analytical Sensitivity and Specificity Study Report.
+
+
+```{r m2a-LODonly_summary}
+### Summary Table
+REPLACE_THIS <- function() {
+final_data %>%
+  dplyr::filter(study_name == "AV2_LOD") %>%
+  dplyr::group_by(participant_id, cancer_type_and_stage, mixture_fraction) %>%
+  summarise(Count = n(),
+            `Targeted VAF (%)` = round(mean(targeted_vaf_percent), 4),
+            `Targeted mVAF (%)` = round(100*mean(titration_af_posterior_median), 4),
+            `Targeted TF (%)` = round(100*mean(titration_posterior_median), 4),
+            correct_detection = sum(cancer_is_detected),
+            correct_too = sum(cancer_detected_too_correct),
+            `Detection Rate (%)` = round(100*correct_detection / Count, 3),
+            `Detection Rate TOO (%)` = round(100*correct_too/Count, 3),
+            `Mean Abn. Cov.` = round(mean(analysis_linear_filtered_abnormal_coverage_cpg_mean), 3),
+            `Max Abn. Cov.` = round(max(analysis_linear_filtered_abnormal_coverage_cpg_mean), 3)) %>%
+  relocate(mixture_fraction, .after = `Max Abn. Cov.`) %>%
+  DT::datatable(extensions = 'Buttons', options = list(dom = 'Bfrtip', buttons = c('excel', "csv")),
+                caption = "AV2-LOD participant summary with hit rates")
+}#REPLACE_THIS
+
+final_data_sum <- by(
+ final_data %>% 
+   #dplyr::filter(study_name == "AV2_LOD") %>%
+   dplyr::select(targeted_vaf_percent, titration_af_posterior_median,
+     titration_posterior_median, cancer_is_detected, cancer_detected_too_correct, 
+     analysis_linear_filtered_abnormal_coverage_cpg_mean),
+ final_data %>% 
+   #dplyr::filter(study_name == "AV2_LOD") %>%
+   #dplyr::select(participant_id, cancer_type_and_stage, mixture_fraction),
+   dplyr::select(participant_id, cancer_type_and_stage, titration_af_posterior_median),
+ FUN=function(x) c(N=nrow(x), colMeans(x)))
+ 
+final_data_sum2 <- NULL
+for(II in 1:dim(final_data_sum)[1])
+for(JJ in 1:dim(final_data_sum)[2])
+for(KK in 1:dim(final_data_sum)[3]){
+ if(is.null(final_data_sum[II,JJ,KK][[1]])) next()
+ final_data_sum2 <- rbind(final_data_sum2,
+  data.frame(
+   participant_id=dimnames(final_data_sum)[[1]][II],
+   cancer_type_and_stage=dimnames(final_data_sum)[[2]][JJ],
+   mixture_fraction=dimnames(final_data_sum)[[3]][KK],
+   t(final_data_sum[II,JJ,KK][[1]]))
+ )
+ }
+
+final_data_sum2 %>% dplyr::mutate(
+   Count = N,
+   `Targeted VAF (%)` = round(targeted_vaf_percent, 4),
+   `Targeted mVAF (%)` = round(100*titration_af_posterior_median,4),
+   `Targeted TF (%)` = round(100*titration_posterior_median, 4),
+   correct_detection = round(Count*cancer_is_detected),
+   correct_too = round(Count*cancer_detected_too_correct),
+   `Detection Rate (%)` = round(100*cancer_is_detected, 3),
+   `Detection Rate TOO (%)` = round(100*cancer_detected_too_correct, 3),
+   `Mean Abn. Cov.` = round(analysis_linear_filtered_abnormal_coverage_cpg_mean, 3)) %>%
+   #`Max Abn. Cov.` = round(max(analysis_linear_filtered_abnormal_coverage_cpg_mean), 3)) %>%
+   #relocate(mixture_fraction, .after = `Max Abn. Cov.`) %>% 
+   dplyr::select(1:3, Count:`Mean Abn. Cov.`)  %>%
+  #DT::datatable(extensions = 'Buttons', options = list(dom = 'Bfrtip', buttons = c('excel', "csv")),
+  DT::datatable(extensions = 'Buttons', options = list(pageLength=50),
+                caption = "AV2-LOD participant summary with hit rates")
+
+# Save THIS
+saveObj('final_data_sum2','final_data_sum2')
+
+### Create Data to input information
+
+LOD_summary_all <- data.frame(
+  `Data Input` = c(), Metric = c(), Detection = c(), LOD95 = c()
+)
+
+
+fit_data_LOD <- final_data %>%
+  dplyr::filter(study_name != "AV2_CC2") %>%
+  dplyr::mutate(clinical_status = case_when(
+    cancer_type == "non-cancer" ~ "Non-cancer",
+    TRUE ~ "Cancer"
+  ))
+
+fit_data_LOD %>% 
+   dplyr::select(participant_id, mixture_fraction, titration_af_posterior_median, cancer_is_detected) %>%
+  #DT::datatable(extensions = 'Buttons', options = list(dom = 'Bfrtip', buttons = c('excel', "csv")),
+  DT::datatable(extensions = 'Buttons', options = list(pageLength=25),
+                caption = "fit_data_LOD")
+
+cat("N cases:\n")
+with(fit_data_LOD, sapply(split(titration_af_posterior_median, cancer_is_detected), length))
+
+cat("N design points:\n")
+with(fit_data_LOD, sapply(split(titration_af_posterior_median, cancer_is_detected), 
+   function(x) length(unique(x))))
+
+# save for future use
+saveObj('fit_data_LOD', 'fit_data_LOD')
+
+```
+
+## For methyl variant allele fraction (mVAF)
+
+```{r m2a-LODonly_mvaf_fit, fig.height = 6, fig.width = 10}
+### GLM fit
+glm_probit <- glm(cancer_is_detected ~ titration_af_posterior_median,
+                data = fit_data_LOD, binomial(link = "probit"))
+
+glm_probit_too <- glm(cancer_detected_too_correct ~ titration_af_posterior_median,
+                data = fit_data_LOD, binomial(link = "probit"))
+
+
+LOD_summary_all <- bind_rows(LOD_summary_all, 
+          data.frame(
+  `Data Input` = c("LOD + LOB", "LOD + LOB"),
+  Metric = c("mVAF", "mVAF"),
+  Detection = c("Cancer Detected", "Cancer Detected and TOO"),
+  LOD95 = c(round(probX(0.95, glm_probit)$xval, 6), round(probX(0.95, glm_probit_too)$xval, 6))
+))
+
+forLine_all <- data.frame(x = seq(0, 0.05, length.out = 10000)) %>%
+  dplyr::mutate(y = pnorm(coef(glm_probit)[1] + x*coef(glm_probit)[2], mean = 0, sd = 1))
+
+fit_data_LOD %>%
+  ggplot(aes(x = titration_af_posterior_median,
+             y = cancer_is_detected)) +
+  geom_point(aes(color = clinical_status), size = 3, shape = 1) +
+  geom_line(data = forLine_all, aes(x = x, y = y), col = "blue") +
+  scale_x_log10(limits = c(10^-6, 0.1), breaks = 10 ^ seq(-6, 0, 1), minor_breaks = NULL) +
+  # scale_x_log10(limits = c(min(fit_data$titration_af_posterior_median), 3)) +
+  scale_y_continuous(breaks = c(0, 1), labels = c("No", "Yes"), limits = c(0, 1), minor_breaks = NULL) +
+  scale_color_manual(values = c(brewer.pal(n = 8, name = "Dark2")[1:2])) +
+  theme_bw() +
+  geom_segment(data = probX(0.95, glm_probit), aes(x = xval, xend = xval, y = 0, yend = 0.95),
+               colour = "red", linetype = "dashed",size = 0.6) +
+  geom_segment(data = probX(0.95, glm_probit), aes(x = 0, xend = xval, y = 0.95, yend = 0.95),
+               colour = "red", linetype = "dashed", size = 0.6) +
+  annotate("text", x = 0.02, y = 0.1,
+           label = str_c("LOD at 95% = ", round(100*probX(0.95, glm_probit)$xval, 4), "%"), size = 5) +
+  labs(x = "Average Methyl Variant Allele Fraction\n(Undiluted MVAF * titration)",
+    y = "Cancer is Detected",
+    color = "Sample Type") +
+  ggtitle("Probit Model Fit for mVAF - Cancer Detection") + 
+  theme(axis.text.x = element_text(size = 12),
+        legend.box = "vertical",
+        legend.position = "bottom",
+        plot.caption = element_text(hjust = 0),
+        text = element_text(size = 15))
+
+forLine_all <- data.frame(x = seq(0, 0.05, length.out = 10000)) %>%
+  dplyr::mutate(y = pnorm(coef(glm_probit_too)[1] + x*coef(glm_probit_too)[2], mean = 0, sd = 1))
+
+fit_data_LOD %>%
+  ggplot(aes(x = titration_af_posterior_median,
+             y = cancer_detected_too_correct)) +
+  geom_point(aes(color = clinical_status), size = 3, shape = 1) +
+  geom_line(data = forLine_all, aes(x = x, y = y), col = "blue") +
+  # scale_x_log10(limits = c(10^-6, 0.1), breaks = 10 ^ seq(-6, 0, 1), minor_breaks = NULL) +
+  scale_x_log10(limits = c(10^-6, 0.1), breaks = 10 ^ seq(-6, 0, 1), minor_breaks = NULL) +
+  scale_y_continuous(breaks = c(0, 1), labels = c("No", "Yes"), limits = c(0, 1), minor_breaks = NULL) +
+  scale_color_manual(values = c(brewer.pal(n = 8, name = "Dark2")[1:2])) +
+  theme_bw() +
+  geom_segment(data = probX(0.95, glm_probit_too), aes(x = xval, xend = xval, y = 0, yend = 0.95),
+               colour = "red", linetype = "dashed",size = 0.6) +
+  geom_segment(data = probX(0.95, glm_probit_too), aes(x = 0, xend = xval, y = 0.95, yend = 0.95),
+               colour = "red", linetype = "dashed", size = 0.6) +
+  annotate("text", x = 0.02, y = 0.1,
+           label = str_c("LOD at 95% = ", round(100*probX(0.95, glm_probit_too)$xval, 4), "%"), size = 5) +
+  labs(x = "Average Methyl Variant Allele Fraction\n(Undiluted MVAF * titration)",
+    y = "Cancer is Detected and TOO Correct",
+    color = "Sample Type") +
+  ggtitle("Probit Model Fit for mVAF - Cancer Detection and TOO") + 
+  theme(axis.text.x = element_text(size = 12),
+        legend.box = "vertical",
+        legend.position = "bottom",
+        plot.caption = element_text(hjust = 0),
+        text = element_text(size = 15))
+```
+
+## For tumor fraction (methyl variant derived)
+
+```{r m2a-LODonly_tf_fit, fig.height = 6, fig.width = 10}
+### GLM fit
+glm_probit <- glm(cancer_is_detected ~ titration_posterior_median,
+                data = fit_data_LOD, binomial(link = "probit"))
+
+glm_probit_too <- glm(cancer_detected_too_correct ~ titration_posterior_median,
+                data = fit_data_LOD, binomial(link = "probit"))
+
+
+LOD_summary_all <- bind_rows(LOD_summary_all, 
+          data.frame(
+  `Data Input` = c("LOD + LOB", "LOD + LOB"),
+  Metric = c("Tumor Fraction", "Tumor Fraction"),
+  Detection = c("Cancer Detected", "Cancer Detected and TOO"),
+  LOD95 = c(round(probX(0.95, glm_probit)$xval, 6), round(probX(0.95, glm_probit_too)$xval, 6))
+))
+
+forLine_all <- data.frame(x = seq(0, 0.1, length.out = 10000)) %>%
+  dplyr::mutate(y = pnorm(coef(glm_probit)[1] + x*coef(glm_probit)[2], mean = 0, sd = 1))
+
+fit_data_LOD %>%
+  ggplot(aes(x = titration_posterior_median,
+             y = cancer_is_detected)) +
+  geom_point(aes(color = clinical_status), size = 3, shape = 1) +
+  geom_line(data = forLine_all, aes(x = x, y = y), col = "blue") +
+  scale_x_log10(limits = c(10^-6, 0.1), breaks = 10 ^ seq(-6, 0, 1), minor_breaks = NULL) +
+  # scale_x_log10(limits = c(min(fit_data$titration_af_posterior_median), 3)) +
+  scale_y_continuous(breaks = c(0, 1), labels = c("No", "Yes"), limits = c(0, 1), minor_breaks = NULL) +
+  scale_color_manual(values = c(brewer.pal(n = 8, name = "Dark2")[1:2])) +
+  theme_bw() +
+  geom_segment(data = probX(0.95, glm_probit), aes(x = xval, xend = xval, y = 0, yend = 0.95),
+               colour = "red", linetype = "dashed",size = 0.6) +
+  geom_segment(data = probX(0.95, glm_probit), aes(x = 0, xend = xval, y = 0.95, yend = 0.95),
+               colour = "red", linetype = "dashed", size = 0.6) +
+  annotate("text", x = 0.02, y = 0.1,
+           label = str_c("LOD at 95% = ", round(100*probX(0.95, glm_probit)$xval, 4), "%"), size = 5) +
+  labs(x = "Average Tumor Fraction\n(Undiluted TF * titration)",
+    y = "Cancer is Detected",
+    color = "Sample Type") +
+  ggtitle("Probit Model Fit for Tumor Fraction - Cancer Detection") + 
+  theme(axis.text.x = element_text(size = 12),
+        legend.box = "vertical",
+        legend.position = "bottom",
+        plot.caption = element_text(hjust = 0),
+        text = element_text(size = 15))
+
+forLine_all <- data.frame(x = seq(0, 0.1, length.out = 10000)) %>%
+  dplyr::mutate(y = pnorm(coef(glm_probit_too)[1] + x*coef(glm_probit_too)[2], mean = 0, sd = 1))
+
+fit_data_LOD %>%
+  ggplot(aes(x = titration_posterior_median,
+             y = cancer_detected_too_correct)) +
+  geom_point(aes(color = clinical_status), size = 3, shape = 1) +
+  geom_line(data = forLine_all, aes(x = x, y = y), col = "blue") +
+  # scale_x_log10(limits = c(10^-6, 0.1), breaks = 10 ^ seq(-6, 0, 1), minor_breaks = NULL) +
+  scale_x_log10(limits = c(10^-6, 0.1), breaks = 10 ^ seq(-6, 0, 1), minor_breaks = NULL) +
+  scale_y_continuous(breaks = c(0, 1), labels = c("No", "Yes"), limits = c(0, 1), minor_breaks = NULL) +
+  scale_color_manual(values = c(brewer.pal(n = 8, name = "Dark2")[1:2])) +
+  theme_bw() +
+  geom_segment(data = probX(0.95, glm_probit_too), aes(x = xval, xend = xval, y = 0, yend = 0.95),
+               colour = "red", linetype = "dashed",size = 0.6) +
+  geom_segment(data = probX(0.95, glm_probit_too), aes(x = 0, xend = xval, y = 0.95, yend = 0.95),
+               colour = "red", linetype = "dashed", size = 0.6) +
+  annotate("text", x = 0.02, y = 0.1,
+           label = str_c("LOD at 95% = ", round(100*probX(0.95, glm_probit_too)$xval, 4), "%"), size = 5) +
+  labs(x = "Average Tumor Fraction\n(Undiluted TF * titration)",
+    y = "Cancer is Detected and TOO Correct",
+    color = "Sample Type") +
+  ggtitle("Probit Model Fit for Tumor Fraction - Cancer Detection and TOO") + 
+  theme(axis.text.x = element_text(size = 12),
+        legend.box = "vertical",
+        legend.position = "bottom",
+        plot.caption = element_text(hjust = 0),
+        text = element_text(size = 15))
+```
+
+## For varianf allele frequency (vaf)
+
+```{r m2a-LODonly_vaf_fit, fig.height = 6, fig.width = 10}
+### GLM fit
+glm_probit <- glm(cancer_is_detected ~ targeted_vaf_percent,
+                data = fit_data_LOD, binomial(link = "probit"))
+
+glm_probit_too <- glm(cancer_detected_too_correct ~ targeted_vaf_percent,
+                data = fit_data_LOD, binomial(link = "probit"))
+
+
+LOD_summary_all <- bind_rows(LOD_summary_all, 
+          data.frame(
+  `Data Input` = c("LOD + LOB", "LOD + LOB"),
+  Metric = c("VAF", "VAF"),
+  Detection = c("Cancer Detected", "Cancer Detected and TOO"),
+  LOD95 = c(round(probX(0.95, glm_probit)$xval, 6), round(probX(0.95, glm_probit_too)$xval, 6))
+))
+
+forLine_all <- data.frame(x = seq(0, 4.5, length.out = 10000)) %>%
+  dplyr::mutate(y = pnorm(coef(glm_probit)[1] + x*coef(glm_probit)[2], mean = 0, sd = 1))
+
+fit_data_LOD %>%
+  ggplot(aes(x = targeted_vaf_percent,
+             y = cancer_is_detected)) +
+  geom_point(aes(color = clinical_status), size = 3, shape = 1) +
+  geom_line(data = forLine_all, aes(x = x, y = y), col = "blue") +
+  scale_x_log10() + #limits = c(10^-6, 0.1), breaks = 10 ^ seq(-6, 0, 1), minor_breaks = NULL
+  # scale_x_log10(limits = c(min(fit_data$titration_af_posterior_median), 3)) +
+  scale_y_continuous(breaks = c(0, 1), labels = c("No", "Yes"), limits = c(0, 1), minor_breaks = NULL) +
+  scale_color_manual(values = c(brewer.pal(n = 8, name = "Dark2")[1:2])) +
+  theme_bw() +
+  geom_segment(data = probX(0.95, glm_probit), aes(x = xval, xend = xval, y = 0, yend = 0.95),
+               colour = "red", linetype = "dashed",size = 0.6) +
+  geom_segment(data = probX(0.95, glm_probit), aes(x = 0, xend = xval, y = 0.95, yend = 0.95),
+               colour = "red", linetype = "dashed", size = 0.6) +
+  annotate("text", x = 1, y = 0.1,
+           label = str_c("LOD at 95% = ", round(probX(0.95, glm_probit)$xval, 4), "%"), size = 5) +
+  labs(x = "Targeted VAF Percent",
+    y = "Cancer is Detected",
+    color = "Sample Type") +
+  ggtitle("Probit Model Fit for VAF - Cancer Detection") + 
+  theme(axis.text.x = element_text(size = 12),
+        legend.box = "vertical",
+        legend.position = "bottom",
+        plot.caption = element_text(hjust = 0),
+        text = element_text(size = 15))
+
+forLine_all <- data.frame(x = seq(0, 4.5, length.out = 10000)) %>%
+  dplyr::mutate(y = pnorm(coef(glm_probit_too)[1] + x*coef(glm_probit_too)[2], mean = 0, sd = 1))
+
+fit_data_LOD %>%
+  ggplot(aes(x = targeted_vaf_percent,
+             y = cancer_detected_too_correct)) +
+  geom_point(aes(color = clinical_status), size = 3, shape = 1) +
+  geom_line(data = forLine_all, aes(x = x, y = y), col = "blue") +
+  # scale_x_log10(limits = c(10^-6, 0.1), breaks = 10 ^ seq(-6, 0, 1), minor_breaks = NULL) +
+  scale_x_log10() + #limits = c(10^-6, 0.1), breaks = 10 ^ seq(-6, 0, 1), minor_breaks = NULL
+  scale_y_continuous(breaks = c(0, 1), labels = c("No", "Yes"), limits = c(0, 1), minor_breaks = NULL) +
+  scale_color_manual(values = c(brewer.pal(n = 8, name = "Dark2")[1:2])) +
+  theme_bw() +
+  geom_segment(data = probX(0.95, glm_probit_too), aes(x = xval, xend = xval, y = 0, yend = 0.95),
+               colour = "red", linetype = "dashed",size = 0.6) +
+  geom_segment(data = probX(0.95, glm_probit_too), aes(x = 0, xend = xval, y = 0.95, yend = 0.95),
+               colour = "red", linetype = "dashed", size = 0.6) +
+  annotate("text", x = 1, y = 0.1,
+           label = str_c("LOD at 95% = ", round(probX(0.95, glm_probit_too)$xval, 4), "%"), size = 5) +
+  labs(x = "Targeted VAF Percent",
+    y = "Cancer is Detected and TOO Correct",
+    color = "Sample Type") +
+  ggtitle("Probit Model Fit for VAF - Cancer Detection and TOO") + 
+  theme(axis.text.x = element_text(size = 12),
+        legend.box = "vertical",
+        legend.position = "bottom",
+        plot.caption = element_text(hjust = 0),
+        text = element_text(size = 15))
+```
+
+## For Abnormal Coverage
+```{r m2a-LODonly_abnCov_fit, fig.height = 6, fig.width = 10}
+### GLM fit
+glm_probit <- glm(cancer_is_detected ~ analysis_linear_filtered_abnormal_coverage_cpg_mean,
+                data = fit_data_LOD, binomial(link = "probit"))
+
+glm_probit_too <- glm(cancer_detected_too_correct ~ analysis_linear_filtered_abnormal_coverage_cpg_mean,
+                data = fit_data_LOD, binomial(link = "probit"))
+
+### For table
+
+LOD_summary_all <- bind_rows(LOD_summary_all, 
+          data.frame(
+  `Data Input` = c("LOD + LOB", "LOD + LOB"),
+  Metric = c("Abnormal Coverage", "Abnormal Coverage"),
+  Detection = c("Cancer Detected", "Cancer Detected and TOO"),
+  LOD95 = c(round(probX(0.95, glm_probit)$xval, 6), round(probX(0.95, glm_probit_too)$xval, 6))
+))
+          
+
+forLine_all <- data.frame(x = seq(0, 3, length.out = 10000)) %>%
+  dplyr::mutate(y = pnorm(coef(glm_probit)[1] + x*coef(glm_probit)[2], mean = 0, sd = 1))
+
+fit_data_LOD %>%
+  ggplot(aes(x = analysis_linear_filtered_abnormal_coverage_cpg_mean,
+             y = cancer_is_detected)) +
+  geom_point(aes(color = clinical_status), size = 3, shape = 1) +
+  geom_line(data = forLine_all, aes(x = x, y = y), col = "blue") +
+  # scale_x_log10(limits = c(10^-6, 0.1), breaks = 10 ^ seq(-6, 0, 1), minor_breaks = NULL) +
+  scale_x_log10(limits = c(min(fit_data_LOD$analysis_linear_filtered_abnormal_coverage_cpg_mean), 3)) +
+  scale_y_continuous(breaks = c(0, 1), labels = c("No", "Yes"), limits = c(0, 1), minor_breaks = NULL) +
+  scale_color_manual(values = c(brewer.pal(n = 8, name = "Dark2")[1:2])) +
+  theme_bw() +
+  geom_segment(data = probX(0.95, glm_probit), aes(x = xval, xend = xval, y = 0, yend = 0.95),
+               colour = "red", linetype = "dashed",size = 0.6) +
+  geom_segment(data = probX(0.95, glm_probit), aes(x = 0, xend = xval, y = 0.95, yend = 0.95),
+               colour = "red", linetype = "dashed", size = 0.6) +
+  annotate("text", x = 2, y = 0.1,
+           label = str_c("LOD at 95% = ", round(probX(0.95, glm_probit)$xval, 4)), size = 5) +
+  labs(x = "Abnormal Coverage",
+    y = "Cancer is Detected",
+    color = "Sample Type") +
+  ggtitle("Probit Model Fit for Abnormal Coverage - Cancer Detection") + 
+  theme(axis.text.x = element_text(size = 12),
+        legend.box = "vertical",
+        legend.position = "bottom",
+        plot.caption = element_text(hjust = 0),
+        text = element_text(size = 15))
+
+forLine_all <- data.frame(x = seq(0, 3, length.out = 10000)) %>%
+  dplyr::mutate(y = pnorm(coef(glm_probit_too)[1] + x*coef(glm_probit_too)[2], mean = 0, sd = 1))
+
+fit_data_LOD %>%
+  ggplot(aes(x = analysis_linear_filtered_abnormal_coverage_cpg_mean,
+             y = cancer_detected_too_correct)) +
+  geom_point(aes(color = clinical_status), size = 3, shape = 1) +
+  geom_line(data = forLine_all, aes(x = x, y = y), col = "blue") +
+  # scale_x_log10(limits = c(10^-6, 0.1), breaks = 10 ^ seq(-6, 0, 1), minor_breaks = NULL) +
+  scale_x_log10(limits = c(min(fit_data_LOD$analysis_linear_filtered_abnormal_coverage_cpg_mean), 3)) +
+  scale_y_continuous(breaks = c(0, 1), labels = c("No", "Yes"), limits = c(0, 1), minor_breaks = NULL) +
+  scale_color_manual(values = c(brewer.pal(n = 8, name = "Dark2")[1:2])) +
+  theme_bw() +
+  geom_segment(data = probX(0.95, glm_probit_too), aes(x = xval, xend = xval, y = 0, yend = 0.95),
+               colour = "red", linetype = "dashed",size = 0.6) +
+  geom_segment(data = probX(0.95, glm_probit_too), aes(x = 0, xend = xval, y = 0.95, yend = 0.95),
+               colour = "red", linetype = "dashed", size = 0.6) +
+  annotate("text", x = 2, y = 0.1,
+           label = str_c("LOD at 95% = ", round(probX(0.95, glm_probit_too)$xval, 4)), size = 5) +
+  labs(x = "Abnormal Coverage",
+    y = "Cancer is Detected and TOO Correct",
+    color = "Sample Type") +
+  ggtitle("Probit Model Fit for Abnormal Coverage - Cancer Detection and TOO") + 
+  theme(axis.text.x = element_text(size = 12),
+        legend.box = "vertical",
+        legend.position = "bottom",
+        plot.caption = element_text(hjust = 0),
+        text = element_text(size = 15))
+```
+
+# LOD + CC2 + LOB Data Analysis 
+
+For this analysis, I will only use the 4 participants in both LOD and CC2 plus the LOB samples.
+
+```{r m2a-LOD_CC2_summary}
+
+fit_data_both <- final_data %>%
+  dplyr::filter(! participant_id %in% str_c("ccga_", c(6069, 10630))) %>%
+  dplyr::mutate(clinical_status = case_when(
+    cancer_type == "non-cancer" ~ "Non-cancer",
+    TRUE ~ "Cancer"
+  ))
+
+### Summary Table
+
+fit_data_both %>%
+  dplyr::filter(study_name != "AV2_LOB") %>%
+  dplyr::group_by(participant_id, cancer_type_and_stage, mixture_fraction) %>%
+  dplyr::summarise(Count = dplyr::n(),
+            `Targeted VAF (%)` = round(mean(targeted_vaf_percent), 4),
+            `Targeted mVAF (%)` = round(100*mean(titration_af_posterior_median), 4),
+            `Targeted TF (%)` = round(100*mean(titration_posterior_median), 4),
+            correct_detection = sum(cancer_is_detected),
+            correct_too = sum(cancer_detected_too_correct),
+            `Detection Rate (%)` = round(100*correct_detection / Count, 3),
+            `Detection Rate TOO (%)` = round(100*correct_too/Count, 3),
+            `Mean Abn. Cov.` = round(mean(analysis_linear_filtered_abnormal_coverage_cpg_mean), 3),
+            `Max Abn. Cov.` = round(max(analysis_linear_filtered_abnormal_coverage_cpg_mean), 3)) %>%
+  relocate(mixture_fraction, .after = `Max Abn. Cov.`) %>%
+  #DT::datatable(extensions = 'Buttons', options = list(dom = 'Bfrtip', buttons = c('excel', "csv")),
+  DT::datatable(extensions = 'Buttons', options = list(pageLength=50),
+                caption = "AV2-LOD + CC2 participant summary with hit rates")
+
+```
+
+## For methyl variant allele fraction (mVAF)
+
+```{r m2a-LOD_CC2_mvaf_fit, fig.height = 6, fig.width = 10}
+### GLM fit
+glm_probit <- glm(cancer_is_detected ~ titration_af_posterior_median,
+                data = fit_data_both, binomial(link = "probit"))
+
+glm_probit_too <- glm(cancer_detected_too_correct ~ titration_af_posterior_median,
+                data = fit_data_both, binomial(link = "probit"))
+
+
+LOD_summary_all <- bind_rows(LOD_summary_all, 
+          data.frame(
+  `Data Input` = c("LOD + CC2 + LOB", "LOD + CC2 + LOB"),
+  Metric = c("mVAF", "mVAF"),
+  Detection = c("Cancer Detected", "Cancer Detected and TOO"),
+  LOD95 = c(round(probX(0.95, glm_probit)$xval, 6), round(probX(0.95, glm_probit_too)$xval, 6))
+))
+
+
+forLine_all <- data.frame(x = seq(0, 0.05, length.out = 10000)) %>%
+  dplyr::mutate(y = pnorm(coef(glm_probit)[1] + x*coef(glm_probit)[2], mean = 0, sd = 1))
+
+fit_data_both %>%
+  ggplot(aes(x = titration_af_posterior_median,
+             y = cancer_is_detected)) +
+  geom_point(aes(color = clinical_status), size = 3, shape = 1) +
+  geom_line(data = forLine_all, aes(x = x, y = y), col = "blue") +
+  scale_x_log10(limits = c(10^-6, 0.1), breaks = 10 ^ seq(-6, 0, 1), minor_breaks = NULL) +
+  # scale_x_log10(limits = c(min(fit_data$titration_af_posterior_median), 3)) +
+  scale_y_continuous(breaks = c(0, 1), labels = c("No", "Yes"), limits = c(0, 1), minor_breaks = NULL) +
+  scale_color_manual(values = c(brewer.pal(n = 8, name = "Dark2")[1:2])) +
+  theme_bw() +
+  geom_segment(data = probX(0.95, glm_probit), aes(x = xval, xend = xval, y = 0, yend = 0.95),
+               colour = "red", linetype = "dashed",size = 0.6) +
+  geom_segment(data = probX(0.95, glm_probit), aes(x = 0, xend = xval, y = 0.95, yend = 0.95),
+               colour = "red", linetype = "dashed", size = 0.6) +
+  annotate("text", x = 0.02, y = 0.1,
+           label = str_c("LOD at 95% = ", round(100*probX(0.95, glm_probit)$xval, 4), "%"), size = 5) +
+  labs(x = "Average Methyl Variant Allele Fraction\n(Undiluted MVAF * titration)",
+    y = "Cancer is Detected",
+    color = "Sample Type") +
+  ggtitle("Probit Model Fit for mVAF - Cancer Detection") + 
+  theme(axis.text.x = element_text(size = 12),
+        legend.box = "vertical",
+        legend.position = "bottom",
+        plot.caption = element_text(hjust = 0),
+        text = element_text(size = 15))
+
+forLine_all <- data.frame(x = seq(0, 0.05, length.out = 10000)) %>%
+  dplyr::mutate(y = pnorm(coef(glm_probit_too)[1] + x*coef(glm_probit_too)[2], mean = 0, sd = 1))
+
+fit_data_both %>%
+  ggplot(aes(x = titration_af_posterior_median,
+             y = cancer_detected_too_correct)) +
+  geom_point(aes(color = clinical_status), size = 3, shape = 1) +
+  geom_line(data = forLine_all, aes(x = x, y = y), col = "blue") +
+  # scale_x_log10(limits = c(10^-6, 0.1), breaks = 10 ^ seq(-6, 0, 1), minor_breaks = NULL) +
+  scale_x_log10(limits = c(10^-6, 0.1), breaks = 10 ^ seq(-6, 0, 1), minor_breaks = NULL) +
+  scale_y_continuous(breaks = c(0, 1), labels = c("No", "Yes"), limits = c(0, 1), minor_breaks = NULL) +
+  scale_color_manual(values = c(brewer.pal(n = 8, name = "Dark2")[1:2])) +
+  theme_bw() +
+  geom_segment(data = probX(0.95, glm_probit_too), aes(x = xval, xend = xval, y = 0, yend = 0.95),
+               colour = "red", linetype = "dashed",size = 0.6) +
+  geom_segment(data = probX(0.95, glm_probit_too), aes(x = 0, xend = xval, y = 0.95, yend = 0.95),
+               colour = "red", linetype = "dashed", size = 0.6) +
+  annotate("text", x = 0.02, y = 0.1,
+           label = str_c("LOD at 95% = ", round(100*probX(0.95, glm_probit_too)$xval, 4), "%"), size = 5) +
+  labs(x = "Average Methyl Variant Allele Fraction\n(Undiluted MVAF * titration)",
+    y = "Cancer is Detected and TOO Correct",
+    color = "Sample Type") +
+  ggtitle("Probit Model Fit for mVAF - Cancer Detection and TOO") + 
+  theme(axis.text.x = element_text(size = 12),
+        legend.box = "vertical",
+        legend.position = "bottom",
+        plot.caption = element_text(hjust = 0),
+        text = element_text(size = 15))
+```
+
+## For tumor fraction (methyl variant derived)
+
+```{r m2a-LOD_CC2_tf_fit, fig.height = 6, fig.width = 10}
+### GLM fit
+glm_probit <- glm(cancer_is_detected ~ titration_posterior_median,
+                data = fit_data_both, binomial(link = "probit"))
+
+glm_probit_too <- glm(cancer_detected_too_correct ~ titration_posterior_median,
+                data = fit_data_both, binomial(link = "probit"))
+
+
+LOD_summary_all <- bind_rows(LOD_summary_all, 
+          data.frame(
+  `Data Input` = c("LOD + CC2 + LOB", "LOD + CC2 + LOB"),
+  Metric = c("Tumor Fraction", "Tumor Fraction"),
+  Detection = c("Cancer Detected", "Cancer Detected and TOO"),
+  LOD95 = c(round(probX(0.95, glm_probit)$xval, 6), round(probX(0.95, glm_probit_too)$xval, 6))
+))
+
+forLine_all <- data.frame(x = seq(0, 0.1, length.out = 10000)) %>%
+  dplyr::mutate(y = pnorm(coef(glm_probit)[1] + x*coef(glm_probit)[2], mean = 0, sd = 1))
+
+fit_data_both %>%
+  ggplot(aes(x = titration_posterior_median,
+             y = cancer_is_detected)) +
+  geom_point(aes(color = clinical_status), size = 3, shape = 1) +
+  geom_line(data = forLine_all, aes(x = x, y = y), col = "blue") +
+  scale_x_log10(limits = c(10^-6, 0.1), breaks = 10 ^ seq(-6, 0, 1), minor_breaks = NULL) +
+  # scale_x_log10(limits = c(min(fit_data$titration_af_posterior_median), 3)) +
+  scale_y_continuous(breaks = c(0, 1), labels = c("No", "Yes"), limits = c(0, 1), minor_breaks = NULL) +
+  scale_color_manual(values = c(brewer.pal(n = 8, name = "Dark2")[1:2])) +
+  theme_bw() +
+  geom_segment(data = probX(0.95, glm_probit), aes(x = xval, xend = xval, y = 0, yend = 0.95),
+               colour = "red", linetype = "dashed",size = 0.6) +
+  geom_segment(data = probX(0.95, glm_probit), aes(x = 0, xend = xval, y = 0.95, yend = 0.95),
+               colour = "red", linetype = "dashed", size = 0.6) +
+  annotate("text", x = 0.02, y = 0.1,
+           label = str_c("LOD at 95% = ", round(100*probX(0.95, glm_probit)$xval, 4), "%"), size = 5) +
+  labs(x = "Average Tumor Fraction\n(Undiluted TF * titration)",
+    y = "Cancer is Detected",
+    color = "Sample Type") +
+  ggtitle("Probit Model Fit for Tumor Fraction - Cancer Detection") + 
+  theme(axis.text.x = element_text(size = 12),
+        legend.box = "vertical",
+        legend.position = "bottom",
+        plot.caption = element_text(hjust = 0),
+        text = element_text(size = 15))
+
+forLine_all <- data.frame(x = seq(0, 0.1, length.out = 10000)) %>%
+  dplyr::mutate(y = pnorm(coef(glm_probit_too)[1] + x*coef(glm_probit_too)[2], mean = 0, sd = 1))
+
+fit_data_both %>%
+  ggplot(aes(x = titration_posterior_median,
+             y = cancer_detected_too_correct)) +
+  geom_point(aes(color = clinical_status), size = 3, shape = 1) +
+  geom_line(data = forLine_all, aes(x = x, y = y), col = "blue") +
+  # scale_x_log10(limits = c(10^-6, 0.1), breaks = 10 ^ seq(-6, 0, 1), minor_breaks = NULL) +
+  scale_x_log10(limits = c(10^-6, 0.1), breaks = 10 ^ seq(-6, 0, 1), minor_breaks = NULL) +
+  scale_y_continuous(breaks = c(0, 1), labels = c("No", "Yes"), limits = c(0, 1), minor_breaks = NULL) +
+  scale_color_manual(values = c(brewer.pal(n = 8, name = "Dark2")[1:2])) +
+  theme_bw() +
+  geom_segment(data = probX(0.95, glm_probit_too), aes(x = xval, xend = xval, y = 0, yend = 0.95),
+               colour = "red", linetype = "dashed",size = 0.6) +
+  geom_segment(data = probX(0.95, glm_probit_too), aes(x = 0, xend = xval, y = 0.95, yend = 0.95),
+               colour = "red", linetype = "dashed", size = 0.6) +
+  annotate("text", x = 0.02, y = 0.1,
+           label = str_c("LOD at 95% = ", round(100*probX(0.95, glm_probit_too)$xval, 4), "%"), size = 5) +
+  labs(x = "Average Tumor Fraction\n(Undiluted TF * titration)",
+    y = "Cancer is Detected and TOO Correct",
+    color = "Sample Type") +
+  ggtitle("Probit Model Fit for Tumor Fraction - Cancer Detection and TOO") + 
+  theme(axis.text.x = element_text(size = 12),
+        legend.box = "vertical",
+        legend.position = "bottom",
+        plot.caption = element_text(hjust = 0),
+        text = element_text(size = 15))
+```
+
+## For varianf allele frequency (vaf)
+
+```{r m2a-LOD_CC2_vaf_fit, fig.height = 6, fig.width = 10}
+### GLM fit
+glm_probit <- glm(cancer_is_detected ~ targeted_vaf_percent,
+                data = fit_data_both, binomial(link = "probit"))
+
+glm_probit_too <- glm(cancer_detected_too_correct ~ targeted_vaf_percent,
+                data = fit_data_both, binomial(link = "probit"))
+
+
+LOD_summary_all <- bind_rows(LOD_summary_all, 
+          data.frame(
+  `Data Input` = c("LOD + CC2 + LOB", "LOD + CC2 + LOB"),
+  Metric = c("VAF", "VAF"),
+  Detection = c("Cancer Detected", "Cancer Detected and TOO"),
+  LOD95 = c(round(probX(0.95, glm_probit)$xval, 6), round(probX(0.95, glm_probit_too)$xval, 6))
+))
+
+forLine_all <- data.frame(x = seq(0, 4.5, length.out = 10000)) %>%
+  dplyr::mutate(y = pnorm(coef(glm_probit)[1] + x*coef(glm_probit)[2], mean = 0, sd = 1))
+
+fit_data_both %>%
+  ggplot(aes(x = targeted_vaf_percent,
+             y = cancer_is_detected)) +
+  geom_point(aes(color = clinical_status), size = 3, shape = 1) +
+  geom_line(data = forLine_all, aes(x = x, y = y), col = "blue") +
+  scale_x_log10() + #limits = c(10^-6, 0.1), breaks = 10 ^ seq(-6, 0, 1), minor_breaks = NULL
+  # scale_x_log10(limits = c(min(fit_data$titration_af_posterior_median), 3)) +
+  scale_y_continuous(breaks = c(0, 1), labels = c("No", "Yes"), limits = c(0, 1), minor_breaks = NULL) +
+  scale_color_manual(values = c(brewer.pal(n = 8, name = "Dark2")[1:2])) +
+  theme_bw() +
+  geom_segment(data = probX(0.95, glm_probit), aes(x = xval, xend = xval, y = 0, yend = 0.95),
+               colour = "red", linetype = "dashed",size = 0.6) +
+  geom_segment(data = probX(0.95, glm_probit), aes(x = 0, xend = xval, y = 0.95, yend = 0.95),
+               colour = "red", linetype = "dashed", size = 0.6) +
+  annotate("text", x = 1, y = 0.1,
+           label = str_c("LOD at 95% = ", round(probX(0.95, glm_probit)$xval, 4), "%"), size = 5) +
+  labs(x = "Targeted VAF Percent",
+    y = "Cancer is Detected",
+    color = "Sample Type") +
+  ggtitle("Probit Model Fit for VAF - Cancer Detection") + 
+  theme(axis.text.x = element_text(size = 12),
+        legend.box = "vertical",
+        legend.position = "bottom",
+        plot.caption = element_text(hjust = 0),
+        text = element_text(size = 15))
+
+forLine_all <- data.frame(x = seq(0, 4.5, length.out = 10000)) %>%
+  dplyr::mutate(y = pnorm(coef(glm_probit_too)[1] + x*coef(glm_probit_too)[2], mean = 0, sd = 1))
+
+fit_data_both %>%
+  ggplot(aes(x = targeted_vaf_percent,
+             y = cancer_detected_too_correct)) +
+  geom_point(aes(color = clinical_status), size = 3, shape = 1) +
+  geom_line(data = forLine_all, aes(x = x, y = y), col = "blue") +
+  # scale_x_log10(limits = c(10^-6, 0.1), breaks = 10 ^ seq(-6, 0, 1), minor_breaks = NULL) +
+  scale_x_log10() + #limits = c(10^-6, 0.1), breaks = 10 ^ seq(-6, 0, 1), minor_breaks = NULL
+  scale_y_continuous(breaks = c(0, 1), labels = c("No", "Yes"), limits = c(0, 1), minor_breaks = NULL) +
+  scale_color_manual(values = c(brewer.pal(n = 8, name = "Dark2")[1:2])) +
+  theme_bw() +
+  geom_segment(data = probX(0.95, glm_probit_too), aes(x = xval, xend = xval, y = 0, yend = 0.95),
+               colour = "red", linetype = "dashed",size = 0.6) +
+  geom_segment(data = probX(0.95, glm_probit_too), aes(x = 0, xend = xval, y = 0.95, yend = 0.95),
+               colour = "red", linetype = "dashed", size = 0.6) +
+  annotate("text", x = 1, y = 0.1,
+           label = str_c("LOD at 95% = ", round(probX(0.95, glm_probit_too)$xval, 4), "%"), size = 5) +
+  labs(x = "Targeted VAF Percent",
+    y = "Cancer is Detected and TOO Correct",
+    color = "Sample Type") +
+  ggtitle("Probit Model Fit for VAF - Cancer Detection and TOO") + 
+  theme(axis.text.x = element_text(size = 12),
+        legend.box = "vertical",
+        legend.position = "bottom",
+        plot.caption = element_text(hjust = 0),
+        text = element_text(size = 15))
+```
+
+## For Abnormal Coverage
+```{r m2a-LOD_CC2_abnCov_fit, fig.height = 6, fig.width = 10}
+### GLM fit
+glm_probit <- glm(cancer_is_detected ~ analysis_linear_filtered_abnormal_coverage_cpg_mean,
+                data = fit_data_both, binomial(link = "probit"))
+
+glm_probit_too <- glm(cancer_detected_too_correct ~ analysis_linear_filtered_abnormal_coverage_cpg_mean,
+                data = fit_data_both, binomial(link = "probit"))
+
+LOD_summary_all <- bind_rows(LOD_summary_all, 
+          data.frame(
+  `Data Input` = c("LOD + CC2 + LOB", "LOD + CC2 + LOB"),
+  Metric = c("Abnormal Coverage", "Abnormal Coverage"),
+  Detection = c("Cancer Detected", "Cancer Detected and TOO"),
+  LOD95 = c(round(probX(0.95, glm_probit)$xval, 6), round(probX(0.95, glm_probit_too)$xval, 6))
+))
+
+forLine_all <- data.frame(x = seq(0, 3, length.out = 10000)) %>%
+  dplyr::mutate(y = pnorm(coef(glm_probit)[1] + x*coef(glm_probit)[2], mean = 0, sd = 1))
+
+fit_data_both %>%
+  ggplot(aes(x = analysis_linear_filtered_abnormal_coverage_cpg_mean,
+             y = cancer_is_detected)) +
+  geom_point(aes(color = clinical_status), size = 3, shape = 1) +
+  geom_line(data = forLine_all, aes(x = x, y = y), col = "blue") +
+  # scale_x_log10(limits = c(10^-6, 0.1), breaks = 10 ^ seq(-6, 0, 1), minor_breaks = NULL) +
+  scale_x_log10(limits = c(min(fit_data_both$analysis_linear_filtered_abnormal_coverage_cpg_mean), 3)) +
+  scale_y_continuous(breaks = c(0, 1), labels = c("No", "Yes"), limits = c(0, 1), minor_breaks = NULL) +
+  scale_color_manual(values = c(brewer.pal(n = 8, name = "Dark2")[1:2])) +
+  theme_bw() +
+  geom_segment(data = probX(0.95, glm_probit), aes(x = xval, xend = xval, y = 0, yend = 0.95),
+               colour = "red", linetype = "dashed",size = 0.6) +
+  geom_segment(data = probX(0.95, glm_probit), aes(x = 0, xend = xval, y = 0.95, yend = 0.95),
+               colour = "red", linetype = "dashed", size = 0.6) +
+  annotate("text", x = 2, y = 0.1,
+           label = str_c("LOD at 95% = ", round(probX(0.95, glm_probit)$xval, 4)), size = 5) +
+  labs(x = "Abnormal Coverage",
+    y = "Cancer is Detected",
+    color = "Sample Type") +
+  ggtitle("Probit Model Fit for Abnormal Coverage - Cancer Detection") + 
+  theme(axis.text.x = element_text(size = 12),
+        legend.box = "vertical",
+        legend.position = "bottom",
+        plot.caption = element_text(hjust = 0),
+        text = element_text(size = 15))
+
+forLine_all <- data.frame(x = seq(0, 3, length.out = 10000)) %>%
+  dplyr::mutate(y = pnorm(coef(glm_probit_too)[1] + x*coef(glm_probit_too)[2], mean = 0, sd = 1))
+
+fit_data_both %>%
+  ggplot(aes(x = analysis_linear_filtered_abnormal_coverage_cpg_mean,
+             y = cancer_detected_too_correct)) +
+  geom_point(aes(color = clinical_status), size = 3, shape = 1) +
+  geom_line(data = forLine_all, aes(x = x, y = y), col = "blue") +
+  # scale_x_log10(limits = c(10^-6, 0.1), breaks = 10 ^ seq(-6, 0, 1), minor_breaks = NULL) +
+  scale_x_log10(limits = c(min(fit_data_both$analysis_linear_filtered_abnormal_coverage_cpg_mean), 3)) +
+  scale_y_continuous(breaks = c(0, 1), labels = c("No", "Yes"), limits = c(0, 1), minor_breaks = NULL) +
+  scale_color_manual(values = c(brewer.pal(n = 8, name = "Dark2")[1:2])) +
+  theme_bw() +
+  geom_segment(data = probX(0.95, glm_probit_too), aes(x = xval, xend = xval, y = 0, yend = 0.95),
+               colour = "red", linetype = "dashed",size = 0.6) +
+  geom_segment(data = probX(0.95, glm_probit_too), aes(x = 0, xend = xval, y = 0.95, yend = 0.95),
+               colour = "red", linetype = "dashed", size = 0.6) +
+  annotate("text", x = 2, y = 0.1,
+           label = str_c("LOD at 95% = ", round(probX(0.95, glm_probit_too)$xval, 4)), size = 5) +
+  labs(x = "Abnormal Coverage",
+    y = "Cancer is Detected and TOO Correct",
+    color = "Sample Type") +
+  ggtitle("Probit Model Fit for Abnormal Coverage - Cancer Detection and TOO") + 
+  theme(axis.text.x = element_text(size = 12),
+        legend.box = "vertical",
+        legend.position = "bottom",
+        plot.caption = element_text(hjust = 0),
+        text = element_text(size = 15))
+```
+
+
+
+# LOD95 Summary (probit fit based)
+
+```{r m2a-LOD95_summary}
+
+LOD_summary_all %>%
+  dplyr::filter(Data.Input == "LOD + LOB") %>%
+  dplyr::select(- Data.Input) %>%
+  spread(Metric, LOD95) %>%
+  dplyr::mutate(`VAF (%)` = VAF, `mVAF (%)` = 100*mVAF, `Tumor Fraction (%)` = 100*`Tumor Fraction`) %>%
+  dplyr::select(Detection, `VAF (%)`, `mVAF (%)`, `Tumor Fraction (%)`, `Abnormal Coverage`) %>%
+  #DT::datatable(extensions = 'Buttons', options = list(dom = 'Bfrtip', buttons = c('excel', "csv")),
+  DT::datatable(extensions = 'Buttons', options = list(pageLength=50),
+                caption = "LOD95 Summary (LOD + LOB)")
+
+
+LOD_summary_all %>%
+  dplyr::filter(Data.Input == "LOD + CC2 + LOB") %>%
+  dplyr::select(- Data.Input) %>%
+  spread(Metric, LOD95) %>%
+  dplyr::mutate(`VAF (%)` = VAF, `mVAF (%)` = 100*mVAF, `Tumor Fraction (%)` = 100*`Tumor Fraction`) %>%
+  dplyr::select(Detection, `VAF (%)`, `mVAF (%)`, `Tumor Fraction (%)`, `Abnormal Coverage`) %>%
+  #DT::datatable(extensions = 'Buttons', options = list(dom = 'Bfrtip', buttons = c('excel', "csv")),
+  DT::datatable(extensions = 'Buttons', options = list(pageLength=50),
+                caption = "LOD95 Summary (LOD + CC2 + LOB)")
+```
+
+<br/>
+
+<!-- 
+# References
+<div id="refs"></div>
+-->
+
+***
+
+# Parameter settings
+  * WRKDIR = `r normalizePath(WRKDIR)`
+  * FN = `r FN`
+  * Scripts = Scripts
+  * RUN DATE = `r date()`
+
+```{r m2a-session-info, echo=T, eval=T}
+ sessionInfo()
+```
+
+```{r, echo=FALSE}
+  knit_exit()
+```
+
+
+
+<!-- To run
+# nohup Rscript -e "knitr::knit2html('_M1A-LOD_CC_classification_LODprobit_mvaf_April2021.Rmd')" > _M1A-LOD_CC_classification_LODprobit_mvaf_April2021.log  &
+
+# Or
+# nohup Rscript -e "rmarkdown::render('_M1A-LOD_CC_classification_LODprobit_mvaf_April2021.Rmd')" > _M1A-LOD_CC_classification_LODprobit_mvaf_April2021.log  &
+
+
+-->
+

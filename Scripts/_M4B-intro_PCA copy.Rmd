@@ -1,0 +1,403 @@
+---
+title:  "Identification of Unwanted Variability: PCA Background" 
+subtitle: "Taken from https://en.wikipedia.org/wiki/Principal_component_analysis"
+author: "Assay Biostatistics"
+date: '`r format(Sys.time(), "%a %b %d", tz="America/Los_Angeles")`'
+always_allow_html: yes
+output:
+  bookdown::html_document2:
+    code_folding: hide
+    code_download: true
+    toc: true
+    # does this have an effect
+    fig_caption: yes
+    # this has no effect
+    number_sections: yes
+    # css: ['../_css/pandoc3.css', '../_css/myMargins.css']
+bibliography: [../_bib/_Normalization.bib, ../Refs/ruv/_RUV.bib, ../Refs/ruvm/_RUVM.bib]
+csl: ../_csl/cell-numeric.csl
+link-citations: true
+---
+
+
+`r DT_TABLES <- F`
+
+
+<style>
+@import url('https://fonts.googleapis.com/css?family=Raleway');
+@import url('https://fonts.googleapis.com/css?family=Oxygen');
+@import url('https://fonts.googleapis.com/css?family=Raleway:bold');
+@import url('https://fonts.googleapis.com/css?family=Oxygen:bold');
+
+.main-container {
+  max-width: 1400px !important;
+}
+
+body{
+  font-family: 'Oxygen', sans-serif;
+  font-size: 16px;
+  line-height: 24px;
+}
+
+h1,h2,h3,h4 {
+  font-family: 'Raleway', sans-serif;
+}
+
+.container { width: 1400px; }
+
+caption {
+  font-size: 20px;
+  caption-side: top;
+  text-indent: 30px;
+  background-color: lightgrey;
+  color: black;
+  margin-top: 5px;
+}
+
+g-table-intro h4 {
+  text-indent: 0px;
+}
+</style>
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(echo = TRUE,
+                      comment = NA,
+                      warning = FALSE,
+                      error = FALSE,
+                      message = FALSE,
+                      cache = FALSE,
+                      fig.width = 8,
+                      fig.height = 4)
+```
+
+```{r m2a-GlobalOptions, results="hide", include=FALSE, cache=FALSE}
+
+knitr::opts_knit$set(stop_on_error = 2L) #really make it stop
+options(knitr.table.format = 'html')
+
+options(stringsAsFactors=F)
+
+ #knitr::dep_auto()
+
+```
+<!-- ######################################################################## -->
+
+
+```{r m2a-Prelims,  include=FALSE, echo=FALSE, results='hide', message=FALSE} 
+
+FN <- "_M2A-intro_PCA"
+if(sum(grepl(FN, list.files()))==0) stop("Check FN")
+
+ suppressMessages(require(rmarkdown))
+ suppressMessages(require(knitr))
+
+ suppressPackageStartupMessages(require(methods))
+ suppressPackageStartupMessages(require(bookdown))
+
+ suppressPackageStartupMessages(require(data.table))
+ options(datatable.fread.datatable=F)
+
+ suppressPackageStartupMessages(require(plyr))
+ suppressPackageStartupMessages(require(dplyr))
+ suppressPackageStartupMessages(require(magrittr))
+
+ # Shotcuts for knitting and rendering while in R session (Invoke interactive R from R/Scripts folder)
+ kk <- function(n='') knitr::knit2html(paste("t", n, sep=''), envir=globalenv(),
+       output=paste(FN,".html", sep=''))
+
+ rr <- function(n='') rmarkdown::render(paste("t", n, sep=''), envir=globalenv(),
+       output_file=paste(FN,".html", sep='')) ##, output_dir='Scripts')
+
+ bb <- function(n='') browseURL(paste(FN,".html", sep=''))
+
+ # The usual shortcuts
+ zz <- function(n='') source(paste("t", n, sep=''))
+
+
+ WRKDIR <- '..'
+ if(!file.exists(WRKDIR)) stop("WRKDIR ERROR", WRKDIR)
+
+ # do once
+
+ # Shotcuts for knitting and rendering while in R session
+ kk <- function(n='') knitr::knit2html(paste("t", n, sep=''), envir=globalenv(),
+       output=paste('',FN,".html", sep=''))
+
+ rr <- function(n='') render(paste("t", n, sep=''), envir=globalenv(),
+       output_file=paste(FN,".html", sep=''), output_dir='Scripts')
+
+ bb <- function(n='') browseURL(paste('',FN,".html", sep=''))
+
+ # The usual shorcuts
+ zz <- function(n='') source(paste('', "t", n, sep=''))
+
+ # file rmarkdown file management options: cache, figures
+ cache_DIR <- file.path(WRKDIR,'Scripts', 'cache/M2A/')
+ suppressMessages(dir.create(cache_DIR, recursive=T))
+ opts_chunk$set(cache.path=cache_DIR)
+
+ figures_DIR <- file.path(WRKDIR,'Scripts', 'figures/M2A/')
+ suppressMessages(dir.create(figures_DIR, recursive=T))
+ opts_chunk$set(fig.path=figures_DIR)
+
+ #tables_DIR <- file.path(WRKDIR,'Scripts', 'tables/M2A/')
+ #suppressMessages(dir.create(table_DIR, recursive=T))
+ #opts_chunk$set(fig.path=table_DIR)
+ 
+ # need a local copy of help_DIR
+ #help_DIR <- file.path(WRKDIR,'Scripts', 'help_files')
+ help_DIR <- file.path('.', 'help_files')
+ suppressMessages(dir.create(help_DIR, recursive=T))
+ 
+ temp_DIR <- file.path(WRKDIR,'Scripts', 'temp_files')
+ suppressMessages(dir.create(temp_DIR, recursive=T))
+
+```
+<!-- ######################################################################## -->
+
+*** 
+
+```{r m2a-utilityFns, echo=FALSE}
+ # Here we define some utility functions
+source('utilityFns.r')
+
+```
+
+<!-- ######################################################################## -->
+
+
+<!-- SKIP THIS 
+# Params {#params}
+
+## Input params {-}
+-->
+
+```{r m2a-input-params-all, echo = FALSE, results = "asis", eval=F, echo=F}
+ # print out original input params
+data.frame(
+param_name=names(params),
+param_value=unlist(params),
+param_class=sapply(params, class), row.names=NULL) %>%
+  knitr::kable(caption="Input Parameters")
+```
+
+<br/>
+
+# Introduction  {#intro}
+
+* **Principal component analysis (PCA)** is a linear dimensionality reduction technique
+in which data is linearly transformed onto a new coordinate system such that the directions (principal components) capturing the largest variation in the data can be easily identified.
+
+* The **principal components** of a collection of points in a real coordinate space
+(ie the rows of a gene expression matrix) are a sequence of `p unit vectors`,
+where the `i-th` vector is the direction of a line that best fits the data 
+while being orthogonal to the first `i-1` vectors.
+
+* Here, a best-fitting line is defined as one that minimizes the average squared
+perpendicular distance from the points to the line.^[$d = |Ax1 + By1 + C|\sqrt{A^2 + B^2}$is the perpendicular distance formula  between point (x1, y1) and
+line Ax + By + C = 0.]
+
+* These directions (i.e., principal components) constitute an orthonormal basis
+in which different individual dimensions of the data are linearly uncorrelated.
+Many studies use the first two principal components in order to plot
+the data in two dimensions and to visually identify clusters of closely
+related data points.
+
+
+* See **Population genetics**  in
+[Principal_component_analysis](https://en.wikipedia.org/wiki/Principal_component_analysis)
+wiki page.
+
+
+<br/>
+<br/>
+
+
+# Overview 
+
+* When performing PCA, the first principal component of a set of 
+p variables is the derived variable formed as a linear combination
+of the original variables that explains the most variance.
+The second principal component explains the most variance in what is
+left once the effect of the first component is removed, ...
+
+* PCA is most commonly used when many of the variables are highly correlated
+it is desirable to reduce their number to an independent set.
+
+* The first principal component can equivalently be defined as a direction that
+maximizes the variance of the projected data. The i-th PC
+is a direction orthogonal to the first i-1 PCs 
+that maximizes the variance of the projected data.
+
+* For either onjectives, principal components are eigenvectors of
+the data's covariance matrix^[
+eigenvector or characteristic vector is a vector that has its direction
+unchanged by a given linear transformation:$T \cdot v = v$.].
+
+* Principal components can be computed by 
+eigendecomposition of the data covariance matrix or **singular value decomposition**
+of the data matrix.
+
+* **Factor analysis** solves eigenvectors of a slightly different matrix. 
+
+<p><p/>
+* PCA is  related to **canonical correlation analysis** (**CCA**). 
+   - CCA defines coordinate systems that optimally describe the 
+cross-covariance between two datasets 
+   - PCA defines a new orthogonal coordinate system that optimally describes variance
+in a single dataset. 
+
+
+<p><p/>
+* Mathematically, the transformation is defined by a set of size `l`
+of p-dimensional vectors of weights or coefficients
+$\mathbf{w}_{(k)}=(w_{1},\dots ,w_{p})_{(k)}$ that map each row vector 
+$\mathbf{x}_{(i)}=(x_{1},\dots ,x_{p})_{(i)}$ of **X** to a new vector of
+principal component scores 
+$\mathbf {t} _{(i)}=(t_{1},\dots ,t_{l})_{(i)}$, given by
+
+$$t_{k(i)}=\mathbf {x} _{(i)}\cdot \mathbf {w} _{(k)}\qquad \mathrm 
+{for} \qquad i=1,\dots ,n\qquad k=1,\dots ,l$$
+in such a way that the individual variables 
+$t_{1},\dots ,t_{l}$ of **t** considered over the data set successively
+inherit the maximum possible variance from X, with each coefficient
+vector **w** constrained to be a unit vector (where l
+is usually selected to be strictly less than p
+to reduce dimensionality).
+
+
+* Equivalently, written in matrix form:
+
+$$\mathbf {T} =\mathbf {X} \mathbf {W}$$
+where
+$\mathbf{T}_{ik}=t_{k(i)}$,
+$\mathbf{X}_{ij}=x_{j(i)}$, and
+$\mathbf{W}_{jk}=w_{j(k)}$.
+
+
+***
+
+**First component**
+
+* In order to maximize variance, the first weight vector **w**(1) thus has to satisfy
+
+$$\mathbf{w}_{(1)}=\arg \max_{\Vert \mathbf{w} \Vert =1}\,\left\{\sum _{i}(t_{1})_{(i)}^{2}\right\}=\arg \max _{\Vert \mathbf {w} \Vert =1}\,\left\{\sum _{i}\left(\mathbf {x} _{(i)}\cdot \mathbf {w} \right)^{2}\right\}$$
+
+* Equivalently, writing this in matrix form gives
+
+$$\mathbf{w}_{(1)}=\arg \max _{\left\|\mathbf {w} \right\|=1}\left\{\left\|\mathbf {Xw} \right\|^{2}\right\}=\arg \max _{\left\|\mathbf {w} \right\|=1}\left\{\mathbf {w} ^{\mathsf {T}}\mathbf {X} ^{\mathsf {T}}\mathbf {Xw} \right\}$$
+
+* Since $\mathbf{w}_{(1)}$
+ has been defined to be a unit vector, it equivalently also satisfies:
+
+$$\mathbf {w}_{(1)}=\arg \max \left\{{\frac {\mathbf {w} ^{\mathsf {T}}\mathbf {X} ^{\mathsf {T}}\mathbf {Xw} }{\mathbf {w} ^{\mathsf {T}}\mathbf {w} }}\right\}$$
+
+
+* The quantity to be maximised can be recognised as a **Rayleigh quotient**.
+A standard result for a positive semidefinite matrix such as $X^TX$ is that the
+quotient's maximum possible value is the largest eigenvalue of the matrix,
+which occurs when w is the corresponding eigenvector.
+
+
+* With $\mathbf{w}_{(1)}$ found, the first principal component of a data vector 
+$\mathbf{x}_{(i)}$ can then be given as a score 
+$t_{1(i)} = \mathbf{x}_{(i)} ⋅ \mathbf{w}_{(1)}$  in the transformed co-ordinates,
+or as the corresponding vector in the original variables,
+${\mathbf{x}_{(i)} \cdot \mathbf{w}_{(1)}} \cdot   \mathbf{w}_{(1)}$.
+
+
+**Further components**
+
+* The k-th component can be found by subtracting the first k − 1 principal components from X:
+
+$$\mathbf {\hat {X}} _{k}=\mathbf {X} -\sum _{s=1}^{k-1}\mathbf {X} \mathbf {w} _{(s)}\mathbf {w} _{(s)}^{\mathsf {T}}}$$
+
+and then finding the weight vector which extracts the maximum variance from this new data matrix.
+
+
+* The full principal components decomposition of X can therefore be given as
+$$\mathbf {T} =\mathbf {X} \mathbf {W} $$
+
+where W is a p-by-p matrix of weights whose columns are the eigenvectors of $X^TX$.
+The transpose of W is sometimes called the whitening or sphering transformation. 
+Columns of **W** multiplied by the square root of corresponding eigenvalues,
+that is, eigenvectors scaled up by the variances, are called loadings in PCA or in Factor analysis.
+
+
+* In matrix form, the empirical covariance matrix for the original variables can be written
+$$\mathbf {Q} \propto \mathbf {X} ^{\mathsf {T}}\mathbf {X} =\mathbf {W} \mathbf {\Lambda } \mathbf {W} ^{\mathsf {T}}$$
+
+* The empirical covariance matrix between the principal components becomes
+$$\mathbf {W} ^{\mathsf {T}}\mathbf {Q} \mathbf {W} \propto \mathbf {W} ^{\mathsf {T}}\mathbf {W} \,\mathbf {\Lambda } \,\mathbf {W} ^{\mathsf {T}}\mathbf {W} =\mathbf {\Lambda }$$
+where $\Lambda$ is the diagonal matrix of eigenvalues $\lambda_k$ of 
+$\mathbf {X} ^{\mathsf {T}}\mathbf {X}$. 
+
+* $λ_k$ is equal to the sum of the squares over the dataset associated with each component k,
+that is, 
+
+$$\lambda_{(k)} = \sum_i t_k^2_{(i)} = \sum_i \left( \mathbf{x}_{(i)} ⋅ \mathbf{w}_{(k)} \right)^2$$
+
+
+<br/>
+<br/>
+
+## Dimensionality reduction {-}
+
+**TBC**
+
+## Applications {-}
+
+### Population Genetics {-}
+
+* In 1978 Cavalli-Sforza and others pioneered the use of principal
+components analysis (PCA) to summarise data on variation in human gene
+frequencies across regions.
+   - Since then, PCA has been ubiquitous in population genetics, with
+thousands of papers using PCA as a display mechanism.    
+
+*  Eran Elhaik published a theoretical paper in
+[Scientific Reports](https://en.wikipedia.org/wiki/Scientific_Reports)
+analyzing 12 PCA applications.
+
+
+*  he argued, the results achieved in population genetics were characterized by
+cherry-picking and circular reasoning [@Elhaik:2022aa].
+
+
+
+
+
+
+
+
+# References {#references}
+<div id="refs"></div>
+    
+<br/> 
+
+```{r , eval=T}
+pander::pander(sessionInfo())
+```
+
+  * WRKDIR = `r normalizePath(WRKDIR)`
+  * FN = `r FN`
+  * Scripts = Scripts
+  * RUN DATE = `r date()`
+
+```{r , echo=FALSE}
+  knit_exit()
+```
+
+############################################################
+## ARCHIVED CODE BELOW {-}
+############################################################
+
+
+<!-- To run
+# nohup Rscript -e "knitr::knit2html('_M2A-intro_PCA.Rmd')" > _M2A-intro_PCA.log  &
+
+# Or
+# nohup Rscript -e "rmarkdown::render('_M2A-intro_PCA.Rmd')" > _M2A-intro_PCA.log  &
+
+
+-->

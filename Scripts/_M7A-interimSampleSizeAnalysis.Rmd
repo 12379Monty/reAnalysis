@@ -1,0 +1,1734 @@
+---
+title: "Clinical Data Collection: Sample Size Assessment for Interim Analysis"
+#author: "Francois Collin"
+date: " "
+#date: "`r format(Sys.time(), '%B %d, %Y')`"
+output:
+  BiocStyle::html_document:
+    code_folding: hide
+    toc: true
+    toc_depth: 2
+    toc_float: true
+    # does this have an effect
+    fig_caption: yes
+    # this has no effect
+    number_sections: yes
+#   css: ../../_css/pandoc3.css
+bibliography: [../../_bibFiles/NSCLC.bib,../../_bibFiles/Validation.bib,../Refs/bibFile.bib]
+csl: ../../_csl/cell-numeric.csl
+#biblio-style: acm
+link-citations: true
+vignette: >
+ %\VignetteEncoding{UTF-8}
+---
+
+
+<!--
+<style type="text/css">
+
+body{ /* Normal  */ 
+ font-size: 16px; 
+}
+td {  /* Table  */ 
+ font-size: 12; 
+}
+h1.title { 
+ font-size: 28px; color: DarkGreen; 
+}
+h1 { /* Header 1 */ 
+ font-size: 24px; color: DarkBlue; 
+}
+h2 { /* Header 2 */ 
+ font-size: 18px; color: DarkBlue; 
+}
+h3 { /* Header 3 */ 
+ font-size: 18px;
+ font-family: "Times New Roman", Times, serif;
+ color: DarkBlue;
+}
+code.r{ /* Code block */
+    font-size: 12px;
+}
+pre { /* Code block - determines code spacing between lines */
+    font-size: 14px;
+}
+</style>
+-->
+
+
+
+```{r m2a-GlobalOptions, results="hide", include=FALSE, cache=FALSE}
+knitr::opts_knit$set(stop_on_error = 2L) #really make it stop
+options(knitr.table.format = 'html')
+
+#knitr::dep_auto()
+```
+<!-- ######################################################################## -->
+
+
+```{r m2a-Prelims, include=FALSE, echo=FALSE, results='hide', message=FALSE,cache=F}
+
+ FN <- "_M2A-interimSampleSizeAnalysis"
+ PREFIX <- "M2A-"
+
+ suppressPackageStartupMessages(require(methods))
+ suppressPackageStartupMessages(require(rmarkdown))
+ suppressPackageStartupMessages(require(bookdown))
+
+ suppressPackageStartupMessages(require(knitr))
+ options(stringsAsFactors=F)
+
+ suppressPackageStartupMessages(require(data.table)) 
+ options(datatable.fread.datatable=F)
+
+ suppressPackageStartupMessages(require(plyr))
+ suppressPackageStartupMessages(require(dplyr))
+ suppressPackageStartupMessages(require(magrittr))
+
+ # Shotcuts for knitting and redering while in R session (Invoke interactive R from R/Scripts folder)
+ kk <- function(n='') knitr::knit2html(paste("t", n, sep=''), envir=globalenv(),
+       output=paste(FN,".html", sep=''))
+
+ rr <- function(n='') rmarkdown::render(paste("t", n, sep=''), envir=globalenv(),
+       output_file=paste(FN,".html", sep='')) ##, output_dir='Scripts')
+
+ bb <- function(n='') browseURL(paste(FN,".html", sep=''))
+
+ # The usual shotcuts
+ zz <- function(n='') source(paste("t", n, sep=''))
+
+ # Using relative paths:
+ # Script will be invoked from R/Scripts folder.  Make 'R' the WRKDIR.
+ WRKDIR <- ('..')
+
+ # Not needed if path is relative ...
+ if(!file.exists(WRKDIR)) stop("WRKDIR ERROR: ", WRKDIR)
+
+ # do once
+ #setwd(WRKDIR)
+
+ # file rmarkdown file management options: cache, figures
+ cache_DIR <- file.path(WRKDIR, 'Scripts', 'cache/M2A/')
+ suppressPackageStartupMessages(dir.create(cache_DIR, recursive=T))
+ opts_chunk$set(cache.path=cache_DIR)
+
+ # NOTE: need to add PREFIX to figure path 
+ # due to confluence "feature" of keeping the filename of embedded figures
+ figures_DIR <- file.path(WRKDIR, 'Scripts', 'figures/M2A/')
+ suppressPackageStartupMessages(dir.create(figures_DIR, recursive=T))
+ opts_chunk$set(fig.path=paste0(figures_DIR, PREFIX))
+
+ tables_DIR <- file.path(WRKDIR, 'Scripts', 'tables/M2A/')
+ suppressPackageStartupMessages(dir.create(tables_DIR, recursive=T))
+ 
+ # need a local copy of help_DIR
+ #help_DIR <- file.path(WRKDIR, 'help_files')
+ help_DIR <- file.path('.', 'help_files')
+ suppressPackageStartupMessages(dir.create(help_DIR, recursive=T))
+ 
+ temp_DIR <- file.path(WRKDIR, 'temp_files')
+ suppressPackageStartupMessages(dir.create(temp_DIR, recursive=T))
+
+```
+<!-- ######################################################################## -->
+
+
+
+*** 
+
+```{r m2a-utilityFns, echo=FALSE}
+ # Here we define some utility functions
+source('utilityFns.r')
+
+```
+
+<!-- ######################################################################## -->
+
+
+<!-- SKIP THIS 
+# Params {#params}
+
+## Input params
+-->
+
+```{r m2a-input-params-all, echo = FALSE, results = "asis", eval=F, echo=F}
+# print out original input params
+data.frame(
+param_name=names(params),
+param_value=unlist(params),
+param_class=sapply(params, class), row.names=NULL) %>%
+  knitr::kable(caption="Input Parameters")
+```
+
+<br/>
+
+# Synopsis 
+
+* NOTE: all confidence bounds are based on two-sided 95% confidence
+intervals.  This leads to 97.5% one sided confidence intervals,
+which may be a bit of a high bar.  
+
+<p><p/>
+See [_M2B-interimSampleSizeAnalysis.html](http://dashboard.prognomiq.com/mlops/get/html?s3=s3://internal-analysis/fcollin/Projects/2023.01/Scripts/_M2B-interimSampleSizeAnalysis.html)
+for results using 95% one sided confidence intervals.  The confidence level does not
+have a dramatic impact on the results in terms of
+required hit rates needed to show better than 80% sensitivity/specificity,
+or the true proportions of success needed to have high probabilities of passing.
+
+
+<p><p/>
+* In order to demonstrate 80% performance, based on the number of samples
+expected, the point estimates for sensitivity and specificity in the
+Large FDA-facing study must be no less than 88% and 84%, respectively.
+  - See Table  \@ref(tab:m2a-lcb-sens-large-study) in
+Section \@ref(qoa-large).
+
+<br/>
+
+* To have better than 90% chance of achieving those thresholds,
+the true sensitivity must exceed:
+   - 92-93% for Sensitivity - Table \@ref(tab:m2a-prob-pass-thr-sens)
+   - 86-87% for Specificity - Table \@ref(tab:m2a-prob-pass-thr-spec)
+
+<br/>
+
+* The results of the interim analysis can be used to gauge 
+which range of true performance levels are most likely, which in
+turn tells us the likelihood of meeting the 80% LCB threshold.
+
+
+<br/>
+
+
+# Introduction  {#intro}
+
+* For the purpose of planning for interim analyses we are interested in
+examining how the **number of positive cases** in the dataset at the time
+of the analysis will affect the accuracy of the **sensitivity** estimates.
+
+* We will also examine how the **number of negative cases** in the dataset at the time
+of the analysis will affect the accuracy of the **specificity** estimates.
+
+<br/>
+<br/>
+
+## Sensitivity, Specificity 
+
+
+* **Sensitivity/PPA** is the proportion of positive test results 
+out of all truly positive cases.  When a reference 
+method is used to classify samples as positive and negative -
+such as cancer detection calls from an authorization-granted
+molecular diagnostic test - the term **Positive Percent Agreement**
+is used instead of sensitivity.
+
+* We will use `sample sensitivity` to denote the observed sensitivity
+in the sample set, or study dataset.
+
+
+\begin{equation}
+Sens = \frac{a}{a+c} = \frac{n(D|Pos)}{nPos}   \\
+(\#eq:sens-def)
+\end{equation}
+
+* where n(D|Pos) is the number of samples detected (classified as cancer)
+among the positive samples.
+
+* **Specificity/NPA**  is the proportion of negative test results
+out of all truly negative cases.  When a reference
+method is used to classify samples as positive and negative,
+the term **Negative Percent Agreement** is used instead of specificity.
+
+* We will use `sample specificity` to denote the observed specificity
+in the sample set, or study dataset.
+
+\begin{equation}
+Spec = \frac{d}{b+d} = \frac{n(notD|Neg)}{nNeg}  \\
+(\#eq:spec-def)
+\end{equation}
+
+* where n(notD|Neg) is the number samples not detected (classified as non-cancer)
+among the negative samples.
+
+</br>
+
+# Statistical Modeling   {#stat-sens-spec}
+
+
+## Nomenclature {-}
+
+To derive the statistical properties of sample sensitivity and sensitivity,
+we will use the following nomenclature:
+
+* $\theta$ = the population sensitivity: the proportion of positive cases 
+which are test positive; classified as cancer by the test.
+   - We can think of the `population` as the `intent-to-test` group,
+but a more accurate way to think about population parameters is in terms of
+long term or large sample averages.  In that sense the population sensitivity
+is the sample set sensitivity when the sample set is very large.
+   - The study samples are assumed to be a `representative` subset of the population.
+<!--
+      - We use the term `representative` instead of random as there is no random sampling 
+involved in the study sample selection. It is assumed that the sample selection process
+produces a representative subset free of bias.
+-->
+
+
+* $\lambda$ = the population specificity: the proportion of negative cases 
+which are test negative; classified as non-cancer by the test.
+
+
+* D = n(Det|Pos) = number of samples detected (classified as cancer)
+among the positive samples in the study dataset.
+
+* E = n(notD|Neg) = number of samples not detected (classified as non-cancer)
+among the negative samples in the study dataset.
+
+
+* If we can think of the set of **positive cases** in the study dataset
+as a random sample selected from all positive cases in the population,
+$\theta$ percent of which are test-positive, then
+we can posit the following model for D:
+
+\begin{equation}
+D \sim binom(\theta, nPos)     
+\end{equation}
+
+   - where $binom(\rho, N)$ denotes a binomial probability distribution
+function with probability of success $\rho$ and number of trials N.
+
+* Similarly, if we can think of the set of **negative cases** in the study dataset
+as a random sample selected from all negative cases in the population,
+$\lambda$ percent of which are test-negative, then 
+we can posit the following model for E:
+
+\begin{equation}
+E \sim binom(\lambda, nNeg)  
+\end{equation}
+
+<br/>
+<br/>
+
+## The binomial likelihood {-}
+
+
+* Let $X \sim binom(P, N)$ denote a random variable that
+has a binomial distribution with probability of success P and the
+number of trials N.  
+
+<p><p/>
+* In the context of a study collecting data
+to assess test sensitivity, `success` is selecting a test positive case among
+all positive cases in the population.  
+   - When we assess specificity,
+`success` is selecting a test negative case among
+all negative cases in the population.
+
+<p><p/>
+* If $X \sim binom(P, N)$, then:
+
+   - $E(X) = N \cdot P$  
+
+   - $E(X/N) = P$
+      - ie. the sample rate of success, X/N,
+is an unbiased estimator of the population success rate.
+      - The sample sensitivity \@ref(eq:sens-def), D/nPos, 
+has expected value $\theta$, the population sensitivity.
+      - The sample specificity \@ref(eq:spec-def), E/nNeg, 
+has expected value $\lambda$, the population sensitivity.  
+
+   - $Var(X) = N \cdot P(1 - P)$  
+
+   - $Var(X/N) =  P(1 -P)/N$  
+
+   - $X/N \approx N(\mu=P, \sigma^2 = P(1 - P)/N)$
+      - ie. the sample rate of success, X/N, is approximately
+normally distributed with a mean equal to the population success rate,
+and variance $\sigma^2$ as indicated.
+
+* The normal approximation is useful for quick computations,
+but all inference about P, the true probability of success in the population,
+can be derived from the likelihood function for the sample proportion of success:
+
+
+\begin{equation}
+
+L_N(P; p) = Prob(X/N = p | P, N) 
+          = \binom{N}{X} P^X (1-P)^{N-X}    \\
+\text{for X = 0, 1, $\ldots$ , N.}
+(\#eq:binom-lk-def)
+\end{equation}
+
+
+
+* $L_N(P; p)$ is *"the likelihood that the population proportion
+of success is P when the sample proportion of success on a sample 
+of size N is p"*.
+^[The reason the term *likelihood* is used here
+is that in the frequentist statistical framework *probability*
+is thought of as relative frequency of occurrence of an observation
+under the data generation model, and relative frequency does not
+apply to population parameters.].
+Note that the likelihood is a function of the argument `P`, the population proportion,
+given a fixed value of the observed sample proportion `p`.
+
+<br/>
+<br/>
+
+## Confidence Intervals for P {-}
+
+* There are several procedures to estimate a confidence interval for the
+population proportion of success, `P`, based on the sample proportion of success on a sample 
+of size N, `p`.  See Newcombe (1998) [@Newcombe:1998tb] for a comparison of 7 procedures.
+The different procedures are mostly differentiated when the sample size is small or
+the proportions to be estimated are close to 0 or 1.  Here we illustrate
+the application of two procedures: the method using exact tail areas
+(Clopper (1934) [@Clopper:1934wq]) and the simple asymptotic method (‘Wald method’).
+
+
+* Figure \@ref(fig:m2a-binom-n75-p88) displays the binomial
+probability density function of p when N = 75 and P = 0.88.
+Note that in this case, `p` varies and `P` is fixed.
+
+* For illustrative purposes we use N = 75, the targeted number of positive cases
+in the large FDA-facing study, and the observed proportion
+of success is p=66/75=0.88, a result which leads to a lower confidence limit close to 80%.^[
+We find that when p = 0.88, the lower confidence limit is close to 80% by searching
+through the set of possible results.].
+
+* When the sample proportion p is 0.88, our best guess of the value of the
+population proportion is 0.88, and we can use this point estimate to estimate
+the true underlying probability distribution and its normal approximation,
+and from the latter we can use Wald's method to obtain a confidence interval.
+
+
+* The likelihood profile method of deriving a confidence interval is
+illustrated in Section \@ref(likelihood-profile).  
+
+```{r m2a-binom-n75-p88, cache=T, cache.vars='', fig.height=6, fig.width=8, fig.cap="Histogram of Binomial Distribution with Superimposed Normal Approximation: N = 75, P = 0.88"}
+
+N <- 75
+P <- 0.88         
+
+pdf_N75P88_p_frm <- data.frame(
+ x = 0:N,
+ p = 0:N/N,
+ prob = dbinom(prob=P, size=N, x=0:N)
+)
+
+
+
+p025_ndx <- with(pdf_N75P88_p_frm, max(which(cumsum(prob) < 0.025)))
+p975_ndx <- with(pdf_N75P88_p_frm, min(which(cumsum(prob) > 0.975)))
+
+with(pdf_N75P88_p_frm,
+plot(x=x, y=prob, type='h', xlim=N*c(.7, 1), xlab='p=x/N', 
+     ylab='P(X/N = p)', lwd = 20, lend = 3, col = 'lightblue',
+     las=1, bty='l', yaxs='i', xaxt='n') 
+)
+with(pdf_N75P88_p_frm[1:p025_ndx,],
+lines(x=x, y=prob, type='h', lwd=20, lend=3, col='red')
+)
+with(pdf_N75P88_p_frm[-(1:(p975_ndx-1)),],
+lines(x=x, y=prob, type='h', lwd=20, lend=3, col='red')
+)
+
+axis(side=1, at=N*seq(70, 95, by=5)/100,  labels=seq(70, 95, by=5)/100)
+
+title(paste0("Estimated PDF for p when N =", N, " and observed p  = ", P,
+   "\nIn Red Tails Adding Up to \u2264 0.025 at Each End"))
+
+LCB <- round(pdf_N75P88_p_frm[p025_ndx+1, "p"], 2)
+UCB <- round(pdf_N75P88_p_frm[p975_ndx-1, "p"], 2)
+
+
+
+# Superimpose Normal
+###########################################
+normal_N75P88_p_frm <- data.frame(
+ x = 0:N,      ### SAME AS ABOVE
+ p = 0:N/N, 
+ prob = dnorm(mean=N*P, sd=sqrt(N*P*(1-P)),  x= 0:N)
+)
+
+
+LCB_Norm <- N*P + qnorm(0.025) * sqrt(N*P*(1-P))
+UCB_Norm <- N*P + qnorm(0.975) * sqrt(N*P*(1-P))
+
+
+with(normal_N75P88_p_frm,
+lines(x=x, y=prob, type='l', lwd=2, col='blue')
+)
+
+segments(x0 = LCB_Norm, x1= LCB_Norm, 
+         y0=par("usr")[3], y1=dnorm(mean=N*P, sd=sqrt(N*P*(1-P)), x=LCB_Norm),
+         col= 'blue', lwd=3)
+
+segments(x0 = UCB_Norm, x1= UCB_Norm, 
+         y0=par("usr")[3], y1=dnorm(mean=N*P, sd=sqrt(N*P*(1-P)), x=UCB_Norm),
+         col= 'blue', lwd=3)
+
+# Add Wilson - SKIP
+wilson_ci <- DescTools::BinomCI(
+           x= N*P,
+           n=N,
+           conf.level = 0.95,
+           #sides = "left",
+           method='wilson'   ###('wald', 'wilson')
+    )[, c("lwr.ci", "upr.ci")]
+
+# This does not agree with
+## binom::binom.confint(x= N*P, n=N, conf.level = 0.95)
+
+
+legend("topleft", bty='n', title = "Method for CI: ",
+    legend = c(paste0("Binomial tail areas: ", LCB, ' - ', UCB),
+               paste0("Normal Approx (Wald): ", round(LCB_Norm/N,2), ' - ', round(UCB_Norm/N, 2)))
+               #paste0("Wilson Method: ", round(wilson_ci[1], 2), ' - ',
+                                         #round(wilson_ci[2], 2)))
+   )
+
+```
+
+
+
+<br/>
+<br/>
+
+
+# Computations 
+
+* Various results which are included in this report are
+computed in the tabs below.
+
+* Probabilities and confidence bounds are based on a binomial probability model
+for the various counts: the number detected for sensitivity and the
+number not detected for specificity.
+
+* The binomial model assumes a common underlying probability of detection
+or non detection for all tested samples.  
+
+* If there is much heterogeneity
+of detection rates among samples, the binomial model would underestimate
+the uncertainty around the estimated sensitivity and specificity.  
+
+* This in turn can result in observing unexpected outcomes, like
+the specificity in a larger dataset falling outside of an estimated 95%
+confidence interval.  
+
+
+<br/>
+
+
+## 1. Point Estimate Requirements {-}
+
+Compile results for Large Study Point Estimate Requirements: 
+
+* Suppose that the objective of the large study is to demonstrate that 
+performance (sensitivity or specificity) is no less than 0.80.
+In that context, a key parameter is the level of **point estimates required**
+for the lower confidence bound of the true performance to be no less than .80.
+The values are computed in the section.  
+
+* Through a simple search of all reasonable values,
+we find the **minimum sample proportion needed** so that
+the corresponding lower confidence bound is 0.80.
+
+<p><p/>
+* In the following table:
+
+   - N = sample size
+   - x = minimum number of successes required
+   - p = sample proportion = x/N
+   - lcb = actual lower confidence bound ($\ge$ 0.80).
+
+<!-- LCB by Wilson (or Wald) Option -->
+```{r m2a-perf-lcb-80, cache=T, cache.vars="perf_wilson_lcb_80_frm"}
+
+perf_wilson_lcb_80_frm <- data.frame()
+
+for(N in c(seq(70, 100, 5), seq(350, 500, 50))) {
+
+  # initiate phat_c just beyond .8
+  N_probs <- 0:N/N
+  x_c_ndx <- min(which(N_probs > .80))
+  x_c <- N_probs[x_c_ndx]*N
+ 
+  # get lcb for x_c
+  lcb_c <- DescTools::BinomCI(
+           x= x_c,
+           n=N,
+           conf.level = 0.95,
+           sides = "left",
+           method='wilson'   ###('wald', 'wilson')
+    )[1, "lwr.ci"]
+
+
+  while(lcb_c < 0.80) {
+    # update x_c
+    x_c_ndx = x_c_ndx +1
+    x_c <- N_probs[x_c_ndx]*N
+
+    # update lcb_c
+     lcb_c <- DescTools::BinomCI(
+             x=x_c,
+             n=N,
+             conf.level = 0.95,
+             sides = "left",
+             method='wilson'   ###('wald', 'wilson')
+      )[1, "lwr.ci"]
+
+  }
+
+  perf_wilson_lcb_80_frm <- rbind(perf_wilson_lcb_80_frm,
+  data.frame(N = N, x = x_c, p = round(x_c/N, 2), lcb = round(lcb_c, 2), row.names=NULL)
+  )
+}
+
+perf_wilson_lcb_80_frm %>%
+knitr::kable(
+caption = "Sample p such that lcb \u2265 0.80"
+) %>%
+kableExtra::kable_styling(full_width = F)
+
+```
+
+
+<br/>
+<br/>
+
+
+## 2 Passing Probabilities {-}
+
+* In order to get a performance LCB $\ge$ 0.80,
+point estimates of 87-88% and 83-84% for sensitivity
+and specificity, respectively, are needed. 
+See Table \@ref(tab:m2a-perf-lcb-80).
+
+<p><p/>
+*  We can compile probabilities of passing, or achieving these
+thresholds,  for a range of true proportions of success in the population, P:
+
+$$P(passing | P, N ) = P(X \ge threshold | P, N)$$
+
+where the threshold values are given in Table \@ref(tab:m2a-perf-lcb-80).
+
+
+* As the interim study data analysis will provide early indications of performance,
+we can refer to the probabilities of passing to translate the
+interim analysis results into likelihoods of success in the larger study.
+The fact that the interim analysis will be based on a limited number of samples
+has to be factored in, of course.
+
+
+**NOTE**: In this computation, we need to use the actual required point estimate
+for passing the 80% LCB threshold.  Otherwise the discreteness of the
+counts distribution gives rise to weird results -
+ie. N goes up, but the probability of passing the threshold goes down.
+
+ 
+```{r m2a-prob-pass-thr, cache=T, cache.vars="prob_pass_frm"}
+
+prob_pass_frm <- data.frame()
+
+for(NN in unique(perf_wilson_lcb_80_frm$N))
+for(trueP in 80:95/100) {
+  # number of successes threshold
+  x_THR <- with(perf_wilson_lcb_80_frm %>% dplyr::filter(N==NN), x)
+
+  # sample proportion threshold
+  p_THR <- with(perf_wilson_lcb_80_frm %>% dplyr::filter(N==NN), p)
+
+  # LCB
+  LCB <- with(perf_wilson_lcb_80_frm %>% dplyr::filter(N==NN), lcb)
+ 
+  # Prob >= x_THR (p_THR)
+  probPassThr <- pbinom(q=x_THR, size=NN, prob=trueP, lower=F)
+
+  prob_pass_frm <- rbind(prob_pass_frm,
+  data.frame(N = NN, 
+             x = x_THR,
+             p = p_THR,
+             trueP = trueP, 
+             ###`(LCB)` = LCB, 
+             probPassThr = round(probPassThr, 2),
+  check.names=F
+  ))
+}
+
+```
+```{r}
+prob_pass_frm %>%
+DT::datatable(
+caption = "p = sample proportion, probPassThr = P(X/N > p|P,N)"
+)
+
+```
+
+<br/>
+<br/>
+
+
+# APOLLO Analysis Planning
+
+* APOLLO is a large prospective study [described elsewhere](put link here).
+
+Two analysis dataset are planned for: the full dataset and an interim
+dataset planned for mid 2023.
+
+
+<br/>
+
+## Large FDA-facing Study
+
+* This is a dynamically sized study with a goal of acquiring
+$\approx$ 75 events.
+
+* If the event rate is 6-8 events per 1000 subjects,
+approximately between `r round(75/8*1000)` and `r format(round(75/6*1000))` will be
+needed to capture 75 events.
+
+<br/>
+
+### Questions of interest {#qoa-large}
+
+* The relationship between the **number of samples** and features of the estimates of
+**sensitivity and specificity**.
+<span style="color:blue">
+   - As the sample sizes change the only feature of the estimates of sensitivity and specificity
+that is affected is the precision or estimated **standard error** or the 
+**width of confidence  intervals**.
+   - The key impact that the size of the paremeter estimate (sens or spec) standard error
+has on test performance is integrated in the analyses that follow.
+</span>
+
+
+<br/>
+
+* To demonstrate 80% performance, the LCB for the estimated population
+performance must not be less than 0.80. 
+* Based the number of samples expected in the larger study,
+we can determine the value of the observed point estimates of performance
+which is required in order for the 97.5% one-sided lower confidence bound for the true 
+performance to be no less than 0.80.  
+
+   -  For various numbers of samples, **N**,
+Table \@ref(tab:m2a-lcb-sens-large-study) tabulates values showing the sample
+proportions required, **p**,  for the lower confidence bound to be $\ge% 80%
+
+<!--
+These values can also be interpreted 
+as the required true performance so that the expected lower confidence bound is at 80%.
+-->
+
+```{r m2a-lcb-sens-large-study, fig.cap="Necessary Point Estimates for LCB > 0.80"}
+
+perf_wilson_lcb_80_frm %>% 
+dplyr::select(-x, -lcb) %>%
+tidyr::pivot_wider(
+ names_from = N, names_prefix = "N=", values_from="p") %>% 
+knitr::kable(
+caption = "Sensitivity/Specificity Point Estimates Needed for LCB > 0.80"
+) %>%
+kableExtra::kable_styling(full_width = F)
+
+```
+
+* Table \@ref(tab:m2a-lcb-sens-large-study) shows that
+within the manageable range of number of samples,
+in order for the lower confidence bounds to be 80% or higher,
+the point estimate for sensitivity has to be 87% or higher,
+while he point estimate for specifcity has to be 83% or higher.
+
+<br/>
+<br/>
+
+
+## Interim Analysis {.tabset}
+
+### Home {-}
+
+<br/>
+<br/>
+
+### Accrual Rates {-}
+
+* An *interim analysis* will be carried out mid-year 2023.
+
+* For mid-year data analysis, the enrollment to be between 350 and 500.
+In that range, the expected number of events is 
+`r paste(round(.06 * 350), 'to' , round(.08 * 500))`.  
+   - based on 6-8% event rate in 350-500 enrolled subjects.
+
+
+* We can enrich events to a fairly arbitrary degree given addition of cohorts with 
+lung nodules and treatment-naïve malignancy which were 
+**previously collected in a case/cohort fashion**
+
+<span style="color:blue">
+   - It is important to **prospectively note any potential difference** between
+the supplemental enrichment set and the prospectively collected evaluation dataset,
+including any covariate which could explain a classifier performance difference
+between the two sets of data.  What we want to avoid is a situation where
+unexpected results are observed in the interim analysis which leads to a retrospective
+analysis aimed at *explaining* the deviance from expectations.
+</span>
+
+
+* We are also interested in additional higher-risk groups:
+   - inflammatory obstructive pulmonary disease as well 
+   - lung nodules
+
+<span style="color:blue">
+      - It is important to **prospectively identify all subset analyses**.
+What we want to avoid is a situation where we carve out subset analyses
+*on-the-fly*.  Any findings resulting from such analyses have little to
+no inferential value and should be regarded as suggestive of hypotheses which
+will have to be prospectively tested. 
+</span>
+
+<br/>
+<br/>
+
+### Performance Requirements {.tabset -}
+
+
+* What performance characteristics would be necessary to suggest a reasonable 
+chance of demonstrating 80% sensitivity and 80% specificity in the larger study.
+
+   -  Table \@ref(tab:m2a-lcb-sens-large-study) shows that
+in the larger study point estimates of approximately 87% and 83% for sensitivity
+and specificity, respectively, are needed to establish higher than 80%
+performance levels.
+
+   - Based on these results,
+Tables \@ref(tab:m2a-prob-pass-thr-sens) and \@ref(tab:m2a-prob-pass-thr-spec) 
+compile probabilities of passing, or achieving the indicated thresholds, 
+as a function of true performance and the number of samples in the larger study.
+
+   - The results of the interim analysis can be used to gauge which
+range  of true performance levels, the rows in Tables \@ref(tab:m2a-prob-pass-thr-sens) 
+and \@ref(tab:m2a-prob-pass-thr-spec),  are the most likely.
+ 
+<br/>
+
+
+**Probabilities of passing the 80% LCB thresholds:**
+
+#### Sensitivity {-}
+
+```{r m2a-prob-pass-thr-sens, fig.cap="Probability of passing - Sensitivity"}
+
+prob_pass_sens_frm <- prob_pass_frm  %>% 
+  dplyr::filter(N <= 100) %>% 
+  dplyr::select(-x, -p) %>%
+tidyr::pivot_wider(
+ names_from = N, names_prefix = "N=", values_from="probPassThr") 
+
+prob_pass_sens_frm %>%
+knitr::kable(
+caption = "Probabilities of passing - Sensitivity"
+) %>%
+kableExtra::kable_styling(full_width = F)
+
+```
+
+<br/>
+
+#### Specificity {-}
+
+```{r m2a-prob-pass-thr-spec, fig.cap="Probability of passing - Specificity"}
+
+prob_pass_sens_frm <- prob_pass_frm  %>% 
+  dplyr::filter(N > 100) %>% 
+  dplyr::select(-x, -p) %>%
+tidyr::pivot_wider(
+ names_from = N, names_prefix = "N=", values_from="probPassThr") 
+
+prob_pass_sens_frm %>%
+knitr::kable(
+caption = "Probabilities of passing - Specificity"
+) %>%
+kableExtra::kable_styling(full_width = F)
+
+```
+
+<br/>
+
+# Uncertainty around the Estimated Sensitivity
+
+For   
+
+* Number of Positive cases = `r nP_vec = seq(20, 90, 5); nP_vec`  
+   - the number of eligible positive cases in the cohort at the
+time of the interim analysis.   
+
+<br/>
+
+* True Sensitivity = `r tS_vec = seq(75, 90, 5)/100; tS_vec`   
+   - the true sensitivity of the test in the sampling population.   
+
+<br/>
+
+* The sampling population is assumed to be representative of the intended usage
+population and to be constant over the study period.  
+
+*  If the sampling population changes over time, the results
+from the interim analysis may not provide reliable indicators
+of results from the analysis of data from participants
+recruited after the interim analysis.
+
+
+<!--
+
+True Sensitivity is used to estimate the expected 
+number of detected cases among the true positives in the study:
+
+$$D = P \cdot S$$
+
+where $P$ is the number of positive cases in the cohort
+and S is the true sensitivity.
+
+
+The standard error of the estimated sensitivity when the
+expected number of detected cases is observed will be used
+to evaluate the effect of the number of enrolled
+cases on precision:
+
+$$ se(\hat{S}=S) = \sqrt{\frac{S \cdot (1-S)}{P}}$$
+
+-->
+
+
+<br/>
+
+```{r m2a-tab-sens, cache=T, cache.vars='sens_nPos_frm'}
+
+sens_nPos_frm <- data.frame()
+
+for(TS in tS_vec) 
+for(NP in nP_vec){
+  D_hat <- TS
+  Wald_SE <- sqrt(D_hat * (1 - D_hat)/NP)
+
+  BinomCI_mtx <- round(DescTools::BinomCI(
+  x= NP * TS,
+  n=NP,
+  # To get +/- 1 se
+  #conf.level=1 - 2 * (1 -  pnorm(1)),
+  # To get +/- 1.645
+  conf.level = 0.90,
+  sides = "two.sided",
+  method=c('wald', 'wilson')
+    ),4)
+
+  sens_nPos_frm <- rbind(sens_nPos_frm,
+  data.frame(Sensitivity = TS, numPos = NP, confLevel = 0.90, 
+  wald=BinomCI_mtx['wald',, drop=F], 
+  wald.Width = round(diff(BinomCI_mtx['wald',])[2], 4),
+  wilson=BinomCI_mtx['wilson',, drop=F], 
+  wilson.Width = round(diff(BinomCI_mtx['wilson',])[2], 4)
+            )
+                      )
+
+}
+
+ #cat("Write to file ...\n")
+ #cat(normalizePath(file.path(tables_DIR, paste0('sens_nPos.tab'))), '\n')
+
+write.table(sens_nPos_frm,
+file=file.path(tables_DIR, paste0('sens_nPos.tab')),
+sep='\t', row.names=F, col.names=T)
+
+```
+
+
+<br/>
+<br/>
+
+* Note: The width of confidence intervals for the estimated 
+test sensitivity shrink proportionally with $\sqrt{numPos}$
+
+* **The results tabulated are based on observing the true sensitivity.**
+
+<br/>
+
+```{r m2a-dt-datatable-sens-frm}
+sens_nPos_frm %>%
+DT::datatable(
+rownames=F,
+caption = "Sensitivity 90% Conf Intervals By Sample Size (numPos) and True Sensitivity",
+extensions = 'Buttons', options = list(dom = 'Bfrtip', buttons = c('excel', "csv"))
+)
+
+```
+
+* The results plotted are based on observing the true sensitivity.
+
+
+```{r m2a-plot-sens, cache=T, cache.vars = '', fig.width = 11, fig.height=8, fig.cap = "90% Conf Intervals By Sample Size (numPos) and Sensitivity"}
+
+par(mfrow=c(2,2), mar=c(3,3,2,1), oma=c(2,0,2,0))
+
+for(SENS in unique(sens_nPos_frm$Sensitivity)) {
+
+ # plotting frame
+with(sens_nPos_frm %>% dplyr::filter(Sensitivity==SENS),
+  plot(x=numPos, y=wald.est, type='n',
+       ylab='', xlab='', 
+       ylim=c(min(c(wald.lwr.ci, wilson.lwr.ci)),
+              max(c(wald.upr.ci, wilson.upr.ci)))
+      )
+)
+title(paste("Sensitivity = ", SENS))
+
+ # wald point estimates
+if(F)
+with(sens_nPos_frm %>% dplyr::filter(Sensitivity==SENS),
+  points(x=numPos, y=wald.est, type='p', col='black')
+)
+
+ # wilson point estimates
+with(sens_nPos_frm %>% dplyr::filter(Sensitivity==SENS),
+  points(x=numPos, y=wilson.est, type='p', col='blue')
+)
+
+ # wald ci
+if(F)
+with(sens_nPos_frm %>% dplyr::filter(Sensitivity==SENS),
+  lines(x=numPos, y=wald.lwr.ci, type='l', lwd=2)
+)
+
+if(F)
+with(sens_nPos_frm %>% dplyr::filter(Sensitivity==SENS),
+  lines(x=numPos, y=wald.upr.ci, type='l', lwd=2)
+)
+
+ # wilson ci
+with(sens_nPos_frm %>% dplyr::filter(Sensitivity==SENS),
+  lines(x=numPos, y=wilson.lwr.ci, type='l', col='blue', lwd=2)
+)
+
+with(sens_nPos_frm %>% dplyr::filter(Sensitivity==SENS),
+  lines(x=numPos, y=wilson.upr.ci, type='l', col='blue', lwd=2)
+)
+
+
+}
+
+mtext(side=1, outer=T, cex=1.5, "Number of Positive Cases in Cohort")
+mtext(side=3, outer=T, cex=1.5, "Wilson 95% CI for Estimated Sensitivity")
+
+if(F)
+legend('bottomright', legend=c('wald', 'wilson'), col=c('black', 'blue'), 
+       bty='n', lty=1, lwd=2)
+
+```
+
+<br/>
+
+# Uncertainty around the Estimated Specificity
+
+For   
+
+* Number of Negative cases = `r nN_vec = seq(350, 500, 25); nN_vec`  
+   - the number of eligible negative cases in the cohort at the
+time of the interim analysis.   
+
+<br/>
+
+<!-- use tP_vec for sPecificity -->
+
+* True Specificity = `r tP_vec = seq(75, 90, 5)/100; tP_vec`   
+   - the true specificity of the test in the sampling population.   
+
+<br/>
+
+* The sampling population is assumed to be representative of the intended usage
+population and to be constant over the study period.  
+
+*  If the sampling population changes over time, the results
+from the interim analysis may not provide reliable indicators
+of results from the analysis of data from participants
+recruited after the interim analysis.
+
+
+<!--
+
+True Specificity is used to estimate the expected 
+number of predicted negative cases among the true negatives in the study:
+
+$$U = N \cdot P$$
+
+where $N$ is the number of negative cases in the cohort
+and P is the true specificity.
+
+
+The standard error of the estimated specificity when the
+expected number of predicted negative cases is observed will be used
+to evaluate the effect of the number of enrolled
+cases on precision:
+
+$$ se(\hat{P}=P) = \sqrt{\frac{P \cdot (1-P)}{N}}$$
+
+-->
+
+
+
+<br/>
+
+```{r m2a-tab-spec, cache=T, cache.vars='spec_nNeg_frm'}
+
+spec_nNeg_frm <- data.frame()
+
+ ### P is for sPecificity
+for(TP in tP_vec) 
+for(NN in nN_vec){
+  P_hat <- TP
+  Wald_SE <- sqrt(P_hat * (1 - P_hat)/NN)
+
+  BinomCI_mtx <- round(DescTools::BinomCI(
+  x= NN * TP,
+  n=NN,
+  # To get +/- 1 se
+  #conf.level=1 - 2 * (1 -  pnorm(1)),
+  # To get +/- 1.645
+  conf.level = 0.90,
+  sides = "two.sided",
+  method=c('wald', 'wilson')
+    ),4)
+
+  spec_nNeg_frm <- rbind(spec_nNeg_frm,
+  data.frame(Specificity = TP, numNeg = NN, confLevel = 0.90, 
+  wald=BinomCI_mtx['wald',, drop=F], 
+  wald.Width = round(diff(BinomCI_mtx['wald',])[2], 4),
+  wilson=BinomCI_mtx['wilson',, drop=F], 
+  wilson.Width = round(diff(BinomCI_mtx['wilson',])[2], 4)
+	    )
+		      )
+
+}
+
+cat("Write to file ...\n")
+cat(normalizePath(file.path(tables_DIR, paste0('spec_nNeg.tab'))), '\n')
+
+write.table(spec_nNeg_frm,
+file=file.path(tables_DIR, paste0('spec_nNeg.tab')),
+sep='\t', row.names=F, col.names=T)
+
+
+
+```
+
+
+<br/>
+<br/>
+
+* Note: The width of confidence intervals for the estimated 
+test specitivity shrink proportionally with $\sqrt{numNeg}$
+
+* The results tabulated are based on observing the true specificity.
+
+<br/>
+
+```{r m2a-dt-datatable-spec-frm}
+spec_nNeg_frm %>%
+DT::datatable(
+rownames=F,
+caption = "Specificity 90% Conf Intervals By Sample Size (numNeg) and True Specificity",
+extensions = 'Buttons', options = list(dom = 'Bfrtip', buttons = c('excel', "csv"))
+)
+
+```
+
+* The results plotted are based on observing the true specificity.
+
+```{r m2a-plot-spec, cache=T, cache.vars = '', fig.width = 11, fig.height=8, fig.cap = "90% Conf Intervals By Sample Size (numNeg) and Specificity"}
+
+par(mfrow=c(2,2), mar=c(3,3,2,1), oma=c(2,0,2,0))
+
+for(SPEC in unique(spec_nNeg_frm$Specificity)) {
+
+ # plotting frame
+with(spec_nNeg_frm %>% dplyr::filter(Specificity==SPEC),
+  plot(x=numNeg, y=wald.est, type='n',
+       ylab='', xlab='', 
+       ylim=c(min(c(wald.lwr.ci, wilson.lwr.ci)),
+              max(c(wald.upr.ci, wilson.upr.ci)))
+      )
+)
+title(paste("Specificity = ", SPEC))
+
+ # wald point estimates
+if(F)
+with(spec_nNeg_frm %>% dplyr::filter(Specificity==SPEC),
+  points(x=numNeg, y=wald.est, type='p')
+)
+
+ # wilson point estimates
+with(spec_nNeg_frm %>% dplyr::filter(Specificity==SPEC),
+  points(x=numNeg, y=wilson.est, type='p', col='blue')
+)
+
+ # wald ci
+if(F)
+with(spec_nNeg_frm %>% dplyr::filter(Specificity==SPEC),
+  lines(x=numNeg, y=wald.lwr.ci, type='l', lwd=2)
+)
+
+if(F)
+with(spec_nNeg_frm %>% dplyr::filter(Specificity==SPEC),
+  lines(x=numNeg, y=wald.upr.ci, type='l', lwd=2)
+)
+
+ # wilson ci
+with(spec_nNeg_frm %>% dplyr::filter(Specificity==SPEC),
+  lines(x=numNeg, y=wilson.lwr.ci, type='l', col='blue', lwd=2)
+)
+
+with(spec_nNeg_frm %>% dplyr::filter(Specificity==SPEC),
+  lines(x=numNeg, y=wilson.upr.ci, type='l', col='blue', lwd=2)
+)
+
+
+}
+
+mtext(side=1, outer=T, cex=1.5, "Number of Negative Cases in Cohort")
+mtext(side=3, outer=T, cex=1.5, "Wilson 95% CI for Estimated Specificity")
+
+if(F)
+legend('bottomright', legend=c('wald', 'wilson'), col=c('black', 'blue'), 
+       bty='n', lty=1, lwd=2)
+
+```
+
+<br/>
+
+# Validation Study: sensitivity targets {#mosaic-sens-targets}
+
+We are interested in exploring the relationship between sensitivity targets
+in the intent-to-test population, and likelihood of success in a validation study.  
+
+## Mosaic Study: sensitivity estimation {#mosaic-sens-est -}
+
+For in the Mosaic Study [@Koh:2024aa], there were 194 confirmed cancer cases
+in the intent-to-test  group, of which 167 were detected. Assuming binomial
+variability (ie. we have 194 shots on goal, shots are independent, and we have
+a fixed probability of scoring with each shot), our best guess for the true
+sensitivity (the sensitivity that would be observed if instead 194 shots, we took 
+a much larger number of shots) is the proportion detected:
+
+```{r m2a-target-sens-prelim}
+
+ thetaM <- round(167/194 , 3)
+ thetaM_se <- round(sqrt((thetaM * (1 - thetaM) )/194), 3)
+
+```
+
+\begin{align}
+
+\hat{\theta} &= D/nPos = 167/194 = `r thetaM`  \\
+se(\hat{\theta}) &= \sqrt{\frac{\hat{\theta} (1-\hat{\theta} )}{nPos}} \\
+   &= 0.025
+\end{align}
+
+Below we will use $\hat{\theta_M}$ to denote the Mosaic study estimate of 
+the long term average sensitivity, $\theta$.
+
+### Refinement  {-}
+
+Throughout this analysis we have modeled the test result data 
+as being independent with fixed probabilities of 
+detection for the positive and negative cases.  This model makes the
+assumption that participants are drawn from sets of positive and 
+negative cases, and that every case in each set has an equal probability
+of producing a positive test result.
+
+If in reality the cases have a range of probabilities of 
+producing a positive test result, the binomial distribution
+used to model number of cases which test positive
+will underestimate the variability in these counts.  
+
+* if the distribution of probabilities is tight around the
+mean, the extra variability will be negligible.
+
+* If, on the other hand, the distribution of probabilities
+has a wide spread, the extra variability will be considerable
+and our estimates of uncertainty will be understating the true variability
+in the counts.
+
+
+To assess the possible boost in variability due
+to variable probabilities for testing positive, we can 
+compare the variability of the binomial model estimates 
+(the sample proportion testing positive) under various
+data generation models - binomial and mixtures of binomials
+covering a range of possible spreads for the underlying 
+probabilities of testing positive.  
+(**To Be Completed**)
+
+## Evaluation of Prospective  Sensitivity Targets  {-}
+
+Given the long term average sensitivity (ie. population sensitivity),
+posited or estimated,  we can compute the desired targeted of claimed
+sensitivity necessary to achieve a specified probability of success.
+
+
+Let
+
+*  $\theta_{0}$  = the true sensitivity
+   - $\hat{\theta_M} \pm z_{\alpha/2} \cdot se(\hat{\theta_{M}})$
+is a 95% confidence  interval for  $\theta_{0}$ 
+* tS = the targeted or claimed sensitivity
+* pAC = the probability of meeting the Acceptance Criterion 
+   - ie. probability of success
+* $nPos_{V}$ = the number of positive cases in the validation cohort
+*  $D_{V}$ = the number of positive cases which test positive in validation
+* $z_{\alpha}$ = (1 - $\alpha$) quantile of N(0,1) distribution 
+   - For 95% one sides confidence level, $z_{\alpha}$ = `r round(qnorm(.05, lower=F),3)`
+
+then 
+\begin{align}
+  \hat{\theta_V} &= D_V/nPos_V \\
+  se(\theta_V) &= \sqrt{\frac{\theta_V \cdot (1-\theta_V)}{nPos_V}}   \\
+  pAC &= P( \hat{\theta_V} - z_{\alpha} \cdot  se(\theta_V) > tS)  \\
+      &= P( \hat{\theta_V} > tS + z_{\alpha} \cdot  se(\theta_V))  \\
+\end{align}
+
+Now 
+$$\hat{\theta_V} \approx N(\mu = \theta_0, \sigma^2=\frac{\theta_0 \cdot (1 - \theta_0)}{nPos_V})$$
+so that
+$$\frac{\hat{\theta_V} - \theta_0}{\sqrt(\frac{\theta_0 \cdot (1 - \theta_0)}{nPos_V})}
+\approx N(0, 1)$$
+Plugging this back into the equation for pAC we get
+\begin{align}
+pAC &= 1 - \Phi(\frac{tS - \theta_0 +
+     z_{\alpha} \cdot \sqrt(\frac{\theta_0 \cdot (1 - \theta_0)}{nPos_V})}
+      {\sqrt(\frac{\theta_0 \cdot (1 - \theta_0)}{nPos_V})}) \\
+\Phi^{-1}(pAC) &= - \frac{tS - \theta_0 +
+     z_{\alpha} \cdot \sqrt(\frac{\theta_0 \cdot (1 - \theta_0)}{nPos_V})}
+      {\sqrt(\frac{\theta_0 \cdot (1 - \theta_0)}{nPos_V})}) \\
+   & \vdots \\
+  tS &= \theta_0 - (\Phi^{-1}(pAC) + \Phi^{-1}(1 - {\alpha})) \cdot 
+     \sqrt(\frac{\theta_0 \cdot (1 - \theta_0)}{nPos_V})
+
+\end{align}
+
+```{r m2a-def-get-target-sens}
+
+get_target_sens_f <- function(theta0, pAC, alphaAC, nPosV)
+  theta0 - (qnorm(pAC, lower=T) + qnorm(1-alphaAC, lower=T))*sqrt((theta0*(1-theta0))/nPosV)
+
+```
+
+### Sensitivity Targets {- .tabset}
+
+```{r m2a-get-sens-low-med-high}
+
+ LowSens = thetaM - 2 * thetaM_se
+ MedSens = thetaM
+ HighSens = thetaM + 2 * thetaM_se
+
+```
+
+Tabulate the necessary targeted sensitivity to achieve specified
+success rates under various scenarios for true (long run)
+sensitivity:
+
+\begin{align}
+
+LowSens &= \theta_M - 2 \cdot SE &= `r LowSens`    \\
+MedSens &= \theta_M &= `r MedSens`                 \\
+HighSens &=$\theta_M + 2 \cdot SE &= `r HighSens`  
+
+\end{align}
+
+
+
+`r signAC = 0.95; alphaAC = 1 - signAC`
+Set the validation significance at one sided  `r signAC`
+
+Examine Target sensitivities by True Sensitivity Level:
+
+#### Home {-}
+
+<br/>
+
+#### True Sensitivity: Low = `r TrueSens = LowSens; TrueSens` {-}
+
+
+```{r m2a-true-sens-low, fig.cap="Target sensitivities to achieve stated Prob of success (columns) by Number of positive cases (rows)"}
+
+ 
+pAC_vec <- seq(from = 80, to = 95, by = 5)/100
+nPos_vec <- seq(from = 25, to = 200, by = 25)
+
+
+targetSens_frm <- data.frame()
+
+for(pAC in pAC_vec) 
+for(nPos in nPos_vec) 
+targetSens_frm <- rbind(targetSens_frm,
+data.frame(pAC = pAC, nPos = nPos, targ_sens = get_target_sens_f(
+theta0 = TrueSens,
+pAC = pAC,
+alphaAC = alphaAC,
+nPosV = nPos) %>% round(3)
+))
+
+
+
+targetSens_frm %>% 
+tidyr::pivot_wider(names_from=pAC, values_from = targ_sens) %>%
+knitr::kable(
+caption = paste(
+"Targeted Sensitivities by number of positive cases and probability of success",
+"- true sens =", TrueSens, "  validation alpha =", alphaAC)
+) %>%
+kableExtra::kable_styling(full_width = F)
+
+
+```
+
+<br/>
+<br/>
+
+#### Medium = `r TrueSens = MedSens; TrueSens` {-}
+
+
+```{r m2a-true-sens-med, fig.cap="Target sensitivities to achieve stated Prob of success (columns) by Number of positive cases (rows)"}
+
+ 
+pAC_vec <- seq(from = 80, to = 95, by = 5)/100
+nPos_vec <- seq(from = 25, to = 200, by = 25)
+
+
+targetSens_frm <- data.frame()
+
+for(pAC in pAC_vec) 
+for(nPos in nPos_vec) 
+targetSens_frm <- rbind(targetSens_frm,
+data.frame(pAC = pAC, nPos = nPos, targ_sens = get_target_sens_f(
+theta0 = TrueSens,
+pAC = pAC,
+alphaAC = alphaAC,
+nPosV = nPos) %>% round(3)
+))
+
+
+
+targetSens_frm %>% 
+tidyr::pivot_wider(names_from=pAC, values_from = targ_sens) %>%
+knitr::kable(
+caption = paste(
+"Targeted Sensitivities by number of positive cases and probability of success",
+"- true sens =", TrueSens, "  validation alpha =", alphaAC)
+) %>%
+kableExtra::kable_styling(full_width = F)
+
+
+```
+
+<br/>
+<br/>
+
+#### High = `r TrueSens = HighSens; TrueSens` {-}
+
+
+```{r m2a-true-sens-high, fig.cap="Target sensitivities to achieve stated Prob of success (columns) by Number of positive cases (rows)"}
+
+ 
+pAC_vec <- seq(from = 80, to = 95, by = 5)/100
+nPos_vec <- seq(from = 25, to = 200, by = 25)
+
+
+targetSens_frm <- data.frame()
+
+for(pAC in pAC_vec) 
+for(nPos in nPos_vec) 
+targetSens_frm <- rbind(targetSens_frm,
+data.frame(pAC = pAC, nPos = nPos, targ_sens = get_target_sens_f(
+theta0 = TrueSens,
+pAC = pAC,
+alphaAC = alphaAC,
+nPosV = nPos) %>% round(3)
+))
+
+
+
+targetSens_frm %>% 
+tidyr::pivot_wider(names_from=pAC, values_from = targ_sens) %>%
+knitr::kable(
+caption = paste(
+"Targeted Sensitivities by number of positive cases and probability of success",
+"- true sens =", TrueSens, "  validation alpha =", alphaAC)
+) %>%
+kableExtra::kable_styling(full_width = F)
+
+
+```
+
+<br/>
+<br/>
+
+# References {#references}
+
+<div id="refs"></div>
+
+<br/>
+
+
+# Appendix 
+
+## Term Definitions 
+
+* **LCB**: Lower Confidence Bound
+   - unless stated otherwise, LCB will be the 95% lower confidence bound,
+which is the lower end of a 90% two-sided confidence interval.
+
+* **Performance**: Stands for either sensitivity or specificity.
+    -  Sensitivity and specificity are point estimates of binomial 
+distributions and as such share the same properties in terms of precision 
+as a function of number of samples.
+    - One distinction in this study is that the number of samples used
+in the specificity analysis will be approximately 8 times 
+the number of samples used in the sensitivity analysis.
+    - In the performance summaries, the number of samples
+can be used to identify results which are relevant to sensitivity or specificity.
+
+* **True Performance/Sensitivity/Specificity**: the actual
+performance of the test in the targeted population.
+
+* **Event**: an event refers to an enrolled subject being (propectively)
+dignosed with cancer.
+
+Test performance metrics are defined in terms of a 2 by 2 confusion or agreement table.
+
+
+```{r m2a-2way-confusion-table, fig.cap='Confusion Table'}
+
+table_frm <- data.frame(
+  Pos = c('a', 'c'), Neg = c('b', 'd'), 
+  row.names = c('D', 'notD'))
+
+table_frm %>%
+knitr::kable(
+caption = "Test Results vs Truth: Det = Detected;  Pos = Cancer"
+) %>%
+kableExtra::kable_styling(full_width = F)
+
+```
+
+* the 2x2 Confusion Table summarizes the agreement between classification results
+in the rows and known diagnosis in the columns.
+* the columns are the true cancer diagnosis of the participants
+   - Pos = participant has cancer
+   - Neg = participant does not have cancer
+* the rows are the test results.
+   - Det = cancer was detected
+   - notD = cancer was not detected
+* the entries in the table are the number of participants
+with the corresponding cancer diagnosis and cancer detection results.
+
+
+<br/>
+
+## Likelihood Profile CI {#likelihood-profile}
+
+* Figure \@ref(fig:m2a-lkhood-n75-p88) displays the binomial
+likelihood of P when N = 75, the targeted number of positive cases
+in the large FDA-facing study, and the observed proportion
+of success is p=66/75=0.88.  Note that in this case, `P` varies and
+`p` is fixed. 
+
+* For a single parameter, likelihood theory shows that the 2 points 1.92 units 
+down from the maximum of the log-likelihood function provide a 95% confidence 
+interval when there is no extrabinomial variation.
+^[The value 1.92 is half of the chi-square value of 3.84 with 1 degree of freedom.
+Thus, the same confidence interval can be computed with the deviance by adding 3.84
+to the minimum of the deviance function, where the deviance is the log-likelihood 
+multiplied by -2 minus the -2 log likelihood value of the saturated model.]
+
+
+```{r m2a-lkhood-n75-p88, cache=T, cache.vars='', fig.height=6, fig.width=8, fig.cap="L_N(P; p): N = 75, p = 0.88"}
+
+N <- 75
+p <- 0.88         ### to avoid rounding errors, should only 
+X <- round(N * p) ### consider p corresponding to integer X
+
+Lkhd_N75p88_P_frm <- data.frame(
+ P = 0:1000/1000, 
+ Lkhd <- do.call('c', lapply(0:1000/1000, function(P) dbinom(prob=P, size=N, x=X)))
+)
+
+log_Lkhd_N75p88_P <- log(Lkhd_N75p88_P_frm$Lkhd)                     # log-likelihood
+max_log_Lkhd_N75p88_P <- max(log_Lkhd_N75p88_P)             # max log-likelihood
+CB_95_log_Lkhd_N75p88_P <- max_log_Lkhd_N75p88_P - 1.92     # 1.92 units down from max LL
+CB_95_Lkhd_N75p88_P <- exp(CB_95_log_Lkhd_N75p88_P)         # 1.92 units down from max LL on lk scale
+
+
+with(Lkhd_N75p88_P_frm,
+plot(x=P, y=Lkhd, type='l', lwd=2, xlim=c(.7, 1), xlab='P')
+)
+abline(h = CB_95_Lkhd_N75p88_P, col='red', lty = 2)
+title(paste0("Likelihood of P when N =", N, ", X =", X, " (p =", p, ")",
+   "\nRed line indicates 95% profile likelihood CI"))
+
+P_maxLkhd <- with(Lkhd_N75p88_P_frm, P[which.max(Lkhd)])
+segments(x0=P_maxLkhd, x1=P_maxLkhd, 
+         y0=par("usr")[3], y1=max(Lkhd_N75p88_P_frm$Lkhd), col='blue')
+text(x=P_maxLkhd, y=par("usr")[3]/2, paste("MLE =", P_maxLkhd), col='blue', pos=2)
+
+P_lcb <- with(Lkhd_N75p88_P_frm, P[min(which(Lkhd > CB_95_Lkhd_N75p88_P))])
+segments(x0=P_lcb, x1=P_lcb,
+         y0=par("usr")[3], y1=CB_95_Lkhd_N75p88_P, col='red')
+text(x=P_lcb, y=par("usr")[3]/2, paste("LCB =", P_lcb), col='red', pos=2)
+
+P_ucb <- with(Lkhd_N75p88_P_frm, P[max(which(Lkhd > CB_95_Lkhd_N75p88_P))])
+segments(x0=P_ucb, x1=P_ucb,
+         y0=par("usr")[3], y1=CB_95_Lkhd_N75p88_P, col='red')
+text(x=P_ucb, y=par("usr")[3]/2, paste("UCB =", P_ucb), col='red', pos=4)
+
+
+```
+
+<br/>
+<br/>
+
+
+# Reproducibility
+
+
+```{r , eval=T}
+pander::pander(sessionInfo())
+```
+
+  * WRKDIR = `r normalizePath(WRKDIR)`
+  * FN = `r FN`
+  * Scripts = Scripts
+  * RUN DATE = `r format(Sys.time(), '%B %d, %Y')`
+
+```{r , echo=FALSE}
+  knit_exit()
+```
+
+############################################################
+## ARCHIVED CODE BELOW
+############################################################
+    
+<!-- DONT NEED ALL THIS
+\begin{equation}
+LCB(\hat{p}) = \hat{p} - z_{\alpha/2} \sqrt{\frac{\hat{p} (1 - \hat{p})}{N}}
+(\#eq:lqb-eq1)
+\end{equation}
+
+Algorithm:
+
+* With fixed N - the number of events when estimsting sensitivity -
+
+   - take a first guess at $\hat{p}$ by shifting from 0.8
+   - get the actual  LCB for that $\hat{p_0}$
+   - adjust the first guess by the difference between the LCB and 0.80.
+   - repeat until convergence
+
+
+
+1. $\hat{p_0} = 0.8 + z_{\alpha/2} \sqrt{\frac{0.8 (1 - 0.8)}{N}}$
+
+2. $LCB(\hat{p_0}) = \hat{p_0} - z_{\alpha/2} \sqrt{\frac{\hat{p_0} (1 - \hat{p_0})}{N}}$
+
+3. $\hat{p_1} = \hat{p_0} + 0.8 - LCB(\hat{p_0})$
+
+4. $LCB(\hat{p_1}) = \hat{p_1} - z_{\alpha/2} \sqrt{\frac{\hat{p_1} (1 - \hat{p_1})}{N}}$
+
+5. If $|LCB(\hat{p_1}) - 0.80| >.01$ repeat
+
+-->
+```{r m2a-perf-lcb-80-ARCH, cache=T, cache.vars="perf_wilson_lcb_80_frm", eval=F, echo=F}
+
+perf_wilson_lcb_80_frm <- data.frame()
+
+for(N in c(seq(70, 100, 5), seq(350, 500, 50))) {
+  # initiate current phat
+  phat_c <- 0.8 + qnorm(0.975) * sqrt(0.8*0.2/N)
+
+  # get lcb for phat_c
+  lcb_c <- DescTools::BinomCI(
+           x= N*phat_c,
+           n=N,
+           conf.level = 0.95,
+           sides = "left",
+           method='wilson'   ###('wald', 'wilson')
+    )[1, "lwr.ci"]
+
+  delta <- lcb_c - .80
+
+  while(abs(delta) > 0.005){
+  # update phat
+  phat_c <- phat_c - delta
+
+  # update lcb_c
+   lcb_c <- DescTools::BinomCI(
+           x= N*phat_c, 
+           n=N,
+           conf.level = 0.95,
+           sides = "left",
+           method='wilson'   ###('wald', 'wilson')
+    )[1, "lwr.ci"]
+
+  delta <- lcb_c - .80
+  }
+
+  perf_wilson_lcb_80_frm <- rbind(perf_wilson_lcb_80_frm,
+  data.frame(N = N, est = round(phat_c, 2), lcb = round(lcb_c, 2), row.names=NULL)
+  )
+}
+
+perf_wilson_lcb_80_frm %>%
+knitr::kable(
+caption = "Est such that lcb >= 80"
+) %>%
+kableExtra::kable_styling(full_width = F)
+
+```
+
+
+<br/>
+<br/>
+
+<!-- Ward Option -->
+```{r m2a-perf-lcb-80-ARCH-2, cache=T, cache.vars="sens_lcb_80_frm", eval=F}
+
+sens_lcb_80_frm <- data.frame()
+
+
+for(N in c(seq(20, 100, 5), 200)) {
+
+  p0 <- 0.8 + qnorm(0.975) * sqrt(0.8*0.2/N)
+  LCB0 <- p0 - qnorm(0.975) * sqrt(p0 * (1 - p0)/N)
+  p1 = p0 + 0.8 - LCB0
+
+  LCB1 <- p1 - qnorm(0.975) * sqrt(p1 * (1 - p1)/N)
+  p2 <- p1 + 0.8  - LCB1
+  LCB2 <- p2 - qnorm(0.975) * sqrt(p2 * (1 - p2)/N)
+
+  sens_lcb_80_frm <- rbind(sens_lcb_80_frm,
+  data.frame(N = N, est = round(p2, 2), lcb = round(LCB2, 2))
+   )
+
+}
+
+```
+
+
+<!-- ARCHIVAL CODE ENDS -->
+<!-- ############################################################# -->
+
+<!-- To run
+# nohup Rscript -e "knitr::knit2html('_M2A-interimSampleSizeAnalysis.Rmd')" > _M2A-interimSampleSizeAnalysis.log  &
+
+# Or
+# nohup Rscript -e "rmarkdown::render('_M2A-interimSampleSizeAnalysis.Rmd')" > _M2A-interimSampleSizeAnalysis.log  &
+
+-->
+

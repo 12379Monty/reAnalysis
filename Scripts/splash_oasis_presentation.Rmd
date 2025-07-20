@@ -1,0 +1,25 @@
+---
+title: "SPLASH and OASIS: Reference-Free Genomic Analysis"
+subtitle: "A Critical Assessment of Statistical Methods"
+author: "Your Name"
+date: "`r Sys.Date()`"
+output:
+  html_document:
+    theme: flatly
+    highlight: tango
+    toc: true
+    toc_float: true
+    number_sections: true
+    css: _M3B-SPLASH-OASIS-presentation_css.css
+# pdf_document:
+#   toc: true
+#   number_sections: true
+  powerpoint_presentation:
+    slide_level: 2
+  revealjs::revealjs_presentation:
+    theme: sky
+    highlight: tango
+    transition: slide
+    slide_level: 2
+---
+

@@ -1,0 +1,795 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>_M1C-stats-pd-plan-final-v35</title>
+  <style>
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    /* The extra [class] is a hack that increases specificity enough to
+       override a similar rule in reveal.js */
+    ul.task-list[class]{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      font-size: inherit;
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+    .display.math{display: block; text-align: center; margin: 0.5rem auto;}
+  </style>
+  <link rel="stylesheet" href="_M1C-stats-pd-plan-css-tables.css" />
+</head>
+<body>
+name: "reAnalysis"
+output_dir: "."
+navbar:
+  title: Training and Data Re-Analysis
+  left:
+    - text: "Home"
+      href: index.html
+<style>
+/* Fix for table of contents numbering - force decimal for all nested lists */
+ol ol { 
+  list-style: decimal !important; 
+}
+ol ol ol { 
+  list-style: decimal !important; 
+}
+</style>
+<h1
+id="professional-development-plan-for-experienced-statisticians">Professional
+Development Plan for Experienced Statisticians</h1>
+<h2 id="bridging-traditional-methods-with-modern-approaches">Bridging
+Traditional Methods with Modern Approaches</h2>
+<h2 id="table-of-contents">Table of Contents</h2>
+<ol type="1">
+<li><a href="#1-introduction-and-methodology">Introduction and
+Methodology</a></li>
+<li><a href="#2-modern-statistical-methods-and-approaches">Modern
+Statistical Methods and Approaches</a>
+<ol type="1">
+<li><a href="#21-ai-and-llm-integration-for-statistical-work">AI and LLM
+Integration for Statistical Work</a></li>
+<li><a href="#22-machine-learning-integration">Machine Learning
+Integration</a></li>
+<li><a href="#23-bayesian-methods-in-practice">Bayesian Methods in
+Practice</a></li>
+<li><a href="#24-causal-inference-methods">Causal Inference
+Methods</a></li>
+</ol></li>
+<li><a
+href="#3-reproducibility-of-statistical-analysis-in-the-age-of-data-science">Reproducibility
+of Statistical Analysis in the Age of Data Science</a>
+<ol type="1">
+<li><a href="#31-principles-of-reproducible-research">Principles of
+Reproducible Research</a></li>
+<li><a href="#32-bin-yus-veridical-data-science-framework">Bin Yu’s
+Veridical Data Science Framework</a></li>
+<li><a href="#33-practical-tools-for-reproducibility">Practical Tools
+for Reproducibility</a></li>
+</ol></li>
+<li><a href="#4-modern-reporting-and-communication">Modern Reporting and
+Communication</a>
+<ol type="1">
+<li><a href="#41-dynamic-reporting-and-dashboards">Dynamic Reporting and
+Dashboards</a></li>
+<li><a href="#42-communicating-uncertainty">Communicating
+Uncertainty</a></li>
+<li><a href="#43-automated-reporting-pipelines">Automated Reporting
+Pipelines</a></li>
+</ol></li>
+<li><a href="#5-appendix">Appendix</a>
+<ol type="1">
+<li><a href="#51-computing-environment-modernization">Computing
+Environment Modernization</a></li>
+<li><a href="#52-implementation-plan">Implementation Plan</a></li>
+<li><a href="#53-assessment-strategy">Assessment Strategy</a></li>
+<li><a href="#54-resource-requirements">Resource Requirements</a></li>
+<li><a href="#55-extension-activities">Extension Activities</a></li>
+</ol></li>
+</ol>
+<h2 id="introduction-and-methodology">1. Introduction and
+Methodology</h2>
+<p>This professional development plan is designed for statisticians with
+10-15+ years of experience who need to update their skills with the
+latest developments in statistical computing, analysis, and reporting
+methods.</p>
+<h3 id="how-this-plan-was-developed">How This Plan Was Developed</h3>
+<p>This plan was created by analyzing several key factors:</p>
+<ol type="1">
+<li><p><strong>Identifying the knowledge gap</strong> between
+traditional statistical methods (what statisticians with 10-15+ years of
+experience likely learned initially) and modern approaches that have
+gained prominence in recent years</p></li>
+<li><p><strong>Incorporating current trends</strong> in the field of
+statistics, such as:</p>
+<ul>
+<li>Reproducible research practices</li>
+<li>Cloud computing and scalable analysis</li>
+<li>Bayesian methods becoming more prevalent</li>
+<li>The integration of ML techniques with classical statistical
+approaches</li>
+<li>The emergence of AI tools like GPT models for augmenting statistical
+workflows</li>
+</ul></li>
+<li><p><strong>Applying effective learning structures</strong> for
+experienced professionals:</p>
+<ul>
+<li>Hands-on activities rather than lectures</li>
+<li>Comparative exercises that build on existing knowledge</li>
+<li>Peer-based learning opportunities</li>
+<li>Project-based approaches for complex topics</li>
+</ul></li>
+<li><p><strong>Balancing technical and communication skills</strong>,
+recognizing that modern statistical practice requires both
+methodological expertise and the ability to effectively communicate
+insights</p></li>
+</ol>
+<p>The curriculum is organized into sections that progress logically:
+first focusing on modern methodological approaches and communication
+strategies, with technical computing environment updates available in
+the appendix for those who need them.</p>
+<h2 id="modern-statistical-methods-and-approaches">2. Modern Statistical
+Methods and Approaches</h2>
+<h3 id="ai-and-llm-integration-for-statistical-work">2.1. AI and LLM
+Integration for Statistical Work</h3>
+<p>Artificial Intelligence and Large Language Models are impacting the
+way data are summarized and reported in all industries which depend on
+accurate data summarization. In applied statistics, tasks whose solution
+can be described by an algorithm or which entail summarizing published
+findings - code generation, debugging, literature review, and
+explanation - have already been impacted by the advent of AI. Tasks
+which require innovation and creativity will not benefit from the
+current round of AI tools. Even when they are useful, it cannot be
+over-emphasized that AI generated results must always be verified by
+field experts. Experienced statisticians can benefit by incorporating
+useful AI tools into their workflow. They may also help in the
+development of next generation AI tools for statistical data
+analysis.</p>
+<p>Yu and Kumbier (Front Inform Technol Electron Eng 2018 19(1):6-9)
+provide a framework for integrating statistical ideas in AI work which
+they term the PQRS Workflow. Indeed the statistical concepts of
+population (P), question of interest (Q), representativeness of training
+data (R), and scrutiny of results (S) remain critically important in the
+application of AI to data analysis. Although the PQRS framework was
+introduced in the context of AI, it is similarly applicable to the
+machine learning context. The PQRS framework should be used wherever
+applicable in the activities below.</p>
+<p>For experienced statisticians, understanding AI’s capabilities and
+limitations is essential for effective integration into professional
+practice. This module focuses on practical applications rather than
+technical implementation details of AI systems themselves. The emphasis
+is on determining when and how to appropriately leverage these tools,
+establishing verification protocols, and maintaining statistical
+integrity when incorporating AI-generated content. Participants will
+learn to evaluate the quality of AI outputs in statistical contexts and
+develop strategies for combining human expertise with AI capabilities to
+enhance productivity while ensuring methodological rigor.</p>
+<ul>
+<li><strong>Format:</strong> Workshop with hands-on exercises (4
+hours)</li>
+<li><strong>Objective:</strong> Gain an understanding of the strengths
+and limitations of AI assistants and large language models in assisting
+statistical analyses</li>
+<li><strong>Activities:</strong>
+<ul>
+<li>Evaluate capabilities and limitations: Compare AI-assisted
+statistical analysis with traditional approaches across different
+tasks</li>
+<li>Develop effective prompting strategies specific to statistical
+questions and code development</li>
+<li>Practice critical evaluation of AI-generated statistical code and
+explanations for errors and misunderstandings</li>
+<li>Explore ethical considerations in AI-assisted statistical practice,
+including citation, transparency, and potential biases</li>
+<li>Design hybrid workflows that combine AI assistance with human
+statistical expertise and domain knowledge</li>
+<li>Create guidelines for responsible use of AI tools in your
+statistical team or organization</li>
+</ul></li>
+</ul>
+<h3 id="machine-learning-integration">2.2. Machine Learning
+Integration</h3>
+<p>Machine learning methods have increasingly become part of the modern
+statistician’s toolkit, offering new approaches to modeling complex
+data. When we speak of “integrating machine learning with traditional
+statistical approaches,” we refer to thoughtfully combining predictive
+machine learning techniques with inferential statistical methods to
+leverage the strengths of both. This integration can take various forms:
+using statistical principles to validate machine learning models,
+employing machine learning algorithms within statistical workflows, or
+creating hybrid methodologies that maintain statistical rigor while
+benefiting from machine learning’s flexibility.</p>
+<table>
+<colgroup>
+<col style="width: 11%" />
+<col style="width: 47%" />
+<col style="width: 41%" />
+</colgroup>
+<thead>
+<tr>
+<th>Aspect</th>
+<th>Traditional Statistical Methods</th>
+<th>Machine Learning Approaches</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Desired Inference/Statistic</strong></td>
+<td>Focus on inference, hypothesis testing, and parameter
+estimation</td>
+<td>Focus on prediction accuracy and pattern recognition</td>
+</tr>
+<tr>
+<td><strong>Model Interpretability</strong></td>
+<td>Emphasize model interpretability and understanding underlying data
+structures</td>
+<td>Often sacrifice interpretability for performance</td>
+</tr>
+<tr>
+<td><strong>Model Derivation</strong></td>
+<td>Require explicit model specification based on domain knowledge</td>
+<td>Can automatically discover complex relationships without explicit
+programming</td>
+</tr>
+<tr>
+<td><strong>Inference Space/Data Generation</strong></td>
+<td>Primarily concerned with uncertainty quantification and statistical
+significance; Often rely on assumptions about data distributions (e.g.,
+normality)</td>
+<td>Primarily concerned with generalization to new data; Generally more
+flexible with fewer distributional assumptions; Require larger datasets
+to perform effectively</td>
+</tr>
+<tr>
+<td><strong>Examples</strong></td>
+<td>Linear/logistic regression, ANOVA, survival analysis, generalized
+linear models, structural equation models</td>
+<td>Random forests, gradient boosting, neural networks, support vector
+machines, deep learning architectures</td>
+</tr>
+</tbody>
+</table>
+<p>The most effective modern statistical practice often involves
+thoughtfully combining elements of both approaches, using statistical
+rigor to guide and interpret machine learning applications.</p>
+<ul>
+<li><strong>Format:</strong> Project-based learning (6 hours split
+across multiple sessions)</li>
+<li><strong>Objective:</strong> Effectively integrate machine learning
+with traditional statistical approaches</li>
+<li><strong>Activities:</strong>
+<ul>
+<li>Identify appropriate use cases for ML vs. traditional statistical
+methods</li>
+<li>Develop a taxonomy of problems and corresponding methodological
+approaches</li>
+<li>Implement hybrid models that combine statistical rigor with ML
+flexibility</li>
+<li>Critical evaluation exercise: Analyze published papers that use ML
+methods for statistical inference</li>
+</ul></li>
+</ul>
+<h3 id="bayesian-methods-in-practice">2.3. Bayesian Methods in
+Practice</h3>
+<table>
+<colgroup>
+<col style="width: 16%" />
+<col style="width: 43%" />
+<col style="width: 39%" />
+</colgroup>
+<thead>
+<tr>
+<th>Aspect</th>
+<th>Frequentist Approach</th>
+<th>Bayesian Approach</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Philosophical Foundation</strong></td>
+<td>Probability as long-run frequency</td>
+<td>Probability as degree of belief</td>
+</tr>
+<tr>
+<td><strong>Estimand</strong></td>
+<td>Functional of the data-generating distribution—a fixed but unknown
+quantity derived from the distribution of the data (e.g., the mean,
+variance, or a regression coefficient)</td>
+<td>Same functional of the data-generating distribution, but inference
+target is the posterior distribution of that functional given the
+observed data</td>
+</tr>
+<tr>
+<td><strong>Prior Knowledge</strong></td>
+<td>Not formally incorporated</td>
+<td>Explicitly modeled through prior distributions</td>
+</tr>
+<tr>
+<td><strong>Inference Results</strong></td>
+<td>Point estimates, confidence intervals, p-values</td>
+<td>Posterior distributions, credible intervals</td>
+</tr>
+<tr>
+<td><strong>Interpretation</strong></td>
+<td>Confidence interval: “95% of similarly constructed intervals contain
+the true parameter”</td>
+<td>Credible interval: “95% probability the parameter lies in this
+range”</td>
+</tr>
+<tr>
+<td><strong>Small Sample Performance</strong></td>
+<td>Relies solely on observed data; wider intervals reflect greater
+uncertainty with small samples</td>
+<td>Can appear to perform better with small samples, but precision gains
+come entirely from prior assumptions, effectively supplementing observed
+data with assumed information</td>
+</tr>
+<tr>
+<td><strong>Complexity Handling</strong></td>
+<td>Can struggle with highly complex hierarchical models</td>
+<td>Naturally handles hierarchical structures and complex
+dependencies</td>
+</tr>
+<tr>
+<td><strong>Computation</strong></td>
+<td>Often has closed-form solutions</td>
+<td>Typically requires MCMC or other sampling methods</td>
+</tr>
+<tr>
+<td><strong>Examples</strong></td>
+<td>Hypothesis testing, MLE, linear regression</td>
+<td>Hierarchical models, probabilistic programming</td>
+</tr>
+</tbody>
+</table>
+<p>Bayesian statistical methods have seen a significant rise in
+prevalence due to increased computational capabilities and growing
+acceptance in various fields. This approach, once primarily confined to
+specialized applications, has become increasingly common across
+disciplines. For experienced statisticians primarily trained in
+frequentist approaches, Bayesian methods provide powerful new tools for
+addressing complex problems and communicating uncertainty.</p>
+<p>It’s worth noting that some prominent statisticians have expressed
+fundamental concerns about Bayesian approaches. David A. Freedman, who
+began as a Bayesian but later became critical of both Bayesian and
+complex frequentist models, argued that Bayesian models provided
+interesting mathematical problems but were not necessarily more helpful
+in extracting useful information from data (Freedman, 1995, “Some issues
+in the foundation of statistics”). Freedman maintained that in many
+applications, both Bayesian and frequentist models risked drawing
+conclusions driven more by assumptions than by data when those models
+were not adequately supported by empirical evidence (Freedman, 2009,
+“Statistical Models and Causal Inference: A Dialogue with the Social
+Sciences”). This perspective highlights the importance of critically
+evaluating all statistical approaches and understanding their
+foundational assumptions.</p>
+<ul>
+<li><strong>Format:</strong> Case-study workshop (4 hours)</li>
+<li><strong>Objective:</strong> Apply Bayesian approaches to real-world
+statistical problems while critically evaluating their strengths and
+limitations</li>
+<li><strong>Activities:</strong>
+<ul>
+<li>Compare frequentist vs. Bayesian approaches to the same problem</li>
+<li>Implement Bayesian models using modern tools (Stan, PyMC3,
+brms)</li>
+<li>Develop intuition for prior selection through interactive
+simulations</li>
+<li>Critically evaluate the impact of prior assumptions on posterior
+inference</li>
+<li>Group challenge: Design and implement a Bayesian solution to an
+industry-relevant problem</li>
+</ul></li>
+</ul>
+<h3 id="causal-inference-methods">2.4. Causal Inference Methods</h3>
+<p>Causal inference methods attempt to move beyond correlation to
+establish causal relationships in observational data. While these
+approaches have become increasingly sophisticated and widely used, they
+remain controversial among some statisticians who question the validity
+of causal claims from non-randomized studies. Statisticians like David
+A. Freedman (2009, “Statistical Models and Causal Inference”) and Erich
+L. Lehmann have expressed fundamental reservations about the credibility
+of conclusions drawn from such analyses, arguing that observational data
+often fails to meet the strong assumptions required for valid causal
+inference and that statistical adjustments cannot fully account for
+unmeasured confounding.</p>
+<ul>
+<li><strong>Format:</strong> Seminar with practical exercises (4
+hours)</li>
+<li><strong>Objective:</strong> Master modern causal inference
+frameworks and methods while understanding their limitations</li>
+<li><strong>Activities:</strong>
+<ul>
+<li>Compare traditional regression approaches with modern causal
+inference methods</li>
+<li>Examine the key assumptions behind causal inference and strategies
+for assessing their plausibility</li>
+<li>Implement causal graphs and identify assumptions using DAGitty or
+similar tools</li>
+<li>Apply methods like propensity score matching, instrumental
+variables, and difference-in-differences</li>
+<li>Critically evaluate published causal inference studies, assessing
+strengths and limitations</li>
+<li>Design challenge: Develop a causal inference strategy for a complex
+observational dataset, including sensitivity analyses</li>
+</ul></li>
+</ul>
+<h2
+id="reproducibility-of-statistical-analysis-in-the-age-of-data-science">3.
+Reproducibility of Statistical Analysis in the Age of Data Science</h2>
+<p>The replication crisis across scientific fields has highlighted the
+critical importance of reproducible research practices. This crisis has
+been documented across psychology (Open Science Collaboration, 2015,
+Science 349(6251)), biomedical research (Begley &amp; Ellis, 2012,
+Nature 483(7391):531-533), and economics (Camerer et al., 2016, Science
+351(6280)), among other fields. These studies reveal that a substantial
+proportion of published findings cannot be replicated, raising
+fundamental questions about the reliability of scientific knowledge.</p>
+<p>Before examining specific approaches to reproducibility, it is
+essential to distinguish between related but distinct concepts:</p>
+<ul>
+<li><strong>Reproducibility</strong>: The ability to obtain consistent
+results using the same input data, computational methods, and conditions
+of analysis</li>
+<li><strong>Replicability</strong>: The ability to obtain consistent
+results across studies aimed at answering the same scientific question,
+each using new data</li>
+<li><strong>Repeatability</strong>: The ability to obtain consistent
+results when the same researcher repeats an analysis using the same
+methods and data</li>
+</ul>
+<p>These concepts are inherently context-specific, and the challenges of
+achieving them vary significantly across different fields and data
+types. For example, in gene expression profiling, the complexity of
+RNA-Seq data introduces unique reproducibility challenges. Molania et
+al. (2023, Nature Biotechnology 41:82-95) demonstrate how systematic
+variability inherent in RNA-Seq data—including batch effects, technical
+artifacts, and biological heterogeneity—can substantially interfere with
+reproducibility. Their work highlights that achieving reproducible
+results requires not only careful documentation of analytical procedures
+but also sophisticated methods for identifying and removing unwanted
+variation from complex biological datasets.</p>
+<p>This section explores practical frameworks and tools for enhancing
+reproducibility in statistical analysis, recognizing that solutions must
+be tailored to the specific challenges of different data types and
+research contexts.</p>
+<h3 id="principles-of-reproducible-research">3.1. Principles of
+Reproducible Research</h3>
+<p>This section explores fundamental principles that ensure statistical
+work can be validated, replicated, and built upon by others, addressing
+both computational reproducibility and analytical reproducibility
+challenges. Building on the distinctions outlined above, participants
+will develop practical strategies for implementing reproducible
+workflows in their statistical practice.</p>
+<ul>
+<li><strong>Format:</strong> Interactive workshop (3 hours)</li>
+<li><strong>Objective:</strong> Establish fundamental principles and
+practices of reproducible statistical analysis</li>
+<li><strong>Activities:</strong>
+<ul>
+<li>Define the spectrum of reproducibility: computational
+reproducibility vs. replicability</li>
+<li>Survey current reproducibility challenges in statistical practice
+and data science</li>
+<li>Evaluate the impact of analytical flexibility on result
+validity</li>
+<li>Develop a personal checklist for ensuring reproducible analysis
+workflows</li>
+</ul></li>
+</ul>
+<h3 id="bin-yus-veridical-data-science-framework">3.2. Bin Yu’s
+Veridical Data Science Framework</h3>
+<p>Bin Yu and Karl Kumbier have developed the Veridical Data Science
+framework as a comprehensive approach to ensuring reproducibility,
+stability, and validity in data science workflows (Yu &amp; Kumbier,
+2020, “Veridical data science,” Proc. Natl. Acad. Sci. U.S.A.
+117(8):3920-3929). This framework extends beyond traditional
+reproducibility to address the fundamental challenge of extracting
+reliable knowledge from data.</p>
+<p>The veridical framework encompasses three core principles:</p>
+<ol type="1">
+<li><strong>Predictability</strong>: Ensuring that results are
+computationally reproducible and stable across perturbations</li>
+<li><strong>Computability</strong>: Managing computational complexity
+and developing efficient algorithms</li>
+<li><strong>Stability</strong>: Assessing how results change under data
+and model perturbations (PCS framework)</li>
+</ol>
+<p>This section introduces Yu’s innovative approaches to documenting
+analytical decisions, quantifying the impact of researcher degrees of
+freedom, and implementing validation protocols that increase confidence
+in statistical findings.</p>
+<ul>
+<li><strong>Format:</strong> Case study analysis and discussion (3
+hours)</li>
+<li><strong>Objective:</strong> Apply the veridical data science
+framework to enhance reproducibility and stability in statistical
+analyses</li>
+<li><strong>Activities:</strong>
+<ul>
+<li>Examine Yu and Kumbier’s PCS (Perturbation, Computation, Stability)
+framework for evaluating data science pipelines</li>
+<li>Implement Yu’s structured workflow for documenting analytical
+decisions and their impacts</li>
+<li>Practice stability analysis by systematically perturbing data,
+models, and computational environments</li>
+<li>Apply the veridical approach to a case study, documenting decision
+points and assessing stability</li>
+<li>Develop protocols for transparent reporting that align with
+veridical data science principles</li>
+</ul></li>
+<li><strong>Key Concepts from Yu’s Framework:</strong>
+<ul>
+<li>PCS documentation for analytical workflows</li>
+<li>Stability analysis across data and model perturbations</li>
+<li>Decision tree documentation for analytical choices</li>
+<li>Computational notebooks with embedded stability checks</li>
+<li>Iterative refinement based on stability assessments</li>
+</ul></li>
+</ul>
+<h3 id="practical-tools-for-reproducibility">3.3. Practical Tools for
+Reproducibility</h3>
+<p>Beyond principles and frameworks, specific technological tools enable
+reproducible research workflows. This section introduces the practical
+technologies that modern statisticians can leverage to ensure their
+analyses are transparent, reproducible, and maintainable over time, with
+a focus on containerization, workflow management, and automated
+validation.</p>
+<ul>
+<li><strong>Format:</strong> Hands-on tutorial (4 hours)</li>
+<li><strong>Objective:</strong> Master practical tools and technologies
+that enable reproducible research</li>
+<li><strong>Activities:</strong>
+<ul>
+<li>Implement containerization (Docker) for computational environment
+reproducibility</li>
+<li>Create research compendiums using the targets/renv ecosystem in R or
+equivalent tools</li>
+<li>Practice literate programming approaches with advanced R Markdown or
+Quarto features</li>
+<li>Develop a reproducible workflow that separates data, code, and
+presentation layers</li>
+<li>Set up continuous integration testing for statistical analyses</li>
+</ul></li>
+</ul>
+<h2 id="modern-reporting-and-communication">4. Modern Reporting and
+Communication</h2>
+<h3 id="dynamic-reporting-and-dashboards">4.1. Dynamic Reporting and
+Dashboards</h3>
+<p>Static reports are increasingly being replaced by interactive
+dashboards and dynamic documents that allow stakeholders to explore data
+and findings according to their specific questions and needs. This
+section introduces techniques for creating interactive statistical
+reports that increase engagement and understanding while maintaining
+statistical rigor.</p>
+<ul>
+<li><strong>Format:</strong> Hands-on workshop (3 hours)</li>
+<li><strong>Objective:</strong> Create interactive statistical reports
+and dashboards</li>
+<li><strong>Activities:</strong>
+<ul>
+<li>Convert static reports to interactive documents using Shiny, Dash,
+or Observable</li>
+<li>Develop parameterized reports that stakeholders can customize</li>
+<li>Implement effective data visualization principles in interactive
+contexts</li>
+<li>Peer review: Evaluate and provide feedback on each other’s
+interactive reports</li>
+</ul></li>
+</ul>
+<h3 id="communicating-uncertainty">4.2. Communicating Uncertainty</h3>
+<p>Effectively communicating statistical uncertainty remains one of the
+most challenging aspects of statistical practice. This section addresses
+sophisticated approaches to representing and explaining uncertainty that
+go beyond traditional p-values and confidence intervals, focusing on
+visual and narrative techniques that make uncertainty intuitive to
+non-technical audiences.</p>
+<ul>
+<li><strong>Format:</strong> Practice session with feedback (2
+hours)</li>
+<li><strong>Objective:</strong> Effectively communicate statistical
+uncertainty to non-technical stakeholders</li>
+<li><strong>Activities:</strong>
+<ul>
+<li>Develop visual representations of uncertainty beyond error bars and
+p-values</li>
+<li>Create explanatory tools for Bayesian credible intervals and
+posterior distributions</li>
+<li>Role-play exercise: Explain complex statistical results to simulated
+stakeholders</li>
+<li>Design challenge: Create a one-page uncertainty summary for a
+complex analysis</li>
+</ul></li>
+</ul>
+<h3 id="automated-reporting-pipelines">4.3. Automated Reporting
+Pipelines</h3>
+<p>Regular reporting workflows can be automated to increase efficiency,
+reproducibility, and consistency. This section explores the creation of
+end-to-end reporting pipelines that automatically ingest data, perform
+analyses, generate reports, and conduct quality checks, reducing manual
+effort while increasing reliability.</p>
+<ul>
+<li><strong>Format:</strong> Project-based learning (4 hours)</li>
+<li><strong>Objective:</strong> Implement automated statistical
+reporting workflows</li>
+<li><strong>Activities:</strong>
+<ul>
+<li>Set up GitHub Actions or similar CI/CD tools for automated report
+generation</li>
+<li>Create templated analyses that can be applied to regularly updated
+data</li>
+<li>Develop quality control checks that run automatically</li>
+<li>Team challenge: Design and implement an end-to-end automated
+analysis pipeline</li>
+</ul></li>
+</ul>
+<h2 id="appendix">5. Appendix</h2>
+<h3 id="computing-environment-modernization">5.1. Computing Environment
+Modernization</h3>
+<p>This section covers foundational skills for updating technical
+computing environments. Depending on the current skill level of your
+team, these activities may be prerequisites for some participants before
+engaging with the main learning tracks.</p>
+<h4 id="transition-from-traditional-software-to-modern-platforms">5.1.1.
+Transition from Traditional Software to Modern Platforms</h4>
+<ul>
+<li><strong>Format:</strong> Hands-on workshop (3 hours)</li>
+<li><strong>Objective:</strong> Familiarize with modern statistical
+computing environments that complement or replace SAS, SPSS, or older R
+versions</li>
+<li><strong>Activities:</strong>
+<ul>
+<li>Comparative exercise: Solve the same analysis problem in traditional
+software and then in Python/modern R</li>
+<li>Pair programming: Team up experienced statisticians with those
+already familiar with modern tools</li>
+<li>Migration exercise: Convert an existing analysis script from legacy
+software to modern alternatives</li>
+</ul></li>
+</ul>
+<h4 id="version-control-and-reproducible-analysis">5.1.2. Version
+Control and Reproducible Analysis</h4>
+<ul>
+<li><strong>Format:</strong> Interactive tutorial with practice (2
+hours)</li>
+<li><strong>Objective:</strong> Master Git/GitHub for code versioning
+and collaboration</li>
+<li><strong>Activities:</strong>
+<ul>
+<li>Set up personal GitHub repositories for statistical projects</li>
+<li>Practice creating branches, commits, and pull requests</li>
+<li>Implement a reproducible analysis workflow using Git, R Markdown or
+Jupyter Notebooks</li>
+<li>Review each other’s repositories and provide feedback on structure
+and documentation</li>
+</ul></li>
+</ul>
+<h4 id="cloud-computing-for-statistical-analysis">5.1.3. Cloud Computing
+for Statistical Analysis</h4>
+<ul>
+<li><strong>Format:</strong> Guided exploration (2 hours)</li>
+<li><strong>Objective:</strong> Utilize cloud platforms for scalable
+statistical analysis</li>
+<li><strong>Activities:</strong>
+<ul>
+<li>Set up environments on platforms like AWS, Google Cloud, or
+Azure</li>
+<li>Deploy and run statistical models on cloud infrastructure</li>
+<li>Compare performance between local and cloud-based computation for
+large datasets</li>
+<li>Collaborative challenge: Develop a cloud-based analysis pipeline for
+a complex dataset</li>
+</ul></li>
+</ul>
+<h3 id="implementation-plan">5.2. Implementation Plan</h3>
+<h4 id="month-1-foundations">Month 1: Foundations</h4>
+<ul>
+<li>Week 1-2: AI Integration and Modern Methods (Activities 2.1 and
+2.2)</li>
+<li>Week 3-4: Machine Learning and Causal Inference (Activities 2.3 and
+2.4)</li>
+</ul>
+<h4 id="month-2-communication-and-reproducibility">Month 2:
+Communication and Reproducibility</h4>
+<ul>
+<li>Week 5-6: Modern Reporting (Activities 3.1 and 3.2)</li>
+<li>Week 7-8: Automated Pipelines and Reproducibility Principles
+(Activities 3.3 and 4.1)</li>
+<li>Week 9-10: Advanced Reproducibility (Activities 4.2 and 4.3)</li>
+</ul>
+<h4 id="month-3-application-and-integration">Month 3: Application and
+Integration</h4>
+<ul>
+<li>Week 11-12: Capstone Project Development</li>
+<li>Final Week: Capstone Project Presentation</li>
+</ul>
+<h3 id="assessment-strategy">5.3. Assessment Strategy</h3>
+<h4 id="formative-assessment">5.3.1. Formative Assessment</h4>
+<ul>
+<li>Regular peer feedback sessions</li>
+<li>Self-assessment reflection logs</li>
+<li>Incremental project milestones</li>
+</ul>
+<h4 id="summative-assessment">5.3.2. Summative Assessment</h4>
+<ul>
+<li>Capstone project: Participants apply all learned skills to a
+real-world statistical problem</li>
+<li>Portfolio of work demonstrating proficiency in new methods and
+tools</li>
+<li>Presentation to peers on a chosen advanced topic</li>
+</ul>
+<h3 id="resource-requirements">5.4. Resource Requirements</h3>
+<h4 id="technology">5.4.1. Technology</h4>
+<ul>
+<li>Access to cloud computing resources (AWS/GCP/Azure credits)</li>
+<li>Modern statistical software installations (R/RStudio,
+Python/Jupyter)</li>
+<li>Version control systems (Git)</li>
+<li>Interactive reporting tools (R Shiny, Dash, Observable)</li>
+<li>Containerization software (Docker)</li>
+</ul>
+<h4 id="personnel">5.4.2. Personnel</h4>
+<ul>
+<li>Lead instructor with expertise in both traditional and modern
+statistical methods</li>
+<li>Topic specialists for advanced sessions</li>
+<li>Technical support for software installation and troubleshooting</li>
+<li>Guest lecture from Bin Yu’s lab on reproducibility frameworks</li>
+</ul>
+<h4 id="materials">5.4.3. Materials</h4>
+<ul>
+<li>Curated datasets representing diverse analytical challenges</li>
+<li>Pre-configured computing environments to minimize setup time</li>
+<li>Reference guides for transitioning between software platforms</li>
+<li>Access to Bin Yu’s lab’s reproducibility validation tools</li>
+</ul>
+<h3 id="extension-activities">5.5. Extension Activities</h3>
+<h4 id="community-of-practice">5.5.1. Community of Practice</h4>
+<ul>
+<li>Establish a peer learning community for ongoing support</li>
+<li>Regular journal club focused on emerging methods</li>
+<li>Mentorship pairing between participants with complementary
+strengths</li>
+</ul>
+<h4 id="continuous-learning-paths">5.5.2. Continuous Learning Paths</h4>
+<ul>
+<li>Specialized deep-dive workshops on specific tools or methods</li>
+<li>Advanced certification opportunities</li>
+<li>Research collaboration opportunities</li>
+</ul>
+<hr />
+<p>This professional development plan is designed to be modular,
+allowing participants to focus on areas most relevant to their specific
+needs while ensuring comprehensive coverage of modern statistical
+practices.</p>
+<h2 id="references">References</h2>
+<p>Begley, C. G., &amp; Ellis, L. M. (2012). Drug development: Raise
+standards for preclinical cancer research. Nature, 483(7391),
+531-533.</p>
+<p>Camerer, C. F., Dreber, A., Forsell, E., Ho, T. H., Huber, J.,
+Johannesson, M., … &amp; Wu, H. (2016). Evaluating replicability of
+laboratory experiments in economics. Science, 351(6280), 1433-1436.</p>
+<p>Freedman, D. A. (1995). Some issues in the foundation of statistics.
+In Issues in the Foundations of Statistics (pp. 19-39). Springer.</p>
+<p>Freedman, D. A. (2009). Statistical Models and Causal Inference: A
+Dialogue with the Social Sciences. Cambridge University Press.</p>
+<p>Molania, R., Foroutan, M., Gagnon-Bartsch, J. A., Gandolfo, L. C.,
+Jain, A., Sinha, A., … &amp; Speed, T. P. (2023). Removing unwanted
+variation from large-scale RNA sequencing data with PRPS. Nature
+Biotechnology, 41, 82-95. https://doi.org/10.1038/s41587-022-01440-w</p>
+<p>Open Science Collaboration. (2015). Estimating the reproducibility of
+psychological science. Science, 349(6251), aac4716.</p>
+<p>Yu, B., &amp; Kumbier, K. (2018). Three principles of data science:
+predictability, stability and computability. Frontiers of Information
+Technology &amp; Electronic Engineering, 19(1), 6-9.</p>
+<p>Yu, B., &amp; Kumbier, K. (2020). Veridical data science. Proceedings
+of the National Academy of Sciences, 117(8), 3920-3929.
+https://doi.org/10.1073/pnas.1901326117</p>
+</body>
+</html>

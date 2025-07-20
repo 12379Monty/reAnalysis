@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="800" height="500" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background -->
+  <rect width="800" height="500" fill="#f5f8fa" rx="8" ry="8"/>
+  
+  <!-- Title -->
+  <text x="400" y="40" text-anchor="middle" font-family="Arial" font-size="22" font-weight="bold" fill="#2c3e50">SPLASH Methodology: From Reads to Discoveries</text>
+  
+  <!-- Step 1: Extract anchors & targets -->
+  <text x="50" y="80" font-family="Arial" font-size="16" font-weight="bold" fill="#2c3e50">1. Extract anchors &amp; targets from reads</text>
+  
+  <!-- Read Sequences -->
+  <g transform="translate(100, 100)">
+    <!-- Sequence 1 -->
+    <rect x="0" y="0" width="120" height="30" rx="4" ry="4" fill="#95a5a6"/>
+    <text x="60" y="20" text-anchor="middle" font-family="monospace" font-size="14" fill="white">ACGTACGT...</text>
+    
+    <rect x="122" y="0" width="100" height="30" rx="4" ry="4" fill="#3498db"/>
+    <text x="172" y="20" text-anchor="middle" font-family="monospace" font-size="14" fill="white">ANCHOR</text>
+    
+    <rect x="224" y="0" width="100" height="30" rx="4" ry="4" fill="#e74c3c"/>
+    <text x="274" y="20" text-anchor="middle" font-family="monospace" font-size="14" fill="white">TARGET-A</text>
+    
+    <rect x="326" y="0" width="120" height="30" rx="4" ry="4" fill="#95a5a6"/>
+    <text x="386" y="20" text-anchor="middle" font-family="monospace" font-size="14" fill="#2c3e50">ACGTACGT...</text>
+    
+    <!-- Sequence 2 -->
+    <rect x="0" y="40" width="120" height="30" rx="4" ry="4" fill="#95a5a6"/>
+    <text x="60" y="60" text-anchor="middle" font-family="monospace" font-size="14" fill="#2c3e50">TGCATGCA...</text>
+    
+    <rect x="122" y="40" width="100" height="30" rx="4" ry="4" fill="#3498db"/>
+    <text x="172" y="60" text-anchor="middle" font-family="monospace" font-size="14" fill="white">ANCHOR</text>
+    
+    <rect x="224" y="40" width="100" height="30" rx="4" ry="4" fill="#e74c3c"/>
+    <text x="274" y="60" text-anchor="middle" font-family="monospace" font-size="14" fill="white">TARGET-B</text>
+    
+    <rect x="326" y="40" width="120" height="30" rx="4" ry="4" fill="#95a5a6"/>
+    <text x="386" y="60" text-anchor="middle" font-family="monospace" font-size="14" fill="#2c3e50">TGCATGCA...</text>
+  </g>
+  
+  <!-- Arrow -->
+  <text x="400" y="190" text-anchor="middle" font-family="Arial" font-size="24" fill="#7f8c8d">↓</text>
+  
+  <!-- Step 2: Build contingency tables -->
+  <text x="50" y="220" font-family="Arial" font-size="16" font-weight="bold" fill="#2c3e50">2. Build contingency tables</text>
+  
+  <!-- Contingency Table -->
+  <g transform="translate(200, 240)">
+    <!-- Headers -->
+    <rect x="0" y="0" width="100" height="30" fill="#34495e"/>
+    <text x="50" y="20" text-anchor="middle" font-family="Arial" font-size="12" fill="white">ANCHOR</text>
+    
+    <rect x="100" y="0" width="100" height="30" fill="#34495e"/>
+    <text x="150" y="20" text-anchor="middle" font-family="Arial" font-size="12" fill="white">TARGET</text>
+    
+    <rect x="200" y="0" width="100" height="30" fill="#34495e"/>
+    <text x="250" y="20" text-anchor="middle" font-family="Arial" font-size="12" fill="white">Sample 1</text>
+    
+    <rect x="300" y="0" width="100" height="30" fill="#34495e"/>
+    <text x="350" y="20" text-anchor="middle" font-family="Arial" font-size="12" fill="white">Sample 2</text>
+    
+    <!-- Row 1 -->
+    <rect x="0" y="30" width="100" height="30" fill="#ebf5fb"/>
+    <text x="50" y="50" text-anchor="middle" font-family="Arial" font-size="12" font-weight="bold" fill="#2c3e50">GACTCTA</text>
+    
+    <rect x="100" y="30" width="100" height="30" fill="#fef5f5"/>
+    <text x="150" y="50" text-anchor="middle" font-family="Arial" font-size="12" font-weight="bold" fill="#2c3e50">TARGET-A</text>
+    
+    <rect x="200" y="30" width="100" height="30" fill="#ffffcc"/>
+    <text x="250" y="50" text-anchor="middle" font-family="Arial" font-size="12" font-weight="bold" fill="#2c3e50">87</text>
+    
+    <rect x="300" y="30" width="100" height="30" fill="white"/>
+    <text x="350" y="50" text-anchor="middle" font-family="Arial" font-size="12" font-weight="bold" fill="#2c3e50">12</text>
+    
+    <!-- Row 2 -->
+    <rect x="0" y="60" width="100" height="30" fill="#ebf5fb"/>
+    <text x="50" y="80" text-anchor="middle" font-family="Arial" font-size="12" font-weight="bold" fill="#2c3e50">GACTCTA</text>
+    
+    <rect x="100" y="60" width="100" height="30" fill="#fef5f5"/>
+    <text x="150" y="80" text-anchor="middle" font-family="Arial" font-size="12" font-weight="bold" fill="#2c3e50">TARGET-B</text>
+    
+    <rect x="200" y="60" width="100" height="30" fill="white"/>
+    <text x="250" y="80" text-anchor="middle" font-family="Arial" font-size="12" font-weight="bold" fill="#2c3e50">14</text>
+    
+    <rect x="300" y="60" width="100" height="30" fill="#ffffcc"/>
+    <text x="350" y="80" text-anchor="middle" font-family="Arial" font-size="12" font-weight="bold" fill="#2c3e50">93</text>
+    
+    <!-- Row 3 -->
+    <rect x="0" y="90" width="100" height="30" fill="#ebf5fb"/>
+    <text x="50" y="110" text-anchor="middle" font-family="Arial" font-size="12" font-weight="bold" fill="#2c3e50">GACTCTA</text>
+    
+    <rect x="100" y="90" width="100" height="30" fill="#fef5f5"/>
+    <text x="150" y="110" text-anchor="middle" font-family="Arial" font-size="12" font-weight="bold" fill="#2c3e50">TARGET-C</text>
+    
+    <rect x="200" y="90" width="100" height="30" fill="white"/>
+    <text x="250" y="110" text-anchor="middle" font-family="Arial" font-size="12" font-weight="bold" fill="#2c3e50">3</text>
+    
+    <rect x="300" y="90" width="100" height="30" fill="white"/>
+    <text x="350" y="110" text-anchor="middle" font-family="Arial" font-size="12" font-weight="bold" fill="#2c3e50">2</text>
+  </g>
+  
+  <!-- Arrow -->
+  <text x="400" y="370" text-anchor="middle" font-family="Arial" font-size="24" fill="#7f8c8d">↓</text>
+  
+  <!-- Step 3: Apply statistical test -->
+  <text x="50" y="400" font-family="Arial" font-size="16" font-weight="bold" fill="#2c3e50">3. Apply statistical test (OASIS)</text>
+  
+  <!-- Statistics Boxes -->
+  <g transform="translate(100, 420)">
+    <!-- OASIS Test Box -->
+    <rect x="0" y="0" width="180" height="60" rx="6" ry="6" fill="white" stroke="#e0e0e0" stroke-width="1"/>
+    <text x="90" y="25" text-anchor="middle" font-family="Arial" font-size="12" font-weight="bold" fill="#2c3e50">OASIS Test Statistic</text>
+    <text x="90" y="45" text-anchor="middle" font-family="Arial" font-size="14" font-weight="bold" fill="#e74c3c">T = 142.87</text>
+    
+    <!-- P-value Box -->
+    <rect x="200" y="0" width="180" height="60" rx="6" ry="6" fill="white" stroke="#e0e0e0" stroke-width="1"/>
+    <text x="290" y="25" text-anchor="middle" font-family="Arial" font-size="12" font-weight="bold" fill="#2c3e50">P-value</text>
+    <text x="290" y="45" text-anchor="middle" font-family="Arial" font-size="14" font-weight="bold" fill="#e74c3c">p &lt; 0.0001</text>
+    
+    <!-- Effect Size Box -->
+    <rect x="400" y="0" width="180" height="60" rx="6" ry="6" fill="white" stroke="#e0e0e0" stroke-width="1"/>
+    <text x="490" y="25" text-anchor="middle" font-family="Arial" font-size="12" font-weight="bold" fill="#2c3e50">Effect Size</text>
+    <text x="490" y="45" text-anchor="middle" font-family="Arial" font-size="14" font-weight="bold" fill="#e74c3c">0.876</text>
+  </g>
+  
+  <!-- Annotations -->
+  <g transform="translate(700, 100)">
+    <rect x="0" y="0" width="15" height="15" fill="#3498db"/>
+    <text x="20" y="12" font-family="Arial" font-size="12" fill="#2c3e50">Anchor</text>
+    
+    <rect x="0" y="25" width="15" height="15" fill="#e74c3c"/>
+    <text x="20" y="37" font-family="Arial" font-size="12" fill="#2c3e50">Target</text>
+  </g>
+</svg>

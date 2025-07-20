@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="800" height="500" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background -->
+  <rect width="800" height="500" fill="#f5f8fa" rx="8" ry="8"/>
+  
+  <!-- Title -->
+  <text x="400" y="40" text-anchor="middle" font-family="Arial" font-size="22" font-weight="bold" fill="#2c3e50">Why the Anchor-Target Structure Works</text>
+  <text x="400" y="65" text-anchor="middle" font-family="Arial" font-size="16" fill="#7f8c8d">Capturing the natural structure of biological variation</text>
+  
+  <!-- Tab Headers -->
+  <rect x="50" y="80" width="200" height="30" rx="4" ry="4" fill="#3498db"/>
+  <text x="150" y="100" text-anchor="middle" font-family="Arial" font-size="14" font-weight="bold" fill="white">Alternative Splicing</text>
+  
+  <rect x="255" y="80" width="200" height="30" rx="4" ry="4" fill="#ecf0f1"/>
+  <text x="355" y="100" text-anchor="middle" font-family="Arial" font-size="14" fill="#7f8c8d">Genetic Variants</text>
+  
+  <rect x="460" y="80" width="200" height="30" rx="4" ry="4" fill="#ecf0f1"/>
+  <text x="560" y="100" text-anchor="middle" font-family="Arial" font-size="14" fill="#7f8c8d">Microbial Diversity</text>
+  
+  <!-- Sequence Visualization -->
+  <g transform="translate(50, 130)">
+    <text x="0" y="0" font-family="Arial" font-size="18" font-weight="bold" fill="#2c3e50">Alternative Splicing Example</text>
+    
+    <!-- Sample A Sequence -->
+    <text x="0" y="30" font-family="Arial" font-size="14" fill="#2c3e50">Sample A:</text>
+    <g transform="translate(80, 20)">
+      <!-- Sequence Visualization -->
+      <g id="sampleA">
+        <!-- Background Nucleotides -->
+        <rect x="0" y="0" width="18" height="25" fill="#95a5a6"/>
+        <text x="9" y="17" text-anchor="middle" font-family="monospace" font-size="12" fill="#2c3e50">A</text>
+        
+        <rect x="19" y="0" width="18" height="25" fill="#95a5a6"/>
+        <text x="28" y="17" text-anchor="middle" font-family="monospace" font-size="12" fill="#2c3e50">T</text>
+        
+        <rect x="38" y="0" width="18" height="25" fill="#95a5a6"/>
+        <text x="47" y="17" text-anchor="middle" font-family="monospace" font-size="12" fill="#2c3e50">C</text>
+        
+        <!-- Anchor Region -->
+        <rect x="57" y="0" width="18" height="25" fill="#3498db"/>
+        <text x="66" y="17" text-anchor="middle" font-family="monospace" font-size="12" fill="white">G</text>
+        
+        <rect x="76" y="0" width="18" height="25" fill="#3498db"/>
+        <text x="85" y="17" text-anchor="middle" font-family="monospace" font-size="12" fill="white">A</text>
+        
+        <rect x="95" y="0" width="18" height="25" fill="#3498db"/>
+        <text x="104" y="17" text-anchor="middle" font-family="monospace" font-size="12" fill="white">T</text>
+        
+        <rect x="114" y="0" width="18" height="25" fill="#3498db"/>
+        <text x="123" y="17" text-anchor="middle" font-family="monospace" font-size="12" fill="white">C</text>
+        
+        <rect x="133" y="0" width="18" height="25" fill="#3498db"/>
+        <text x="142" y="17" text-anchor="middle" font-family="monospace" font-size="12" fill="white">C</text>
+        
+        <!-- Target Region -->
+        <rect x="152" y="0" width="18" height="25" fill="#e74c3c"/>
+        <text x="161" y="17" text-anchor="middle" font-family="monospace" font-size="12" fill="white">A</text>
+        
+        <rect x="171" y="0" width="18" height="25" fill="#e74c3c"/>
+        <text x="180" y="17" text-anchor="middle" font-family="monospace" font-size="12" fill="white">T</text>
+        
+        <rect x="190" y="0" width="18" height="25" fill="#e74c3c"/>
+        <text x="199" y="17" text-anchor="middle" font-family="monospace" font-size="12" fill="white">C</text>
+        
+        <rect x="209" y="0" width="18" height="25" fill="#e74c3c"/>
+        <text x="218" y="17" text-anchor="middle" font-family="monospace" font-size="12" fill="white">A</text>
+        
+        <rect x="228" y="0" width="18" height="25" fill="#e74c3c"/>
+        <text x="237" y="17" text-anchor="middle" font-family="monospace" font-size="12" fill="white">C</text>
+        
+        <!-- Background Nucleotides -->
+        <rect x="247" y="0" width="18" height="25" fill="#95a5a6"/>
+        <text x="256" y="17" text-anchor="middle" font-family="monospace" font-size="12" fill="#2c3e50">T</text>
+        
+        <rect x="266" y="0" width="18" height="25" fill="#95a5a6"/>
+        <text x="275" y="17" text-anchor="middle" font-family="monospace" font-size="12" fill="#2c3e50">G</text>
+      </g>
+    </g>
+    
+    <!-- Sample B Sequence -->
+    <text x="0" y="70" font-family="Arial" font-size="14" fill="#2c3e50">Sample B:</text>
+    <g transform="translate(80, 60)">
+      <!-- Sequence Visualization -->
+      <g id="sampleB">
+        <!-- Background Nucleotides -->
+        <rect x="0" y="0" width="18" height="25" fill="#95a5a6"/>
+        <text x="9" y="17" text-anchor="middle" font-family="monospace" font-size="12" fill="#2c3e50">A</text>
+        
+        <rect x="19" y="0" width="18" height="25" fill="#95a5a6"/>
+        <text x="28" y="17" text-anchor="middle" font-family="monospace" font-size="12" fill="#2c3e50">T</text>
+        
+        <rect x="38" y="0" width="18" height="25" fill="#95a5a6"/>
+        <text x="47" y="17" text-anchor="middle" font-family="monospace" font-size="12" fill="#2c3e50">C</text>
+        
+        <!-- Anchor Region (Same) -->
+        <rect x="57" y="0" width="18" height="25" fill="#3498db"/>
+        <text x="66" y="17" text-anchor="middle" font-family="monospace" font-size="12" fill="white">G</text>
+        
+        <rect x="76" y="0" width="18" height="25" fill="#3498db"/>
+        <text x="85" y="17" text-anchor="middle" font-family="monospace" font-size="12" fill="white">A</text>
+        
+        <rect x="95" y="0" width="18" height="25" fill="#3498db"/>
+        <text x="104" y="17" text-anchor="middle" font-family="monospace" font-size="12" fill="white">T</text>
+        
+        <rect x="114" y="0" width="18" height="25" fill="#3498db"/>
+        <text x="123" y="17" text-anchor="middle" font-family="monospace" font-size="12" fill="white">C</text>
+        
+        <rect x="133" y="0" width="18" height="25" fill="#3498db"/>
+        <text x="142" y="17" text-anchor="middle" font-family="monospace" font-size="12" fill="white">C</text>
+        
+        <!-- Target Region (Different) -->
+        <rect x="152" y="0" width="18" height="25" fill="#9b59b6"/>
+        <text x="161" y="17" text-anchor="middle" font-family="monospace" font-size="12" fill="white">G</text>
+        
+        <rect x="171" y="0" width="18" height="25" fill="#9b59b6"/>
+        <text x="180" y="17" text-anchor="middle" font-family="monospace" font-size="12" fill="white">A</text>
+        
+        <rect x="190" y="0" width="18" height="25" fill="#9b59b6"/>
+        <text x="199" y="17" text-anchor="middle" font-family="monospace" font-size="12" fill="white">T</text>
+        
+        <rect x="209" y="0" width="18" height="25" fill="#9b59b6"/>
+        <text x="218" y="17" text-anchor="middle" font-family="monospace" font-size="12" fill="white">C</text>
+        
+        <rect x="228" y="0" width="18" height="25" fill="#9b59b6"/>
+        <text x="237" y="17" text-anchor="middle" font-family="monospace" font-size="12" fill="white">C</text>
+        
+        <!-- Background Nucleotides -->
+        <rect x="247" y="0" width="18" height="25" fill="#95a5a6"/>
+        <text x="256" y="17" text-anchor="middle" font-family="monospace" font-size="12" fill="#2c3e50">T</text>
+        
+        <rect x="266" y="0" width="18" height="25" fill="#95a5a6"/>
+        <text x="275" y="17" text-anchor="middle" font-family="monospace" font-size="12" fill="#2c3e50">G</text>
+      </g>
+    </g>
+    
+    <!-- Annotations -->
+    <line x1="105" y1="90" x2="105" y2="110" stroke="#3498db" stroke-width="2"/>
+    <text x="105" y="120" text-anchor="middle" font-family="Arial" font-size="10" font-weight="bold" fill="#3498db">Anchor</text>
+    <text x="105" y="135" font-family="Arial" font-size="10" fill="#3498db">Conserved exon junction</text>
+    
+    <line x1="200" y1="90" x2="200" y2="110" stroke="#e74c3c" stroke-width="2"/>
+    <text x="200" y="120" text-anchor="middle" font-family="Arial" font-size="10" font-weight="bold" fill="#e74c3c">Target A</text>
+    <text x="200" y="135" font-family="Arial" font-size="10" fill="#e74c3c">Exon inclusion</text>
+    
+    <line x1="200" y1="50" x2="200" y2="30" stroke="#9b59b6" stroke-width="2"/>
+    <text x="200" y="25" text-anchor="middle" font-family="Arial" font-size="10" font-weight="bold" fill="#9b59b6">Target B</text>
+    <text x="200" y="10" font-family="Arial" font-size="10" fill="#9b59b6">Exon skipping</text>
+  </g>
+  
+  <!-- Explanatory Text -->
+  <g transform="translate(400, 130)">
+    <text x="0" y="0" font-family="Arial" font-size="18" font-weight="bold" fill="#2c3e50">How It Works: Alternative Splicing</text>
+    
+    <text x="0" y="30" font-family="Arial" font-size="14" fill="#2c3e50">Alternative splicing creates different RNA transcripts from the same gene. The anchor-target structure naturally captures this biological pattern.</text>
+    
+    <g transform="translate(0, 50)">
+      <text x="0" y="0" font-family="Arial" font-size="14" fill="#2c3e50">• Anchors in conserved exons detect splicing events regardless of reference</text>
+      <text x="0" y="25" font-family="Arial" font-size="14" fill="#2c3e50">• Targets reveal different splice junctions specific to each cell type</text>
+      <text x="0" y="50" font-family="Arial" font-size="14" fill="#2c3e50">• Enables discovery of novel splice variants missing from reference</text>
+      <text x="0" y="75" font-family="Arial" font-size="14" fill="#2c3e50">• Identifies cell type-specific regulation without prior knowledge</text>
+    </g>
+    
+    <rect x="0" y="140" width="350" height="60" rx="4" ry="4" fill="#f8f9fa"/>
+    <text x="10" y="160" font-family="Arial" font-size="14" font-weight="bold" fill="#3498db">Key insight:</text>
+    <text x="10" y="185" font-family="Arial" font-size="14" fill="#2c3e50">In single-cell RNA-seq data, SPLASH identified MYL6 alternative splicing patterns across different cell types without requiring alignment to a reference transcriptome.</text>
+    
+    <rect x="0" y="220" width="350" height="60" rx="4" ry="4" fill="#f8f9fa"/>
+    <text x="10" y="240" font-family="Arial" font-size="14" font-weight="bold" fill="#3498db">Why this matters:</text>
+    <text x="10" y="265" font-family="Arial" font-size="14" fill="#2c3e50">The anchor-target approach enables statistical analysis of sequence variation without requiring reference genomes, providing a unified framework for discovery.</text>
+  </g>
+</svg>

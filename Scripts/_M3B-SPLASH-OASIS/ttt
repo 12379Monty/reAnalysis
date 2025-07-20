@@ -1,0 +1,386 @@
+<!-- Copy from splash_oasis_methodology_presentation.md -->
+
+<!--
+# SPLASH & OASIS Methodology
+## A Reference-Free Genomic Analysis
+
+-->
+
+## Genomics today: distorting biological signal$^1$ ?
+
+- Operating in a paradigm designed for a different era of data and sampling
+- Not fully statistical or mathematical
+- No unification across "microniches" of biology
+- Reference-dependent; Missing biology
+- (Computationally intensive)
+- Not AI ready
+
+> Current paradigms limit discovery  
+
+<span style="color:blublue;"><span style="font-size:small;">
+\n 1. [Dr. Salzman's CGSI 2024 talk](https://www.youtube.com/watch?v=nHuc5mlQRQw)
+</font-size></span>
+
+---
+
+
+<style>
+    .reveal section p {
+    display: inline-block;
+    font-size: 0.6em;
+    line-height: 1.2em;
+    vertical-align: top;
+  }
+</style>
+
+
+  
+
+
+## Why We Need a Reference-Free Approach
+
+- **Reference genomes have fundamental limitations**:
+  - Incomplete representation of genetic diversity
+  - Missing sequences from understudied populations
+  - Poor handling of highly variable regions
+
+- **Alignment-based approaches**:
+  - Computationally expensive
+  - Struggle with repetitive elements 
+  - Limit discovery of novel biology; Cannot detect what's not in the reference
+
+- **The SPLASH solution**: Direct statistical analysis of raw sequence data using **anchor-target structure**
+
+---
+
+## Why the Anchor-Target Structure Works
+
+- **Biological signal is inherently structured**:
+  - Variation occurs in specific patterns adjacent to conserved regions
+  - Most biological variation follows this pattern:
+    - Alternative splicing: constant exons with variable junctions
+    - Genetic variants: stable regions with point mutations
+    - Microbial diversity: conserved genes with variable regions
+
+---
+
+## Why the Anchor-Target Structure Works
+
+- **Statistical power through structure**:
+  - Anchors provide context for variation
+  - Targets capture the biologically meaningful differences
+  - Enables detection of patterns without prior knowledge
+  - Works across diverse biological domains
+
+- **Unified mathematical framework**:
+  - Contingency tables of anchor-target $pairs^1$
+  - Same approach applies to viruses, human cells, non-model organisms
+
+
+<span style="color:blue;"><span style="font-size:smaller;">
+  1. We are comparing the distribution of targets between samples.  A contingency
+tabke is just a display the data.
+</font-size></span>
+
+---
+
+
+<!--
+
+## The Problem with Traditional Genomic Analysis
+
+- **Reference-dependent workflows limit discovery**
+  - References may be incomplete, misassembled, or nonexistent for less-studied organisms
+  - Genetic variants from understudied populations often missing from references
+  - High-diversity regions (e.g., HLA in humans) poorly represented
+
+- **Computational inefficiency**
+  - Alignment to references is computationally expensive
+  - Limited scalability for large datasets
+
+- **Poor handling of**:
+  - Paralogs and repetitive elements
+  - Diseases like cancer defined by deviation from reference
+  - Viral and microbial diversity
+
+---
+
+-->
+
+## SPLASH: The Fundamental Concept
+
+![SPLASH Concept Diagram](https://via.placeholder.com/800x400?text=SPLASH+Concept+Diagram)
+
+- **S**tatistically **P**rimary a**L**ignment **A**gnostic **S**equence **H**oming
+- Directly analyzes raw sequencing data
+- Detects sample-specific sequence variation without alignment
+- Unifies detection of multiple forms of sequence variation
+
+---
+
+## SPLASH: How It Works
+
+1. **Extract k-mers (anchors and targets)**
+   - Anchor: fixed sequence (k nucleotides long)
+   - Target: adjacent sequence (also k nucleotides)
+
+2. **Build contingency tables**
+   - Rows: Different targets
+   - Columns: Different samples/conditions
+   - Cells: Counts of anchor-target pairs
+
+3. **Apply statistical test**
+   - Originally used chi-squared test
+   - Now uses OASIS for more robust results
+   - Identifies statistically significant sample-specific variation
+
+---
+
+## Why OASIS Instead of Chi-Squared?
+
+- **Limitations of Chi-Squared Test**:
+  - Requires large sample sizes for asymptotic validity
+  - Poor performance with sparse contingency tables
+  - Limited interpretability
+
+- **OASIS Advantages**:
+  - Provides valid finite-sample bounds
+  - Computationally efficient
+  - Offers closed-form P-value calculations
+  - Better statistical power
+  - More interpretable results
+
+---
+
+## OASIS: Mathematical Framework
+
+- **Linear test statistic** in the normalized data matrix
+- Closed-form P-value bounds through concentration inequalities
+- Optimizes for both statistical power and interpretability
+- Provides decomposition of the table for understanding which elements contribute to rejection of the null hypothesis
+
+---
+
+## Biological Relevance: Applications
+
+- **Viral genomics**: Identifying strain-defining mutations in SARS-CoV-2
+  - No reference or strain metadata needed
+
+- **Single-cell transcriptomics**: Discovering regulated RNA isoforms
+  - Cell-type specific alternative splicing
+  - HLA polymorphism detection
+
+- **Non-model organisms**: Finding biology not in reference genomes
+  - Tissue-specific transcripts in octopus
+  - Seasonal variation in eelgrass
+
+- **Microbial genomics**: Detecting mobile genetic elements and CRISPR arrays
+  - Rapid strain typing
+
+---
+
+## Example 1: SARS-CoV-2 Variant Detection
+
+![SARS-CoV-2 Analysis](https://via.placeholder.com/800x400?text=SARS-CoV-2+Analysis)
+
+- **Discovery process**:
+  - SPLASH identified anchors with sample-specific targets across SARS-CoV-2 sequences
+  - Without reference genome or metadata, detected strain-defining mutations
+  
+- **Anchor-target advantage**:
+  - Anchors located in conserved regions (same across strains)
+  - Targets captured variant-specific mutations
+  - Statistical testing showed which variants were significantly associated with different samples/timepoints
+  
+- **Biological insight**:
+  - Protein domain profiling revealed key affected proteins (spike, ORF7a, etc.)
+  - Detected mutations in functional domains like receptor binding domain
+  - Clustered samples by strain without prior knowledge of strain definitions
+
+---
+
+## Example 2: Single-Cell RNA Alternative Splicing
+
+![Single-Cell Splicing](https://via.placeholder.com/800x400?text=Single-Cell+Splicing)
+
+- **Discovery process**:
+  - SPLASH applied to Smart-Seq2 single-cell RNA-seq data
+  - Identified cell-type specific splicing without requiring reference transcriptome
+  
+- **Anchor-target advantage**:
+  - Anchors captured exon-exon junctions
+  - Different targets represented alternative splice events
+  - Target distribution patterns revealed cell-type specificity
+  
+- **Biological insight**:
+  - Detected known MYL6 alternative splicing as validation
+  - Discovered previously unrecognized splicing events
+  - Identified cell-type specific expression of HLA-DRB1 vs HLA-DRB4 paralogs
+  - Revealed single-cell level variation in HLA-B allele expression
+
+---
+
+## Example 3: Octopus Tissue-Specific Transcripts
+
+![Octopus Transcripts](https://via.placeholder.com/800x400?text=Octopus+Transcripts)
+
+- **Discovery process**:
+  - SPLASH applied to RNA-seq from different octopus tissues
+  - No comprehensive reference transcriptome available
+  
+- **Anchor-target advantage**:
+  - Anchors with tissue-specific target distributions revealed tissue-specific transcripts
+  - In-silico translation and protein domain analysis without reference
+  - Detected novel splicing patterns missed by reference-based approaches
+  
+- **Biological insight**:
+  - Identified neural-specific isoforms of tropomyosin
+  - Discovered muscle-specific isoforms of myosins and actins
+  - Found light-responsive transcripts in photoreceptive tissues
+  - Revealed novel tissue-specific isoforms absent from reference genome
+
+---
+
+## Example 4: Eelgrass Geographic and Seasonal Variation
+
+![Eelgrass Analysis](https://via.placeholder.com/800x400?text=Eelgrass+Analysis)
+
+- **Discovery process**:
+  - SPLASH applied to RNA-seq from eelgrass collected at different locations and seasons
+  - Reference genome available but incomplete
+  
+- **Anchor-target advantage**:
+  - Anchors with location-specific targets revealed geographic adaptations
+  - Seasonal-specific target distributions identified circadian and seasonal regulation
+  - Anchors with no matches to reference revealed novel biology
+  
+- **Biological insight**:
+  - Discovered diatom association through protein domain analysis
+  - Identified fucoxanthin chlorophyll proteins showing day/night variation
+  - Detected geographic adaptations between Norway and France populations
+  - Found seasonal variations related to light adaptation
+
+---
+
+## For Biologists: Why This Matters
+
+- **Unbiased discovery**
+  - Not limited to what's in reference genomes
+  - Captures biological variation missed by standard methods
+
+- **Biological interpretation**
+  - Protein domain profiling without reference
+  - Sample-specific sequence variation relates directly to biological function
+
+- **Applied examples**:
+  - Detection of RNA splicing variations across cell types
+  - Identification of pathogen strain differences
+  - Analysis of immune receptor diversity
+
+---
+
+## For Bioinformaticians: Technical Benefits
+
+- **Computational efficiency**
+  - Avoids computationally expensive alignment
+  - Scales to large datasets
+
+- **Statistical robustness**
+  - OASIS provides finite-sample valid statistics
+  - Closed-form P-value calculations avoid permutation testing
+  - Controls for multiple testing
+
+- **Algorithmic implementation**
+  - SPLASH2: C++/Python implementation with enhanced efficiency
+  - Compactors: Statistical approach to local seed-based assembly
+
+---
+
+## Why Chi-Squared Test as Comparator?
+
+- **Historical context**: Most widely used test for contingency tables
+- **Benchmark status**: Standard approach in genomics for comparing distributions
+- **Known limitations**: 
+  - Requires large expected counts (>5) in each cell
+  - Limited interpretability
+  - Struggles with sparse data
+- **OASIS addresses these limitations** while maintaining comparable or better statistical power
+
+---
+
+<!--
+## Comparing Methodologies: OASIS vs Chi-Squared
+
+| Feature | Chi-Squared Test | OASIS |
+|---------|-----------------|-------|
+| Finite sample validity | No | Yes |
+| Computational efficiency | Good | Excellent |
+| Interpretability | Limited | High |
+| Performance with sparse data | Poor | Good |
+| Closed-form P-values | No | Yes |
+| Asymptotic validity | Yes | Yes |
+
+---
+-->
+
+## Performance Examples
+
+![Performance Comparison](https://via.placeholder.com/800x400?text=Performance+Comparison)
+
+- **Real-world applications**: 
+  - SARS-CoV-2 variant detection
+  - Mycobacterium tuberculosis analysis
+  - Single-cell RNA sequencing
+
+---
+
+## Conclusion: A New Paradigm
+
+- **Unified approach** to genomic analysis
+- **Reference-free discovery** enables novel findings
+- **Statistical rigor** through OASIS methodology
+- **Computationally efficient** analysis at scale
+- **Biologically interpretable** results
+- **Future directions**: Expanding to additional omics technologies
+
+---
+
+## Need for Comprehensive Assessment Methods
+
+- **Current evaluation approaches are insufficient for omics-scale methods**:
+  - Limited benchmarks that don't reflect real-world complexity
+  - Overfitting to specific test cases
+  - Lack of diverse metrics to evaluate performance
+
+- **A holistic assessment framework should include**:
+  - Datasets reflecting end-to-end process variability
+  - Samples from varied sources and conditions
+  - Battery of meaningful metrics measuring field performance
+  - Comprehensive comparison with all competing methods
+  - Evaluation of both statistical power and biological relevance
+
+- **Beyond accuracy**: Assessment must consider computational efficiency, interpretability, and adaptability to new biological contexts
+
+---
+
+## References
+
+1. Chaung et al. (2023). SPLASH: A statistical, reference-free genomic algorithm unifies biological discovery. *Cell*, 186(25), 5440-5456. DOI: 10.1016/j.cell.2023.10.028
+
+2. Baharav et al. (2024). OASIS: An interpretable, finite-sample valid alternative to Pearson's X² for scientific discovery. *PNAS*, 121(15), e2304671121. DOI: 10.1073/pnas.2304671121
+
+3. Henderson et al. (2024). Ultra-efficient, unified discovery from microbial sequencing with SPLASH and precise statistical assembly. *bioRxiv*. DOI: 10.1101/2024.01.18.576133
+
+---
+
+## Resources
+
+- GitHub repository: [https://github.com/refresh-bio/SPLASH](https://github.com/refresh-bio/SPLASH)
+- Salzman Lab: [http://salzmanlab.stanford.edu/](http://salzmanlab.stanford.edu/)
+
+
+<!--
+
+ nohup Rscript -e "rmarkdown::render('splash_oasis_methodology_presentation.Rmd')" > splash_oasis_methodology_presentation.log  &
+
+-->

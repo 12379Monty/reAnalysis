@@ -1,0 +1,112 @@
+---
+#title: Professional Development Plan for Experienced Statisticians - V. 2
+subtitle: With help from Claude
+#date: "`r format(Sys.time(), '%B %d, %Y')`"
+#date: '`r format(Sys.time(), "%a %b %d %Y", tz="America/Los_Angeles")`'
+date: '`r format(Sys.time(), "%a %b %d %X %Y", tz="America/Los_Angeles")`'
+output:
+  html_document:
+    css: ../_css/stats-pd-plan-css-final-2.css
+bibliography: [../_bibFiles/_healthy_aging.bib, ../_bibFiles/_ref_free_genom_inf.bib, ../../_bibFiles/_Breiman.bib, ../../_bibFiles/_Yu.bib, ../../_bibFiles/_Freedman.bib, ../../_bibFiles/_RUV.bib, ../../_bibFiles/_Yu.bib, ../../_bibFiles/_rand_cause_inf.bib]
+csl: ../_csl/cell-numeric.csl
+link-citations: true
+---
+
+
+<!-- ######################################################################## -->
+
+
+```{r m1c-Prelims,  include=FALSE, echo=FALSE, results='hide', message=FALSE} 
+
+FN <- "_M1C-prof_dev_plan"
+if(sum(grepl(FN, list.files()))==0) stop("Check FN")
+
+ suppressMessages(require(rmarkdown))
+ suppressMessages(require(knitr))
+
+ suppressPackageStartupMessages(require(methods))
+ suppressPackageStartupMessages(require(bookdown))
+
+ suppressPackageStartupMessages(require(data.table))
+ options(datatable.fread.datatable=F)
+
+ suppressPackageStartupMessages(require(plyr))
+ suppressPackageStartupMessages(require(dplyr))
+ suppressPackageStartupMessages(require(magrittr))
+
+ # Shotcuts for knitting and rendering while in R session (Invoke interactive R from R/Scripts folder)
+ kk <- function(n='') knitr::knit2html(paste("t", n, sep=''), envir=globalenv(),
+       output=paste(FN,".html", sep=''))
+
+ rr <- function(n='') rmarkdown::render(paste("t", n, sep=''), envir=globalenv(),
+       output_file=paste(FN,".html", sep='')) ##, output_dir='Scripts')
+
+ bb <- function(n='') browseURL(paste(FN,".html", sep=''))
+
+ # The usual shortcuts
+ zz <- function(n='') source(paste("t", n, sep=''))
+
+ WRKDIR <- '..'
+ if(!file.exists(WRKDIR)) stop("WRKDIR ERROR", WRKDIR)
+
+ # file rmarkdown file management options: cache, figures
+ cache_DIR <- file.path(WRKDIR,'Scripts', 'cache/M1C/')
+ suppressMessages(dir.create(cache_DIR, recursive=T))
+ opts_chunk$set(cache.path=cache_DIR)
+
+ figures_DIR <- file.path(WRKDIR,'Scripts', 'figures/M1C/')
+ suppressMessages(dir.create(figures_DIR, recursive=T))
+ opts_chunk$set(fig.path=figures_DIR)
+
+ #tables_DIR <- file.path(WRKDIR,'Scripts', 'tables/M1C/')
+ #suppressMessages(dir.create(table_DIR, recursive=T))
+ #opts_chunk$set(fig.path=table_DIR)
+ 
+ # need a local copy of help_DIR
+ #help_DIR <- file.path(WRKDIR,'Scripts', 'help_files')
+ help_DIR <- file.path('.', 'help_files')
+ suppressMessages(dir.create(help_DIR, recursive=T))
+ 
+ temp_DIR <- file.path(WRKDIR,'Scripts', 'temp_files')
+ suppressMessages(dir.create(temp_DIR, recursive=T))
+
+```
+<!-- ######################################################################## -->
+
+```{r m1c-utilityFns, echo=FALSE}
+ # Here we define some utility functions
+source('r/utilityFns.r')
+
+```
+
+<!-- ######################################################################## -->
+
+
+<title>_M1C-stats-pd-plan-final-v21</title>
+
+
+```{r m1c-unclude-text, echo=FALSE}
+
+   htmltools::includeMarkdown("_M1C-stats-pd-plan-final-v21.md")
+
+```
+
+
+```{r, echo=FALSE}
+  knitr::knit_exit()
+```
+
+
+
+<!-- To run
+# nohup Rscript -e "knitr::knit2html('_M1C-prof_dev_plan.Rmd')" > _M1C-prof_dev_plan.log  &
+
+# Or
+# nohup Rscript -e "rmarkdown::render('_M1C-prof_dev_plan.Rmd')" > _M1C-prof_dev_plan.log  &
+nohup Rscript -e "rmarkdown::render('_M1C-prof_dev_plan.Rmd')" > _M1C-prof_dev_plan.log  &
+
+-->
+
+
+
+
