@@ -1,5 +1,5 @@
 ---
-title: "Topics on the Statistical Analysis of Data for the Biotech Industry"
+title: "Topics on the Statistical Analysis of Genomic Data"
 ###\nLessons from 20 years of expererience"
 ###author: "[Francois Collin](https://www.linkedin.com/in/francoisz/)"
 date: "`r format(Sys.time(), '%B %d, %Y')`"
