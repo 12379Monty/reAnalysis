@@ -239,8 +239,10 @@ machine learning technique for identifying patterns in data. NMF has a
 long history of use in bioinformatics and a number of NMF methods
 have been developed specifically for omics data. This also includes semi-supervised approaches to NMF.
 
-However, how to best apply unsupervised or semi-supervised approaches is currently not clear. This project will deliver a benchmark of NMF methods, and develop new methods and guidelines to make these tools more accessible and their results more interpretable.
-
+* However, how to best apply unsupervised or semi-supervised
+pproaches is currently not clear. This project will deliver a benchmark
+of NMF methods, and develop new methods and guidelines to
+make these tools more accessible and their results more interpretable.
 
 <br/>
 
