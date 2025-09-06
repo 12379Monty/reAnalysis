@@ -10,7 +10,7 @@
 
 
 
-<meta name="date" content="2025-09-05" />
+<meta name="date" content="2025-09-06" />
 
 <title>Topics on the Statistical Analysis of Genomic Data</title>
 
@@ -30,8 +30,6 @@
        code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
        pre:not([class]) { background-color: white }</style>
 <script src="site_libs/navigation-1.1/tabsets.js"></script>
-<script src="site_libs/navigation-1.1/codefolding.js"></script>
-<script src="site_libs/navigation-1.1/sourceembed.js"></script>
 <link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
 <script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
 
@@ -58,11 +56,6 @@ if (window.hljs) {
 
 
 
-<style type="text/css">
-#rmd-source-code {
-  display: none;
-}
-</style>
 
 <style type="text/css">
 /* for pandoc --citeproc since 2.11 */
@@ -245,9 +238,6 @@ $(document).ready(function () {
 </style>
 
 <!-- code folding -->
-<style type="text/css">
-.code-folding-btn { margin-bottom: 4px; }
-</style>
 
 
 
@@ -287,23 +277,26 @@ $(document).ready(function () {
 
 <div id="header">
 
-<div class="btn-group pull-right float-right">
-<button type="button" class="btn btn-default btn-xs btn-secondary btn-sm dropdown-toggle" data-toggle="dropdown" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span>Code</span> <span class="caret"></span></button>
-<ul class="dropdown-menu dropdown-menu-right" style="min-width: 50px;">
-<li><a id="rmd-show-all-code" href="#">Show All Code</a></li>
-<li><a id="rmd-hide-all-code" href="#">Hide All Code</a></li>
-<li role="separator" class="divider"></li>
-<li><a id="rmd-download-source" href="#">Download Rmd</a></li>
-</ul>
-</div>
-
 
 
 <h1 class="title toc-ignore">Topics on the Statistical Analysis of Genomic Data</h1>
-<h4 class="date">September 05, 2025</h4>
+<h4 class="date">September 06, 2025</h4>
 
 </div>
 
+<div id="TOC">
+<ul>
+<li><a href="#published-article-review---ghandi-and-beer-2012" id="toc-published-article-review---ghandi-and-beer-2012"><span class="toc-section-number">1</span> Published article review - Ghandi and Beer (2012)</a></li>
+<li><a href="#spatial-transcriptomics" id="toc-spatial-transcriptomics"><span class="toc-section-number">2</span> Spatial Transcriptomics</a></li>
+<li><a href="#technical-reviews" id="toc-technical-reviews"><span class="toc-section-number">3</span> Technical reviews</a>
+<ul>
+<li><a href="#long-read-based-analysis-of-cancer-genomes" id="toc-long-read-based-analysis-of-cancer-genomes"><span class="toc-section-number">3.1</span> Long read-based analysis of cancer genomes</a></li>
+<li><a href="#deep-learning-based-latent-space-analysis-for-cancer-omics" id="toc-deep-learning-based-latent-space-analysis-for-cancer-omics"><span class="toc-section-number">3.2</span> Deep learning-based latent space analysis for cancer omics</a></li>
+<li><a href="#non-negative-matrix-factorization-in-cancer-omics" id="toc-non-negative-matrix-factorization-in-cancer-omics"><span class="toc-section-number">3.3</span> Non-negative matrix factorization in cancer omics</a></li>
+</ul></li>
+<li><a href="#references" id="toc-references"><span class="toc-section-number">4</span> References</a></li>
+</ul>
+</div>
 
 <style type="text/css">
 
@@ -361,8 +354,8 @@ g-table-intro h4 {
 <!-- ######################################################################## -->
 <!-- ######################################################################## -->
 <p><br/></p>
-<div id="published-article-review" class="section level1 unnumbered">
-<h1>Published article review</h1>
+<div id="published-article-review---ghandi-and-beer-2012" class="section level1" number="1">
+<h1><span class="header-section-number">1</span> Published article review - Ghandi and Beer (2012)</h1>
 <ul>
 <li><p><strong>Group Normalization for Genomic Data</strong>
 by Ghandi and Beer (2012)<span class="citation">[<a href="#ref-Ghandi:2012ab">1</a>]</span>)</p></li>
@@ -404,8 +397,8 @@ proposed pre-processing step (called normalization in the paper)</p></li>
 -->
 <p><br/></p>
 </div>
-<div id="spatial-transcriptomics" class="section level1 unnumbered">
-<h1>Spatial Transcriptomics</h1>
+<div id="spatial-transcriptomics" class="section level1" number="2">
+<h1><span class="header-section-number">2</span> Spatial Transcriptomics</h1>
 <ul>
 <li>10x Visium spatial data consists of spots comprising 1-10 cells
 <ul>
@@ -426,15 +419,60 @@ observations by modeling the experimental process
 as a combination of single cells.</li>
 </ul></li>
 </ul></li>
-<li>Compare and contrast the methods.</li>
+<li>Compare and contrast the methods.
+<ul>
+<li>Marie currently uses RCTD.</li>
+</ul></li>
 </ul>
-<!-- Marie currently uses RCTD. If this topic appeals, you could compare and contrast these methods. There is bound to be one or more papers comparing some of these approached. 
--->
+<p><br/></p>
+</div>
+<div id="technical-reviews" class="section level1" number="3">
+<h1><span class="header-section-number">3</span> Technical reviews</h1>
+<ul>
+<li>Technical reviews of the state of the art for analysis techniques
+in the areas of research of some PhD projects would make good
+presentation topics.</li>
+</ul>
+<div id="long-read-based-analysis-of-cancer-genomes" class="section level2" number="3.1">
+<h2><span class="header-section-number">3.1</span> <a href="https://www.wehi.edu.au/project/long-read-based-analysis-of-cancer-genomes/">Long read-based analysis of cancer genomes</a></h2>
+<ul>
+<li>Oxford Nanopore, Pacbio and other long-read sequencing technologies
+enable deep characterisation of cancer genomes, but remain relatively
+inaccessible. Based around existing and planned long read data from
+matched tumour and normal (blood) genomes, as well as
+simulated data, this project will deliver pipelines and new methods for
+long read-based characterisation of cancer genomes.</li>
+</ul>
+<p><br/></p>
+</div>
+<div id="deep-learning-based-latent-space-analysis-for-cancer-omics" class="section level2" number="3.2">
+<h2><span class="header-section-number">3.2</span> <a href="https://www.wehi.edu.au/project/deep-learning-based-latent-space-analysis-for-cancer-omics/">Deep learning-based latent space analysis for cancer omics</a></h2>
+<ul>
+<li><p>Deep learning methods are being used to identify lower dimensional
+latent spaces underlying complex disease datasets. Interpretation of
+the latent dimensions is possible using different approaches, but
+there is much room to improve understanding best practice.</p></li>
+<li><p>The goal of this project is to explore and refine the use
+of deep learning methods to analyse and interpret latent spaces of complex
+cancer omics data.</p></li>
+</ul>
+<p><br/></p>
+</div>
+<div id="non-negative-matrix-factorization-in-cancer-omics" class="section level2" number="3.3">
+<h2><span class="header-section-number">3.3</span> <a href="https://www.wehi.edu.au/project/non-negative-matrix-factorization-in-cancer-omics/">Non-negative matrix factorization in cancer omics</a></h2>
+<ul>
+<li>Non-negative matrix factorisation (NMF) is an unsupervised
+machine learning technique for identifying patterns in data. NMF has a
+long history of use in bioinformatics and a number of NMF methods
+have been developed specifically for omics data. This also includes semi-supervised approaches to NMF.</li>
+</ul>
+<p>However, how to best apply unsupervised or semi-supervised approaches is currently not clear. This project will deliver a benchmark of NMF methods, and develop new methods and guidelines to make these tools more accessible and their results more interpretable.</p>
 <p><br/></p>
 <p><br/></p>
 </div>
-<div id="references" class="section level1" number="1">
-<h1><span class="header-section-number">1</span> References</h1>
+</div>
+<div id="references" class="section level1" number="4">
+<h1><span class="header-section-number">4</span> References</h1>
 <div id="refs" class="references csl-bib-body">
 <div id="ref-Ghandi:2012ab" class="csl-entry">
 <div class="csl-left-margin">1. </div><div class="csl-right-inline">Ghandi, M., and Beer, M.A. (2012). <a href="https://doi.org/10.1371/journal.pone.0038695">Group normalization for genomic data.</a> PLoS One <em>7</em>, e38695.</div>
@@ -451,7 +489,6 @@ as a combination of single cells.</li>
 </div>
 </div>
 
-<div id="rmd-source-code">LS0tCnRpdGxlOiAiVG9waWNzIG9uIHRoZSBTdGF0aXN0aWNhbCBBbmFseXNpcyBvZiBHZW5vbWljIERhdGEiCiMjI1xuTGVzc29ucyBmcm9tIDIwIHllYXJzIG9mIGV4cGVyZXJpZW5jZSIKIyMjYXV0aG9yOiAiW0ZyYW5jb2lzIENvbGxpbl0oaHR0cHM6Ly93d3cubGlua2VkaW4uY29tL2luL2ZyYW5jb2lzei8pIgpkYXRlOiAiYHIgZm9ybWF0KFN5cy50aW1lKCksICclQiAlZCwgJVknKWAiCmFsd2F5c19hbGxvd19odG1sOiB5ZXMKb3V0cHV0OgogICMgZm9yIGd0YW5zZSBvZiAudGFic2V0CiAgYm9va2Rvd246Omh0bWxfZG9jdW1lbnQyOgogICNodG1sX2RvY3VtZW50OgogICAgY29kZV9mb2xkaW5nOiBoaWRlCiAgICBjb2RlX2Rvd25sb2FkOiB0cnVlCiAgICB0b2M6IGZhbHNlCiAgICB0b2NfZGVwdGg6IDMKICAgICMgZG9lcyB0aGlzIGhhdmUgYW4gZWZmZWN0CiAgICBmaWdfY2FwdGlvbjogeWVzCiAgICAjIHRoaXMgaGFzIG5vIGVmZmVjdAogICAgbnVtYmVyX3NlY3Rpb25zOiB5ZXMKICAgICMgY3NzOiBbJy4uL19jc3MvcGFuZG9jMy5jc3MnLCAnLi4vX2Nzcy9teU1hcmdpbnMuY3NzJ10KYmlibGlvZ3JhcGh5OiBbLi4vUmVmcy9ncm91cF9ub3JtLmJpYiwuLi8uLi9fYmliRmlsZXMvX2hlYWx0aHlfYWdpbmcuYmliLCAuLi8uLi8uLi9fYmliRmlsZXMvX0JyZWltYW4uYmliLCAuLi8uLi8uLi9fYmliRmlsZXMvX0ZyZWVkbWFuLmJpYiwgLi4vLi4vLi4vX2JpYkZpbGVzL19ZdS5iaWIsIC4uLy4uLy4uL19iaWJGaWxlcy9fUlVWLmJpYiwgLi4vLi4vLi4vX2JpYkZpbGVzL19STUEuYmliLCAuLi8uLi8uLi9fYmliRmlsZXMvX3NjUk5Bc2VxX25vcm0uYmliXQpjc2w6IC4uLy4uL19jc2wvY2VsbC1udW1lcmljLmNzbApsaW5rLWNpdGF0aW9uczogdHJ1ZQotLS0KCmBgYHtjc3Mgc2lkZW5vdGUsIGVjaG8gPSBGQUxTRX0KCi5tYWluLWNvbnRhaW5lciB7CiAgICBtYXJnaW4tbGVmdDogMjUwcHg7Cn0KLnNpZGVub3RlLCAubWFyZ2lubm90ZSB7IAogIGZsb2F0OiByaWdodDsKICBjbGVhcjogcmlnaHQ7CiAgbWFyZ2luLXJpZ2h0OiAtNDAlOwogIHdpZHRoOiAzNyU7ICAgICAgICAgIyBiZXN0IGJldHdlZW4gNTAlIGFuZCA2MCUKICBtYXJnaW4tdG9wOiAwOwogIG1hcmdpbi1ib3R0b206IDA7CiAgZm9udC1zaXplOiAxLjFyZW07CiAgbGluZS1oZWlnaHQ6IDEuMzsKICB2ZXJ0aWNhbC1hbGlnbjogYmFzZWxpbmU7CiAgcG9zaXRpb246IHJlbGF0aXZlOwogIH0KYGBgCgoKPHN0eWxlPgpAaW1wb3J0IHVybCgnaHR0cHM6Ly9mb250cy5nb29nbGVhcGlzLmNvbS9jc3M/ZmFtaWx5PVJhbGV3YXknKTsKQGltcG9ydCB1cmwoJ2h0dHBzOi8vZm9udHMuZ29vZ2xlYXBpcy5jb20vY3NzP2ZhbWlseT1PeHlnZW4nKTsKQGltcG9ydCB1cmwoJ2h0dHBzOi8vZm9udHMuZ29vZ2xlYXBpcy5jb20vY3NzP2ZhbWlseT1SYWxld2F5OmJvbGQnKTsKQGltcG9ydCB1cmwoJ2h0dHBzOi8vZm9udHMuZ29vZ2xlYXBpcy5jb20vY3NzP2ZhbWlseT1PeHlnZW46Ym9sZCcpOwoKLm1haW4tY29udGFpbmVyIHsKICBtYXgtd2lkdGg6IDE0MDBweCAhaW1wb3J0YW50Owp9Cgpib2R5ewogIGZvbnQtZmFtaWx5OiAnT3h5Z2VuJywgc2Fucy1zZXJpZjsKICBmb250LXNpemU6IDE2cHg7CiAgbGluZS1oZWlnaHQ6IDI0cHg7Cn0KCmgxLGgyLGgzLGg0IHsKICBmb250LWZhbWlseTogJ1JhbGV3YXknLCBzYW5zLXNlcmlmOwp9CgouY29udGFpbmVyIHsgd2lkdGg6IDE0MDBweDsgfQoKY2FwdGlvbiB7CiAgZm9udC1zaXplOiAyMHB4OwogIGNhcHRpb24tc2lkZTogdG9wOwogIHRleHQtaW5kZW50OiAzMHB4OwogIGJhY2tncm91bmQtY29sb3I6IGxpZ2h0Z3JleTsKICBjb2xvcjogYmxhY2s7CiAgbWFyZ2luLXRvcDogNXB4Owp9CgpnLXRhYmxlLWludHJvIGg0IHsKICB0ZXh0LWluZGVudDogMHB4Owp9Cjwvc3R5bGU+CgpgYGB7ciBzZXR1cCwgaW5jbHVkZSA9IEZBTFNFfQprbml0cjo6b3B0c19jaHVuayRzZXQoZWNobyA9IFRSVUUsCiAgICAgICAgICAgICAgICAgICAgICBjb21tZW50ID0gTkEsCiAgICAgICAgICAgICAgICAgICAgICB3YXJuaW5nID0gRkFMU0UsCiAgICAgICAgICAgICAgICAgICAgICBlcnJvciA9IEZBTFNFLAogICAgICAgICAgICAgICAgICAgICAgbWVzc2FnZSA9IEZBTFNFLAogICAgICAgICAgICAgICAgICAgICAgY2FjaGUgPSBGQUxTRSwKICAgICAgICAgICAgICAgICAgICAgIGZpZy53aWR0aCA9IDgsCiAgICAgICAgICAgICAgICAgICAgICBmaWcuaGVpZ2h0ID0gNCkKYGBgCgpgYGB7ciBpbmZleC1HbG9iYWxPcHRpb25zLCByZXN1bHRzPSJoaWRlIiwgaW5jbHVkZT1GQUxTRSwgY2FjaGU9RkFMU0V9Cgprbml0cjo6b3B0c19rbml0JHNldChzdG9wX29uX2Vycm9yID0gMkwpICNyZWFsbHkgbWFrZSBpdCBzdG9wCm9wdGlvbnMoa25pdHIudGFibGUuZm9ybWF0ID0gJ2h0bWwnKQoKb3B0aW9ucyhzdHJpbmdzQXNGYWN0b3JzPUYpCgogI2tuaXRyOjpkZXBfYXV0bygpCgpgYGAKPCEtLSAjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMgLS0+CgoKYGBge3IgaW5kZXgtUHJlbGltcywgIGluY2x1ZGU9RkFMU0UsIGVjaG89RkFMU0UsIHJlc3VsdHM9J2hpZGUnLCBtZXNzYWdlPUZBTFNFfSAKCgpGTiA8LSAiaW5kZXgiCmlmKHN1bShncmVwbChGTiwgbGlzdC5maWxlcygpKSk9PTApIHN0b3AoIkNoZWNrIEZOIikKClBSRUZJWCA8LSAiaW5kZXgiICMtIHJlcGxhY2UgYnkgRkxPV0NFTEw/Pz8KCiBzdXBwcmVzc01lc3NhZ2VzKHJlcXVpcmUocm1hcmtkb3duKSkKIHN1cHByZXNzTWVzc2FnZXMocmVxdWlyZShrbml0cikpCgogc3VwcHJlc3NQYWNrYWdlU3RhcnR1cE1lc3NhZ2VzKHJlcXVpcmUobWV0aG9kcykpCiBzdXBwcmVzc1BhY2thZ2VTdGFydHVwTWVzc2FnZXMocmVxdWlyZShib29rZG93bikpCgogc3VwcHJlc3NQYWNrYWdlU3RhcnR1cE1lc3NhZ2VzKHJlcXVpcmUobWFncml0dHIpKQoKICMgU2hvdGN1dHMgZm9yIGtuaXR0aW5nIGFuZCByZW5kZXJpbmcgd2hpbGUgaW4gUiBzZXNzaW9uIChJbnZva2UgaW50ZXJhY3RpdmUgUiBmcm9tIFIvU2NyaXB0cyBmb2xkZXIpCiBrayA8LSBmdW5jdGlvbihuPScnKSBrbml0cjo6a25pdDJodG1sKHBhc3RlKCJ0Iiwgbiwgc2VwPScnKSwgZW52aXI9Z2xvYmFsZW52KCksCiAgICAgICBvdXRwdXQ9cGFzdGUoRk4sIi5odG1sIiwgc2VwPScnKSkKCiByciA8LSBmdW5jdGlvbihuPScnKSBybWFya2Rvd246OnJlbmRlcihwYXN0ZSgidCIsIG4sIHNlcD0nJyksIGVudmlyPWdsb2JhbGVudigpLAogICAgICAgb3V0cHV0X2ZpbGU9cGFzdGUoRk4sIi5odG1sIiwgc2VwPScnKSkgIyMsIG91dHB1dF9kaXI9J1NjcmlwdHMnKQoKIGJiIDwtIGZ1bmN0aW9uKG49JycpIGJyb3dzZVVSTChwYXN0ZShGTiwiLmh0bWwiLCBzZXA9JycpKQoKICMgVGhlIHVzdWFsIHNob3J0Y3V0cwogenogPC0gZnVuY3Rpb24obj0nJykgc291cmNlKHBhc3RlKCJ0Iiwgbiwgc2VwPScnKSkKCgpgYGAKPCEtLSAjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMgLS0+Cgo8YnIvPgoKIyBQdWJsaXNoZWQgYXJ0aWNsZSByZXZpZXcgIHstfQoKKiAqKkdyb3VwIE5vcm1hbGl6YXRpb24gZm9yIEdlbm9taWMgRGF0YSoqCmJ5IEdoYW5kaSBhbmQgQmVlciAoMjAxMilbQEdoYW5kaToyMDEyYWJdKSAKCiogTWFpbiBGaW5kaW5nIGlzIHRoYXQgYSBwcmUtcHJvY2Vzc2luZyBzdGVwIGFwcGxpZWQgdG8KQWZmaW1ldHJpeCB0aWxpbmcgYXJyYXkgZGF0YSBpbXByb3ZlcyB0aGUgcXVhbGl0eSBvZiB0aGUgZGF0YQoKKiBPdXRsaW5lIG9mIHByZXNlbnRhdGlvbgogICAtIERlc2NyaWJlIHRoZSBBZmZ5bWV0cml4IFRpbGluZyBBcnJheSBkZXNpZ24sCnRoZSBjb2xsZWN0ZWQgZGF0YSwgYW5kIHR5cGljYWwgYW5hbHlzZXMKCiAgIC0gRG93bmxvYWQgdGhlIGRhdGEgYW5hbHl6ZWQgaW4gdGhlIHJlcG9ydDoKICAgICAgLSBGaWd1cmVzIDYgYW5kIDcgZGF0YSBhcmUgZnJvbSAKSGUgZXQgYWwuIDIwMDggW0BIZToyMDA4YWFdLgogICAgICAgICAtIFtHU0UxMjE2M10oaHR0cHM6Ly93d3cubmNiaS5ubG0ubmloLmdvdi9nZW8vcXVlcnkvYWNjLmNnaT9hY2M9JTIwR1NFMTIxNjMpCiAgICAgIC0gRmlndXJlIDggZGF0YSBhcmUgZnJvbSBKb2huc29uIGV0IGFsLiAoMjAwOCkgW0BKb2huc29uOjIwMDhhYV0KICAgICAgICAgLSBbR1NFMTAxMTRdKGh0dHBzOi8vd3d3Lm5jYmkubmxtLm5paC5nb3YvZ2VvL3F1ZXJ5L2FjYy5jZ2k/YWNjPUdTRTEwMTE0KQoKICAgICAgLSBGaWd1cmUgUzQgZGF0YSBhcmUgZnJvbSBMZWUgZXQgYWwuICgyMDA3KSBbQExlZToyMDA3YWFdCiAgICAgICAgIC0gW0FycmF5RXhwcmVzcyBkYXRhYmFzZV0oaHR0cDovL3d3dy5lYmkuYWMudWsvYXJyYXlleHByZXNzLykgCnVuZGVyIGFjY2Vzc2lvbiBjb2RlIFtFLU1FWFAtMTE3Ml0oaHR0cHM6Ly93d3cuZWJpLmFjLnVrL2Jpb3N0dWRpZXMvQXJyYXlFeHByZXNzL3N0dWRpZXMvRS1NRVhQLTExNzI/cXVlcnk9RS1NRVhQLTExNzIpLgoKICAgLSBTdXBwbGVtZW50IHRoZSBmaWd1cmVzIGluIHRoZSByZXBvcnQgd2l0aCBvdGhlcnMKd2hpY2ggZnVydGhlciBjaGFyYWN0ZXJpemUgdGhlIG9wZXJhdGluZyBjaGFyYWN0ZXJpc3RpY3Mgb2YgdGhlCnByb3Bvc2VkIHByZS1wcm9jZXNzaW5nIHN0ZXAgKGNhbGxlZCBub3JtYWxpemF0aW9uIGluIHRoZSBwYXBlcikKCjwhLS0KKiBDb21wYXJhdGl2ZSBJbGx1c3RyYXRpb24gb2YgdGhlIHVzZSBvZiBBSSBBZ2VudHMgCiAgIC0gIEZvciBBcnRpY2xlIFJldmlldwogICAgICAtIGNsYXVkZSAodjMuNyAsIDQuPykKICAgICAgLSBjaGF0R1BUCiAgICAgIC0gPz8/CiAgIC0gRm9yIGxpdGVyYXR1cmUgcmV2aWV3Ci0tPgoKCjxici8+CgoKIyBTcGF0aWFsIFRyYW5zY3JpcHRvbWljcyB7LX0KCgoqIDEweCAgVmlzaXVtIHNwYXRpYWwgZGF0YSBjb25zaXN0cyBvZiBzcG90cyBjb21wcmlzaW5nIDEtMTAgY2VsbHMKICAgLSB3b3JraW5nIG91dCB3aGF04oCZcyBpbiBhIHNwb3QgIG9uZSBvZiB0aGUgY2hhbGxlbmdlcyBvZgp3b3JraW5nIHdpdGggdGhlc2UgZGF0YS4KCiogQ2VsbHVsYXIgY29tcG9zaXRpb24gaXMgZXN0aW1hdGVkIGJ5IGRlY29udm9sdmluZyAxMHggVmlzaXVtIGRhdGEuClNldmVyYWwgdG9vbHMgYXJlIGF2YWlsYWJsZS4gCiAgIC0gbWFwcGluZy1iYXNlZCBtZXRob2RzIG1hcCBzaW5nbGUgY2VsbHMgdG8gc3BhdGlhbCB0cmFuc2NyaXB0b21pY3MgKFNUKSBkYXRhIGJhc2VkIG9uIGdlbmUgZXhwcmVzc2lvbiBzaW1pbGFyaXR5CiAgICAgIC0gTm92b3NwYVJjLCBUYW5ncmFtLCBDZWxsVHJlaywgYW5kIEN5dG9TUEFDRQoKCiAgIC0gZGVjb252b2x1dGlvbi1iYXNlZCBtZXRob2RzIGF0dGVtcHQgdG8gcmVjb25zdHJ1Y3QgdGhlIFNUIApvYnNlcnZhdGlvbnMgYnkgbW9kZWxpbmcgdGhlIGV4cGVyaW1lbnRhbCBwcm9jZXNzIAogICAgICAtIENBUkQsIFJDVEQsIGNlbGwybG9jYXRpb24sIERlc3RWSSwgU3BhdGlhbERXTFMsIFNQT1RsaWdodCwgU1RSSURFLCBDZWxsREFSVCwgQ2VsbG9zY29wZSwgRFNURywgYW5kIFN0ZXJlb3Njb3BlCmFzIGEgY29tYmluYXRpb24gb2Ygc2luZ2xlIGNlbGxzLiAKCgoqICBDb21wYXJlIGFuZCBjb250cmFzdCB0aGUgbWV0aG9kcy4KCjwhLS0gTWFyaWUgY3VycmVudGx5IHVzZXMgUkNURC4gSWYgdGhpcyB0b3BpYyBhcHBlYWxzLCB5b3UgY291bGQgY29tcGFyZSBhbmQgY29udHJhc3QgdGhlc2UgbWV0aG9kcy4gVGhlcmUgaXMgYm91bmQgdG8gYmUgb25lIG9yIG1vcmUgcGFwZXJzIGNvbXBhcmluZyBzb21lIG9mIHRoZXNlIGFwcHJvYWNoZWQuIAotLT4gCgo8YnIvPgoKCgoKYGBge3IgLCBjaGlsZD1jKCdfaW5kZXguUm1kJyksIGV2YWw9Rn0KYGBgCgo8YnIvPgoKIyBSZWZlcmVuY2VzIHsjcmVmZXJlbmNlc30KICAgCjxkaXYgaWQ9InJlZnMiPjwvZGl2PgogICAgIAogIAogCmBgYHtyLCBlY2hvPUZBTFNFfQogIGtuaXRyOjprbml0X2V4aXQoKQpgYGAKCgo=</div>
 
 
 
@@ -485,12 +522,6 @@ $(document).ready(function () {
 </script>
 
 <!-- code folding -->
-<script>
-$(document).ready(function () {
-  window.initializeSourceEmbed("index.Rmd");
-  window.initializeCodeFolding("hide" === "show");
-});
-</script>
 
 
 <!-- dynamically load mathjax for compatibility with self-contained -->

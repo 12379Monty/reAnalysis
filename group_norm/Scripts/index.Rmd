@@ -8,10 +8,10 @@ output:
   # for gtanse of .tabset
   bookdown::html_document2:
   #html_document:
-    code_folding: hide
-    code_download: true
-    toc: false
-    toc_depth: 3
+#   code_folding: hide
+#   code_download: true
+    toc: true
+    toc_depth: 2
     # does this have an effect
     fig_caption: yes
     # this has no effect
@@ -136,7 +136,7 @@ PREFIX <- "index" #- replace by FLOWCELL???
 
 <br/>
 
-# Published article review  {-}
+# Published article review - Ghandi and Beer (2012)
 
 * **Group Normalization for Genomic Data**
 by Ghandi and Beer (2012)[@Ghandi:2012ab]) 
@@ -176,7 +176,7 @@ proposed pre-processing step (called normalization in the paper)
 <br/>
 
 
-# Spatial Transcriptomics {-}
+# Spatial Transcriptomics 
 
 
 * 10x  Visium spatial data consists of spots comprising 1-10 cells
@@ -196,13 +196,53 @@ as a combination of single cells.
 
 
 *  Compare and contrast the methods.
+   -  Marie currently uses RCTD. 
 
-<!-- Marie currently uses RCTD. If this topic appeals, you could compare and contrast these methods. There is bound to be one or more papers comparing some of these approached. 
---> 
+<br/>
+
+# Technical reviews 
+
+* Technical reviews of the state of the art for analysis techniques
+in the areas of research of some PhD projects would make good
+presentation topics.
+
+## [Long read-based analysis of cancer genomes](https://www.wehi.edu.au/project/long-read-based-analysis-of-cancer-genomes/) 
+
+* Oxford Nanopore, Pacbio and other long-read sequencing technologies
+enable deep characterisation of cancer genomes, but remain relatively
+inaccessible. Based around existing and planned long read data from
+matched tumour and normal (blood) genomes, as well as
+simulated data, this project will deliver pipelines and new methods for
+long read-based characterisation of cancer genomes.
+
 
 <br/>
 
 
+## [Deep learning-based latent space analysis for cancer omics](https://www.wehi.edu.au/project/deep-learning-based-latent-space-analysis-for-cancer-omics/)
+
+* Deep learning methods are being used to identify lower dimensional
+latent spaces underlying complex disease datasets. Interpretation of
+the latent dimensions is possible using different approaches, but
+there is much room to improve understanding best practice.
+
+* The goal of this project is to explore and refine the use
+of deep learning methods to analyse and interpret latent spaces of complex
+cancer omics data.
+
+<br/>
+
+## [Non-negative matrix factorization in cancer omics](https://www.wehi.edu.au/project/non-negative-matrix-factorization-in-cancer-omics/)
+
+* Non-negative matrix factorisation (NMF) is an unsupervised
+machine learning technique for identifying patterns in data. NMF has a
+long history of use in bioinformatics and a number of NMF methods
+have been developed specifically for omics data. This also includes semi-supervised approaches to NMF.
+
+However, how to best apply unsupervised or semi-supervised approaches is currently not clear. This project will deliver a benchmark of NMF methods, and develop new methods and guidelines to make these tools more accessible and their results more interpretable.
+
+
+<br/>
 
 
 ```{r , child=c('_index.Rmd'), eval=F}
@@ -219,5 +259,4 @@ as a combination of single cells.
 ```{r, echo=FALSE}
   knitr::knit_exit()
 ```
-
 
