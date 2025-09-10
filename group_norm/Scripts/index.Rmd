@@ -128,7 +128,9 @@ PREFIX <- "index" #- replace by FLOWCELL???
  # The usual shortcuts 
  zz <- function(n='') source(paste("t", n, sep='')) 
 ``` 
+
 <!-- ######################################################################## -->
+
 <br/>
 
 # Published article review - Ghandi and Beer (2012)
@@ -136,9 +138,30 @@ PREFIX <- "index" #- replace by FLOWCELL???
 * **Group Normalization for Genomic Data**
 by Ghandi and Beer (2012)[@Ghandi:2012ab]) 
 
-* Main Finding is that a pre-processing step applied to
+* **Main Finding** is that a pre-processing step applied to
 Affimetrix tiling array data improves the quality of the data
 
+<p><p/>
+* **Nomenclature**.
+   - Normalization has different meanings in different context.  
+"Normalization" in this paper
+refers to a within group or sample probe effect correction.
+   - In the context of Omic data analysis, *normalization* is usually
+reserved for transformations which affect between sample variability.
+      - See [Normalization of omic data after 2007 (INCOB2014)](https://incob.apbionet.org/incob14/assets/INCOB2014/Terry-SpeedInCoB2014.pdf)
+and [Identification of Unwanted Variability: Introduction](_intro_IUV.html)
+   - A standard language to speak clearly about variability is sorely needed.
+      - Also `replicate`, `noise` `signal`.
+
+<p><p/>
+* [Data Analysis Plan](claude_3.7_GNGD-project/GN4GD_implementationGuide.html)
+
+<!--
+claude 3.7 reports
+   - [Background - Affy Tiling Arrays](claude_3.7_GNGD-chat/affy_tiling_arrays.html0)
+-->
+
+<!--  #################################################
 ## Outline of presentation {-}
 
 <p><p/>
@@ -150,7 +173,6 @@ which led to the development of the GN normalization.
    - in the end the question is not so much 
 does the preprocessing step work, as **when does it work**.
 
-<p><p/>
 ## Download the data analyzed in the report
 
 * Figures 6 and 7 data are from 
@@ -204,7 +226,7 @@ performed  best at the typical analysis tasks the microarray data were used for
 * Note that when working with chips, local image artifacts are part of every dataset
 	and my be useful in as assessment exercise.
 
-
+ ################################################################### -->
 
 <br/>
 
