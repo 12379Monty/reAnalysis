@@ -371,23 +371,30 @@ plot_figure7 <- function(data_file) {
     sig_probes
   )
   
-  # 4. Mock MAS5 (simplified for demonstration)
-  # In real implementation, this would be the actual MAS5 algorithm
-  mas5_A <- data$condA / smooth_signal(data$condA, 100)
-  mas5_B <- data$condB / smooth_signal(data$condB, 100)
-  mas5_B_rep <- data$condB_rep / smooth_signal(data$condB_rep, 100)
+  # 4. MAS5 normalization
+  mas5_A <- mas5_normalization(data$condA)
+  mas5_B <- mas5_normalization(data$condB)
+  mas5_B_rep <- mas5_normalization(data$condB_rep)
   sq_mas5 <- calculate_signal_quality(mas5_A, mas5_B, mas5_B_rep, sig_probes)
   
-  # 5. Mock Quantile normalization (simplified)
-  # In real implementation, this would be the actual quantile normalization
-  q_norm_A <- rank(data$condA) / length(data$condA)
-  q_norm_B <- rank(data$condB) / length(data$condB)
-  q_norm_B_rep <- rank(data$condB_rep) / length(data$condB_rep)
+  # 5. MAT normalization
+  mat_A <- mat_normalization(data$condA)
+  mat_B <- mat_normalization(data$condB)
+  mat_B_rep <- mat_normalization(data$condB_rep)
+  sq_mat <- calculate_signal_quality(mat_A, mat_B, mat_B_rep, sig_probes)
+  
+  # 6. Quantile normalization
+  # Create a matrix with all conditions for proper quantile normalization
+  data_matrix <- cbind(data$condA, data$condB, data$condB_rep)
+  q_norm_matrix <- quantile_normalization(data_matrix)
+  q_norm_A <- q_norm_matrix[, 1]
+  q_norm_B <- q_norm_matrix[, 2]
+  q_norm_B_rep <- q_norm_matrix[, 3]
   sq_qq <- calculate_signal_quality(q_norm_A, q_norm_B, q_norm_B_rep, sig_probes)
   
   # Assemble results
   methods <- c("MAS5", "Q-Q", "MAT", "GN-quant", "GN-binary")
-  sq_values <- c(sq_mas5, sq_qq, NA, sq_gn_quantile, sq_gn_binary)
+  sq_values <- c(sq_mas5, sq_qq, sq_mat, sq_gn_quantile, sq_gn_binary)
   
   # Create a dataframe for plotting
   fig7_data <- data.frame(

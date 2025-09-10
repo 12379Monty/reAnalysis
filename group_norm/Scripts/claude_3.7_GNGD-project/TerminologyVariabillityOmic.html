@@ -11,7 +11,7 @@
 
 
 
-<title>GN4GD_implementationGuide</title>
+<title>TerminologyVariabillityOmic</title>
 
 <script>// Pandoc 2.9 adds attributes on both header and div. We remove the former (to
 // be compatible with the behavior of Pandoc < 2.8).
@@ -352,312 +352,289 @@ display: none;
 </div>
 
 
-<div id="group-normalization-for-genomic-data---implementation-guide" class="section level1">
-<h1>Group Normalization for Genomic Data - Implementation Guide</h1>
-<p>This document provides a guide to reproducing figures from the paper
-“Group Normalization for Genomic Data” by Ghandi and Beer (2012). The
-implementation uses R to process nucleosome positioning data and
-generate visualizations similar to those in the original paper.</p>
-<div id="background" class="section level2">
-<h2>Background</h2>
-<p>The Group Normalization method addresses both global variation and
-local biases (probe effects) in genomic data. It works by finding a set
-of reference probes with similar responses for each probe, then using
-these reference sets to normalize the probe signal.</p>
+<div id="comprehensive-terminology-for-variability-in-genomic-data-analysis" class="section level1">
+<h1>Comprehensive Terminology for Variability in Genomic Data
+Analysis</h1>
+<div id="the-vocabulary-of-variability-in-genomic-data-analysis" class="section level2">
+<h2>The vocabulary of variability in genomic data analysis</h2>
+<p>The field of genomic data normalization has developed a rich
+vocabulary for describing sources of variation and methods for their
+correction. This terminology, largely formalized through the work of
+Terry Speed’s group at UC Berkeley and WEHI, and recently unified by
+Gerard and Stephens, provides the conceptual framework for understanding
+group normalization approaches.</p>
 </div>
-<div id="biological-context-nucleosome-positioning" class="section level2">
-<h2>Biological Context: Nucleosome Positioning</h2>
-<div id="what-are-nucleosomes" class="section level3">
-<h3>What are Nucleosomes?</h3>
-<p>Nucleosomes are the fundamental unit of chromatin structure in
-eukaryotic cells. Each nucleosome consists of approximately 147 base
-pairs of DNA wrapped around an octamer of histone proteins (two copies
-each of H2A, H2B, H3, and H4). Nucleosomes are connected by “linker DNA”
-of variable length (typically 10-80 bp), creating a “beads-on-a-string”
-structure that represents the first level of DNA packaging in the
-nucleus.</p>
-</div>
-<div id="why-are-nucleosomes-important" class="section level3">
-<h3>Why are Nucleosomes Important?</h3>
-<p>Nucleosomes play critical roles in genome function:</p>
-<ol style="list-style-type: decimal">
-<li><p><strong>Genome Accessibility</strong>: Nucleosomes restrict
-access to the DNA they wrap, acting as physical barriers to DNA-binding
-proteins. This affects all DNA-dependent processes including
-transcription, replication, and repair.</p></li>
-<li><p><strong>Transcriptional Regulation</strong>: Nucleosome
-positioning at promoters and regulatory elements can determine whether
-transcription factors can access their binding sites, directly impacting
-gene expression.</p></li>
-<li><p><strong>Epigenetic Regulation</strong>: Histone modifications on
-nucleosomes serve as signals for recruiting chromatin-modifying enzymes
-and transcription factors.</p></li>
-</ol>
-</div>
-<div id="nucleosome-positioning-patterns" class="section level3">
-<h3>Nucleosome Positioning Patterns</h3>
-<p>Nucleosomes are not randomly distributed along the genome but show
-specific positioning patterns:</p>
-<ol style="list-style-type: decimal">
-<li><p><strong>Nucleosome-Depleted Regions (NDRs)</strong>: Typically
-found at active promoters, enhancers, and transcription termination
-sites. These regions allow transcription factors and the transcription
-machinery to access DNA.</p></li>
-<li><p><strong>Well-Positioned Nucleosomes</strong>: The +1 nucleosome
-(immediately downstream of the transcription start site) and -1
-nucleosome (upstream of the promoter) are often precisely
-positioned.</p></li>
-<li><p><strong>Phased Arrays</strong>: Downstream of the +1 nucleosome,
-subsequent nucleosomes often form regular arrays with consistent
-spacing.</p></li>
-<li><p><strong>Sequence Preferences</strong>: DNA sequence composition
-influences nucleosome formation, with some sequences (like poly(dA:dT)
-tracts) disfavoring nucleosome formation.</p></li>
-</ol>
-<p>In yeast (<em>Saccharomyces cerevisiae</em>), which was studied in
-the paper, a stereotypical nucleosome organization exists around gene
-promoters: a nucleosome-depleted region (NDR) upstream of the
-transcription start site (TSS), flanked by well-positioned -1 and +1
-nucleosomes, followed by an array of regularly spaced nucleosomes over
-the gene body.</p>
-</div>
-<div id="tiling-array-technology-for-nucleosome-mapping" class="section level3">
-<h3>Tiling Array Technology for Nucleosome Mapping</h3>
-<p><strong>Tiling Array Design</strong>: - High-density oligonucleotide
-microarrays with probes spaced at regular intervals across the genome -
-For yeast studies like Lee et al. (2007), Affymetrix arrays with ~2.6
-million 25-bp oligonucleotide probes covering the entire yeast genome at
-~4-5 bp resolution were used - Each probe measures the abundance of DNA
-fragments that hybridize to its sequence</p>
-<p><strong>Experimental Assay (MNase-chip)</strong>: 1.
-<strong>Crosslinking</strong>: Cells are treated with formaldehyde to
-crosslink DNA to histones, preserving nucleosome positions 2.
-<strong>Nuclease Digestion</strong>: Micrococcal nuclease (MNase)
-preferentially digests linker DNA between nucleosomes, leaving
-nucleosome-protected DNA intact 3. <strong>DNA Isolation</strong>:
-Nucleosome-protected DNA fragments (~147 bp) are purified 4.
-<strong>Labeling and Hybridization</strong>: The DNA is labeled and
-hybridized to the tiling array 5. <strong>Control</strong>: A control
-sample of randomly sheared genomic DNA is also hybridized to normalize
-for sequence-specific hybridization biases (probe effects)</p>
-</div>
-<div id="experimental-design" class="section level3">
-<h3>Experimental Design</h3>
-<p>A typical nucleosome positioning experiment using tiling arrays might
-include:</p>
-<ol style="list-style-type: decimal">
-<li><strong>Multiple Conditions</strong>: e.g., wild-type vs. mutant
-strains, different growth conditions</li>
-<li><strong>Biological Replicates</strong>: Multiple independent
-biological samples to assess reproducibility</li>
-<li><strong>Controls</strong>: Genomic DNA samples to normalize for
-probe-specific effects</li>
-<li><strong>Reference Samples</strong>: Defined nucleosome positions
-(e.g., +1 nucleosomes at well-studied genes)</li>
-</ol>
-</div>
-<div id="data-analysis-and-expected-results" class="section level3">
-<h3>Data Analysis and Expected Results</h3>
-<p><strong>Raw Data Characteristics</strong>: - Probe intensity values
-across the genome - Substantial probe-to-probe variation due to
-sequence-specific hybridization differences - Biological signal
-(nucleosome occupancy) superimposed on these technical variations</p>
-<p><strong>Analysis Steps</strong>: 1. <strong>Normalization</strong>:
-Correct for probe-specific effects (the focus of the Group Normalization
-method) 2. <strong>Smoothing</strong>: Apply running average or other
-smoothing techniques to reduce noise 3. <strong>Peak Calling</strong>:
-Identify nucleosome positions based on signal peaks 4.
-<strong>Comparative Analysis</strong>: Compare nucleosome positions
-between conditions</p>
-<p><strong>Expected Patterns</strong>: - Regular oscillations in signal
-intensity with a periodicity of ~165 bp (nucleosome + linker) -
-Consistent depletion of signal at promoters (NDRs) - Well-defined peaks
-at +1 and -1 positions - More variable positioning in gene bodies and
-intergenic regions</p>
-<p><strong>Visualization</strong>: - Heatmaps aligned to TSSs showing
-nucleosome positioning across genes - Average profiles showing
-nucleosome occupancy patterns around genomic features - Gene-specific
-tracks showing nucleosome positions in regions of interest</p>
-<p>This biological and technical context is essential for understanding
-the significance of the Group Normalization method, which aims to
-improve signal quality by addressing the substantial probe effects
-inherent in tiling array data.</p>
+<div id="core-concepts-of-variation" class="section level2">
+<h2>Core Concepts of Variation</h2>
+<div id="fundamental-variation-dichotomies" class="section level3">
+<h3>Fundamental Variation Dichotomies</h3>
+<p><strong>Wanted versus Unwanted Variation</strong> represents the
+central organizing principle in genomic normalization. <strong>Wanted
+variation</strong> encompasses the biological signals of scientific
+interest—treatment effects, disease states, genetic differences, or
+temporal changes that researchers aim to detect and quantify. In
+contrast, <strong>unwanted variation</strong> includes all sources of
+variability that confound the analysis but are not of primary scientific
+interest. This concept was formalized in Gagnon-Bartsch and Speed’s
+seminal 2012 paper in <em>Biostatistics</em>, which introduced the RUV
+(Remove Unwanted Variation) framework. The distinction is
+context-dependent: batch effects that are unwanted in most analyses
+might become wanted variation when studying laboratory
+reproducibility.</p>
+<p><strong>Technical versus Biological Variation</strong> divides
+variability by its origin. <strong>Technical variation</strong> arises
+from experimental procedures rather than biological differences,
+including pipetting errors, RNA degradation, PCR amplification biases,
+sequencing depth differences, and platform-specific artifacts.
+<strong>Biological variation</strong> represents legitimate differences
+between samples due to actual biological phenomena, including both the
+variation of interest and biological confounders like age or sex
+effects. Yang et al. (2002) in <em>Nucleic Acids Research</em>
+established methods for separating these sources in microarray data.</p>
+<p><strong>Observable versus Unobservable Factors</strong> distinguishes
+between variation sources based on measurement capability.
+<strong>Observable factors</strong> (also called known covariates) are
+directly measured and recorded during experiments—batch identifiers,
+processing dates, technician identities, or sample collection times.
+<strong>Unobservable factors</strong> (hidden or latent factors) affect
+gene expression but weren’t measured or recorded. Leek and Storey’s 2007
+surrogate variable analysis (SVA) paper in <em>PLoS Genetics</em>
+provided the statistical framework for estimating these hidden
+factors.</p>
+<p><strong>Systematic versus Random Variation</strong> categorizes
+effects by their predictability. <strong>Systematic variation</strong>
+follows reproducible patterns that can be modeled and corrected—dye
+biases in two-color arrays, spatial effects on array surfaces, or
+consistent batch effects. <strong>Random variation</strong> represents
+unpredictable fluctuations following statistical distributions,
+typically modeled as measurement error or biological noise that cannot
+be deterministically removed.</p>
 </div>
 </div>
-<div id="data-sources" class="section level2">
-<h2>Data Sources</h2>
-<p>The original paper used several datasets:</p>
-<ol style="list-style-type: decimal">
-<li><strong>Lee et al. 2007</strong> - Nucleosome positioning data in
-yeast (Figure 1)
-<ul>
-<li>Available from ArrayExpress: E-MEXP-1172</li>
-</ul></li>
-<li><strong>Zawadzki et al. 2009</strong> - Nucleosome data before and
-after glucose addition (Figures 4, 5, 7)</li>
-<li><strong>He et al. 2008</strong> - Histone H3 mutant data (Figure
-6)</li>
-<li><strong>Johnson et al. 2008</strong> - Spike-in benchmark dataset
-(Figure 8)</li>
-</ol>
-<p>The implementation supports both: - <strong>Simulated data</strong>:
-Creates synthetic data that mimics the properties of nucleosome
-positioning data - <strong>Real data</strong>: Downloads and processes
-the actual Lee et al. 2007 dataset from ArrayExpress (E-MEXP-1172)</p>
-</div>
-<div id="implementation-details" class="section level2">
-<h2>Implementation Details</h2>
-<div id="group-normalization-algorithm" class="section level3">
-<h3>1. Group Normalization Algorithm</h3>
-<p>The core algorithm has two variants:</p>
-<p><strong>Binary Group Normalization</strong>: - For each probe, find N
-(~1000) reference probes with similar values in a reference dataset -
-Use the low (~30%) and high (~30%) signals from these reference probes
-to estimate the dynamic range - Normalize using these parameters:
-<code>normalized_value = (value - μ_low) / (μ_high - μ_low)</code></p>
-<p><strong>Quantile-based Group Normalization</strong>: - Similar to
-binary method but uses the rank of the probe in its reference set -
-Normalization is based on the quantile position rather than just
-low/high values</p>
-</div>
-<div id="cross-normalization" class="section level3">
-<h3>2. Cross Normalization</h3>
-<p>Cross Normalization is a variant that amplifies biologically relevant
-differences between two datasets: - Normalize dataset B using A as
-reference - Normalize dataset A using B as reference - The two resulting
-datasets highlight differences between conditions</p>
-</div>
-<div id="comparison-normalization-methods" class="section level3">
-<h3>3. Comparison Normalization Methods</h3>
-<p>The paper compares Group Normalization to several existing methods.
-Here’s how each works:</p>
-<p><strong>MAS5.0 (Microarray Suite 5.0)</strong>: - Developed by
-Affymetrix for their GeneChip arrays - Uses a robust multi-chip average
-(RMA) approach - For background correction, employs a statistical
-algorithm that uses a weighted average of probe intensities - Applies a
-global scaling normalization where arrays are scaled to the same target
-intensity - Includes a sliding window of 20bp for smoothing - In MAS5.0,
-each probe’s value is adjusted based on its local background -
-Algorithm: 1. Background correction by subtracting local background
-estimate 2. Global scaling to a target intensity 3. Signal summarization
-using Tukey’s biweight estimator</p>
-<p><strong>MAT (Model-based Analysis of Tiling arrays)</strong>: -
-Developed specifically for ChIP-chip data - Models probe behavior based
-on its sequence composition - Includes a position-dependent weight for
-each nucleotide - Also includes a nonlinear term proportional to the
-count of each nucleotide - Algorithm: 1. For each probe, compute an
-expected baseline signal based on sequence composition 2. Normalize the
-observed signal by subtracting this expected baseline 3. Scale the
-result to a standard deviation</p>
-<p><strong>Quantile Normalization (Q-Q)</strong>: - A non-parametric
-approach that forces the distribution of probe intensities to be the
-same across all arrays - Algorithm: 1. Rank all probes within each array
-2. Compute the mean value for each rank across arrays 3. Replace each
-probe’s value with the mean value for its rank 4. This creates identical
-distributions across all normalized arrays - Unlike Group Normalization,
-it assumes that the underlying signal distribution should be identical
-for all conditions - This assumption may not hold for nucleosome
-positioning data, where nucleosome-enriched samples have different
-distributions than genomic controls</p>
-</div>
-<div id="signal-quality-measure" class="section level3">
-<h3>4. Signal Quality Measure</h3>
-<p>The paper uses a Signal Quality measure (in dB) to compare
-normalization methods: - Signal (S): Mean square change between
-conditions at significantly changed probes - Noise (N): Mean square
-difference between replicates - Signal Quality = 10 * log10(S/N)</p>
-<p>To identify significantly changed probes, the paper: 1. Takes the top
-2% of probes sorted by difference in signal between conditions 2. Uses a
-147bp spatial averaging window to focus on biologically relevant regions
-3. Takes the intersection of top probes identified by different methods
-to avoid bias</p>
+<div id="the-architecture-of-normalization" class="section level2">
+<h2>The Architecture of Normalization</h2>
+<div id="levels-of-normalization" class="section level3">
+<h3>Levels of Normalization</h3>
+<p><strong>Within-sample normalization</strong> corrects for biases
+affecting different features within the same sample. For RNA-seq, this
+primarily involves adjusting for gene length and GC content biases,
+enabling fair comparison of expression levels across genes of different
+lengths. The RPKM, FPKM, and TPM units introduced by Mortazavi et
+al. (2008) and refined by Li and Dewey (2011) standardized this
+approach.</p>
+<p><strong>Between-sample normalization</strong> enables valid
+comparisons across different samples by correcting for global
+differences in library size, RNA composition, and technical processing.
+The field has developed sophisticated methods including <strong>quantile
+normalization</strong> (Bolstad et al., 2003), which forces all samples
+to have identical distributions, and <strong>TMM normalization</strong>
+(Robinson and Oshlack, 2010), which uses a trimmed mean of M-values to
+account for compositional biases.</p>
+<p><strong>Between-group normalization</strong> specifically addresses
+systematic differences between experimental groups that aren’t of
+biological interest. This includes corrections for batch effects when
+treatment groups are processed separately, or adjustments for
+confounding variables that differ systematically between groups. The
+ComBat method (Johnson et al., 2007) exemplifies this approach, using
+empirical Bayes to remove known batch effects while preserving
+biological variation.</p>
 </div>
 </div>
-<div id="running-the-analysis" class="section level2">
-<h2>Running the Analysis</h2>
-<p>The main function <code>run_analysis()</code> will: 1. Generate data
-(either simulated or real from ArrayExpress) 2. Process the data using
-Group Normalization methods 3. Create figures similar to those in the
-paper 4. Save the figures to the specified output directory</p>
-<p>To use real data instead of simulated data, set the
-<code>use_real_data</code> parameter to <code>TRUE</code>:</p>
-<pre class="r"><code>run_analysis(use_real_data = TRUE)</code></pre>
+<div id="control-features-and-reference-systems" class="section level2">
+<h2>Control Features and Reference Systems</h2>
+<div id="types-of-control-genes" class="section level3">
+<h3>Types of Control Genes</h3>
+<p>The concept of <strong>negative control genes</strong> is fundamental
+to modern normalization methods. These are genes assumed to be
+unaffected by the conditions of interest, with expression variation
+reflecting only unwanted technical or biological factors. The RUV
+methods formalized their use, with RUVg specifically using negative
+controls for factor estimation. Selection can be based on biological
+knowledge (housekeeping genes), external spike-ins (ERCC controls), or
+empirical identification from the data itself.</p>
+<p><strong>Positive control genes</strong> have known, expected
+expression changes between conditions. While less commonly used in
+normalization, they provide validation that methods preserve true
+biological signals. <strong>Empirical control genes</strong> represent
+an important innovation where controls are identified computationally
+from the data, typically as the least differentially expressed genes in
+an initial analysis pass.</p>
+<p><strong>Housekeeping genes</strong> are endogenous genes with
+presumed stable expression across conditions, traditionally used for
+qPCR normalization. However, RNA-seq has revealed that many classical
+housekeeping genes show substantial variation, leading to more
+sophisticated control selection methods.</p>
 </div>
-<div id="reproduced-figures" class="section level2">
-<h2>Reproduced Figures</h2>
-<p>The script reproduces:</p>
-<ul>
-<li><strong>Figure 1</strong>: Reproducibility of genomic assays
-<ul>
-<li>1A: Two genomic hybridization signals along a portion of
-chromosome</li>
-<li>1B: Correlation between replicates across the genome</li>
-</ul></li>
-<li><strong>Figure 5</strong>: Group Normalization results at the HXT3
-locus
-<ul>
-<li>5B: Raw nucleosome occupancy data</li>
-<li>5C: Cross normalization highlighting differential nucleosome
-occupancy</li>
-</ul></li>
-<li><strong>Figure 7</strong>: Signal Quality comparison across
-normalization methods</li>
-</ul>
 </div>
-<div id="value-of-using-both-real-and-simulated-data" class="section level2">
-<h2>Value of Using Both Real and Simulated Data</h2>
-<p>Having both options provides several advantages:</p>
-<ol style="list-style-type: decimal">
-<li><strong>Validation</strong>: Test the algorithm on real data to
-ensure it works in practice</li>
-<li><strong>Control</strong>: Simulated data allows testing under
-controlled conditions where you know the ground truth</li>
-<li><strong>Reproducibility</strong>: Simulated data doesn’t rely on
-external data sources that may change or become unavailable</li>
-<li><strong>Educational</strong>: Simulated data provides a cleaner
-example for understanding the method</li>
-<li><strong>Robustness</strong>: If there are issues accessing the real
-data, the simulation provides a fallback</li>
-</ol>
+<div id="mathematical-framework-and-factor-models" class="section level2">
+<h2>Mathematical Framework and Factor Models</h2>
+<div id="the-ruv-model-structure" class="section level3">
+<h3>The RUV Model Structure</h3>
+<p>The RUV framework represents gene expression as <strong>Y = Xβ + Wα +
+ε</strong>, where Y is the expression matrix, X captures factors of
+wanted variation with coefficients β, W represents factors of unwanted
+variation with loadings α, and ε is random error. This decomposition,
+introduced by Gagnon-Bartsch and Speed (2012), provides the mathematical
+foundation for separating wanted from unwanted effects.</p>
+<p><strong>Factor loadings</strong> (the α matrix) describe how each
+unwanted factor affects each gene’s expression. These are typically
+estimated from control genes or replicate samples. The <strong>number of
+unwanted factors</strong> (k) is a crucial parameter, often determined
+by cross-validation or scree plots. Gerard and Stephens (2021) showed
+how different choices of k relate to different RUV variants.</p>
 </div>
-<div id="usage-notes" class="section level2">
-<h2>Usage Notes</h2>
-<ul>
-<li>The real data download may take some time depending on your internet
-connection</li>
-<li>The structure of the ArrayExpress data may change over time, so the
-parser might need updates</li>
-<li>The parameters for Group Normalization (reference group size,
-low/high percentages) can be adjusted</li>
-</ul>
+<div id="ruv-method-variants" class="section level3">
+<h3>RUV Method Variants</h3>
+<p>The proliferation of RUV methods reflects different strategies for
+estimating unwanted factors:</p>
+<p><strong>RUVg</strong> uses negative control genes exclusively,
+performing factor analysis on this subset to estimate W.
+<strong>RUVs</strong> uses replicate samples or negative control samples
+where the factors of interest are constant, estimating unwanted factors
+from the variation within these groups. <strong>RUVr</strong> uses
+residuals from a first-pass regression of all genes on the factors of
+interest, essentially treating genes that show little differential
+expression as empirical controls.</p>
+<p>Gerard and Stephens’ <strong>RUV*</strong> (2021) provided a unifying
+framework showing these methods as special cases of a general approach.
+Their RUVB extends this with Bayesian factor analysis, accounting for
+uncertainty in factor estimation—a limitation of earlier methods.</p>
 </div>
-<div id="future-improvements" class="section level2">
-<h2>Future Improvements</h2>
-<ul>
-<li>Implement more sophisticated nucleosome peak calling</li>
-<li>Add additional visualizations from the paper</li>
-<li>Extend to additional genomic data types</li>
-<li>Optimize the processing of large datasets</li>
-</ul>
 </div>
-<div id="references" class="section level2">
-<h2>References</h2>
-<ul>
-<li>Ghandi, M., &amp; Beer, M. A. (2012). Group normalization for
-genomic data. PLoS ONE, 7(8), e38695.</li>
-<li>Lee, W., et al. (2007). A high-resolution atlas of nucleosome
-occupancy in yeast. Nature Genetics, 39(10), 1235-1244.</li>
-<li>Zawadzki, K. A., et al. (2009). Chromatin-dependent transcription
-factor accessibility rather than nucleosome remodeling predominates
-during global transcriptional restructuring in Saccharomyces cerevisiae.
-Molecular Biology of the Cell, 20(15), 3503-3513.</li>
-<li>Kornberg, R. D., &amp; Lorch, Y. (1999). Twenty-five years of the
-nucleosome, fundamental particle of the eukaryote chromosome. Cell,
-98(3), 285-294.</li>
-<li>Jiang, C., &amp; Pugh, B. F. (2009). Nucleosome positioning and gene
-regulation: advances through genomics. Nature Reviews Genetics, 10(3),
-161-172.</li>
-</ul>
+<div id="batch-effects-and-confounding" class="section level2">
+<h2>Batch Effects and Confounding</h2>
+<div id="understanding-batch-effects" class="section level3">
+<h3>Understanding Batch Effects</h3>
+<p><strong>Batch effects</strong> are systematic differences between
+groups of samples processed together. The term encompasses any
+non-biological variation correlating with experimental batches—different
+days, technicians, reagent lots, or equipment runs. Leek et al. (2010)
+demonstrated their pervasive impact, showing batch effects often exceed
+biological signals in magnitude.</p>
+<p><strong>Confounding</strong> occurs when unwanted variation
+correlates with factors of interest, making it impossible to separate
+technical from biological effects without additional information or
+assumptions. <strong>Perfect confounding</strong> represents the extreme
+case where batch completely aligns with treatment groups, making
+correction impossible without biological replicates spanning
+batches.</p>
+</div>
+<div id="surrogate-variable-analysis" class="section level3">
+<h3>Surrogate Variable Analysis</h3>
+<p><strong>Surrogate variables</strong> are statistically constructed
+variables representing unmeasured sources of variation. Introduced by
+Leek and Storey (2007), SVA estimates these latent factors by
+identifying systematic patterns in expression data not explained by
+known variables. The method assumes these patterns reflect batch effects
+or other technical artifacts rather than interesting biology.</p>
+<p><strong>Hidden factors</strong> and <strong>latent factors</strong>
+are related concepts referring to unmeasured sources of systematic
+variation. While sometimes used interchangeably with surrogate
+variables, they can also refer to true biological factors that weren’t
+measured but affect expression patterns.</p>
+</div>
+</div>
+<div id="statistical-properties-and-distributions" class="section level2">
+<h2>Statistical Properties and Distributions</h2>
+<div id="count-data-characteristics" class="section level3">
+<h3>Count Data Characteristics</h3>
+<p><strong>Overdispersion</strong> describes the common observation that
+RNA-seq count variance exceeds what the Poisson distribution predicts.
+This extra-Poisson variation arises from both technical sources (varying
+capture efficiency) and biological heterogeneity. The negative binomial
+distribution, with its additional dispersion parameter, has become the
+standard model for RNA-seq counts.</p>
+<p><strong>Zero inflation</strong> refers to an excess of zero counts
+beyond what count distributions predict. In single-cell RNA-seq, this
+manifests as <strong>dropout events</strong>—genes appearing unexpressed
+due to technical failures rather than biological absence. Methods like
+ZINB (zero-inflated negative binomial) explicitly model these excess
+zeros.</p>
+</div>
+<div id="compositional-effects" class="section level3">
+<h3>Compositional Effects</h3>
+<p><strong>Compositional data</strong> constraints arise because RNA-seq
+measures relative rather than absolute abundance. If one gene’s
+expression increases dramatically, others appear relatively decreased
+even if their absolute expression is unchanged. This
+<strong>compositional bias</strong> motivated the development of TMM
+normalization and similar methods that assume most genes are
+unchanged.</p>
+</div>
+</div>
+<div id="modern-extensions-and-unified-frameworks" class="section level2">
+<h2>Modern Extensions and Unified Frameworks</h2>
+<div id="the-gerard-stephens-contributions" class="section level3">
+<h3>The Gerard-Stephens Contributions</h3>
+<p>David Gerard and Matthew Stephens expanded the RUV framework in
+several important directions. Their <strong>MOUTHWASH</strong> method
+(2020) combines empirical Bayes shrinkage with unwanted variation
+removal, providing better uncertainty quantification through
+<strong>local false sign rates</strong> rather than traditional FDR.</p>
+<p>The <strong>RUV* framework</strong> (2021) unified previously
+disparate RUV methods, showing them as special cases of a general matrix
+imputation problem. This theoretical advance enables development of new
+methods and clearer understanding of when different approaches are
+equivalent.</p>
+<p><strong>RUVB</strong> introduces full Bayesian treatment of unwanted
+variation, propagating uncertainty from factor estimation through to
+differential expression testing—addressing a key limitation where
+earlier methods treated estimated factors as known.</p>
+</div>
+</div>
+<div id="visualization-and-quality-assessment" class="section level2">
+<h2>Visualization and Quality Assessment</h2>
+<div id="diagnostic-plots" class="section level3">
+<h3>Diagnostic Plots</h3>
+<p><strong>MA plots</strong>, plotting log-ratios (M) against average
+intensities (A), reveal intensity-dependent biases and the effectiveness
+of normalization. Introduced for microarrays by Yang et al. (2002), they
+remain valuable for RNA-seq visualization.</p>
+<p><strong>RLE plots</strong> (Relative Log Expression) display the
+distribution of each gene’s expression relative to its median across
+samples. Gandolfo and Speed (2018) showed how RLE plots effectively
+reveal unwanted variation patterns, with tight, centered distributions
+indicating successful normalization.</p>
+<p><strong>Principal component analysis (PCA)</strong> projects
+high-dimensional expression data onto major axes of variation. PCA plots
+reveal batch effects when samples cluster by batch rather than
+biological groups, and successful normalization should reduce
+batch-driven separation.</p>
+</div>
+</div>
+<div id="implementation-terminology" class="section level2">
+<h2>Implementation Terminology</h2>
+<div id="normalization-units" class="section level3">
+<h3>Normalization Units</h3>
+<p>The evolution from <strong>RPKM</strong> to <strong>FPKM</strong> to
+<strong>TPM</strong> reflects growing understanding of compositional
+effects. While RPKM normalizes for sequencing depth then gene length,
+TPM reverses this order, ensuring the sum of all TPMs equals one million
+in every sample—providing true proportional abundances that are
+comparable across samples.</p>
+</div>
+<div id="key-software-implementations" class="section level3">
+<h3>Key Software Implementations</h3>
+<p>The terminology is embodied in software packages that have become
+standard tools: <strong>limma</strong> for linear modeling and batch
+correction, <strong>sva</strong> for surrogate variable analysis and
+ComBat, <strong>RUVSeq</strong> for applying RUV methods to RNA-seq,
+<strong>edgeR</strong> and <strong>DESeq2</strong> for differential
+expression with integrated normalization, and <strong>vicar</strong> for
+the Gerard-Stephens methods.</p>
+</div>
+</div>
+<div id="conclusion" class="section level2">
+<h2>Conclusion</h2>
+<p>This vocabulary provides the conceptual foundation for understanding
+group normalization in genomics. The terminology has evolved from simple
+scaling methods to sophisticated factor models that separate wanted from
+unwanted variation. The recent unification by Gerard and Stephens
+suggests the field is maturing toward a coherent theoretical framework,
+though challenges remain in handling increasingly complex experimental
+designs and single-cell data. Understanding this terminology is
+essential for both implementing normalization methods correctly and
+interpreting their results in biological context.</p>
 </div>
 </div>
 

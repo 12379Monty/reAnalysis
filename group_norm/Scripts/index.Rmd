@@ -151,7 +151,8 @@ reserved for transformations which affect between sample variability.
       - See [Normalization of omic data after 2007 (INCOB2014)](https://incob.apbionet.org/incob14/assets/INCOB2014/Terry-SpeedInCoB2014.pdf)
 and [Identification of Unwanted Variability: Introduction](_intro_IUV.html)
    - A standard language to speak clearly about variability is sorely needed.
-      - Also `replicate`, `noise` `signal`.
+      - [claude 3.7 -  Terminology for Variability in Genomic Data Analysis](claude_3.7_GNGD-project/TerminologyVariabillityOmic.html)
+
 
 <p><p/>
 * [Data Analysis Plan](claude_3.7_GNGD-project/GN4GD_implementationGuide.html)

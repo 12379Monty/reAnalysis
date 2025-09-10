@@ -121,53 +121,12 @@ Cross Normalization is a variant that amplifies biologically relevant difference
 - Normalize dataset A using B as reference
 - The two resulting datasets highlight differences between conditions
 
-### 3. Comparison Normalization Methods
-
-The paper compares Group Normalization to several existing methods. Here's how each works:
-
-**MAS5.0 (Microarray Suite 5.0)**:
-- Developed by Affymetrix for their GeneChip arrays
-- Uses a robust multi-chip average (RMA) approach
-- For background correction, employs a statistical algorithm that uses a weighted average of probe intensities
-- Applies a global scaling normalization where arrays are scaled to the same target intensity
-- Includes a sliding window of 20bp for smoothing
-- In MAS5.0, each probe's value is adjusted based on its local background
-- Algorithm: 
-  1. Background correction by subtracting local background estimate
-  2. Global scaling to a target intensity
-  3. Signal summarization using Tukey's biweight estimator
-
-**MAT (Model-based Analysis of Tiling arrays)**:
-- Developed specifically for ChIP-chip data
-- Models probe behavior based on its sequence composition
-- Includes a position-dependent weight for each nucleotide
-- Also includes a nonlinear term proportional to the count of each nucleotide
-- Algorithm:
-  1. For each probe, compute an expected baseline signal based on sequence composition
-  2. Normalize the observed signal by subtracting this expected baseline
-  3. Scale the result to a standard deviation
-
-**Quantile Normalization (Q-Q)**:
-- A non-parametric approach that forces the distribution of probe intensities to be the same across all arrays
-- Algorithm:
-  1. Rank all probes within each array
-  2. Compute the mean value for each rank across arrays
-  3. Replace each probe's value with the mean value for its rank
-  4. This creates identical distributions across all normalized arrays
-- Unlike Group Normalization, it assumes that the underlying signal distribution should be identical for all conditions
-- This assumption may not hold for nucleosome positioning data, where nucleosome-enriched samples have different distributions than genomic controls
-
-### 4. Signal Quality Measure
+### 3. Signal Quality Measure
 
 The paper uses a Signal Quality measure (in dB) to compare normalization methods:
 - Signal (S): Mean square change between conditions at significantly changed probes
 - Noise (N): Mean square difference between replicates
 - Signal Quality = 10 * log10(S/N)
-
-To identify significantly changed probes, the paper:
-1. Takes the top 2% of probes sorted by difference in signal between conditions
-2. Uses a 147bp spatial averaging window to focus on biologically relevant regions
-3. Takes the intersection of top probes identified by different methods to avoid bias
 
 ## Running the Analysis
 
