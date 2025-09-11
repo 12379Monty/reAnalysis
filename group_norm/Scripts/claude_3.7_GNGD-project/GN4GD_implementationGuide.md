@@ -16,72 +16,79 @@ Nucleosomes are the fundamental unit of chromatin structure in eukaryotic cells.
 
 Nucleosomes play critical roles in genome function:
 
-1. **Genome Accessibility**: Nucleosomes restrict access to the DNA they wrap, acting as physical barriers to DNA-binding proteins. This affects all DNA-dependent processes including transcription, replication, and repair.
+* **Genome Accessibility**: Nucleosomes restrict access to the DNA they wrap, acting as physical barriers to DNA-binding proteins. This affects all DNA-dependent processes including transcription, replication, and repair.
 
-2. **Transcriptional Regulation**: Nucleosome positioning at promoters and regulatory elements can determine whether transcription factors can access their binding sites, directly impacting gene expression.
+* **Transcriptional Regulation**: Nucleosome positioning at promoters and regulatory elements can determine whether transcription factors can access their binding sites, directly impacting gene expression.
 
-3. **Epigenetic Regulation**: Histone modifications on nucleosomes serve as signals for recruiting chromatin-modifying enzymes and transcription factors.
+* **Epigenetic Regulation**: Histone modifications on nucleosomes serve as signals for recruiting chromatin-modifying enzymes and transcription factors.
 
 ### Nucleosome Positioning Patterns
 
 Nucleosomes are not randomly distributed along the genome but show specific positioning patterns:
 
-1. **Nucleosome-Depleted Regions (NDRs)**: Typically found at active promoters, enhancers, and transcription termination sites. These regions allow transcription factors and the transcription machinery to access DNA.
+* **Nucleosome-Depleted Regions (NDRs)**: Typically found at active promoters, enhancers, and transcription termination sites. These regions allow transcription factors and the transcription machinery to access DNA.
 
-2. **Well-Positioned Nucleosomes**: The +1 nucleosome (immediately downstream of the transcription start site) and -1 nucleosome (upstream of the promoter) are often precisely positioned.
+* **Well-Positioned Nucleosomes**: The +1 nucleosome (immediately downstream of the transcription start site) and -1 nucleosome (upstream of the promoter) are often precisely positioned.
 
-3. **Phased Arrays**: Downstream of the +1 nucleosome, subsequent nucleosomes often form regular arrays with consistent spacing.
+* **Phased Arrays**: Downstream of the +1 nucleosome, subsequent nucleosomes often form regular arrays with consistent spacing.
 
-4. **Sequence Preferences**: DNA sequence composition influences nucleosome formation, with some sequences (like poly(dA:dT) tracts) disfavoring nucleosome formation.
+* **Sequence Preferences**: DNA sequence composition influences nucleosome formation, with some sequences (like poly(dA:dT) tracts) disfavoring nucleosome formation.
 
+<span style="color: blue;">
 In yeast (*Saccharomyces cerevisiae*), which was studied in the paper, a stereotypical nucleosome organization exists around gene promoters: a nucleosome-depleted region (NDR) upstream of the transcription start site (TSS), flanked by well-positioned -1 and +1 nucleosomes, followed by an array of regularly spaced nucleosomes over the gene body.
+</span>
+
+
 
 ### Tiling Array Technology for Nucleosome Mapping
 
-**Tiling Array Design**:
-- High-density oligonucleotide microarrays with probes spaced at regular intervals across the genome
-- For yeast studies like Lee et al. (2007), Affymetrix arrays with ~2.6 million 25-bp oligonucleotide probes covering the entire yeast genome at ~4-5 bp resolution were used
-- Each probe measures the abundance of DNA fragments that hybridize to its sequence
+* **Tiling Array Design**:
+   - High-density oligonucleotide microarrays with probes spaced at regular intervals across the genome
+   - For yeast studies like Lee et al. (2007), Affymetrix arrays with ~2.6 million 25-bp oligonucleotide probes covering the entire yeast genome at ~4-5 bp resolution were used
+   - Each probe measures the abundance of DNA fragments that hybridize to its sequence
 
-**Experimental Assay (MNase-chip)**:
-1. **Crosslinking**: Cells are treated with formaldehyde to crosslink DNA to histones, preserving nucleosome positions
-2. **Nuclease Digestion**: Micrococcal nuclease (MNase) preferentially digests linker DNA between nucleosomes, leaving nucleosome-protected DNA intact
-3. **DNA Isolation**: Nucleosome-protected DNA fragments (~147 bp) are purified
-4. **Labeling and Hybridization**: The DNA is labeled and hybridized to the tiling array
-5. **Control**: A control sample of randomly sheared genomic DNA is also hybridized to normalize for sequence-specific hybridization biases (probe effects)
+* **Experimental Assay (MNase-chip)**:
+   - **Crosslinking**: Cells are treated with formaldehyde to crosslink DNA to histones, preserving nucleosome positions
+   - **Nuclease Digestion**: Micrococcal nuclease (MNase) preferentially digests linker DNA between nucleosomes, leaving nucleosome-protected DNA intact
+   - **DNA Isolation**: Nucleosome-protected DNA fragments (~147 bp) are purified
+   - **Labeling and Hybridization**: The DNA is labeled and hybridized to the tiling array
+   - **Control**: A control sample of randomly sheared genomic DNA is also hybridized to normalize for sequence-specific hybridization biases (probe effects)
 
 ### Experimental Design
 
-A typical nucleosome positioning experiment using tiling arrays might include:
 
-1. **Multiple Conditions**: e.g., wild-type vs. mutant strains, different growth conditions
-2. **Biological Replicates**: Multiple independent biological samples to assess reproducibility
-3. **Controls**: Genomic DNA samples to normalize for probe-specific effects
-4. **Reference Samples**: Defined nucleosome positions (e.g., +1 nucleosomes at well-studied genes)
+* A typical nucleosome positioning experiment using tiling arrays might include:
+
+   -  **Multiple Conditions**: e.g., wild-type vs. mutant strains, different growth conditions
+   -  **Biological Replicates**: Multiple independent biological samples to assess reproducibility
+   -  **Controls**: Genomic DNA samples to normalize for probe-specific effects
+   -  **Reference Samples**: Defined nucleosome positions (e.g., +1 nucleosomes at well-studied genes)
+
 
 ### Data Analysis and Expected Results
 
-**Raw Data Characteristics**:
-- Probe intensity values across the genome
-- Substantial probe-to-probe variation due to sequence-specific hybridization differences
-- Biological signal (nucleosome occupancy) superimposed on these technical variations
+* **Raw Data Characteristics**:
+   - Probe intensity values across the genome
+   - Substantial probe-to-probe variation due to sequence-specific hybridization differences
+   - Biological signal (nucleosome occupancy) superimposed on these technical variations
 
-**Analysis Steps**:
-1. **Normalization**: Correct for probe-specific effects (the focus of the Group Normalization method)
-2. **Smoothing**: Apply running average or other smoothing techniques to reduce noise
-3. **Peak Calling**: Identify nucleosome positions based on signal peaks
-4. **Comparative Analysis**: Compare nucleosome positions between conditions
 
-**Expected Patterns**:
-- Regular oscillations in signal intensity with a periodicity of ~165 bp (nucleosome + linker)
-- Consistent depletion of signal at promoters (NDRs)
-- Well-defined peaks at +1 and -1 positions
-- More variable positioning in gene bodies and intergenic regions
+* **Analysis Steps**:
+   -  **Normalization**: Correct for probe-specific effects (the focus of the Group Normalization method)
+   -  **Smoothing**: Apply running average or other smoothing techniques to reduce noise
+   -  **Peak Calling**: Identify nucleosome positions based on signal peaks
+   -  **Comparative Analysis**: Compare nucleosome positions between conditions
 
-**Visualization**:
-- Heatmaps aligned to TSSs showing nucleosome positioning across genes
-- Average profiles showing nucleosome occupancy patterns around genomic features
-- Gene-specific tracks showing nucleosome positions in regions of interest
+* **Expected Patterns**:
+   - Regular oscillations in signal intensity with a periodicity of ~165 bp (nucleosome + linker)
+   - Consistent depletion of signal at promoters (NDRs)
+   - Well-defined peaks at +1 and -1 positions
+   - More variable positioning in gene bodies and intergenic regions
+
+* **Visualization**:
+   - Heatmaps aligned to TSSs showing nucleosome positioning across genes
+   - Average profiles showing nucleosome occupancy patterns around genomic features
+   - Gene-specific tracks showing nucleosome positions in regions of interest
 
 This biological and technical context is essential for understanding the significance of the Group Normalization method, which aims to improve signal quality by addressing the substantial probe effects inherent in tiling array data.
 
@@ -95,9 +102,9 @@ The original paper used several datasets:
 3. **He et al. 2008** - Histone H3 mutant data (Figure 6)
 4. **Johnson et al. 2008** - Spike-in benchmark dataset (Figure 8)
 
-The implementation supports both:
-- **Simulated data**: Creates synthetic data that mimics the properties of nucleosome positioning data
-- **Real data**: Downloads and processes the actual Lee et al. 2007 dataset from ArrayExpress (E-MEXP-1172)
+* The implementation supports both:  
+   - **Simulated data**: Creates synthetic data that mimics the properties of nucleosome positioning data
+   - **Real data**: Downloads and processes the actual Lee et al. 2007 dataset from ArrayExpress (E-MEXP-1172)
 
 ## Implementation Details
 
@@ -105,77 +112,77 @@ The implementation supports both:
 
 The core algorithm has two variants:
 
-**Binary Group Normalization**:
-- For each probe, find N (~1000) reference probes with similar values in a reference dataset
-- Use the low (~30%) and high (~30%) signals from these reference probes to estimate the dynamic range
-- Normalize using these parameters: `normalized_value = (value - μ_low) / (μ_high - μ_low)`
+* **Binary Group Normalization**:
+   - For each probe, find N (~1000) reference probes with similar values in a reference dataset
+   - Use the low (~30%) and high (~30%) signals from these reference probes to estimate the dynamic range
+   - Normalize using these parameters: `normalized_value = (value - μ_low) / (μ_high - μ_low)`
 
-**Quantile-based Group Normalization**:
-- Similar to binary method but uses the rank of the probe in its reference set
-- Normalization is based on the quantile position rather than just low/high values
+* **Quantile-based Group Normalization**:
+   - Similar to binary method but uses the rank of the probe in its reference set
+   - Normalization is based on the quantile position rather than just low/high values
 
 ### 2. Cross Normalization
 
-Cross Normalization is a variant that amplifies biologically relevant differences between two datasets:
-- Normalize dataset B using A as reference
-- Normalize dataset A using B as reference
-- The two resulting datasets highlight differences between conditions
+* Cross Normalization is a variant that amplifies biologically relevant differences between two datasets:
+   - Normalize dataset B using A as reference
+   - Normalize dataset A using B as reference
+   - The two resulting datasets highlight differences between conditions
 
 ### 3. Comparison Normalization Methods
 
 The paper compares Group Normalization to several existing methods. Here's how each works:
 
-**MAS5.0 (Microarray Suite 5.0)**:
-- Developed by Affymetrix for their GeneChip arrays
-- Uses a robust multi-chip average (RMA) approach
-- For background correction, employs a statistical algorithm that uses a weighted average of probe intensities
-- Applies a global scaling normalization where arrays are scaled to the same target intensity
-- Includes a sliding window of 20bp for smoothing
-- In MAS5.0, each probe's value is adjusted based on its local background
-- Algorithm: 
-  1. Background correction by subtracting local background estimate
-  2. Global scaling to a target intensity
-  3. Signal summarization using Tukey's biweight estimator
+* **MAS5.0 (Microarray Suite 5.0)**:
+   - Developed by Affymetrix for their GeneChip arrays
+   - Uses a robust multi-chip average (RMA) approach
+   - For background correction, employs a statistical algorithm that uses a weighted average of probe intensities
+   - Applies a global scaling normalization where arrays are scaled to the same target intensity
+   - Includes a sliding window of 20bp for smoothing
+   - In MAS5.0, each probe's value is adjusted based on its local background
+   - Algorithm: 
+     1. Background correction by subtracting local background estimate
+     2. Global scaling to a target intensity
+     3. Signal summarization using Tukey's biweight estimator
 
-**MAT (Model-based Analysis of Tiling arrays)**:
-- Developed specifically for ChIP-chip data
-- Models probe behavior based on its sequence composition
-- Includes a position-dependent weight for each nucleotide
-- Also includes a nonlinear term proportional to the count of each nucleotide
-- Algorithm:
-  1. For each probe, compute an expected baseline signal based on sequence composition
-  2. Normalize the observed signal by subtracting this expected baseline
-  3. Scale the result to a standard deviation
+* **MAT (Model-based Analysis of Tiling arrays)**:
+   - Developed specifically for ChIP-chip data
+   - Models probe behavior based on its sequence composition
+   - Includes a position-dependent weight for each nucleotide
+   - Also includes a nonlinear term proportional to the count of each nucleotide
+   - Algorithm:
+     1. For each probe, compute an expected baseline signal based on sequence composition
+     2. Normalize the observed signal by subtracting this expected baseline
+     3. Scale the result to a standard deviation
 
-**Quantile Normalization (Q-Q)**:
-- A non-parametric approach that forces the distribution of probe intensities to be the same across all arrays
-- Algorithm:
-  1. Rank all probes within each array
-  2. Compute the mean value for each rank across arrays
-  3. Replace each probe's value with the mean value for its rank
-  4. This creates identical distributions across all normalized arrays
-- Unlike Group Normalization, it assumes that the underlying signal distribution should be identical for all conditions
-- This assumption may not hold for nucleosome positioning data, where nucleosome-enriched samples have different distributions than genomic controls
+* **Quantile Normalization (Q-Q)**:
+   - A non-parametric approach that forces the distribution of probe intensities to be the same across all arrays
+   - Algorithm:
+     1. Rank all probes within each array
+     2. Compute the mean value for each rank across arrays
+     3. Replace each probe's value with the mean value for its rank
+     4. This creates identical distributions across all normalized arrays
+   - Unlike Group Normalization, it assumes that the underlying signal distribution should be identical for all conditions
+   - This assumption may not hold for nucleosome positioning data, where nucleosome-enriched samples have different distributions than genomic controls
 
 ### 4. Signal Quality Measure
 
-The paper uses a Signal Quality measure (in dB) to compare normalization methods:
-- Signal (S): Mean square change between conditions at significantly changed probes
-- Noise (N): Mean square difference between replicates
-- Signal Quality = 10 * log10(S/N)
+* The paper uses a Signal Quality measure (in dB) to compare normalization methods:
+   - Signal (S): Mean square change between conditions at significantly changed probes
+   - Noise (N): Mean square difference between replicates
+   - Signal Quality = 10 * log10(S/N)
 
-To identify significantly changed probes, the paper:
-1. Takes the top 2% of probes sorted by difference in signal between conditions
-2. Uses a 147bp spatial averaging window to focus on biologically relevant regions
-3. Takes the intersection of top probes identified by different methods to avoid bias
+* To identify significantly changed probes, the paper:
+   1. Takes the top 2% of probes sorted by difference in signal between conditions
+   2. Uses a 147bp spatial averaging window to focus on biologically relevant regions
+   3. Takes the intersection of top probes identified by different methods to avoid bias
 
 ## Running the Analysis
 
-The main function `run_analysis()` will:
-1. Generate data (either simulated or real from ArrayExpress)
-2. Process the data using Group Normalization methods
-3. Create figures similar to those in the paper
-4. Save the figures to the specified output directory
+* The main function `run_analysis()` will:
+   1. Generate data (either simulated or real from ArrayExpress)
+   2. Process the data using Group Normalization methods
+   3. Create figures similar to those in the paper
+   4. Save the figures to the specified output directory
 
 To use real data instead of simulated data, set the `use_real_data` parameter to `TRUE`:
 ```r
