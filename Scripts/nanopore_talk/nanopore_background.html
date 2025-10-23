@@ -1,0 +1,174 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <meta http-equiv="Content-Style-Type" content="text/css">
+  <title></title>
+  <meta name="Generator" content="Cocoa HTML Writer">
+  <meta name="CocoaVersion" content="2575.7">
+  <style type="text/css">
+    p.p1 {margin: 0.0px 0.0px 0.0px 0.0px; font: 14.0px 'Helvetica Neue'; color: #262626; -webkit-text-stroke: #262626; min-height: 16.0px}
+    p.p4 {margin: 0.0px 0.0px 10.0px 0.0px; font: 14.0px 'Helvetica Neue'; color: #262626; -webkit-text-stroke: #262626}
+    p.p7 {margin: 0.0px 0.0px 0.0px 0.0px; font: 13.0px Courier; color: #262626; -webkit-text-stroke: #262626; background-color: #f2f2f2}
+    p.p8 {margin: 0.0px 0.0px 0.0px 0.0px; font: 13.0px Courier; color: #262626; -webkit-text-stroke: #262626; background-color: #f2f2f2; min-height: 16.0px}
+    li.li9 {margin: 0.0px 0.0px 0.0px 0.0px; font: 14.0px 'Helvetica Neue'; color: #262626; -webkit-text-stroke: #262626}
+    span.s1 {font-kerning: none}
+    span.s2 {font: 12.6px Courier; font-kerning: none; background-color: rgba(0, 0, 0, 0.039)}
+    span.s3 {-webkit-text-stroke: 0px #000000}
+    span.s4 {font: 14.0px 'Lucida Grande'; font-kerning: none}
+    ol.ol1 {list-style-type: decimal}
+    ul.ul1 {list-style-type: disc}
+  </style>
+</head>
+<body>
+<p class="p1"><span class="s1"></span><br></p>
+<h1 style="margin: 0.0px 0.0px 10.0px 0.0px; font: 34.0px 'Helvetica Neue'; color: #262626; -webkit-text-stroke: #262626"><span class="s1">Nanopore background - placeholder</span></h1>
+<h1 style="margin: 0.0px 0.0px 10.0px 0.0px; font: 34.0px 'Helvetica Neue'; color: #262626; -webkit-text-stroke: #262626; min-height: 41.0px"><span class="s1"></span><br></h1>
+<p class="p4"><span class="s1">There are several excellent tools for extracting images from PDFs:</span></p>
+<h2 style="margin: 0.0px 0.0px 10.0px 0.0px; font: 30.0px 'Helvetica Neue'; color: #262626; -webkit-text-stroke: #262626"><span class="s1">Command-line tools</span></h2>
+<h3 style="margin: 0.0px 0.0px 10.0px 0.0px; font: 24.0px 'Helvetica Neue'; color: #262626; -webkit-text-stroke: #262626"><span class="s1">1. pdfimages (part of poppler-utils - best option)</span></h3>
+<p class="p7"><span class="s1"># Extract all images</span></p>
+<p class="p7"><span class="s1">pdfimages -all input.pdf output_prefix</span></p>
+<p class="p8"><span class="s1"></span><br></p>
+<p class="p7"><span class="s1"># Extract as PNG</span></p>
+<p class="p7"><span class="s1">pdfimages -png input.pdf images/fig</span></p>
+<p class="p8"><span class="s1"></span><br></p>
+<p class="p7"><span class="s1"># Extract as JPEG</span></p>
+<p class="p7"><span class="s1">pdfimages -j input.pdf images/fig</span></p>
+<p class="p4"><span class="s1"><b>Installation:</b> - Ubuntu/Debian: </span><span class="s2">sudo apt install poppler-utils</span><span class="s1"> - macOS: </span><span class="s2">brew install poppler</span><span class="s1"> - Windows: Download from poppler website or use WSL</span></p>
+<h3 style="margin: 0.0px 0.0px 10.0px 0.0px; font: 24.0px 'Helvetica Neue'; color: #262626; -webkit-text-stroke: #262626"><span class="s1">2. ImageMagick</span></h3>
+<p class="p7"><span class="s1"># Convert each page to image</span></p>
+<p class="p7"><span class="s1">convert -density 300 input.pdf output_%03d.png</span></p>
+<p class="p8"><span class="s1"></span><br></p>
+<p class="p7"><span class="s1"># Extract specific pages</span></p>
+<p class="p7"><span class="s1">convert -density 300 input.pdf[0-5] output_%03d.png</span></p>
+<p class="p4"><span class="s1"><b>Installation:</b> - Ubuntu/Debian: </span><span class="s2">sudo apt install imagemagick</span><span class="s1"> - macOS: </span><span class="s2">brew install imagemagick</span><span class="s1"> - Windows: Download from imagemagick.org</span></p>
+<h3 style="margin: 0.0px 0.0px 10.0px 0.0px; font: 24.0px 'Helvetica Neue'; color: #262626; -webkit-text-stroke: #262626"><span class="s1">3. pdftoppm (also from poppler)</span></h3>
+<p class="p7"><span class="s1"># Convert pages to images</span></p>
+<p class="p7"><span class="s1">pdftoppm -png -r 300 input.pdf output</span></p>
+<p class="p8"><span class="s1"></span><br></p>
+<p class="p7"><span class="s1"># Convert specific page range</span></p>
+<p class="p7"><span class="s1">pdftoppm -png -f 1 -l 10 -r 300 input.pdf output</span></p>
+<h2 style="margin: 0.0px 0.0px 10.0px 0.0px; font: 30.0px 'Helvetica Neue'; color: #262626; -webkit-text-stroke: #262626"><span class="s1">Python solution</span></h2>
+<p class="p4"><span class="s1">Using PyMuPDF (fitz):</span></p>
+<p class="p7"><span class="s1">import fitz<span class="Apple-converted-space">  </span># PyMuPDF</span></p>
+<p class="p8"><span class="s1"></span><br></p>
+<p class="p7"><span class="s1">pdf_file = "presentation.pdf"</span></p>
+<p class="p7"><span class="s1">doc = fitz.open(pdf_file)</span></p>
+<p class="p8"><span class="s1"></span><br></p>
+<p class="p7"><span class="s1"># Create output directory</span></p>
+<p class="p7"><span class="s1">import os</span></p>
+<p class="p7"><span class="s1">os.makedirs("images", exist_ok=True)</span></p>
+<p class="p8"><span class="s1"></span><br></p>
+<p class="p7"><span class="s1">for page_num in range(len(doc)):</span></p>
+<p class="p7"><span class="s1"><span class="Apple-converted-space">    </span>page = doc[page_num]</span></p>
+<p class="p7"><span class="s1"><span class="Apple-converted-space">    </span>image_list = page.get_images()</span></p>
+<p class="p8"><span class="s1"><span class="Apple-converted-space">    </span></span></p>
+<p class="p7"><span class="s1"><span class="Apple-converted-space">    </span>for img_index, img in enumerate(image_list):</span></p>
+<p class="p7"><span class="s1"><span class="Apple-converted-space">        </span>xref = img[0]</span></p>
+<p class="p7"><span class="s1"><span class="Apple-converted-space">        </span>base_image = doc.extract_image(xref)</span></p>
+<p class="p7"><span class="s1"><span class="Apple-converted-space">        </span>image_bytes = base_image["image"]</span></p>
+<p class="p7"><span class="s1"><span class="Apple-converted-space">        </span>image_ext = base_image["ext"]</span></p>
+<p class="p8"><span class="s1"><span class="Apple-converted-space">        </span></span></p>
+<p class="p7"><span class="s1"><span class="Apple-converted-space">        </span># Save image</span></p>
+<p class="p7"><span class="s1"><span class="Apple-converted-space">        </span>filename = f"images/page{page_num+1}_img{img_index+1}.{image_ext}"</span></p>
+<p class="p7"><span class="s1"><span class="Apple-converted-space">        </span>with open(filename, "wb") as f:</span></p>
+<p class="p7"><span class="s1"><span class="Apple-converted-space">            </span>f.write(image_bytes)</span></p>
+<p class="p7"><span class="s1"><span class="Apple-converted-space">        </span>print(f"Saved: {filename}")</span></p>
+<p class="p8"><span class="s1"></span><br></p>
+<p class="p7"><span class="s1">doc.close()</span></p>
+<p class="p4"><span class="s1"><b>Installation:</b><b></b></span></p>
+<p class="p7"><span class="s1">pip install PyMuPDF</span></p>
+<h3 style="margin: 0.0px 0.0px 10.0px 0.0px; font: 24.0px 'Helvetica Neue'; color: #262626; -webkit-text-stroke: #262626"><span class="s1">Alternative: Using pdf2image</span></h3>
+<p class="p7"><span class="s1">from pdf2image import convert_from_path</span></p>
+<p class="p8"><span class="s1"></span><br></p>
+<p class="p7"><span class="s1"># Convert PDF pages to PIL Image objects</span></p>
+<p class="p7"><span class="s1">images = convert_from_path('presentation.pdf', dpi=300)</span></p>
+<p class="p8"><span class="s1"></span><br></p>
+<p class="p7"><span class="s1"># Save images</span></p>
+<p class="p7"><span class="s1">for i, image in enumerate(images):</span></p>
+<p class="p7"><span class="s1"><span class="Apple-converted-space">    </span>image.save(f'images/page_{i+1}.png', 'PNG')</span></p>
+<p class="p4"><span class="s1"><b>Installation:</b><b></b></span></p>
+<p class="p7"><span class="s1">pip install pdf2image</span></p>
+<p class="p7"><span class="s1"># Also requires poppler</span></p>
+<h2 style="margin: 0.0px 0.0px 10.0px 0.0px; font: 30.0px 'Helvetica Neue'; color: #262626; -webkit-text-stroke: #262626"><span class="s1">R solution</span></h2>
+<p class="p7"><span class="s1">library(pdftools)</span></p>
+<p class="p8"><span class="s1"></span><br></p>
+<p class="p7"><span class="s1"># Convert PDF pages to images</span></p>
+<p class="p7"><span class="s1">pdf_convert("presentation.pdf",<span class="Apple-converted-space"> </span></span></p>
+<p class="p7"><span class="s1"><span class="Apple-converted-space">            </span>format = "png",<span class="Apple-converted-space"> </span></span></p>
+<p class="p7"><span class="s1"><span class="Apple-converted-space">            </span>dpi = 300,</span></p>
+<p class="p7"><span class="s1"><span class="Apple-converted-space">            </span>filenames = "images/slide_%d.png")</span></p>
+<p class="p8"><span class="s1"></span><br></p>
+<p class="p7"><span class="s1"># Convert specific pages</span></p>
+<p class="p7"><span class="s1">pdf_convert("presentation.pdf",</span></p>
+<p class="p7"><span class="s1"><span class="Apple-converted-space">            </span>pages = 1:10,</span></p>
+<p class="p7"><span class="s1"><span class="Apple-converted-space">            </span>format = "png",</span></p>
+<p class="p7"><span class="s1"><span class="Apple-converted-space">            </span>dpi = 300,</span></p>
+<p class="p7"><span class="s1"><span class="Apple-converted-space">            </span>filenames = "images/slide_%d.png")</span></p>
+<p class="p4"><span class="s1"><b>Installation:</b><b></b></span></p>
+<p class="p7"><span class="s1">install.packages("pdftools")</span></p>
+<h3 style="margin: 0.0px 0.0px 10.0px 0.0px; font: 24.0px 'Helvetica Neue'; color: #262626; -webkit-text-stroke: #262626"><span class="s1">Extract images only (not render pages)</span></h3>
+<p class="p7"><span class="s1">library(pdftools)</span></p>
+<p class="p8"><span class="s1"></span><br></p>
+<p class="p7"><span class="s1"># Get info about images in PDF</span></p>
+<p class="p7"><span class="s1">pdf_data("presentation.pdf")</span></p>
+<p class="p8"><span class="s1"></span><br></p>
+<p class="p7"><span class="s1"># For actual image extraction, use system call to pdfimages</span></p>
+<p class="p7"><span class="s1">system("pdfimages -all presentation.pdf images/fig")</span></p>
+<h2 style="margin: 0.0px 0.0px 10.0px 0.0px; font: 30.0px 'Helvetica Neue'; color: #262626; -webkit-text-stroke: #262626"><span class="s1">GUI tools</span></h2>
+<h3 style="margin: 0.0px 0.0px 10.0px 0.0px; font: 24.0px 'Helvetica Neue'; color: #262626; -webkit-text-stroke: #262626"><span class="s1">Adobe Acrobat</span></h3>
+<ul class="ul1">
+  <li class="li9"><span class="s3"></span><span class="s1">File </span><span class="s4">→</span><span class="s1"> Export To </span><span class="s4">→</span><span class="s1"> Image </span><span class="s4">→</span><span class="s1"> Select format (PNG, JPEG, etc.)</span></li>
+  <li class="li9"><span class="s3"></span><span class="s1">Choose quality/resolution settings</span></li>
+  <li class="li9"><span class="s3"></span><span class="s1">Export all pages or selected pages</span></li>
+</ul>
+<h3 style="margin: 0.0px 0.0px 10.0px 0.0px; font: 24.0px 'Helvetica Neue'; color: #262626; -webkit-text-stroke: #262626"><span class="s1">GIMP</span></h3>
+<ul class="ul1">
+  <li class="li9"><span class="s3"></span><span class="s1">Open PDF in GIMP (imports as layers)</span></li>
+  <li class="li9"><span class="s3"></span><span class="s1">Export individual pages as images</span></li>
+  <li class="li9"><span class="s3"></span><span class="s1">Good for editing images before export</span></li>
+</ul>
+<h3 style="margin: 0.0px 0.0px 10.0px 0.0px; font: 24.0px 'Helvetica Neue'; color: #262626; -webkit-text-stroke: #262626"><span class="s1">Inkscape</span></h3>
+<ul class="ul1">
+  <li class="li9"><span class="s3"></span><span class="s1">Good for vector graphics in PDFs</span></li>
+  <li class="li9"><span class="s3"></span><span class="s1">Can import PDF pages and export as PNG/SVG</span></li>
+  <li class="li9"><span class="s3"></span><span class="s1">Useful for presentations with vector graphics</span></li>
+</ul>
+<h3 style="margin: 0.0px 0.0px 10.0px 0.0px; font: 24.0px 'Helvetica Neue'; color: #262626; -webkit-text-stroke: #262626"><span class="s1">Preview (macOS)</span></h3>
+<ul class="ul1">
+  <li class="li9"><span class="s3"></span><span class="s1">Open PDF in Preview</span></li>
+  <li class="li9"><span class="s3"></span><span class="s1">File </span><span class="s4">→</span><span class="s1"> Export </span><span class="s4">→</span><span class="s1"> Select PNG format</span></li>
+  <li class="li9"><span class="s3"></span><span class="s1">Can export current page or all pages</span></li>
+</ul>
+<h2 style="margin: 0.0px 0.0px 10.0px 0.0px; font: 30.0px 'Helvetica Neue'; color: #262626; -webkit-text-stroke: #262626"><span class="s1">Recommendations</span></h2>
+<h3 style="margin: 0.0px 0.0px 10.0px 0.0px; font: 24.0px 'Helvetica Neue'; color: #262626; -webkit-text-stroke: #262626"><span class="s1">Best for extracting embedded images:</span></h3>
+<p class="p4"><span class="s1">Use <b>pdfimages</b> from poppler-utils - it extracts the actual embedded images rather than rendering the pages.</span></p>
+<p class="p7"><span class="s1">pdfimages -all presentation.pdf images/figure</span></p>
+<h3 style="margin: 0.0px 0.0px 10.0px 0.0px; font: 24.0px 'Helvetica Neue'; color: #262626; -webkit-text-stroke: #262626"><span class="s1">Best for rendering pages as images:</span></h3>
+<p class="p4"><span class="s1">Use <b>pdf2image</b> in Python or <b>pdftools</b> in R for high-quality page rendering.</span></p>
+<h3 style="margin: 0.0px 0.0px 10.0px 0.0px; font: 24.0px 'Helvetica Neue'; color: #262626; -webkit-text-stroke: #262626"><span class="s1">Best for batch processing:</span></h3>
+<p class="p4"><span class="s1">Write a shell script with pdfimages:</span></p>
+<p class="p7"><span class="s1">#!/bin/bash</span></p>
+<p class="p7"><span class="s1"># extract_pdf_images.sh</span></p>
+<p class="p8"><span class="s1"></span><br></p>
+<p class="p7"><span class="s1">PDF_FILE=$1</span></p>
+<p class="p7"><span class="s1">OUTPUT_DIR=${2:-images}</span></p>
+<p class="p8"><span class="s1"></span><br></p>
+<p class="p7"><span class="s1">mkdir -p "$OUTPUT_DIR"</span></p>
+<p class="p7"><span class="s1">pdfimages -png "$PDF_FILE" "$OUTPUT_DIR/fig"</span></p>
+<p class="p8"><span class="s1"></span><br></p>
+<p class="p7"><span class="s1">echo "Images extracted to $OUTPUT_DIR"</span></p>
+<p class="p4"><span class="s1">Usage:</span></p>
+<p class="p7"><span class="s1">chmod +x extract_pdf_images.sh</span></p>
+<p class="p7"><span class="s1">./extract_pdf_images.sh presentation.pdf images/</span></p>
+<h2 style="margin: 0.0px 0.0px 10.0px 0.0px; font: 30.0px 'Helvetica Neue'; color: #262626; -webkit-text-stroke: #262626"><span class="s1">Tips</span></h2>
+<ol class="ol1">
+  <li class="li9"><span class="s3"><b></b></span><span class="s1"><b>DPI/Resolution</b>: Use 300 DPI for high-quality images suitable for presentations</span></li>
+  <li class="li9"><span class="s3"><b></b></span><span class="s1"><b>Format</b>: PNG is best for diagrams/charts, JPEG for photographs</span></li>
+  <li class="li9"><span class="s3"><b></b></span><span class="s1"><b>Naming</b>: Use consistent naming schemes (e.g., </span><span class="s2">figure_01.png</span><span class="s1">, </span><span class="s2">figure_02.png</span><span class="s1">)</span></li>
+  <li class="li9"><span class="s3"><b></b></span><span class="s1"><b>Organization</b>: Create an </span><span class="s2">images/</span><span class="s1"> directory to keep files organized</span></li>
+  <li class="li9"><span class="s3"><b></b></span><span class="s1"><b>Quality check</b>: Always verify extracted images look correct before using in presentation</span></li>
+</ol>
+</body>
+</html>

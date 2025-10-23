@@ -1,0 +1,112 @@
+
+
+processing file: microbiome_slides.Rmd
+1/103                                       
+2/103 [setup]                               
+3/103                                       
+4/103 [mic-slides-1]                        
+5/103                                       
+6/103 [mic-slides-1B]                       
+7/103                                       
+8/103 [mic-slides-2]                        
+9/103                                       
+10/103 [mic-slides-3]                        
+11/103                                       
+12/103 [unnamed-chunk-1]                     
+13/103                                       
+14/103 [unnamed-chunk-2]                     
+15/103                                       
+16/103 [unnamed-chunk-3]                     
+17/103                                       
+18/103 [mic-slides-read-qual-sa1-sa2]        
+19/103                                       
+20/103 [unnamed-chunk-4]                     
+21/103                                       
+22/103 [unnamed-chunk-5]                     
+23/103                                       
+24/103 [unnamed-chunk-6]                     
+25/103                                       
+26/103 [unnamed-chunk-7]                     
+27/103                                       
+28/103 [unnamed-chunk-8]                     
+29/103                                       
+30/103 [unnamed-chunk-9]                     
+31/103                                       
+32/103 [unnamed-chunk-10]                    
+33/103                                       
+34/103 [unnamed-chunk-11]                    
+35/103                                       
+36/103 [unnamed-chunk-12]                    
+37/103                                       
+38/103 [unnamed-chunk-13]                    
+39/103                                       
+40/103 [unnamed-chunk-14]                    
+41/103                                       
+42/103 [unnamed-chunk-15]                    
+43/103                                       
+44/103 [unnamed-chunk-16]                    
+45/103                                       
+46/103 [unnamed-chunk-17]                    
+47/103                                       
+48/103 [unnamed-chunk-18]                    
+49/103                                       
+50/103 [unnamed-chunk-19]                    
+51/103                                       
+52/103 [unnamed-chunk-20]                    
+53/103                                       
+54/103 [unnamed-chunk-21]                    
+55/103                                       
+56/103 [unnamed-chunk-22]                    
+57/103                                       
+58/103 [unnamed-chunk-23]                    
+59/103                                       
+60/103 [unnamed-chunk-24]                    
+61/103                                       
+62/103 [micro-slides-data-1]                 
+63/103                                       
+64/103 [micro-slides-data-2]                 
+65/103                                       
+66/103 [micro-slides-data-3]                 
+67/103                                       
+68/103 [micro-slides-data-4]                 
+69/103                                       
+70/103 [micro-slides-data-5]                 
+71/103                                       
+72/103 [micro-sides-plot-panel]              
+73/103                                       
+74/103 [micro-sides-plot-superimposed]       
+75/103                                       
+76/103 [micro-slides-sum]                    
+77/103                                       
+78/103 [micro-slides-bland-alt-fun]          
+79/103                                       
+80/103 [micro-slides-extract-scatterp-data]  
+81/103                                       
+82/103 [micro-slides-bland-altman-strain]    
+83/103                                       
+84/103 [micro-slides-bland-altman-species]   
+85/103                                       
+86/103 [micro-slides-bland-altman-genus]     
+87/103                                       
+88/103 [micro-slides-bland-altman-all-levels]
+89/103                                       
+90/103 [unnamed-chunk-25]                    
+91/103                                       
+92/103 [unnamed-chunk-26]                    
+93/103                                       
+94/103 [micro-slides-BA-stats-strain]        
+95/103                                       
+96/103 [micro-slides-BA-stats-species]       
+97/103                                       
+98/103 [micro-slides-BA-stats-genus]         
+99/103                                       
+100/103 [micro-slides-BA-stats-summary]       
+101/103                                       
+102/103 [unnamed-chunk-27]                    
+output file: microbiome_slides.knit.md
+
+/usr/local/bin/pandoc +RTS -K512m -RTS microbiome_slides.knit.md --to html4 --from markdown+autolink_bare_uris+tex_math_single_backslash --output microbiome_slides.html --lua-filter /Library/Frameworks/R.framework/Versions/4.4-x86_64/Resources/library/rmarkdown/rmarkdown/lua/pagebreak.lua --lua-filter /Library/Frameworks/R.framework/Versions/4.4-x86_64/Resources/library/rmarkdown/rmarkdown/lua/latex-div.lua --lua-filter /Library/Frameworks/R.framework/Versions/4.4-x86_64/Resources/library/rmarkdown/rmarkdown/lua/table-classes.lua --embed-resources --standalone --wrap none --variable widescreen --variable transition=0.4 --css styles.css --template /Library/Frameworks/R.framework/Versions/4.4-x86_64/Resources/library/rmarkdown/rmd/ioslides/default.html --mathjax --variable 'mathjax-url=https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML' --include-in-header /var/folders/jk/d24lm6n944q5y650lph85m7w0000gp/T//RtmpbKNY4T/rmarkdown-str4df63ee801f3.html 
+[WARNING] Could not fetch resource styles.css
+/usr/local/bin/pandoc +RTS -K512m -RTS microbiome_slides.knit.md --to ioslides_presentation.lua --from markdown+autolink_bare_uris+tex_math_single_backslash --output /var/folders/jk/d24lm6n944q5y650lph85m7w0000gp/T//RtmpbKNY4T/ioslides-output4df671d818c8.html --wrap none --slide-level 2 
+
+Output created: microbiome_slides.html
