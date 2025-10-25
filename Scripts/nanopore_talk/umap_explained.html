@@ -11,7 +11,7 @@
 
 
 
-<title>nanopore_background</title>
+<title>umap_explained</title>
 
 <script>// Pandoc 2.9 adds attributes on both header and div. We remove the former (to
 // be compatible with the behavior of Pandoc < 2.8).
@@ -352,510 +352,505 @@ display: none;
 </div>
 
 
-<div id="oxford-nanopore-technology-background-for-microbiome-analysis" class="section level1">
-<h1>Oxford Nanopore Technology: Background for Microbiome Analysis</h1>
-<div id="overview-of-the-nanopore-sequencing-platform" class="section level2">
-<h2>Overview of the Nanopore Sequencing Platform</h2>
-<div id="what-does-the-platform-do" class="section level3">
-<h3>What Does the Platform Do?</h3>
-<p>Oxford Nanopore Technologies (ONT) provides a unique sequencing
-platform based on nanopore sensing technology. At its core, the platform
-works by:</p>
-<p><strong>Basic Mechanism:</strong> - DNA or RNA molecules pass through
-biological nanopores (protein pores embedded in a membrane) - As
-nucleotides pass through the pore, they disrupt an ionic current flowing
-through it - Each nucleotide creates a characteristic current disruption
-pattern - These electrical signals are measured in real-time and decoded
-to determine the DNA/RNA sequence</p>
-<p><strong>Key Distinguishing Features:</strong> - <strong>Long
-reads</strong>: Can sequence fragments from hundreds of bases to
-megabases in length (typical amplicon reads: 1-5kb; ultra-long reads:
-&gt;100kb) - <strong>Real-time sequencing</strong>: Data is generated
-and available immediately during the sequencing run - <strong>Direct
-sequencing</strong>: Can sequence native DNA/RNA without amplification
-(though PCR amplification is used for amplicon sequencing) -
-<strong>Portability</strong>: Devices range from pocket-sized MinION to
-high-throughput PromethION - <strong>Accessible</strong>: Relatively low
-capital cost and simple library preparation</p>
-<p><strong>Current Technology Generation:</strong> - <strong>R10.4.1
-pores</strong>: Latest flow cell chemistry providing improved accuracy -
-<strong>Basecalling</strong>: Conversion of electrical signals to DNA
-sequence using neural network algorithms - <strong>Accuracy</strong>:
-Raw read accuracy ~95-99%, with consensus methods achieving
-&gt;99.9%</p>
-<hr />
+<div id="umap-projections-for-microbiome-sequence-analysis" class="section level1">
+<h1>UMAP Projections for Microbiome Sequence Analysis</h1>
+<div id="high-level-description-of-umap" class="section level2">
+<h2>High-Level Description of UMAP</h2>
+<div id="what-is-umap" class="section level3">
+<h3>What is UMAP?</h3>
+<p><strong>UMAP (Uniform Manifold Approximation and Projection)</strong>
+is a dimensionality reduction technique that transforms high-dimensional
+data into a lower-dimensional space (typically 2D or 3D) while
+preserving the overall structure and relationships in the data.</p>
+<p><strong>Key Concept:</strong> Think of UMAP as creating a map from
+complex, multi-dimensional data. Just as a 2D map of Earth preserves
+neighborhoods and relative distances (though not perfectly), UMAP
+creates a 2D representation of high-dimensional sequence data that keeps
+similar sequences close together and dissimilar sequences far apart.</p>
 </div>
-</div>
-<div id="applications-of-nanopore-sequencing" class="section level2">
-<h2>Applications of Nanopore Sequencing</h2>
-<div id="genomic-applications" class="section level3">
-<h3>Genomic Applications</h3>
-<p><strong>1. Whole Genome Sequencing</strong> - De novo genome assembly
-of bacteria, plants, animals - Structural variant detection - Haplotype
-phasing - Resolution of repetitive regions</p>
-<p><strong>2. Transcriptomics</strong> - Direct RNA sequencing (no
-reverse transcription needed) - Full-length transcript isoform detection
-- RNA modification detection (m6A, pseudouridine)</p>
-<p><strong>3. Epigenetics</strong> - Direct detection of DNA methylation
-(5mC, 6mA) - No bisulfite conversion required - Single-molecule
-resolution</p>
-<p><strong>4. Metagenomics and Microbiome Analysis</strong> - Taxonomic
-profiling of complex microbial communities - <strong>16S/ITS/23S
-amplicon sequencing</strong> (our application) - Whole metagenome
-shotgun sequencing - Strain-level resolution - Real-time pathogen
-identification</p>
-<p><strong>5. Targeted Sequencing</strong> - Amplicon panels for
-specific genes or regions - Adaptive sampling (enrichment/depletion
-during sequencing)</p>
-<p><strong>6. Clinical and Diagnostic Applications</strong> - Rapid
-pathogen identification - Antimicrobial resistance gene detection -
-Cancer genomics - Rare disease diagnosis</p>
-<hr />
-</div>
-</div>
-<div id="microbiome-amplicon-sequencing-recommended-pipeline" class="section level2">
-<h2>Microbiome Amplicon Sequencing: Recommended Pipeline</h2>
-<div id="overview-for-16sits23s-rrna-amplicon-applications" class="section level3">
-<h3>Overview for 16S/ITS/23S rRNA Amplicon Applications</h3>
-<p>For bacterial microbiome profiling using ribosomal RNA gene amplicons
-(16S, 23S, or full 16S-ITS-23S operons), Oxford Nanopore recommends the
-following workflow:</p>
-</div>
-<div id="library-preparation" class="section level3">
-<h3>1. Library Preparation</h3>
-<p><strong>PCR Amplification:</strong> - Use primers targeting conserved
-regions flanking the gene(s) of interest - Recommended: 16S primers
-(27F/1492R for full-length) or operon-spanning primers - PCR product
-size: typically 1.5-5kb for full operons - Barcode addition for
-multiplexing samples</p>
-<p><strong>Library Prep Kit:</strong> - PCR Barcoding Kit (SQK-PBK004 or
-SQK-16S024) - Rapid Barcoding Kit (SQK-RBK004/114) - Native barcoding
-for highest accuracy</p>
-</div>
-<div id="sequencing" class="section level3">
-<h3>2. Sequencing</h3>
-<p><strong>Flow Cell:</strong> - MinION/GridION: R10.4.1 flow cells -
-Run time: 24-72 hours (though data available in real-time) - Recommended
-depth: 10,000-50,000 reads per sample for microbiome profiling</p>
-</div>
-<div id="basecalling" class="section level3">
-<h3>3. Basecalling</h3>
-<p><strong>MinKNOW Software:</strong> - Real-time basecalling during
-sequencing run - Options: - Fast basecalling (lower accuracy, ~95%) -
-High-accuracy basecalling (HAC, ~98-99%) - Super-accuracy basecalling
-(SUP, ~99%+, slower)</p>
-<p><strong>Guppy Basecaller</strong> (or Dorado, the newer replacement):
-- Recommended: High-accuracy or super-accuracy models - Output: FASTQ
-files with quality scores</p>
-<hr />
-</div>
-</div>
-<div id="quality-control-in-the-standard-pipeline" class="section level2">
-<h2>Quality Control in the Standard Pipeline</h2>
-<div id="built-in-qc-during-sequencing-minknow" class="section level3">
-<h3>Built-in QC During Sequencing (MinKNOW)</h3>
-<p><strong>Real-time Metrics:</strong> - <strong>Pore
-occupancy</strong>: Number of active sequencing pores - <strong>Read
-length distribution</strong>: N50, mean, median read lengths -
-<strong>Throughput</strong>: Bases per hour, cumulative yield -
-<strong>Read quality</strong>: Mean Q-score distribution -
-<strong>Sequencing speed</strong>: Bases per second</p>
-<p><strong>Flow Cell Health:</strong> - Mux scan results showing active
-pore count - Pore availability over time - Temperature stability</p>
-</div>
-<div id="post-sequencing-qc" class="section level3">
-<h3>Post-Sequencing QC</h3>
-<p><strong>1. Raw Read Quality Assessment</strong></p>
-<p><strong>Tools:</strong> - <strong>NanoPlot/NanoStat</strong>:
-Comprehensive read quality statistics - Read length distribution - Read
-quality score distribution - Yield over time - Quality vs. read length
-plots</p>
+<div id="mathematical-foundation-simplified" class="section level3">
+<h3>Mathematical Foundation (Simplified)</h3>
+<p><strong>Basic Principles:</strong></p>
+<ol style="list-style-type: decimal">
+<li><strong>Manifold Assumption</strong>: Assumes data lies on or near a
+lower-dimensional manifold embedded in high-dimensional space</li>
+<li><strong>Topological Data Analysis</strong>: Uses concepts from
+topology to understand data structure</li>
+<li><strong>Local + Global Structure</strong>: Preserves both local
+neighborhoods and broader global relationships</li>
+</ol>
+<p><strong>Algorithm Overview:</strong></p>
+<ol style="list-style-type: decimal">
+<li><strong>Construct high-dimensional graph</strong>:
 <ul>
-<li><strong>PycoQC</strong>: Quality control metrics visualization
-<ul>
-<li>Interactive HTML reports</li>
-<li>Barcode demultiplexing statistics</li>
-<li>Channel performance analysis</li>
+<li>For each point, find its k-nearest neighbors</li>
+<li>Measure distances in the original high-dimensional space</li>
+<li>Create a weighted graph connecting similar points</li>
 </ul></li>
-</ul>
-<p><strong>Key Metrics:</strong> - <strong>Mean read quality
-(Q-score)</strong>: Should be &gt;10, ideally &gt;12-15 - <strong>Read
-length</strong>: Check against expected amplicon size -
-<strong>Yield</strong>: Total bases sequenced - <strong>Pass vs. fail
-reads</strong>: Reads passing quality threshold</p>
-<p><strong>2. Filtering Criteria</strong></p>
-<p><strong>Length Filtering:</strong> - Minimum length: Typically
-1000-1200bp for 16S - Maximum length: 2000-2500bp for 16S (to remove
-chimeras/concatenated reads) - For full operons: 3500-5000bp</p>
-<p><strong>Quality Filtering:</strong> - Minimum mean Q-score: Often set
-at Q7-Q10 - Maximum expected error rate: 1-2% - Remove reads with
-homopolymer errors &gt;10bp</p>
-<p><strong>3. Amplicon-Specific QC</strong></p>
-<p><strong>Primer Trimming:</strong> - Remove primer sequences from read
-ends - Tools: Porechop, Cutadapt, or custom scripts - Verify successful
-removal</p>
-<p><strong>Orientation:</strong> - Check read orientation
-(forward/reverse) - Orient all reads in same direction</p>
-<p><strong>Chimera Detection:</strong> - Identify and remove chimeric
-sequences - Tools: VSEARCH, UCHIME</p>
+<li><strong>Optimize low-dimensional representation</strong>:
+<ul>
+<li>Initialize points randomly in 2D/3D space</li>
+<li>Iteratively move points to match the high-dimensional structure</li>
+<li>Minimize the difference between high-D and low-D graphs</li>
+</ul></li>
+<li><strong>Fuzzy topology</strong>:
+<ul>
+<li>Uses probabilistic “fuzzy sets” rather than hard boundaries</li>
+<li>Allows for more nuanced representation of relationships</li>
+</ul></li>
+</ol>
 </div>
-<div id="ont-recommended-analysis-tools" class="section level3">
-<h3>4. ONT-Recommended Analysis Tools</h3>
-<p><strong>EPI2ME Platform:</strong> - Cloud-based or local workflows -
-<strong>16S workflow</strong>: - Automatic quality filtering - Taxonomic
-classification using NCBI database - Diversity analysis - QC reporting
-with plots</p>
-<p><strong>Workflow Features:</strong> - Demultiplexing of barcoded
-samples - Quality filtering (Q&gt;7 default, adjustable) - Length
-filtering - Taxonomic assignment using Minimap2 + BLAST - Output: KRONA
-plots, abundance tables, QC reports</p>
-</div>
-<div id="community-standard-tools-for-amplicon-analysis" class="section level3">
-<h3>5. Community Standard Tools for Amplicon Analysis</h3>
-<p><strong>Denoising (Error Correction):</strong> -
-<strong>DADA2</strong>: Amplicon sequence variant (ASV) inference -
-<strong>Medaka</strong>: ONT-specific error correction using neural
-networks - <strong>RACON</strong>: Consensus polishing</p>
-<p><strong>Quality Metrics for Denoised Reads:</strong> - Number of
-unique ASVs - Read depth per ASV - Estimated error rate per ASV -
-Clustering statistics</p>
-<p><strong>Taxonomic Assignment:</strong> - <strong>Minimap2</strong>:
-Fast alignment to reference databases - <strong>BLAST/BLASTN</strong>:
-High-sensitivity alignment - <strong>Kraken2/Centrifuge</strong>: k-mer
-based classification - <strong>EPI2ME WIMP</strong>: What’s In My Pot
-workflow</p>
-<p><strong>Reference Databases:</strong> - NCBI 16S rRNA database -
-SILVA ribosomal RNA database - RDP (Ribosomal Database Project) - GTDB
-(Genome Taxonomy Database) - Custom databases for specific
-applications</p>
+<div id="key-parameters" class="section level3">
+<h3>Key Parameters</h3>
+<p><strong>n_neighbors</strong> (default: 15) - Controls how UMAP
+balances local vs. global structure - Small values (5-10): Emphasize
+local structure, fine detail - Large values (50-100): Emphasize global
+structure, broader patterns - For microbiome: 15-30 works well for
+strain-level clusters</p>
+<p><strong>min_dist</strong> (default: 0.1) - Minimum distance between
+points in low-dimensional space - Small values (0.001-0.01): Tight,
+densely packed clusters - Large values (0.5-1.0): More spread out, focus
+on broad structure - For microbiome: 0.01-0.1 to see distinct strain
+clusters</p>
+<p><strong>metric</strong> (default: ‘euclidean’) - Distance measure in
+high-dimensional space - Options: euclidean, manhattan, cosine, hamming,
+jaccard - For sequences: hamming (for aligned sequences) or custom k-mer
+distances</p>
 <hr />
 </div>
 </div>
-<div id="alternative-analysis-pipelines-supported-by-r-packages" class="section level2">
-<h2>Alternative Analysis Pipelines Supported by R Packages</h2>
-<p>Several R-based analysis pipelines have been developed specifically
-for nanopore amplicon sequencing and have demonstrated excellent
-performance in peer-reviewed studies:</p>
-<div id="nanoclust" class="section level3">
-<h3>1. NanoCLUST</h3>
-<p><strong>Description:</strong> - Complete R-based pipeline for
-nanopore 16S/ITS amplicon clustering and classification - Published by
-Rodriguez-Perez et al. (2021) in Bioinformatics - Designed specifically
-for long nanopore reads</p>
-<p><strong>R Package:</strong> - Available through Bioconductor -
-Package name: <code>NanoCLUST</code> - Installation:
-<code>BiocManager::install(&quot;NanoCLUST&quot;)</code></p>
-<p><strong>Key Features:</strong> - Quality filtering adapted for
-nanopore error profiles - UMAP-based clustering for ASV detection -
-Consensus sequence generation - Taxonomic classification using BLAST -
-Handles variable-length reads well - Built-in QC reporting</p>
-<p><strong>Performance:</strong> - Demonstrated high accuracy with
-nanopore R9.4.1 and R10 data - Superior to standard Illumina-based
-methods for long reads - Effective at genus and species-level
-classification</p>
-<p><strong>Workflow:</strong> 1. Quality filtering (length and quality
-score) 2. Clustering using UMAP dimensionality reduction 3. Consensus
-sequence generation per cluster 4. Taxonomic assignment via BLAST 5.
-Output: OTU table, taxonomic assignments, QC plots</p>
+<div id="how-umap-is-used-in-microbiome-sequence-analysis" class="section level2">
+<h2>How UMAP is Used in Microbiome Sequence Analysis</h2>
+<div id="application-to-16s23s-rrna-sequences" class="section level3">
+<h3>Application to 16S/23S rRNA Sequences</h3>
+<p>In your presentation, UMAP is used to visualize and cluster similar
+ribosomal RNA sequences from nanopore sequencing data. Here’s how:</p>
 </div>
-<div id="dada2-with-nanopore-adaptations" class="section level3">
-<h3>2. DADA2 (with Nanopore Adaptations)</h3>
-<p><strong>Description:</strong> - Originally developed for Illumina,
-but adapted for nanopore long reads - Callahan et al. (2016) Nature
-Methods; nanopore implementation by Calus et al. (2018) - Gold standard
-for ASV inference</p>
-<p><strong>R Package:</strong> - CRAN package: <code>dada2</code> -
-Installation: <code>install.packages(&quot;dada2&quot;)</code> - Bioconductor:
-<code>BiocManager::install(&quot;dada2&quot;)</code></p>
-<p><strong>Nanopore-Specific Modifications:</strong> - Modified error
-model for nanopore systematic errors - Adjusted quality filtering
-thresholds - Custom pooling strategies for lower coverage - Loess-based
-error rate estimation</p>
-<p><strong>Key Features:</strong> - Infers true biological sequences
-(ASVs) from noisy reads - Error correction without clustering - Removes
-chimeras - Assigns taxonomy using reference databases - Reproducible
-results (no arbitrary similarity thresholds)</p>
-<p><strong>Workflow for Nanopore:</strong> 1. Quality filtering:
-<code>filterAndTrim()</code> with nanopore-appropriate parameters 2.
-Learn error rates: <code>learnErrors()</code> with modified settings 3.
-Denoise: <code>dada()</code> algorithm to infer ASVs 4. Merge paired
-ends (if applicable) 5. Remove chimeras:
-<code>removeBimeraDenovo()</code> 6. Assign taxonomy:
-<code>assignTaxonomy()</code> against SILVA/RDP/GTDB</p>
-<p><strong>Performance:</strong> - Achieves &lt;1% error rate after
-denoising - Works well with R10.4.1 chemistry (Q&gt;15 reads) - Requires
-quality pre-filtering for best results</p>
+<div id="step-1-high-dimensional-representation" class="section level3">
+<h3>Step 1: High-Dimensional Representation</h3>
+<p><strong>Sequence Data as High-Dimensional Vectors:</strong></p>
+<p>Each DNA sequence read is represented in a high-dimensional space
+using one of several methods:</p>
+<p><strong>A. k-mer Frequency Vectors</strong> - Break sequences into
+overlapping k-mers (e.g., k=5: “ACGT” → “ACGTG”, “CGTGA”, etc.) - Count
+frequency of each k-mer - Creates a vector of dimension 4^k (e.g., 1024
+dimensions for k=5)</p>
+<p>Example:</p>
+<pre><code>Sequence: ACGTACGT
+k=3 kmers: ACG, CGT, GTA, TAC, ACG, CGT
+Vector: [ACG:2, CGT:2, GTA:1, TAC:1, ...]</code></pre>
+<p><strong>B. Alignment-Based Distance Matrix</strong> - Align all
+sequences to each other (or to reference) - Calculate pairwise distances
+(edit distance, % identity) - Create distance matrix (N×N for N
+sequences)</p>
+<p><strong>C. Embedding from Neural Networks</strong> - Pass sequences
+through learned embeddings - Each sequence becomes a dense vector (e.g.,
+512 dimensions)</p>
 </div>
-<div id="qiime2-r-interface-via-qiime2r" class="section level3">
-<h3>3. QIIME2 (R Interface via qiime2R)</h3>
-<p><strong>Description:</strong> - QIIME2 is Python-based but fully
-accessible through R via qiime2R package - Extensive validation for
-microbiome analysis - Bolyen et al. (2019) Nature Biotechnology</p>
-<p><strong>R Package:</strong> - <code>qiime2R</code> for importing
-QIIME2 artifacts into R - Installation:
-<code>devtools::install_github(&quot;jbisanz/qiime2R&quot;)</code> - Integrates
-with phyloseq, ggplot2, tidyverse</p>
-<p><strong>Key Features:</strong> - Complete pipeline from raw reads to
-publication figures - Multiple denoising options (Deblur, DADA2) -
-Extensive taxonomic databases - Diversity analysis (alpha/beta
-diversity) - Differential abundance testing - Visualization tools</p>
-<p><strong>Nanopore Support:</strong> - Import FASTQ files from nanopore
-sequencing - Quality filtering adapted for long reads - VSEARCH-based
-clustering - Integration with minimap2 for taxonomic assignment</p>
-<p><strong>Workflow:</strong> 1. Import data into QIIME2 2. Quality
-control and filtering 3. Denoising (DADA2 or Deblur) 4. Taxonomic
-classification 5. Export to R using qiime2R 6. Statistical analysis and
-visualization in R</p>
+<div id="step-2-umap-projection" class="section level3">
+<h3>Step 2: UMAP Projection</h3>
+<p><strong>Input</strong>: N sequences, each represented as a
+high-dimensional vector (e.g., 1024-d k-mer vector)</p>
+<p><strong>Output</strong>: N points in 2D space (x, y coordinates)</p>
+<p><strong>Process:</strong></p>
+<pre><code>High-D space (1024 dimensions)  →  UMAP  →  2D space (x, y)
+Each sequence is a point              Each sequence is a point
+Similar sequences are &quot;close&quot;         Similar sequences are &quot;close&quot;</code></pre>
 </div>
-<div id="longqc-custom-r-analysis" class="section level3">
-<h3>4. LongQC + Custom R Analysis</h3>
-<p><strong>Description:</strong> - LongQC provides comprehensive QC for
-long reads - Fukasawa et al. (2020) G3: Genes, Genomes, Genetics - Pairs
-well with custom R analysis scripts</p>
-<p><strong>R Integration:</strong> - Output can be parsed and analyzed
-in R - Works with tidyverse, ggplot2, phyloseq - Custom R scripts for
-downstream analysis</p>
-<p><strong>Key Features:</strong> - Detailed QC metrics for nanopore
-reads - Identifies systematic errors - Quality score distribution
-analysis - Read length and GC content assessment - Output: HTML reports,
-TSV files for R import</p>
-<p><strong>Custom R Analysis Components:</strong> - Read quality
-filtering using <code>ShortRead</code> or <code>Biostrings</code> -
-Clustering with <code>DECIPHER</code> package - Taxonomic assignment
-using BLAST via <code>rBLAST</code> - Community analysis with
-<code>vegan</code> and <code>phyloseq</code></p>
+<div id="step-3-visualization-and-interpretation" class="section level3">
+<h3>Step 3: Visualization and Interpretation</h3>
+<p><strong>What You See in Your Figures:</strong></p>
+<p>Looking at your Figures 2, 3, 10, 11, 13, 14, 15, 16 (the 2D UMAP
+plots):</p>
+<p><strong>Clusters = Similar Sequences</strong> - Each point represents
+one sequence read or ASV - Points close together = similar sequences -
+Distinct clusters = different taxa (species/strains)</p>
+<p><strong>Colors/Symbols = Taxonomic Labels</strong> - Different
+colors/symbols show different identified species - Allows validation: do
+sequences from the same species cluster together?</p>
+<p><strong>Read Clouds Around ASVs</strong> - ASVs (Amplicon Sequence
+Variants) are shown as labeled points - Surrounding cloud of points =
+individual noisy reads - Tight clouds = high-quality data with low error
+- Diffuse clouds = noisier data</p>
 </div>
-<div id="nanocomp-r-based-statistical-analysis" class="section level3">
-<h3>5. NanoComp + R-based Statistical Analysis</h3>
-<p><strong>Description:</strong> - NanoComp (part of NanoPack suite) for
-comparing multiple nanopore datasets - R packages for downstream
-statistical analysis - De Coster et al. (2018) Bioinformatics</p>
-<p><strong>R Packages Used:</strong> - <code>phyloseq</code>: Microbiome
-data handling and visualization - <code>vegan</code>: Community ecology
-analysis - <code>DESeq2</code>: Differential abundance analysis -
-<code>microbiome</code>: Microbiome-specific tools</p>
-<p><strong>Workflow:</strong> 1. QC with NanoComp (compare samples) 2.
-Import filtered data into R 3. Create phyloseq object 4. Diversity
-analysis (vegan) 5. Differential abundance (DESeq2) 6. Visualization
-(ggplot2)</p>
-</div>
-<div id="porechop-minimap2-r-analysis" class="section level3">
-<h3>6. Porechop + Minimap2 + R Analysis</h3>
-<p><strong>Description:</strong> - Streamlined pipeline combining
-command-line tools with R - Highly cited and widely used in microbiome
-studies - Flexible and customizable</p>
-<p><strong>R Components:</strong> - <code>Biostrings</code>: Sequence
-manipulation - <code>taxonomizr</code>: Taxonomy assignment in R -
-<code>DECIPHER</code>: Multiple sequence alignment and classification -
-<code>phyloseq</code>: Data management and analysis</p>
-<p><strong>Pipeline:</strong> 1. Porechop: Remove adapters and
-demultiplex 2. Quality filter: Custom R scripts or NanoFilt 3. Minimap2:
-Align to reference database 4. Parse alignments in R 5. Taxonomic
-assignment and abundance estimation 6. Statistical analysis and
-visualization</p>
-<p><strong>Key Features:</strong> - Fast alignment with minimap2 -
-Flexible R-based analysis - Integration with existing R microbiome tools
-- Custom QC and filtering parameters</p>
-</div>
-<div id="emu-expectation-maximization" class="section level3">
-<h3>7. Emu (Expectation-Maximization)</h3>
-<p><strong>Description:</strong> - Probabilistic taxonomic assignment
-for amplicon data - Particularly good for handling multi-mapping reads -
-Dougherty et al. (2022) Nature Methods</p>
-<p><strong>R Integration:</strong> - Output compatible with phyloseq -
-Can be analyzed using standard R microbiome packages - CSV/TSV output
-easily imported to R</p>
-<p><strong>Key Features:</strong> - EM algorithm for abundance
-estimation - Handles ambiguous alignments well - Strain-level resolution
-capability - Faster than BLAST-based methods - Integrates with
-minimap2</p>
+<div id="specific-use-cases-in-your-analysis" class="section level3">
+<h3>Specific Use Cases in Your Analysis</h3>
+<p><strong>1. Quality Assessment</strong> - Well-separated clusters →
+good taxonomic resolution - Overlapping clusters → sequences too similar
+or high error rates - Outlier points → potential contaminants or
+errors</p>
+<p><strong>2. ASV Validation</strong> - ASV should be in the center of
+its read cluster - Reads should cluster tightly around their ASV -
+Multiple ASVs in one cloud → potential over-splitting</p>
+<p><strong>3. Taxonomic Structure</strong> - Clear separation between
+species (Figures 10, 11) - Sub-clusters within species = strains
+(Figures 15, 16) - Validates strain-level resolution capability</p>
+<p><strong>4. Data Quality Comparison</strong> - Sereika data (Figures
+2, 3): Tight, well-separated clusters - Srinivas data (Figures 8, 9,
+10): More diffuse, reflecting lower quality - Simulated data (Figures
+13, 14): Very clean, as expected</p>
 <hr />
 </div>
 </div>
-<div id="comparison-of-r-based-pipelines" class="section level2">
-<h2>Comparison of R-Based Pipelines</h2>
-<table>
+<div id="advantages-of-umap-for-sequence-analysis" class="section level2">
+<h2>Advantages of UMAP for Sequence Analysis</h2>
+<div id="why-umap-works-well-for-microbiome-data" class="section level3">
+<h3>Why UMAP Works Well for Microbiome Data</h3>
+<p><strong>1. Preserves Hierarchical Structure</strong> - Maintains both
+species-level and strain-level relationships - Allows visualization of
+taxonomic hierarchy in 2D</p>
+<p><strong>2. Handles High Dimensionality</strong> - Sequences have
+thousands of features (k-mers, positions) - UMAP effectively reduces to
+2D without losing key relationships</p>
+<p><strong>3. Scalable</strong> - Can handle tens of thousands of
+sequences - Faster than many alternatives (e.g., t-SNE)</p>
+<p><strong>4. Deterministic (with fixed seed)</strong> - Reproducible
+results - Important for scientific analysis</p>
+<p><strong>5. Tunable</strong> - Parameters allow focus on local
+(strain) or global (genus/family) structure - Can be optimized for
+specific applications</p>
+<p><strong>6. Intuitive Interpretation</strong> - Distances in 2D
+roughly correspond to sequence similarity - Clusters are visually
+obvious</p>
+<hr />
+</div>
+</div>
+<div id="alternative-dimensionality-reduction-methods" class="section level2">
+<h2>Alternative Dimensionality Reduction Methods</h2>
+<div id="t-sne-t-distributed-stochastic-neighbor-embedding" class="section level3">
+<h3>1. t-SNE (t-Distributed Stochastic Neighbor Embedding)</h3>
+<p><strong>Description:</strong> - Earlier dimensionality reduction
+method (pre-UMAP) - Very popular in genomics and single-cell analysis -
+Focuses heavily on preserving local structure</p>
+<p><strong>How it Works:</strong> - Converts high-D distances to
+probability distributions - Optimizes low-D representation to match
+these distributions - Uses Student’s t-distribution in low-D space</p>
+<p><strong>Advantages:</strong> - Excellent at revealing local clusters
+- Widely used and well-understood - Good for visualization</p>
+<p><strong>Disadvantages:</strong> - <strong>Much slower than
+UMAP</strong> (O(N²) complexity) - <strong>Poor at preserving global
+structure</strong> - <strong>Stochastic</strong> - different runs give
+different results - <strong>Crowding problem</strong> - struggles with
+high-D data - Not suitable for &gt;10,000 sequences</p>
+<p><strong>When to Use:</strong> - Small to medium datasets (&lt;5,000
+sequences) - When only local clusters matter - Historical comparison
+with older studies</p>
+<p><strong>R Implementation:</strong></p>
+<pre class="r"><code>library(Rtsne)
+tsne_result &lt;- Rtsne(sequence_matrix, 
+                     dims = 2, 
+                     perplexity = 30,
+                     max_iter = 1000)</code></pre>
+</div>
+<div id="pca-principal-component-analysis" class="section level3">
+<h3>2. PCA (Principal Component Analysis)</h3>
+<p><strong>Description:</strong> - Classical linear dimensionality
+reduction - Projects data onto principal components (directions of
+maximum variance)</p>
+<p><strong>How it Works:</strong> - Compute covariance matrix of
+features - Find eigenvectors (principal components) - Project data onto
+top 2 eigenvectors</p>
+<p><strong>Advantages:</strong> - <strong>Fast</strong> - O(N)
+complexity - <strong>Deterministic</strong> - always same result -
+<strong>Interpretable</strong> - PCs have clear mathematical meaning -
+<strong>Global structure</strong> - preserves large-scale relationships
+well</p>
+<p><strong>Disadvantages:</strong> - <strong>Linear</strong> - assumes
+linear relationships - <strong>Poor for complex manifolds</strong> -
+misses non-linear patterns - Often doesn’t separate clusters as clearly
+- First 2 PCs may not capture enough variance</p>
+<p><strong>When to Use:</strong> - Quick exploratory analysis - Data
+with linear structure - When you need deterministic results -
+Preprocessing before other methods</p>
+<p><strong>R Implementation:</strong></p>
+<pre class="r"><code>pca_result &lt;- prcomp(sequence_matrix, center = TRUE, scale. = TRUE)
+plot(pca_result$x[,1], pca_result$x[,2])</code></pre>
+</div>
+<div id="mds-multidimensional-scaling" class="section level3">
+<h3>3. MDS (Multidimensional Scaling)</h3>
+<p><strong>Description:</strong> - Places points in low-D space to
+preserve pairwise distances - Classical method predating PCA</p>
+<p><strong>Types:</strong> - <strong>Classical MDS</strong>: Equivalent
+to PCA on distance matrix - <strong>Metric MDS</strong>: Preserves
+actual distances - <strong>Non-metric MDS</strong>: Preserves rank order
+of distances</p>
+<p><strong>Advantages:</strong> - <strong>Works directly with distance
+matrices</strong> - good for sequence alignments - <strong>Preserves
+global distances</strong> well - <strong>Deterministic</strong>
+(classical MDS)</p>
+<p><strong>Disadvantages:</strong> - <strong>Slow</strong> for large
+datasets - O(N³) - <strong>Linear</strong> assumptions (classical MDS) -
+<strong>May not separate clusters</strong> as clearly as UMAP/t-SNE</p>
+<p><strong>When to Use:</strong> - You have pre-computed distance matrix
+- Global distance preservation is critical - Small to medium
+datasets</p>
+<p><strong>R Implementation:</strong></p>
+<pre class="r"><code>dist_matrix &lt;- dist(sequence_matrix)
+mds_result &lt;- cmdscale(dist_matrix, k = 2)</code></pre>
+</div>
+<div id="hierarchical-clustering-dendrogram" class="section level3">
+<h3>4. Hierarchical Clustering + Dendrogram</h3>
+<p><strong>Description:</strong> - Creates tree structure showing
+relationships - Not strictly dimensionality reduction, but serves
+similar purpose</p>
+<p><strong>How it Works:</strong> - Agglomerative: Start with individual
+points, merge closest - Divisive: Start with all points, recursively
+split - Creates hierarchical tree (dendrogram)</p>
+<p><strong>Advantages:</strong> - <strong>Shows hierarchical
+relationships</strong> explicitly - <strong>Natural for taxonomic
+data</strong> (matches phylogenetic trees) -
+<strong>Deterministic</strong> - <strong>No dimensionality
+choice</strong> needed</p>
+<p><strong>Disadvantages:</strong> - <strong>Difficult to
+visualize</strong> for &gt;100 sequences - <strong>No 2D spatial
+layout</strong> - harder to see clusters - <strong>Doesn’t
+scale</strong> to tens of thousands of sequences</p>
+<p><strong>When to Use:</strong> - Small datasets (&lt;200 sequences) -
+When hierarchy is important - Supplementary to 2D projections</p>
+<p><strong>R Implementation:</strong></p>
+<pre class="r"><code>hc &lt;- hclust(dist(sequence_matrix), method = &quot;ward.D2&quot;)
+plot(hc)</code></pre>
+</div>
+<div id="phate-potential-of-heat-diffusion-for-affinity-based-transition-embedding" class="section level3">
+<h3>5. PHATE (Potential of Heat-diffusion for Affinity-based Transition
+Embedding)</h3>
+<p><strong>Description:</strong> - Newer method (2019) using diffusion
+geometry - Preserves both local and global structure - Specifically
+designed for biological data</p>
+<p><strong>How it Works:</strong> - Constructs diffusion operator on
+data - Computes potential distances via heat diffusion - Embeds using
+these distances</p>
+<p><strong>Advantages:</strong> - <strong>Excellent for continuous
+processes</strong> (differentiation, trajectories) - <strong>Preserves
+branching structure</strong> - <strong>Denoises data</strong> naturally
+- <strong>Better than t-SNE</strong> at global structure</p>
+<p><strong>Disadvantages:</strong> - <strong>Relatively new</strong> -
+less tested than UMAP - <strong>Slower than UMAP</strong> - <strong>More
+parameters</strong> to tune - <strong>Less widely used</strong> in
+microbiome field</p>
+<p><strong>When to Use:</strong> - Data with continuous transitions -
+When trajectory/branching structure exists - Developmental or temporal
+data</p>
+<p><strong>R Implementation:</strong></p>
+<pre class="r"><code>library(phateR)
+phate_result &lt;- phate(sequence_matrix)</code></pre>
+</div>
+<div id="isomap-isometric-mapping" class="section level3">
+<h3>6. Isomap (Isometric Mapping)</h3>
+<p><strong>Description:</strong> - Non-linear dimensionality reduction
+using geodesic distances - Extends MDS to non-linear manifolds</p>
+<p><strong>How it Works:</strong> - Construct k-nearest neighbor graph -
+Compute geodesic distances (shortest path on graph) - Apply classical
+MDS to geodesic distance matrix</p>
+<p><strong>Advantages:</strong> - <strong>Preserves geodesic
+distances</strong> on manifold - <strong>Better than PCA</strong> for
+non-linear data - <strong>Deterministic</strong></p>
+<p><strong>Disadvantages:</strong> - <strong>Sensitive to noise</strong>
+and outliers - <strong>Slower</strong> than PCA/UMAP - <strong>Can
+fail</strong> if manifold is not well-sampled - <strong>Not widely
+used</strong> in microbiome analysis</p>
+<p><strong>When to Use:</strong> - Data lies on well-defined manifold -
+Medium-sized datasets - Research/exploratory purposes</p>
+<p><strong>R Implementation:</strong></p>
+<pre class="r"><code>library(vegan)
+iso &lt;- isomap(dist(sequence_matrix), k = 10)</code></pre>
+<hr />
+</div>
+</div>
+<div id="comparison-table" class="section level2">
+<h2>Comparison Table</h2>
+<table style="width:100%;">
 <colgroup>
-<col width="16%" />
-<col width="18%" />
-<col width="16%" />
+<col width="10%" />
+<col width="9%" />
 <col width="21%" />
-<col width="11%" />
-<col width="16%" />
+<col width="24%" />
+<col width="20%" />
+<col width="13%" />
 </colgroup>
 <thead>
 <tr class="header">
-<th>Pipeline</th>
-<th>R Package</th>
-<th>Best For</th>
-<th>QC Features</th>
+<th>Method</th>
 <th>Speed</th>
-<th>Accuracy</th>
+<th>Local Structure</th>
+<th>Global Structure</th>
+<th>Deterministic</th>
+<th>Best For</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
-<td>NanoCLUST</td>
-<td>Bioconductor</td>
-<td>16S/ITS amplicons</td>
-<td>Built-in</td>
-<td>Moderate</td>
-<td>High</td>
-</tr>
-<tr class="even">
-<td>DADA2</td>
-<td>CRAN/Bioconductor</td>
-<td>ASV inference</td>
-<td>Extensive</td>
-<td>Moderate</td>
-<td>Very High</td>
-</tr>
-<tr class="odd">
-<td>qiime2R</td>
-<td>GitHub</td>
-<td>Full pipeline</td>
-<td>Via QIIME2</td>
-<td>Moderate</td>
-<td>High</td>
-</tr>
-<tr class="even">
-<td>phyloseq</td>
-<td>Bioconductor</td>
-<td>Data analysis</td>
-<td>Visualization</td>
+<td><strong>UMAP</strong></td>
 <td>Fast</td>
-<td>N/A*</td>
+<td>Excellent</td>
+<td>Good</td>
+<td>Yes*</td>
+<td>General purpose, large datasets</td>
+</tr>
+<tr class="even">
+<td><strong>t-SNE</strong></td>
+<td>Slow</td>
+<td>Excellent</td>
+<td>Poor</td>
+<td>No</td>
+<td>Small datasets, local clusters</td>
 </tr>
 <tr class="odd">
-<td>Custom (Biostrings)</td>
-<td>Bioconductor</td>
-<td>Flexibility</td>
-<td>Custom</td>
-<td>Variable</td>
-<td>Variable</td>
+<td><strong>PCA</strong></td>
+<td>Very Fast</td>
+<td>Poor</td>
+<td>Excellent</td>
+<td>Yes</td>
+<td>Quick exploration, linear data</td>
+</tr>
+<tr class="even">
+<td><strong>MDS</strong></td>
+<td>Slow</td>
+<td>Good</td>
+<td>Excellent</td>
+<td>Yes</td>
+<td>Distance preservation</td>
+</tr>
+<tr class="odd">
+<td><strong>Hierarchical</strong></td>
+<td>Moderate</td>
+<td>N/A</td>
+<td>Good</td>
+<td>Yes</td>
+<td>Small datasets, taxonomy</td>
+</tr>
+<tr class="even">
+<td><strong>PHATE</strong></td>
+<td>Moderate</td>
+<td>Excellent</td>
+<td>Excellent</td>
+<td>Yes*</td>
+<td>Trajectories, time series</td>
+</tr>
+<tr class="odd">
+<td><strong>Isomap</strong></td>
+<td>Moderate</td>
+<td>Good</td>
+<td>Good</td>
+<td>Yes</td>
+<td>Manifold data</td>
 </tr>
 </tbody>
 </table>
-<p>*phyloseq is for analysis after taxonomic assignment</p>
+<p>*With fixed random seed</p>
 <hr />
 </div>
-<div id="recommended-r-based-workflow-for-your-application" class="section level2">
-<h2>Recommended R-Based Workflow for Your Application</h2>
-<p>Based on your work with strain-level resolution and emphasis on
-quality control:</p>
-<div id="option-1-high-quality-asv-inference-recommended" class="section level3">
-<h3>Option 1: High-Quality ASV Inference (Recommended)</h3>
-<pre class="r"><code># Install packages
-if (!requireNamespace(&quot;BiocManager&quot;, quietly = TRUE))
-    install.packages(&quot;BiocManager&quot;)
-BiocManager::install(c(&quot;dada2&quot;, &quot;phyloseq&quot;, &quot;DECIPHER&quot;))
-install.packages(c(&quot;ggplot2&quot;, &quot;vegan&quot;))
+<div id="why-umap-is-preferred-for-your-analysis" class="section level2">
+<h2>Why UMAP is Preferred for Your Analysis</h2>
+<p>Based on your microbiome work with strain-level resolution:</p>
+<div id="advantages-for-your-application" class="section level3">
+<h3>Advantages for Your Application</h3>
+<ol style="list-style-type: decimal">
+<li><strong>Multi-scale Resolution</strong>
+<ul>
+<li>Separates species-level clusters (global)</li>
+<li>Resolves strain-level differences (local)</li>
+<li>Critical for your strain-level goals</li>
+</ul></li>
+<li><strong>Scalability</strong>
+<ul>
+<li>Handles 50,000+ reads efficiently</li>
+<li>Your simulated C11 dataset has ~98,000 reads</li>
+<li>t-SNE would be prohibitively slow</li>
+</ul></li>
+<li><strong>Quality Assessment</strong>
+<ul>
+<li>Tight clusters indicate high-quality data (Sereika)</li>
+<li>Diffuse clusters show lower quality (Srinivas)</li>
+<li>Clear visual QC metric</li>
+</ul></li>
+<li><strong>Validation</strong>
+<ul>
+<li>ASVs should center their read clusters</li>
+<li>Easy to spot errors and outliers</li>
+<li>Confirms taxonomic assignments</li>
+</ul></li>
+<li><strong>Publication-Ready</strong>
+<ul>
+<li>Standard in microbiome field</li>
+<li>Reviewers familiar with interpretation</li>
+<li>Consistent with your cited papers</li>
+</ul></li>
+</ol>
+</div>
+<div id="parameters-used-in-your-analysis" class="section level3">
+<h3>Parameters Used in Your Analysis</h3>
+<p>Based on your figures, likely settings:</p>
+<pre class="r"><code>library(umap)
 
-# Workflow
-1. Quality filter with DADA2 (adjusted for nanopore)
-2. Denoise to ASVs (error rate &lt;0.01)
-3. Taxonomic assignment (SILVA/GTDB)
-4. Import to phyloseq
-5. Statistical analysis</code></pre>
-<p><strong>Advantages:</strong> - Proven track record - Excellent error
-correction - Strong R ecosystem - Reproducible ASVs</p>
-</div>
-<div id="option-2-nanopore-optimized-alternative" class="section level3">
-<h3>Option 2: Nanopore-Optimized (Alternative)</h3>
-<pre class="r"><code># Install NanoCLUST
-BiocManager::install(&quot;NanoCLUST&quot;)
+# Typical microbiome settings
+umap_config &lt;- umap.defaults
+umap_config$n_neighbors &lt;- 15-30  # Balance local/global
+umap_config$min_dist &lt;- 0.01-0.1  # Tight clusters
+umap_config$metric &lt;- &quot;euclidean&quot; # or &quot;hamming&quot; for sequences
 
-# Workflow
-1. Run NanoCLUST pipeline
-2. Export results
-3. Downstream analysis with phyloseq</code></pre>
-<p><strong>Advantages:</strong> - Designed for nanopore - Built-in QC -
-UMAP clustering handles long reads well</p>
+umap_result &lt;- umap(sequence_features, config = umap_config)
+
+plot(umap_result$layout[,1], 
+     umap_result$layout[,2],
+     col = species_colors,
+     pch = 19)</code></pre>
 <hr />
 </div>
 </div>
-<div id="critical-qc-checkpoints-for-microbiome-studies" class="section level2">
-<h2>Critical QC Checkpoints for Microbiome Studies</h2>
-<div id="pre-sequencing" class="section level3">
-<h3>Pre-Sequencing</h3>
-<ol style="list-style-type: decimal">
-<li>PCR product verification (gel electrophoresis, Bioanalyzer)</li>
-<li>Concentration and purity assessment</li>
-<li>Library QC (fragment size, concentration)</li>
-</ol>
+<div id="practical-recommendations" class="section level2">
+<h2>Practical Recommendations</h2>
+<div id="when-to-use-each-method" class="section level3">
+<h3>When to Use Each Method</h3>
+<p><strong>Use UMAP when:</strong> - You have &gt;1,000 sequences - You
+need both local and global structure - You want strain-level resolution
+- Standard microbiome analysis</p>
+<p><strong>Use t-SNE when:</strong> - You have &lt;5,000 sequences -
+Only local clusters matter - Comparing to older literature</p>
+<p><strong>Use PCA when:</strong> - Quick initial exploration - Checking
+for batch effects - Data is approximately linear</p>
+<p><strong>Use Hierarchical Clustering when:</strong> - &lt;200
+sequences - Phylogenetic relationships important - Creating
+supplementary figures</p>
+<p><strong>Use Multiple Methods when:</strong> - Validating findings -
+Exploring data structure - Publication requires comparison</p>
 </div>
-<div id="during-sequencing" class="section level3">
-<h3>During Sequencing</h3>
-<ol style="list-style-type: decimal">
-<li>Monitor pore occupancy (should remain &gt;50% of initial)</li>
-<li>Real-time read length distribution</li>
-<li>Throughput rates</li>
-</ol>
-</div>
-<div id="post-sequencing" class="section level3">
-<h3>Post-Sequencing</h3>
-<ol style="list-style-type: decimal">
-<li><strong>Read quality distribution</strong>: Majority should have
-Q&gt;10</li>
-<li><strong>Read length filtering</strong>: Remove outliers, keep
-expected size ±500bp</li>
-<li><strong>Yield per sample</strong>: Ensure adequate coverage
-(&gt;10,000 reads minimum)</li>
-<li><strong>Demultiplexing efficiency</strong>: Check for barcode
-cross-contamination</li>
-</ol>
-</div>
-<div id="post-denoising" class="section level3">
-<h3>Post-Denoising</h3>
-<ol style="list-style-type: decimal">
-<li><strong>ASV quality</strong>: Mean error rate &lt;0.01 (1%)</li>
-<li><strong>Chimera rate</strong>: Should be &lt;5% of total reads</li>
-<li><strong>Taxonomic assignment rate</strong>: &gt;80% of ASVs should
-classify</li>
-<li><strong>Negative controls</strong>: Verify minimal
-contamination</li>
-</ol>
+<div id="validation-strategy" class="section level3">
+<h3>Validation Strategy</h3>
+<p>For robust analysis, consider using multiple methods:</p>
+<pre class="r"><code># 1. Quick exploration
+pca &lt;- prcomp(data)
+
+# 2. Main analysis
+umap_result &lt;- umap(data)
+
+# 3. Validation
+tsne_result &lt;- Rtsne(data)  # if dataset not too large
+
+# 4. Compare
+# Do similar sequences cluster together in all methods?</code></pre>
 <hr />
 </div>
 </div>
-<div id="key-considerations-for-your-microbiome-analysis" class="section level2">
-<h2>Key Considerations for Your Microbiome Analysis</h2>
-<p>Based on your presentation work with the Sereika, Srinivas, and
-simulated datasets:</p>
-<p><strong>Quality Threshold of 0.008 Error Rate:</strong> - Your
-analysis identified this as a critical threshold - Sereika data achieved
-this; Srinivas data did not - This aligns with ONT recommendations for
-Q&gt;12 reads - Error rate of 0.008 ≈ Q21 (very high quality for
-nanopore)</p>
-<p><strong>R10.4.1 Flow Cells:</strong> - Both Sereika and Srinivas used
-this latest chemistry - Improved accuracy over older R9.4.1 pores -
-Better suited for strain-level resolution</p>
-<p><strong>Full Operon Sequencing:</strong> - 16S-ITS-23S provides
-superior taxonomic resolution - Longer reads (3-5kb) require careful
-quality filtering - Higher information content enables strain-level
-identification</p>
-<p><strong>Denoising Importance:</strong> - RAD denoiser (used in your
-work) is critical for quality - Reduces error rate from ~2-5% to &lt;1%
-- Essential for accurate ASV generation - DADA2 in R provides comparable
-or better results</p>
-<hr />
-</div>
-<div id="references-and-resources" class="section level2">
-<h2>References and Resources</h2>
-<p><strong>Official ONT Documentation:</strong> - Oxford Nanopore
-Technologies Community (community.nanoporetech.com) - Protocol
-documentation for amplicon sequencing - MinKNOW user manual - EPI2ME
-workflow documentation</p>
-<p><strong>R Package Documentation:</strong> - DADA2: <a href="https://benjjneb.github.io/dada2/" class="uri">https://benjjneb.github.io/dada2/</a> - phyloseq: <a href="https://joey711.github.io/phyloseq/" class="uri">https://joey711.github.io/phyloseq/</a> - qiime2R: <a href="https://github.com/jbisanz/qiime2R" class="uri">https://github.com/jbisanz/qiime2R</a> - NanoCLUST: <a href="https://bioconductor.org/packages/NanoCLUST/" class="uri">https://bioconductor.org/packages/NanoCLUST/</a></p>
-<p><strong>Key Publications:</strong> - Sereika et al. (2022) - R10.4.1
-performance validation - Srinivas et al. (2025) - 16S-ITS-23S operon
-sequencing evaluation - Callahan et al. (2016) - DADA2 methodology -
-Rodriguez-Perez et al. (2021) - NanoCLUST for nanopore - Bolyen et
-al. (2019) - QIIME2 platform</p>
-<p><strong>Software Resources:</strong> - MinKNOW/EPI2ME: Oxford
-Nanopore official software - Guppy/Dorado: Basecallers - NanoPack: QC
-tools suite - QIIME2: Comprehensive microbiome analysis platform with
-nanopore support - Bioconductor: R packages for sequence analysis</p>
+<div id="references" class="section level2">
+<h2>References</h2>
+<p><strong>UMAP:</strong> - McInnes, L., Healy, J., &amp; Melville, J.
+(2018). UMAP: Uniform Manifold Approximation and Projection for
+Dimension Reduction. arXiv:1802.03426.</p>
+<p><strong>t-SNE:</strong> - van der Maaten, L., &amp; Hinton, G.
+(2008). Visualizing Data using t-SNE. Journal of Machine Learning
+Research, 9, 2579-2605.</p>
+<p><strong>PHATE:</strong> - Moon, K.R., et al. (2019). Visualizing
+structure and transitions in high-dimensional biological data. Nature
+Biotechnology, 37, 1482-1492.</p>
+<p><strong>Microbiome Applications:</strong> - Rodriguez-Perez, H., et
+al. (2021). NanoCLUST: a species-level analysis of 16S rRNA nanopore
+sequencing data. Bioinformatics, 37, 1600-1601. - Bokulich, N.A., et
+al. (2018). Optimizing taxonomic classification of marker-gene amplicon
+sequences. PeerJ, 6, e3208.</p>
+<p><strong>R Packages:</strong> - <code>umap</code>: <a href="https://cran.r-project.org/package=umap" class="uri">https://cran.r-project.org/package=umap</a> -
+<code>Rtsne</code>: <a href="https://cran.r-project.org/package=Rtsne" class="uri">https://cran.r-project.org/package=Rtsne</a> -
+<code>phateR</code>: <a href="https://github.com/KrishnaswamyLab/phateR" class="uri">https://github.com/KrishnaswamyLab/phateR</a></p>
 </div>
 </div>
 

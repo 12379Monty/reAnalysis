@@ -359,9 +359,9 @@ in the downstream read-outs
       - [_M3A_study_design_CB_notes.pdf]
   - [nanopore_talk/microbiome_slides.html](nanopore_talk/microbiome_slides.html)
       - [nanopore_talk/nanopore_background.html](nanopore_talk/nanopore_background.html)
+      - [nanopore_talk/umap_explained.html](nanopore_talk/umap_explained.html)
+      - [nanopore_talk/pdf_image_extraction.html](nanopore_talk/pdf_image_extraction.html)
 
-
-/Users/fcollin/Documents/Projects/reAnalysis/Scripts/nanopore_talk/pdf_image_extraction.html 
 
 <br/>
 
