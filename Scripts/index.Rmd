@@ -351,7 +351,7 @@ in the downstream read-outs
 
 <br/>
 
-## Miscellanious  {-}
+## Miscellanious  
   - [_M4A-intro_IUV.html](./_M4A-intro_IUV.html) 
   - [_M5A-cf_ddPCR_seq.html]
   - [_M6A-randomness_in_calls.html] 
