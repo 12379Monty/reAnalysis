@@ -493,29 +493,34 @@ line-height: 1.0em;
 vertical-align: top;
 }
 </style>
-<h2 id="genomics-today-distorting-a-signal-foundational-to-biological-discovery-and-medicine">Genomics
+<h2 id="genomics-today-distorting-a-signal-foundational-to-biological-discovery-and-medicine1">Genomics
 today: distorting a signal foundational to biological discovery and
-medicine?</h2>
+medicine?<span style="color:green;"><span class="math inline">\(^1\)</span></span></h2>
 <ul>
 <li>Operating in a paradigm designed for a different era of data and
-sampling <span style="color:grey;"></li>
-<li>Not fully statistical or mathematical </span></li>
-<li>No unification across “microniches” of biology</li>
-<li>Reference-dependent</li>
+sampling</li>
+<li>Not fully statistical or mathematical<span style="color:green;"><span class="math inline">\(^2\)</span></span>.</li>
+<li>No unification across “microniches” of biology<span style="color:green;"><span class="math inline">\(^3\)</span></span>.</li>
+<li>Reference-dependent<span style="color:green;"><span class="math inline">\(^4\)</span></span>.</li>
 <li>Missing biology</li>
 <li>(Computationally intensive)</li>
 <li>Not AI ready</li>
 </ul>
-<blockquote>
-<p>Current paradigms limit discovery and are not designed for today’s
-data scale <span style="font-size:smaller;"> <a href="https://www.youtube.com/watch?v=nHuc5mlQRQw">Dr. Salzman’s CGSI
-2024 talk</a> </span></p>
-</blockquote>
 </section>
 <section class="slide level1">
 
-<p>Note that the alignment of reads to a known sequence has unstated
-data quality value - garbeg reads don’t align.</p>
+<ul>
+<li><p><span style="color:green;">1</span>: <a href="https://youtu.be/nHuc5mlQRQw?t=64">Dr. Salzman’s CGSI 2024
+talk</a>.</p></li>
+<li><p><span style="color:green;">2</span>: An algorithm doesn’t have to
+be statistical or mathematical to work well.</p></li>
+<li><p><span style="color:green;">3</span>: Do we expect a
+one-size-fits-all peri-omic solution common to microniches of
+biology?</p></li>
+<li><p><span style="color:green;">4</span>: The alignment of reads to a
+known sequence provides a powerful QC/QA element. In the absence of this
+element what supplemental QC/QA measures are included.</p></li>
+</ul>
 </section>
 <section class="slide level1">
 
@@ -544,8 +549,7 @@ analysis</em> of raw sequence data using anchor-target structure</li>
 <h2 id="why-the-anchor-target-structure-works">Why the Anchor-Target
 Structure Works</h2>
 <ul>
-<li><strong>Biological signal is inherently structured</strong>: - the
-centrsl od=
+<li><strong>Biological signal is inherently structured</strong>:
 <ul>
 <li>Variation occurs in specific patterns adjacent to conserved
 regions</li>
@@ -561,28 +565,40 @@ regions</li>
 <section class="slide level1">
 
 <ul>
-<li><strong>Statistical power through structure</strong>:
+<li><strong>Statistical power<span style="color:green;"><span class="math inline">\(^1\)</span></span> through structure</strong>:
 <ul>
 <li>Anchors provide context for variation</li>
 <li>Targets capture the biologically meaningful differences</li>
 <li>Enables detection of patterns without prior knowledge</li>
 <li>Works across diverse biological domains</li>
 </ul></li>
-<li><strong>Unified mathematical framework</strong>:
+<li><strong>Unified mathematical framework</strong><span style="color:green;"><span class="math inline">\(^2\)</span></span>:
 <ul>
-<li><em>Contingency tables</em> of anchor-target pairs</li>
+<li><em>Contingency tables</em><span style="color:green;"><span class="math inline">\(^3\)</span></span> of anchor-target pairs</li>
 <li>Same approach applies to viruses, human cells, non-model
 organisms</li>
 </ul></li>
 </ul>
-<blockquote>
-<p>we are interested in comparing distributions between samples. The
-data has the shape of a contingency table, but is it analogous?</p>
-</blockquote>
 </section>
 <section class="slide level1">
 
-<p>We need to define, and examine power.</p>
+<ul>
+<li><p><span style="color:green;">1</span>: Statistical power, in the
+technical sense of the word, needs to be demonstrated. Choosing the
+chi-square test as comparator is unfortunate as it is not known to be a
+particularly powerful test. More respectable comparators can be
+identified by surveying the RNA-Seq literature.</p></li>
+<li><p><span style="color:green;">2</span>: I’m not sure that this is a
+distinguishing feature of this approach as many RNA-Seq methods can also
+make that claim. In the end what we care about is applications and
+performance.</p></li>
+<li><p><span style="color:green;">3</span>: A contingency table is a way
+succinctly summarize sample counts which can be cross-classified by 2
+categorical variables. The contingency table summarization does not
+confer any analytical advantages other than providing a natural and
+sufficient set of summary statistics and a way to compute chi-squared
+statistics.</p></li>
+</ul>
 </section>
 <section class="slide level1">
 
@@ -620,9 +636,17 @@ a<strong>L</strong>ignment <strong>A</strong>gnostic
 <ul>
 <li>Originally used chi-squared test; Now uses IASIUS</li>
 <li>Identifies <strong>statistically significant</strong>
-sample-specific variation</li>
+sample-specific variation<span style="color:green;"><span class="math inline">\(^1\)</span></span></li>
 </ul></li>
 </ol>
+</section>
+<section class="slide level1">
+
+<ul>
+<li><span style="color:green;">1</span>: The identification step is
+application specific and should be set empirically; significance is just
+one option for identification.</li>
+</ul>
 </section>
 <section class="slide level1">
 
@@ -632,7 +656,7 @@ Statistical Tests</h2>
 <li><strong>Pearson’s chi-squared test</strong> requires expected cell
 counts ≥5 for valid inference
 <ul>
-<li>Unreliable for sparse tables common in genomic data</li>
+<li>Unreliable for sparse tables</li>
 <li>Provides little insight into <em>which</em> rows/columns drive
 differences</li>
 <li>Computationally inefficient for large tables</li>
@@ -643,6 +667,13 @@ differences</li>
 <li>Require iterative procedures that may not converge</li>
 <li>Poor performance with sparse data</li>
 </ul></li>
+</ul>
+</section>
+<section class="slide level1">
+
+<h2 id="limitations-of-current-statistical-tests-contd">Limitations of
+Current Statistical Tests (cont’d)</h2>
+<ul>
 <li><strong>Exact tests</strong> (Fisher’s, Barnard’s, etc.):
 <ul>
 <li>Computationally prohibitive for large tables</li>
@@ -704,14 +735,9 @@ table: <span class="math inline">\(p_{i,j} =
 
 <ul>
 <li><strong>Interpretation</strong>: Measures deviation from
-independence model, optimized for maximum statistical power</li>
+independence model, <em>optimized for maximum statistical
+power</em><span class="math inline">\(^1\)</span></li>
 </ul>
-<blockquote>
-<p>What is the trade off between power ans size?</p>
-</blockquote>
-<blockquote>
-<p>Seems likely dependent in dataset size</p>
-</blockquote>
 </section>
 <section class="slide level1">
 
@@ -784,10 +810,10 @@ asymptotic distribution</li>
 | Closed-form P-values | No | Yes |
 | Asymptotic validity | Yes | Yes |
 
--->
-</section>
-<section class="slide level1">
 
+---
+
+-->
 <h2 id="for-biologists-why-this-matters">For Biologists: Why This
 Matters</h2>
 <ul>
@@ -818,21 +844,25 @@ function</li>
 </section>
 <section class="slide level1">
 
-<h2 id="for-bioinformaticians-technical-benefits">For Bioinformaticians:
-Technical Benefits</h2>
+<h2 id="for-bioinformaticians-technical-benefits-1">For
+Bioinformaticians: Technical Benefits <span style="color:green;"><span class="math inline">\(^1\)</span></span></h2>
 <ul>
 <li><strong>Computational efficiency</strong>
 <ul>
 <li>Avoids computationally expensive alignment</li>
 <li>Scales to large datasets</li>
 </ul></li>
-<li><strong>Statistical Benefits</strong> ???
+<li><strong>Statistical Benefits</strong><span style="color:green;"><span class="math inline">\(^1\)</span></span>:
 <ul>
 <li>OASIS provides finite-sample valid statistics</li>
 <li>Closed-form P-value calculations avoid permutation testing</li>
 <li>Controls for multiple testing</li>
 </ul></li>
 </ul>
+<blockquote>
+<p><span style="color:green;">1</span>: These benefits are neither
+unique to SPLASH, nor necessary.</p>
+</blockquote>
 </section>
 <section class="slide level1">
 
@@ -1012,35 +1042,55 @@ technologies</li>
 </section>
 <section class="slide level1">
 
-<h2 id="need-for-more-rigorous-assessments">Need for More Rigorous
-Assessments</h2>
+<h2 id="more-rigorous-assessments-are-needed">More Rigorous Assessments
+are Needed</h2>
+<p>
+<p></p>
 <ul>
 <li><strong>Current evaluation approaches are insufficient for
 omics-scale methods</strong>:
 <ul>
-<li><p>Limited benchmarks that don’t reflect real-world
-complexity</p></li>
-<li><p>need a battery of objective benchmarks which reflect meaningful
-endpoints</p></li>
+<li>Limited benchmarks that don’t reflect real-world complexity</li>
+<li>Need a battery of objective benchmarks which reflect meaningful
+endpoints</li>
 </ul></li>
+</ul>
+</section>
+<section class="slide level1">
+
+<ul>
 <li><strong>A holistic assessment framework should include</strong>:
 <ul>
 <li>Datasets reflecting end-to-end process variability</li>
 <li>Samples from varied sources and conditions</li>
 <li>Battery of meaningful metrics measuring field performance</li>
 <li>Comprehensive comparison with all competing methods</li>
-<li>Evaluation of both statistical power and biological relevance</li>
 </ul></li>
 </ul>
 </section>
 <section class="slide level1">
 
-<h2 id="to-do">TO DO</h2>
+<h2 id="quality---quality---quality">Quality - Quality - Quality</h2>
 <ul>
-<li><p>Everything that this study glossed over - variability regimes
-which come with the omic territory</p></li>
-<li><p>PNAS paper has 100 pages of theory</p></li>
+<li><p>The full range of data quality which may be present in successful
+RNASeq data sets must be accounted for.</p></li>
+<li><p>The presence of unwanted variability must also be accounted for
+in the design and evaluation steps.</p></li>
+<li><p>See Molania et. al (2023) for indication of the extent and impact
+of unwanted variability in RNA-Seq data, and ways to remove it.</p></li>
 </ul>
+<!--
+## TO DO
+
+- Everything that this study glossed over -
+variability regimes which come with the omic territory
+
+- PNAS paper has 100 pages of theory
+
+-->
+</section>
+<section class="slide level1">
+
 <h2 id="references">References</h2>
 <ol type="1">
 <li><p>Chaung et al. (2023). SPLASH: A statistical, reference-free
@@ -1053,6 +1103,11 @@ valid alternative to Pearson’s X² for scientific discovery.
 <li><p>Henderson et al. (2024). Ultra-efficient, unified discovery from
 microbial sequencing with SPLASH and precise statistical assembly.
 <em>bioRxiv</em>. DOI: 10.1101/2024.01.18.576133</p></li>
+<li><p>Molania, R., Foroutan, M., Gagnon-Bartsch, J.A., Gandolfo, L.C.,
+Jain, A., Sinha, A., Olshansky, G., Dobrovic, A., Papenfuss, A.T., and
+Speed, T.P. (2023). Removing unwanted variation from large-scale RNA
+sequencing data with PRPS. Nature Biotechnology 41, 82–95. Available at:
+<a href="https://doi.org/10.1038/s41587-022-01440-w" class="uri">https://doi.org/10.1038/s41587-022-01440-w</a>.</p></li>
 </ol>
 <h2 id="resources">Resources</h2>
 <ul>
