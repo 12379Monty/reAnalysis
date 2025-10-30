@@ -277,6 +277,40 @@ profiels as input.
 
 # Data (Re-)Analysis by Topic 
 
+
+
+## Reference-Free Genomic Inference with SPLASH and OASIS 
+
+
+<p><p/>
+*  [Presentation](_M3B-SPLASH-OASIS/splash_oasis_methodology_presentation_v2.html)
+   - Summarizes the key points made in the SPLASH and OASIS papers
+   - Includes comments  on alternative approaches or interpretations
+**but no additional analyses**
+
+<p><p/>
+* [SPLASH](./_M2B-RFGI_SPLASH_v2.html) - a detailed look at the SPLASH article.
+
+<p><p/>
+* [OASIS](./_M3A-OASIS.html) - a detailed look at the OASIS article.
+  - INCOMPLETE
+
+<!--
+### SPLASH {-}
+
+* [_M2A-RFGI_SPLASH_v1.html](./_M2A-RFGI_SPLASH_v1.html) -
+* [_M2B-RFGI_SPLASH_v2.html](./_M2B-RFGI_SPLASH_v2.html) -
+* [_M3A-OASIS.html](./_M3A-OASIS.html) -
+
+<br/>
+
+### OASIS {-}
+
+-->
+
+<br/>
+
+
 ## scRNAseq UMI count normalization 
 
 * slide deck:  OneDrive folder of Speed Lab Meeting: https://outlook.office365.com/mail/group/wehi.edu.au/speedlabmeeting/files
@@ -332,31 +366,13 @@ in the downstream read-outs
 
 <br/>
 
-## Reference-Free Genomic Inference with SPLASH and OASIS 
-
-
-*  [Presentation](_M3B-SPLASH-OASIS/splash_oasis_methodology_presentation_v2.html)
-
-
-### SPLASH {-}
-
-
-* [_M2A-RFGI_SPLASH_v1.html](./_M2A-RFGI_SPLASH_v1.html) -
-* [_M2B-RFGI_SPLASH_v2.html](./_M2B-RFGI_SPLASH_v2.html) -
-* [_M3A-OASIS.html](./_M3A-OASIS.html) -
-
-<br/>
-
-### OASIS {-}
-
-<br/>
-
 ## Miscellanious  
-  - [_M4A-intro_IUV.html](./_M4A-intro_IUV.html) 
-  - [_M5A-cf_ddPCR_seq.html]
-  - [_M6A-randomness_in_calls.html] 
-  - [_M7A-interimSampleSizeAnalysis.html]
+  - [IUV](./_M4A-intro_IUV.html) 
+  - [Digital Driplet PCR - soon](./_M5A-cf_ddPCR_seq.html)
+  - [Randomness in sample calls - soon](./_M6A-randomness_in_calls.html) 
+  - [interimSampleSizeAnalysis - soon](./_M7A-interimSampleSizeAnalysis.html)
       - [_M3A_study_design_CB_notes.pdf]
+<p><p/>
   - [nanopore_talk/microbiome_slides.html](nanopore_talk/microbiome_slides.html)
       - [nanopore_talk/nanopore_background.html](nanopore_talk/nanopore_background.html)
       - [nanopore_talk/umap_explained.html](nanopore_talk/umap_explained.html)

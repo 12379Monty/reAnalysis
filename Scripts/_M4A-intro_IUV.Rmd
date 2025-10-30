@@ -15,8 +15,8 @@ output:
     # this has no effect
     number_sections: yes
     # css: ['../_css/pandoc3.css', '../_css/myMargins.css']
-bibliography: [../../../_bibFiles/_Normalization.bib, ../../../_bibFiles/_RUV.bib]
-csl: ../../../_csl/cell-numeric.csl
+bibliography: [../../_bibFiles/_Normalization.bib, ../../_bibFiles/_RUV.bib]
+csl: ../../_csl/cell-numeric.csl
 link-citations: true
 ---
 
