@@ -30,17 +30,6 @@ output:
 
 
 
----
-
-::: {.incremental}
-
-> I thought that the worst thing in statistics was the p-value.  
-> Then came the q-value.
-> `r tufte::quote_footer('--- Anonymous Statistician')`
-:::
-
----
-
 ## Review of two Publications
 
 - **SPLASH**: "A statistical, reference-free genomic algorithm unifies biological discovery" (Chaung et al., 2023, Cell)
@@ -131,31 +120,20 @@ of raw sequence data using anchor-target structure
 
 ---
 
-- **Statistical power<span style="color:green;">$^1$</span> through structure**:
+- **Sensitivity through structure**:
   - Anchors provide context for variation
   - Targets capture the biologically meaningful differences
   - Enables detection of patterns without prior knowledge
   - Works across diverse biological domains
 
-- **Unified mathematical framework**<span style="color:green;">$^2$</span>:
-  - *Contingency tables*<span style="color:green;">$^3$</span>
+- **Unified mathematical framework**:
+  - *Contingency tables*<span style="color:green;">$^1$</span>
 of anchor-target pairs
   - Same approach applies to viruses, human cells, non-model organisms
 
 ---
 
-- <span style="color:green;">1</span>:  Statistical power, in the
-technical sense of the word, needs to be demonstrated. Choosing
-the chi-square test as comparator is unfortunate as it is not known
-to be a particularly powerful test.  More respectable comparators can
-be identified by surveying the RNA-Seq literature.
-
-- <span style="color:green;">2</span>: I'm not sure that this
-is a distinguishing feature of this approach as many RNA-Seq
-methods can also make that claim.   In the end what we care about is
-applications and performance.
-
-- <span style="color:green;">3</span>: A contingency table is a way
+- <span style="color:green;">1</span>: A contingency table is a way
 succinctly summarize sample counts which can be cross-classified by
 2 categorical variables.  The contingency table summarization does
 not confer any analytical advantages other than providing a natural
@@ -190,7 +168,7 @@ compute chi-squared statistics.
    - Cells: Counts of anchor-target pairs
 
 3. **Apply statistical test**
-   - Originally used chi-squared test; Now uses IASIUS
+   - Originally used chi-squared test; Now uses OASIS
    - Identifies **statistically significant** sample-specific 
 variation<span style="color:green;">$^1$</span>
 
@@ -198,7 +176,8 @@ variation<span style="color:green;">$^1$</span>
 
 - <span style="color:green;">1</span>: The identification step
 is application specific  and should be set empirically; 
-significance is just one option for identification.
+significance is just one option for identification,
+and is rarely the best way to identify features of interest.
 
 
 
@@ -267,7 +246,7 @@ significance is just one option for identification.
 
 ---
 
-- **Interpretation**: Measures deviation from independence model, *optimized for maximum statistical power*$^1$
+- **Interpretation**: Measures deviation from independence model, *optimized for maximum sensitivity*
 
 
 ---
@@ -356,13 +335,14 @@ This approach provides both *statistical rigor* and *biological interpretability
   - Avoids computationally expensive alignment
   - Scales to large datasets
 
-- **Statistical Benefits**<span style="color:green;">$^1$</span>:
-  - OASIS provides finite-sample valid statistics
+- **Statistical Benefits**
+  - OASIS provides finite-sample valid statistics<span style="color:green;">$^1$</span>:
   - Closed-form P-value calculations avoid permutation testing
   - Controls for multiple testing
 
-> <span style="color:green;">1</span>:  These benefits are neither
-unique to SPLASH, nor necessary.
+> <span style="color:green;">1</span>:  I'm not sure I beleve this.
+All we need is that the statistics provide a useful index which
+can be used to identify interesting targets.
 
 
 ---
@@ -545,8 +525,10 @@ variability regimes which come with the omic territory
 - GitHub repository: [https://github.com/refresh-bio/SPLASH](https://github.com/refresh-bio/SPLASH)
 - Salzman Lab: [http://salzmanlab.stanford.edu/](http://salzmanlab.stanford.edu/)
 
-    
+
+
 <!--
+    
     
  nohup Rscript -e "rmarkdown::render('splash_oasis_methodology_presentation_v2.Rmd')" > splash_oasis_methodology_presentation_v2.log  &
   

@@ -444,19 +444,6 @@ line-height: 1.2em;
 vertical-align: top;
 }
 </style>
-</section>
-<section class="slide level1">
-
-<blockquote>
-I thought that the worst thing in statistics was the p-value.<br />
-Then came the q-value.
-<footer>
-— Anonymous Statistician
-</footer>
-</blockquote>
-</section>
-<section class="slide level1">
-
 <h2 id="review-of-two-publications">Review of two Publications</h2>
 <ul>
 <li><strong>SPLASH</strong>: “A statistical, reference-free genomic
@@ -565,16 +552,16 @@ regions</li>
 <section class="slide level1">
 
 <ul>
-<li><strong>Statistical power<span style="color:green;"><span class="math inline">\(^1\)</span></span> through structure</strong>:
+<li><strong>Sensitivity through structure</strong>:
 <ul>
 <li>Anchors provide context for variation</li>
 <li>Targets capture the biologically meaningful differences</li>
 <li>Enables detection of patterns without prior knowledge</li>
 <li>Works across diverse biological domains</li>
 </ul></li>
-<li><strong>Unified mathematical framework</strong><span style="color:green;"><span class="math inline">\(^2\)</span></span>:
+<li><strong>Unified mathematical framework</strong>:
 <ul>
-<li><em>Contingency tables</em><span style="color:green;"><span class="math inline">\(^3\)</span></span> of anchor-target pairs</li>
+<li><em>Contingency tables</em><span style="color:green;"><span class="math inline">\(^1\)</span></span> of anchor-target pairs</li>
 <li>Same approach applies to viruses, human cells, non-model
 organisms</li>
 </ul></li>
@@ -583,21 +570,12 @@ organisms</li>
 <section class="slide level1">
 
 <ul>
-<li><p><span style="color:green;">1</span>: Statistical power, in the
-technical sense of the word, needs to be demonstrated. Choosing the
-chi-square test as comparator is unfortunate as it is not known to be a
-particularly powerful test. More respectable comparators can be
-identified by surveying the RNA-Seq literature.</p></li>
-<li><p><span style="color:green;">2</span>: I’m not sure that this is a
-distinguishing feature of this approach as many RNA-Seq methods can also
-make that claim. In the end what we care about is applications and
-performance.</p></li>
-<li><p><span style="color:green;">3</span>: A contingency table is a way
+<li><span style="color:green;">1</span>: A contingency table is a way
 succinctly summarize sample counts which can be cross-classified by 2
 categorical variables. The contingency table summarization does not
 confer any analytical advantages other than providing a natural and
 sufficient set of summary statistics and a way to compute chi-squared
-statistics.</p></li>
+statistics.</li>
 </ul>
 </section>
 <section class="slide level1">
@@ -634,7 +612,7 @@ a<strong>L</strong>ignment <strong>A</strong>gnostic
 </ul></li>
 <li><strong>Apply statistical test</strong>
 <ul>
-<li>Originally used chi-squared test; Now uses IASIUS</li>
+<li>Originally used chi-squared test; Now uses OASIS</li>
 <li>Identifies <strong>statistically significant</strong>
 sample-specific variation<span style="color:green;"><span class="math inline">\(^1\)</span></span></li>
 </ul></li>
@@ -645,7 +623,8 @@ sample-specific variation<span style="color:green;"><span class="math inline">\(
 <ul>
 <li><span style="color:green;">1</span>: The identification step is
 application specific and should be set empirically; significance is just
-one option for identification.</li>
+one option for identification, and is rarely the best way to identify
+features of interest.</li>
 </ul>
 </section>
 <section class="slide level1">
@@ -735,8 +714,7 @@ table: <span class="math inline">\(p_{i,j} =
 
 <ul>
 <li><strong>Interpretation</strong>: Measures deviation from
-independence model, <em>optimized for maximum statistical
-power</em><span class="math inline">\(^1\)</span></li>
+independence model, <em>optimized for maximum sensitivity</em></li>
 </ul>
 </section>
 <section class="slide level1">
@@ -852,16 +830,17 @@ Bioinformaticians: Technical Benefits <span style="color:green;"><span class="ma
 <li>Avoids computationally expensive alignment</li>
 <li>Scales to large datasets</li>
 </ul></li>
-<li><strong>Statistical Benefits</strong><span style="color:green;"><span class="math inline">\(^1\)</span></span>:
+<li><strong>Statistical Benefits</strong>
 <ul>
-<li>OASIS provides finite-sample valid statistics</li>
+<li>OASIS provides finite-sample valid statistics<span style="color:green;"><span class="math inline">\(^1\)</span></span>:</li>
 <li>Closed-form P-value calculations avoid permutation testing</li>
 <li>Controls for multiple testing</li>
 </ul></li>
 </ul>
 <blockquote>
-<p><span style="color:green;">1</span>: These benefits are neither
-unique to SPLASH, nor necessary.</p>
+<p><span style="color:green;">1</span>: I’m not sure I beleve this. All
+we need is that the statistics provide a useful index which can be used
+to identify interesting targets.</p>
 </blockquote>
 </section>
 <section class="slide level1">
@@ -1115,6 +1094,7 @@ sequencing data with PRPS. Nature Biotechnology 41, 82–95. Available at:
 <li>Salzman Lab: <a href="http://salzmanlab.stanford.edu/">http://salzmanlab.stanford.edu/</a></li>
 </ul>
 <!--
+    
     
  nohup Rscript -e "rmarkdown::render('splash_oasis_methodology_presentation_v2.Rmd')" > splash_oasis_methodology_presentation_v2.log  &
   
