@@ -1,0 +1,7 @@
+part-a-brief-history-of-data-analysis-1950---2025
+john-tukey
+leo-breiman
+david-donoho
+part-selected-example-data-analyses
+reference-free-genomic-inference-with-splash-and-oasis
+removal-of-unwanted-variability

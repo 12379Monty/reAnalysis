@@ -1,0 +1,217 @@
+from http://stackoverflow.com/questions/9776020/recursive-search-and-replace-in-text-files-on-mac-and-linux
+
+find . -type f -name '*.Rmd' -exec sed -i '' s%GRAIL%XXXXX% {} +
+find . -type f -name '*.html' -exec sed -i '' s%GRAIL%XXXXXX% {} +
+
+find . -type f -name '*.Rmd' -exec sed -i '' s%liung%lung% {} +
+find . -type f -name '*.html' -exec sed -i '' s%liung%lung% {} +
+
+find . -type f -name '*.Rmd' -exec sed -i '' s%cartrifges%cartriges% {} +
+find . -type f -name '*.html' -exec sed -i '' s%cartrifges%cartriges% {} +
+
+find . -type f -name '*.Rmd' -exec sed -i '' s%becusse%because% {} +
+find . -type f -name '*.html' -exec sed -i '' s%becusse%because% {} +
+
+find . -type f -name '*.Rmd' -exec sed -i '' s%genesi%genes% {} +
+find . -type f -name '*.html' -exec sed -i '' s%genesi%genes% {} +
+
+find . -type f -name '*.Rmd' -exec sed -i '' s%criteris%criteria% {} +
+find . -type f -name '*.html' -exec sed -i '' s%criteris%criteria% {} +
+
+find . -type f -name '*.Rmd' -exec sed -i '' s%CLIA_Validation%CLIA_LOD% {} +
+find . -type f -name '*.html' -exec sed -i '' s%CLIA_Validation%CLIA_LOD% {} +
+
+find . -type f -name '*.Rmd' -exec sed -i '' s%CLIA_LOD%CLIA_Validation% {} +
+find . -type f -name '*.html' -exec sed -i '' s%CLIA_LOD%CLIA_Validation% {} +
+
+find . -type f -name '*.Rmd' -exec sed -i '' s%InoutL%InputL% {} +
+find . -type f -name '*.html' -exec sed -i '' s%InoutL%InputL% {} +
+
+find . -type f -name '*.Rmd' -exec sed -i '' s%Normlization%Normalization% {} +
+find . -type f -name '*.html' -exec sed -i '' s%Normlization%Normalization% {} +
+
+find . -type f -name '*.Rmd' -exec sed -i '' s%unput%input% {} +
+find . -type f -name '*.html' -exec sed -i '' s%unput%input% {} +
+
+find . -type f -name '*.Rmd' -exec sed -i '' s%distibutions%distributions% {} +
+find . -type f -name '*.html' -exec sed -i '' s%distibutions%distributions% {} +
+
+find . -type f -name '*.Rmd' -exec sed -i '' s%dostributions%distributions% {} +
+find . -type f -name '*.html' -exec sed -i '' s%dostributions%distributions% {} +
+
+find . -type f -name '*.Rmd' -exec sed -i '' s%availalble%available% {} +
+find . -type f -name '*.html' -exec sed -i '' s%availalble%available% {} +
+
+find . -type f -name '*.Rmd' -exec sed -i '' s%classufication%classification% {} +
+find . -type f -name '*.html' -exec sed -i '' s%classufication%classification% {} +
+
+find . -type f -name '*.Rmd' -exec sed -i '' s%parimonious%parsimonious% {} +
+find . -type f -name '*.html' -exec sed -i '' s%parimonious%parsimonious% {} +
+
+find . -type f -name '*.Rmd' -exec sed -i '' s%contraining%constraining% {} +
+find . -type f -name '*.html' -exec sed -i '' s%contraining%constraining% {} +
+
+find . -type f -name '*.Rmd' -exec sed -i '' s%Metrcs%Metrics% {} +
+find . -type f -name '*.html' -exec sed -i '' s%Metrcs%Metrics% {} +
+
+find . -type f -name '*.Rmd' -exec sed -i '' s%differecnes%differences% {} +
+find . -type f -name '*.html' -exec sed -i '' s%differecnes%differences% {} +
+
+
+find . -type f -name '*.Rmd' -exec sed -i '' s%dotplotOOFProbTrainlassoFit%look-oofprob-lassofit% {} +
+
+find . -type f -name '*.Rmd' -exec sed -i '' s%shoe%show% {} +
+find . -type f -name '*.html' -exec sed -i '' s%shoe%show% {} +
+
+find . -type f -name '*.Rmd' -exec sed -i '' s%Coubt%Count% {} +
+find . -type f -name '*.html' -exec sed -i '' s%Coubt%Count% {} +
+
+find . -type f -name '*.Rmd' -exec sed -i '' s%smaples%samples% {} +
+find . -type f -name '*.html' -exec sed -i '' s%smaples%samples% {} +
+
+find . -type f -name '*.Rmd' -exec sed -i '' s%Falagged%Flagged% {} +
+find . -type f -name '*.html' -exec sed -i '' s%Falagged%Flagged% {} +
+
+find . -type f -name '*.Rmd' -exec sed -i '' s%Yeild%Yield% {} +
+find . -type f -name '*.html' -exec sed -i '' s%Yeild%Yield% {} +
+
+find . -type f -name '*.Rmd' -exec sed -i '' s%previosu%previous% {} +
+find . -type f -name '*.html' -exec sed -i '' s%previosu%previous% {} +
+
+find . -type f -name '*.Rmd' -exec sed -i '' s%Flage%Flag% {} +
+find . -type f -name '*.html' -exec sed -i '' s%Flage%Flag% {} +
+
+find . -type f -name '*.Rmd' -exec sed -i '' s%otherwose%otherwise% {} +
+find . -type f -name '*.html' -exec sed -i '' s%otherwose%otherwise% {} +
+
+find . -type f -name '*.Rmd' -exec sed -i '' s%Referecne%Reference% {} +
+find . -type f -name '*.html' -exec sed -i '' s%Referecne%Reference% {} +
+
+find . -type f -name '*.Rmd' -exec sed -i '' s%micorarray%microarray% {} +
+find . -type f -name '*.html' -exec sed -i '' s%micorarray%microarray% {} +
+
+
+find . -type f -name '*.Rmd' -exec sed -i '' s%_M1A-QA-Disc-G003_G006%_M1A-QA-Disc-G001_G002% {} +
+find . -type f -name '*.html' -exec sed -i '' s%_M1A-QA-Disc-G003_G006%_M1A-QA-Disc-G001_G002% {} +
+
+find . -type f -name '*.Rmd' -exec sed -i '' s%groupd%groups% {} +
+find . -type f -name '*.html' -exec sed -i '' s%groupd%groups% {} +
+
+find . -type f -name '*.Rmd' -exec sed -i '' s%hyridized%hybridized% {} +
+find . -type f -name '*.html' -exec sed -i '' s%hyridized%hybridized% {} +
+
+find . -type f -name '*.Rmd' -exec sed -i '' s%VCU_AtoE%VCU_AtoF% {} +
+find . -type f -name '*.html' -exec sed -i '' s%VCU_AtoE%VCU_AtoF% {} +
+
+find . -type f -name '*.Rmd' -exec sed -i '' s%cartridfges%cartridges% {} +
+find . -type f -name '*.html' -exec sed -i '' s%cartridfges%cartridges% {} +
+
+find . -type f -name '*.Rmd' -exec sed -i '' s%Nov2021%May21% {} +
+find . -type f -name '*.html' -exec sed -i '' s%Nov2021%May21% {} +
+
+find . -type f -name '*.Rmd' -exec sed -i '' s%../../Refs/%../../../Refs% {} +
+
+find . -type f -name '*.Rmd' -exec sed -i '' s%/bib/%/../_bibFiles/% {} +
+
+
+find . -type f -name '*.Rmd' -exec sed -i '' s%agrement%agreement% {} +
+find . -type f -name '*.html' -exec sed -i '' s%agrement%agreement% {} +
+
+find . -type f -name '*.Rmd' -exec sed -i '' s%higest%highest% {} +
+find . -type f -name '*.html' -exec sed -i '' s%higest%highest% {} +
+
+find . -type f -name '*.Rmd' -exec sed -i '' s%Signignificant%Significant% {} +
+find . -type f -name '*.html' -exec sed -i '' s%Signignificant%Significant% {} +
+
+find . -type f -name '*.Rmd' -exec sed -i '' s%assy%assay% {} +
+find . -type f -name '*.html' -exec sed -i '' s%assy%assay% {} +
+
+find . -type f -name '*.Rmd' -exec sed -i '' s%sectoon%section% {} +
+find . -type f -name '*.html' -exec sed -i '' s%sectoon%section% {} +
+
+find . -type f -name '*.Rmd' -exec sed -i '' s%we we%we% {} +
+
+find . -type f -name '_M5A03.Rmd' -exec sed -i '' s%02%03`% {} +
+
+find . -type f -name '*.Rmd' -exec sed -i '' s%analyisi%analysis% {} +
+find . -type f -name '*.html' -exec sed -i '' s%analyisi%analysis% {} +
+
+find . -type f -name '*.Rmd' -exec sed -i '' s%h=.75%h=.10% {} +
+find . -type f -name '*.html' -exec sed -i '' s%h=.75%h=.10% {} +
+
+find . -type f -name '*.Rmd' -exec sed -i '' s%pairswise%pairwise% {} +
+
+find . -type f -name '*.Rmd' -exec sed -i '' s%coeverage%coverage% {} +
+find . -type f -name '*.Rmd' -exec sed -i '' s%PlatformConc%PlatformComp% {} +
+
+find . -type f -name '*.Rmd' -exec sed -i '' s%POK1%POS1% {} +
+
+find . -type f -name '*.Rmd' -exec sed -i '' s%2000212%200304% {} +
+find . -type f -name '*.Rmd' -exec sed -i '' s%200212%200304% {} +
+
+find . -type f -name '*.Rmd' -exec sed -i '' s%figure%figures% {} +
+find . -type f -name '*.Rmd' -exec sed -i '' s%figuress%figures% {} +
+
+find . -type f -name '*.html' -exec sed -i '' s%fc@bluestargenomics.com%% {} +
+
+find . -type f -name '*.Rmd' -exec sed -i '' s%https://r.bsg-analysis.com/bsg-analysis/fcollin%https://us-east-serverlesswebsite-monty12379.s3.amazonaws.com/Projects% {} +
+find . -type f -name '*.Rmd' -exec sed -i '' s%bsg%web% {} +
+find . -type f -name '*.Rmd' -exec sed -i '' s%BSG%WEB% {} +
+
+find . -type f -name '*.Rmd' -exec sed -i '' s%ext-analysis%extAnalysis% {} +
+find . -type f -name '*.Rmd' -exec sed -i '' s%Francois/BlueStar/bsg-analysis/fcollin%Projects% {} +
+
+find . -type f -name '*.Rmd' -exec sed -i '' s%Macbeth%% {} +
+find . -type f -name '*.Rmd' -exec sed -i '' s%fc@bluestargenomics.com%Macbeth% {} +
+
+# That doesn work!
+find . -type f -name '*.Rmd' -exec sed -i '' s%2019.25.HCC%HCC% {} +
+
+find . -type f -name '*.Rmd' -exec sed -i '' s%BloodCancerNonCancer%PlasmaCancerNonCancer% {} +
+find . -type f -name '*.Rmd' -exec sed -i '' s%Run%SeqID% {} +
+find . -type f -name '*.Rmd' -exec sed -i '' s%BloodAll%BreastLungColoPDAC% {} +
+find . -type f -name '*.Rmd' -exec sed -i '' s%html_document2%html_document% {} +
+find . -type f -name '*.Rmd' -exec sed -i '' s%diseaseTT%Outcome% {} +
+find . -type f -name '*.Rmd' -exec sed -i '' s%UChicagoBlood%BreastLungColoPDAC5hmC% {} +
+
+find . -type f -name '*.Rmd' -exec sed -i '' s%MTBreast1%PdacAnalysis2% {} +
+find . -type f -name '*.Rmd' -exec sed -i '' s%ageMatchedSet1%PdacAnalysis% {} +
+
+find . -type f -name '*.Rmd' -exec sed -i '' s%BreastManual%PDACManual% {} +
+find . -type f -name '*.Rmd' -exec sed -i '' s%BreastAuto%PDACAuto% {} +
+find . -type f -name '*.Rmd' -exec sed -i '' s%BreastStudyAuto%PDACStudyAuto% {} +
+
+find . -type f -name '*.Rmd' -exec sed -i '' s%html_document2%html_document% {} +
+
+find . -type f -name '*.Rmd' -exec sed -i '' s%PDAC Longitudinal Study%MT_Breast Cancer Auto extraction% {} +
+
+find . -type f -name '*.Rmd' -exec sed -i '' s%pROC::roc\(Test.Label.vec,%pROC::roc\(Test.Label.vec==\"Cancer\",% {} +
+find . -type f -name '*.Rmd' -exec sed -i '' s%pROC::roc\(Train.Label.vec,%pROC::roc\(Train.Label.vec==\"Cancer\",% {} +
+
+find . -type f -name '*.Rmd' -exec sed -i '' s%warning=F}%warning=F,message=F}% {} +
+find . -type f -name '*.Rmd' -exec sed -i '' s%results=\"hide\"}%results=\"hide\",warning=F}% {} +
+
+find . -type f -name '*.Rmd' -exec sed -i '' s%include=F}%include=F,results=\"hide\"}% {} +
+
+find . -type f -name '*.Rmd' -exec sed -i '' s%Individumed%Indivumed% {} +
+
+find . -type f -name '*.Rmd' -exec sed -i '' s%CRC.bib%bibFile.bib% {} +
+
+#find . -type f -name '*.r' -exec sed -i '' s%CN2ACDv1%CN2ACDE% {} +
+
+find . -type f -name '*.Rmd' -exec sed -i '' s%Indivudumed%Indivumed% {} +
+find . -type f -name '*.Rmd' -exec sed -i '' s%Seq76%Seq77% {} +
+# AND THIS
+find . -type f -name '*.r' -exec sed -i '' s%NGS76%NGS77% {} +
+find . -type f -name '*.r' -exec sed -i '' s%Seq76%Seq77% {} +
+
+
+find . -type f -name '*.r' -exec sed -i '' s%CN2A%CN2AD% {} +
+
+
+find . -type f -name '*.Rmd' -exec sed -i '' s%NGS16%NGS76g% {} +
+find . -type f -name '*.Rmd' -exec sed -i '' s%Seq16%Seq33% {} +
+# AND THIS
+find . -type f -name '*.r' -exec sed -i '' s%NGS16%NGS76g% {} +
+find . -type f -name '*.r' -exec sed -i '' s%Seq16%Seq33% {} +
+

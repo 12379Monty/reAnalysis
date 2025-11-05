@@ -1,0 +1,17 @@
+# (PART) A brief history of data analysis 1950 - 2025
+
+Or 75 years of data science and machine learning guided by
+the learnings of statistical science.
+
+* Is there a science to data analysis?
+
+* What do I mean by statistical data analysis, or statistical anything?
+
+* References:
+   - [50 years of data science](https://www.tandfonline.com/doi/full/10.1080/10618600.2017.1384734#d1e296)
+   - [19 ways of looking at Data Science at the Singularity](https://statmodeling.stat.columbia.edu/2024/07/12/19-ways-of-looking-at-data-science-at-the-singularity/)
+   - [AI Singularity NArrative](https://files.reuniontechnologies.com/PU78/public/134399/AI-Narrative.pdf)
+
+
+
+

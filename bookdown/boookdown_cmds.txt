@@ -1,0 +1,53 @@
+from http://stackoverflow.com/questions/9776020/recursive-search-and-replace-in-text-files-on-mac-and-linux
+
+find . -type f -name '*.Rmd' -exec sed -i '' s%explore-glmnet%explore-sparsity% {} +
+
+# initiate bookdown - DO ONCE
+# In R
+bookdown:::bookdown_skeleton(getwd())
+
+# at cmd line
+nohup Rscript -e  "bookdown:::bookdown_skeleton(getwd())"    >  bookdown_skeleton.log  &
+
+######
+# github action - https://www.hvitfeldt.me/blog/bookdown-netlify-github-actions/
+# API ID:  XXX
+# TOKEN: XXX
+
+# In R
+usethis::use_github_action("bookdown.yaml")
+renv::snapshot()
+
+##############################################
+# build the book
+# THIS DOESNT WORK - object 'params' not found
+#nohup Rscript -e "bookdown::render_book('index.Rmd', params=list(format='html'),clean_envir = FALSE)"    > render_book.log &
+
+# SET  options(knitr.table.format = 'html' in index.rmd
+nohup Rscript -e "bookdown::render_book('index.Rmd')"  > render_book.log &
+
+
+# SET  options(knitr.table.format = 'latex' in index.rmd
+nohup Rscript -e "bookdown::render_book('index.Rmd', 'bookdown::pdf_book')"  > render_bookPDF.log &
+
+nohup Rscript -e "bookdown::render_book('index.Rmd', 'bookdown::gitbook')"  > render_bookGIT.log &
+nohup Rscript -e "bookdown::render_book('index.Rmd', 'bookdown::epub_book')"  > render_bookEPUB.log &
+
+##############################################
+# Preview a chapter
+nohup Rscript -e "bookdown::render_book(input='index.Rmd', preview=T)" > render_index.log  &
+
+
+##############################################
+# to continuously serve the book
+Rscript -e "bookdown::serve_book()" 
+  ###> serve_book.log  &
+
+## history
+vi _bookdown.yml 
+vi _output.yml 
+vi 01-intro.Rmd 
+nohup Rscript -e "bookdown::render_book('index.Rmd')"  > render_book.log &
+git add .
+git commit -m 'change title intro'
+git push

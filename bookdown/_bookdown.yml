@@ -1,0 +1,13 @@
+delete_merged_file: true
+language:
+  ui:
+    chapter_name: "Section "
+rmd_files:
+ - 01-part1.Rmd
+ - 01-01-john-tukey.Rmd
+ - 01-02-leo-breiman.Rmd
+ - 01-03-david-donoho.Rmd
+ - 02-part2.Rmd
+ - 02-01-SPLASH-OASIS.Rmd
+ - 02-02-RUV.Rmd
+

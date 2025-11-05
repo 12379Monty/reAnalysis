@@ -1,0 +1,16 @@
+
+
+processing file: _main.Rmd
+1/1
+output file: _main.knit.md
+
+/usr/local/bin/pandoc +RTS -K512m -RTS _main.knit.md --to html4 --from markdown+autolink_bare_uris+tex_math_single_backslash --output _main.html --lua-filter /Library/Frameworks/R.framework/Versions/4.4-x86_64/Resources/library/bookdown/rmarkdown/lua/custom-environment.lua --lua-filter /Users/fcollin/Library/R/x86_64/4.4/library/rmarkdown/rmarkdown/lua/pagebreak.lua --lua-filter /Users/fcollin/Library/R/x86_64/4.4/library/rmarkdown/rmarkdown/lua/latex-div.lua --lua-filter /Users/fcollin/Library/R/x86_64/4.4/library/rmarkdown/rmarkdown/lua/table-classes.lua --lua-filter /Users/fcollin/Library/R/x86_64/4.4/library/rmarkdown/rmarkdown/lua/anchor-sections.lua --metadata-file /var/folders/jk/d24lm6n944q5y650lph85m7w0000gp/T//RtmpizDqz6/file1514a5ed2571f --wrap preserve --standalone --section-divs --table-of-contents --toc-depth 3 --template /Library/Frameworks/R.framework/Versions/4.4-x86_64/Resources/library/bookdown/templates/gitbook.html --highlight-style pygments --number-sections --css style.css --mathjax --include-in-header /var/folders/jk/d24lm6n944q5y650lph85m7w0000gp/T//RtmpizDqz6/rmarkdown-str1514a3c240866.html 
+[WARNING] This document format requires a nonempty <title> element.
+  Defaulting to '_main.knit' as the title.
+  To specify a title, use 'title' in metadata or --metadata title="...".
+
+Output created: _book/part-a-brief-history-of-data-analysis-1950---2025.html
+[1] "/Users/fcollin/Documents/Projects/reAnalysis/bookdown/_book/part-a-brief-history-of-data-analysis-1950---2025.html"
+Warning message:
+In split_chapters(output, gitbook_page, global_numbering, split_by,  :
+  You have 7 Rmd input file(s) but only 2 first-level heading(s). Did you forget first-level headings in certain Rmd files?
