@@ -1,0 +1,642 @@
+% Options for packages loaded elsewhere
+\PassOptionsToPackage{unicode}{hyperref}
+\PassOptionsToPackage{hyphens}{url}
+\documentclass[
+]{article}
+\usepackage{xcolor}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amssymb}
+\setcounter{secnumdepth}{5}
+\usepackage{iftex}
+\ifPDFTeX
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+  \usepackage{textcomp} % provide euro and other symbols
+\else % if luatex or xetex
+  \usepackage{unicode-math} % this also loads fontspec
+  \defaultfontfeatures{Scale=MatchLowercase}
+  \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
+\fi
+\usepackage{lmodern}
+\ifPDFTeX\else
+  % xetex/luatex font selection
+\fi
+% Use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\IfFileExists{microtype.sty}{% use microtype if available
+  \usepackage[]{microtype}
+  \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\makeatletter
+\@ifundefined{KOMAClassName}{% if non-KOMA class
+  \IfFileExists{parskip.sty}{%
+    \usepackage{parskip}
+  }{% else
+    \setlength{\parindent}{0pt}
+    \setlength{\parskip}{6pt plus 2pt minus 1pt}}
+}{% if KOMA class
+  \KOMAoptions{parskip=half}}
+\makeatother
+\usepackage{longtable,booktabs,array}
+\usepackage{calc} % for calculating minipage widths
+% Correct order of tables after \paragraph or \subparagraph
+\usepackage{etoolbox}
+\makeatletter
+\patchcmd\longtable{\par}{\if@noskipsec\mbox{}\fi\par}{}{}
+\makeatother
+% Allow footnotes in longtable head/foot
+\IfFileExists{footnotehyper.sty}{\usepackage{footnotehyper}}{\usepackage{footnote}}
+\makesavenoteenv{longtable}
+\usepackage{graphicx}
+\makeatletter
+\newsavebox\pandoc@box
+\newcommand*\pandocbounded[1]{% scales image to fit in text height/width
+  \sbox\pandoc@box{#1}%
+  \Gscale@div\@tempa{\textheight}{\dimexpr\ht\pandoc@box+\dp\pandoc@box\relax}%
+  \Gscale@div\@tempb{\linewidth}{\wd\pandoc@box}%
+  \ifdim\@tempb\p@<\@tempa\p@\let\@tempa\@tempb\fi% select the smaller of both
+  \ifdim\@tempa\p@<\p@\scalebox{\@tempa}{\usebox\pandoc@box}%
+  \else\usebox{\pandoc@box}%
+  \fi%
+}
+% Set default figure placement to htbp
+\def\fps@figure{htbp}
+\makeatother
+\setlength{\emergencystretch}{3em} % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\usepackage[]{natbib}
+\bibliographystyle{plainnat}
+\usepackage{booktabs}
+\usepackage{bookmark}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\urlstyle{same}
+\hypersetup{
+  pdftitle={Statistical Analysis of Data in the Biotech Industry},
+  pdfauthor={Francois Collin},
+  hidelinks,
+  pdfcreator={LaTeX via pandoc}}
+
+\title{Statistical Analysis of Data in the Biotech Industry}
+\author{\href{https://www.linkedin.com/in/francoisz/}{Francois Collin}}
+\date{November 04, 2025}
+
+\begin{document}
+\maketitle
+
+{
+\setcounter{tocdepth}{2}
+\tableofcontents
+}
+\section*{Preliminaries - Leo Breiman}\label{preliminaries---leo-breiman}
+\addcontentsline{toc}{section}{Preliminaries - Leo Breiman}
+
+Before machine learning became a household name for engineers and computer scientists
+interested in making predictions, before AI had any developed applications, and
+before the name ``Data Science'' was popularized to describe an area of statistical application
+which most statisticians ignored, Leo Breiman \citep{Breiman:1984aa, Breiman:2001aa} was calling
+for the field of statistics to modernize or become irrelevant.
+
+\href{http://www.jstor.org/stable/2676681}{Breiman, L. (2001). Statistical modeling: The two cultures. Statistical Science 16, 199--215}
+is a must-read.
+
+My recent experience working in the context of specifying and validating an omic pipeline
+used to produce a molecular diagnostic test made it clear that even without AI, DS, and ML,
+statistical methods needed modernizing: the usual approach of using a named
+statistical procedure off the shelf will not yield accurate results in most cases -
+the esoteric error distributions which characterize modern datasets must be accounted for
+when analyzing these data.
+See \href{https://breimansworld.netlify.app/}{Where's the Randomness?} for a
+description of this context.\footnote{
+  Why the use of canned procedures persists is easily explained
+  in the context of a client who is uncritical of the form of any proposed solution
+  while being unflinchingly insistent on the timely
+  release of the said solution.}
+
+Inspired and encouraged by Leo Breiman, Bin Yu has modernized the concept of variability in data
+to reflect the character of modern day data collection and analysis. The PQRS framework
+(Yu and Kumbier, Front Inform Technol Electron Eng 2018 19(1):6-9)) highlight 4 elements of
+statistical practice which remain crucially important for the successful analysis of modern
+day datasets: population (P), question of interest (Q), representativeness of training data (R),
+and scrutiny of results (S). These concepts have always been important, but very often
+neglected in practice.. These concepts have always been important, but very often
+neglected in practice.
+
+\section{Statistics Training}\label{statistics-training}
+
+\subsection{\texorpdfstring{Training Program for Statisticians - a collaboration with \textbf{claude.ai}}{Training Program for Statisticians - a collaboration with claude.ai}}\label{training-program-for-statisticians---a-collaboration-with-claude.ai}
+
+As an exercise working with claude.ai, we design a training program for experienced statisticians.
+The professional development training is meant to bring statisticians up to speed with
+novel statistical methods and techniques which may be outsite of their expertise or
+sector of industry.
+
+\begin{itemize}
+\item
+  \href{./_M1C-stats-pd-plan-final-v35.html}{stats-pd-plan-final-v35.html} - final version of the
+  professional development program.
+\item
+  \href{./_M1C-stats-pd-plan-change-log.html}{stats-pd-plan-change-log.html} -
+  detailed change log documenting the development process
+\item
+  \href{./_M1C-ai-assistant-guide.html}{ai-assistant-guide} - outline
+  principles which apply broadly to working with AI assistants on complex projects.
+\end{itemize}
+
+\subsection{Specific Training Resources}\label{specific-training-resources}
+
+\subsubsection*{Generative AI}\label{generative-ai}
+\addcontentsline{toc}{subsubsection}{Generative AI}
+
+Resources - online courses, published papers, books, slide presentations - to learn
+about the areas of applications and development of AI that are most important to statisticians.
+These should include a basic set of learnings which all professionals interested in
+harnessing the powers of AI should know. In addition to this basic set, learnings
+that are most relevant for the integration of AI with statistics.
+
+Yu and Kumbier (Front Inform Technol Electron Eng 2018 19(1):6-9) \citep{Yu:2018aa}
+provide a framework for integrating statistical ideas in AI work which they
+term the PQRS Workflow. In this framework, the statistical concepts of
+population (P), question of interest (Q), representativeness of training data (R),
+and scrutiny of results (S) remain critically important in the application
+of AI to data analysis. We should include any training which can help clarify the framework
+to non-statisticians, or help statisticians explain the framework to
+non-statisticians.
+
+If it helps to limit resources or choose among similar options, we can assume
+that the statisticians work with bio-tech companies which market molecular diagnostics
+devices which use omic-wide\footnote{
+  transcriptomic, genomic, proteomic, methylomic}
+profiels as input.
+
+\begin{itemize}
+\tightlist
+\item
+  Report: \href{./_M1D-genAI-report-updated.html}{Comprehensive Introduction to Generative AI Resources}
+\end{itemize}
+
+\begin{itemize}
+\tightlist
+\item
+  Resources:
+
+  \begin{itemize}
+  \tightlist
+  \item
+    \href{./_M1D-genAI-changelog.html}{Gen AI - ChangeLog}
+  \item
+    \href{./_M1D-genAI-instructions.html}{Gen AI - Instructions}
+  \end{itemize}
+\end{itemize}
+
+\subsubsection*{Deep Learning Models}\label{deep-learning-models}
+\addcontentsline{toc}{subsubsection}{Deep Learning Models}
+
+Resources - online courses, published papers, books, slide presentations - to learn
+about the development deep learning theiry ands applications
+that are most important to statisticians.
+These should include a basic set of learnings which all professionals interested in
+harnessing the powers of Deep Leaning should know. In addition to this basic set, learnings
+that are most relevant for the integration of Deep Learning with statistics.
+
+If it helps to limit resources or choose among similar options, we can assume
+that the statisticians work with bio-tech companies which market molecular diagnostics
+devices which use omic-wide\footnote{
+  transcriptomic, genomic, proteomic, methylomic}
+profiels as input.
+
+\begin{itemize}
+\tightlist
+\item
+  Report: \href{./_M1E-DL-deep-learning-resources.html}{Comprehensive Resources for Deep Learning in Statistics \& Biotech}
+\end{itemize}
+
+\begin{itemize}
+\tightlist
+\item
+  Resources:
+
+  \begin{itemize}
+  \tightlist
+  \item
+    \href{./_M1E-DL-changelog.html}{ChangeLog}
+  \item
+    \href{./_M1E-DL-repository-setup.html}{Repository Setup}
+  \item
+    \href{./_M1E-DL-rendering-instructions.html}{Instructions for Rendering Reports and Changelog}
+  \item
+    \href{./_M1E-DL-report-instructions.html}{Generating HTML Reports from Markdown}
+  \item
+    \href{./_M1E-DL-markdown-template.html}{Markdown Template}
+  \end{itemize}
+\end{itemize}
+
+\section{Data (Re-)Analysis by Topic}\label{data-re-analysis-by-topic}
+
+\subsection{Reference-Free Genomic Inference with SPLASH and OASIS}\label{reference-free-genomic-inference-with-splash-and-oasis}
+
+\begin{itemize}
+\tightlist
+\item
+  \href{_M3B-SPLASH-OASIS/splash_oasis_methodology_presentation_v2.html}{Presentation}
+
+  \begin{itemize}
+  \tightlist
+  \item
+    Summarizes the key points made in the SPLASH and OASIS papers
+  \item
+    Includes comments on alternative approaches or interpretations
+    \textbf{but no additional analyses}
+  \end{itemize}
+\end{itemize}
+
+\begin{itemize}
+\tightlist
+\item
+  \href{./_M2B-RFGI_SPLASH_v2.html}{SPLASH} - a detailed look at the SPLASH article.
+\end{itemize}
+
+\begin{itemize}
+\tightlist
+\item
+  \href{./_M3A-OASIS.html}{OASIS} - a detailed look at the OASIS article.
+
+  \begin{itemize}
+  \tightlist
+  \item
+    INCOMPLETE
+  \end{itemize}
+\end{itemize}
+
+\subsection{scRNAseq UMI count normalization}\label{scrnaseq-umi-count-normalization}
+
+\begin{itemize}
+\item
+  slide deck: OneDrive folder of Speed Lab Meeting: \url{https://outlook.office365.com/mail/group/wehi.edu.au/speedlabmeeting/files}
+\item
+  Reference:
+
+  \begin{itemize}
+  \tightlist
+  \item
+    Ahlmann-Eltze and Huber (2023) \citep{Ahlmann-Eltze:2023aa}
+  \end{itemize}
+\item
+  Other:
+
+  \begin{itemize}
+  \tightlist
+  \item
+    Melms et. al.~(2021) \citep{Melms:2021aa}
+  \end{itemize}
+\end{itemize}
+
+\subsection{RUV}\label{ruv}
+
+\subsubsection*{Normalization Lit Review}\label{normalization-lit-review}
+\addcontentsline{toc}{subsubsection}{Normalization Lit Review}
+
+\begin{itemize}
+\tightlist
+\item
+  To Be Completed with an appropriate assistant.
+\end{itemize}
+
+\subsubsection*{The latest RUV}\label{the-latest-ruv}
+\addcontentsline{toc}{subsubsection}{The latest RUV}
+
+\begin{itemize}
+\tightlist
+\item
+  Link to Ramyar Molania presentations.
+\end{itemize}
+
+\subsubsection*{Beyond RUV}\label{beyond-ruv}
+\addcontentsline{toc}{subsubsection}{Beyond RUV}
+
+Can the methodology which enables the basic RUV analysis be adapted to
+other applications?
+
+\begin{itemize}
+\tightlist
+\item
+  IUV - identification of unwanted variability
+
+  \begin{itemize}
+  \tightlist
+  \item
+    the automated high throughput processing of samples necessary
+    to get the omic based readouts used to diagnose samples is carried out by
+    a pipeline which strings together numerous steps (typically hundreds).
+
+    \begin{itemize}
+    \tightlist
+    \item
+      eg. Cell-Free DNA Methylation Profiling Analysis
+    \end{itemize}
+  \item
+    As samples proceed through the pipeline they will be organized in various configurations
+    giving rise to various groupings:
+
+    \begin{itemize}
+    \tightlist
+    \item
+      plasma isolation
+    \item
+      cfDNA extraction
+    \item
+      amplification, conversion, \ldots{}
+    \end{itemize}
+  \item
+    measurements are recorded as samples travel through the pipeline, each
+    measurement potentially having its own shared variability or dependency structure
+  \item
+    a real problem is to identify the factors giving rise to excessive variability
+    in the downstream read-outs
+  \end{itemize}
+\end{itemize}
+
+\begin{itemize}
+\tightlist
+\item
+  QUV - quantification of unwanted variability
+
+  \begin{itemize}
+  \tightlist
+  \item
+    can RUV methodology be adapted to provide quantification of reproducibility?
+  \end{itemize}
+\end{itemize}
+
+\subsection{Miscellanious}\label{miscellanious}
+
+\begin{itemize}
+\tightlist
+\item
+  \href{./_M4A-intro_IUV.html}{IUV}
+\item
+  \href{./_M5A-cf_ddPCR_seq.html}{Digital Driplet PCR - soon}
+\item
+  \href{./_M6A-randomness_in_calls.html}{Randomness in sample calls - soon}
+\item
+  \href{./_M7A-interimSampleSizeAnalysis.html}{interimSampleSizeAnalysis - soon}
+
+  \begin{itemize}
+  \tightlist
+  \item
+    {[}\_M3A\_study\_design\_CB\_notes.pdf{]}
+  \end{itemize}
+\item
+  \url{nanopore_talk/microbiome_slides.html}
+
+  \begin{itemize}
+  \tightlist
+  \item
+    \url{nanopore_talk/nanopore_background.html}
+  \item
+    \url{nanopore_talk/umap_explained.html}
+  \item
+    \url{nanopore_talk/pdf_image_extraction.html}
+  \end{itemize}
+\end{itemize}
+
+\section{References}\label{references}
+
+\section{Appendix:}\label{appendix}
+
+\subsection*{Challenges in Statistical Analysis}\label{challenges-in-statistical-analysis}
+\addcontentsline{toc}{subsection}{Challenges in Statistical Analysis}
+
+`
+
+Types of errors:
+
+\begin{itemize}
+\tightlist
+\item
+  The question is wrong or inadequately posed
+
+  \begin{itemize}
+  \tightlist
+  \item
+    this is not that infrequent and is largely caused by
+    folks phrasing the question in a form that anticipates the solution.
+    eg, client expresses desire to know what a particular estimated regression
+    coefficient is
+  \item
+    solution is easy: subject matter experts should think hard about the
+    question which is then phrased using appropriate subject matter specific language.
+  \end{itemize}
+\end{itemize}
+
+\begin{itemize}
+\tightlist
+\item
+  An inappropriate model is used as the analysis framework to
+  address a question
+
+  \begin{itemize}
+  \tightlist
+  \item
+    this is either due to common practice or inadequate statistical training
+  \item
+    David Freedman discussed the inappropriate use of
+    statistical models in the social sciences
+    \citep{Freedman:2008aa, Freedman:2008ad, Freedman:2008ac, Freedman:2009ac}
+  \item
+    Inappropriate modeling is not limited to the social sciences
+
+    \begin{itemize}
+    \tightlist
+    \item
+      in biotech, the unchecked use of logistic regression whenever the
+      response is binary is ubiquitous.
+
+      \begin{itemize}
+      \tightlist
+      \item
+        the results of such analyses could be misleading due to the biases
+        illustrated in Freedman (2008) \citep{Freedman:2008aa}
+      \end{itemize}
+    \end{itemize}
+  \item
+    Leo Breiman pointed to inadequate training as the cause of
+    the reliance on \textbf{standard textbook methods} which
+    have a limited range of applicability - Breiman:
+    \citep{Breiman:1984aa, Breiman:2001aa}
+  \item
+    as regression models are used to answer almost every question
+    that come up in the internal analyses conducted by companies in industry,
+    many are going to be flawed.
+
+    \begin{itemize}
+    \tightlist
+    \item
+      For a review of how regression models go wrong see
+      \citep{Freedman:2009aa, Freedman:2010aa, Freedman:2008ac, Freedman:2008ad, Freedman:2004aa, Freedman:2008aa, Freedman:2008ab}
+    \end{itemize}
+  \item
+    clinical validation studies for complex omic Dx instruments that are designed
+    according to FDA guidelines will make use of the classical Neyman-Pearson hypothesis
+    testing context which is often invalid:
+
+    \begin{itemize}
+    \tightlist
+    \item
+      the samples in the study may not be representative of the target population.
+
+      \begin{itemize}
+      \tightlist
+      \item
+        there is rarely any explicit randomness in the selection of the study samples
+        so inference to any superset of the study samples is iffy at best.
+      \end{itemize}
+    \item
+      dependency structure among samples processed in batches is often complex
+
+      \begin{itemize}
+      \tightlist
+      \item
+        a run may be treated as a batch with internal structure or sub-batches.
+      \end{itemize}
+    \item
+      N is often small
+    \item
+      contrived samples may not be interpretable as intended or required
+    \item
+      other???
+    \end{itemize}
+  \end{itemize}
+\end{itemize}
+
+Improving in Analysis Results:
+
+\begin{itemize}
+\tightlist
+\item
+  Assessment, Assessment, Assessment
+
+  \begin{itemize}
+  \tightlist
+  \item
+    the path to better results through improved methodology must go through
+    \textbf{valid assessments of performance} - Speed:
+    \citep{Irizarry:2003aa, Bolstad:2004aa, Gagnon-Bartsch:2012aa, Gandolfo:2018aa, Irizarry:2006aa, Jacob:2018aa, Risso:2014aa, Yuan:2019aa}
+  \item
+    \emph{valid} here means that the assessment provides a direct indicator of performance
+    on a meaningful scale or end point.
+
+    \begin{itemize}
+    \tightlist
+    \item
+      when normalizing RNASeq gene expression profiles, one can measure the effectiveness of
+      the normalization step by examining the similarities among gene expression profiles before
+      and after normalization. Although this is a sensible way to assess the effect of the
+      normalization step, it is not a good metric to assess the impact normalization has on
+      the ultimate goal of the analysis - DGE analysis.
+    \item
+      when comparing two sequencing instruments in terms of their ability to carry-out
+      a reagent QC protocol designed to assess reagent quality:
+
+      \begin{itemize}
+      \tightlist
+      \item
+        although the appropriate assessment probably calls for an assessment of
+        performance against the truth, and a comparison of these performance parameters between
+        instruments, regulatory compliance may call for an equivalency assessment
+
+        \begin{itemize}
+        \tightlist
+        \item
+          it should not take much reflecting realize that an equivalency assessment
+          creates unnecessary complications and can go wrong in many ways:
+
+          \begin{itemize}
+          \tightlist
+          \item
+            an obvious problem being drift.
+          \item
+            down sampling to make the two instruments comparable is another obvious
+            problem
+          \end{itemize}
+        \end{itemize}
+      \end{itemize}
+    \item
+      using an upstream measurement to predict unconverted fraction
+      -SCALE, SCALE, SCALE
+    \end{itemize}
+  \end{itemize}
+\end{itemize}
+
+\section{Bad Analysis by Example}\label{bad-analysis-by-example}
+
+\begin{itemize}
+\item
+  predict \%unconverted with assistant tech
+\item
+  DDpcr
+\end{itemize}
+
+\section{}\label{section}
+
+\_M0A-healthy\_aging\_genes.html
+
+\_M1A-prof\_dev\_plan\_v1.html
+
+\_M1B-prof\_dev\_plan.html
+
+\_M1C-ai-assistant-guide.html
+
+\_M1C-stats-pd-plan-change-log.html
+
+\_M1C-stats-pd-plan-final-v35\_old.html
+
+\_M1C-stats-pd-plan-final-v35.html
+
+\_M1D-genAI-changelog.html
+
+\_M1D-genAI-instructions.html
+
+\_M1D-genAI-report-html.html
+
+\_M1D-genAI-report-updated.html
+
+\_M1E-DL-changelog.html
+
+\_M1E-DL-deep-learning-resources.html
+
+\_M1E-DL-markdown-template.html
+
+\_M1E-DL-rendering-instructions.html
+
+\_M1E-DL-report-instructions.html
+
+\_M1E-DL-repository-setup.html
+
+\_M2A-Comments.html
+
+\_M2A-RFGI\_SPLASH\_v1.html
+
+\_M2B-Comments.html
+
+\_M2B-RFGI\_SPLASH\_v2.html
+
+\_M3A-OASIS.html
+
+\_M3B-SPLASH-OASIS-changelog.html
+
+\_M3B-SPLASH-OASIS-markdown\_source.html
+
+\_M3B-SPLASH-OASIS-presentation\_slides.html
+
+\_M3B-SPLASH-OASIS-splash\_oasis\_presentation.html
+
+\_prof\_dev\_plan.html
+
+\_splash\_oasis\_presentation.html
+
+index\_1.html
+
+\bibliography{../\_bibFiles/\_healthy\_aging.bib,../../\_bibFiles/\_Breiman.bib,../../\_bibFiles/\_Freedman.bib,../../\_bibFiles/\_Yu.bib,../../\_bibFiles/\_RUV.bib,../../\_bibFiles/\_RMA.bib,../../\_bibFiles/\_scRNAseq\_norm.bib}
+
+\end{document}

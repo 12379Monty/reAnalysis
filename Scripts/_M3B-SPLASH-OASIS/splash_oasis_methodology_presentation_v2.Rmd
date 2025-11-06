@@ -86,8 +86,13 @@ peri-omic solution common to microniches of biology?
 
 - <span style="color:green;">4</span>: 
 The alignment of reads to a
-known sequence provides a powerful QC/QA element.  In the absence of this
-element what supplemental QC/QA measures are included.
+known sequence provides a powerful QC/QA element.  
+
+  - The lack of discussion of data quality and how
+quality will impact the results produced by the proposed algotihtm
+is a significant omission from the report.  
+
+  - The shallowness of the evaluation does not inform on this critical point.
 
 ---
 
@@ -104,9 +109,14 @@ element what supplemental QC/QA measures are included.
   - Cannot detect what's not in the reference
   - Limit discovery of novel biology
 
-- **The SPLASH solution**: Direct *statistical analysis*
+- **The SPLASH solution**: Direct *statistical analysis*<span style="color:green;">$^1$</span>
 of raw sequence data using anchor-target structure
 
+---
+
+- <span style="color:green;">1</span>: *statistical analysis* here means
+computing a number for each target and identifying targets based on these.
+ 
 ---
 
 ## Why the Anchor-Target Structure Works
@@ -136,7 +146,7 @@ of anchor-target pairs
 - <span style="color:green;">1</span>: A contingency table is a way
 succinctly summarize sample counts which can be cross-classified by
 2 categorical variables.  The contingency table summarization does
-not confer any analytical advantages other than providing a natural
+not confer any analytical advantage other than providing a natural
 and sufficient set of summary statistics  and a way to 
 compute chi-squared statistics.
 
@@ -185,7 +195,8 @@ and is rarely the best way to identify features of interest.
 
 ## Limitations of Current Statistical Tests
 
-- **Pearson's chi-squared test** requires expected cell counts ≥5 for valid inference
+- **Pearson's chi-squared test**^[Not state of the art]
+requires expected cell counts ≥5 for valid inference
   - Unreliable for sparse tables 
   - Provides little insight into *which* rows/columns drive differences
   - Computationally inefficient for large tables
@@ -283,7 +294,8 @@ Given a contingency table of anchor-target pairs across samples:
 5. **Compute test statistic** $T(N)$ using optimized $f$ and $c$
 6. **Calculate p-value** using closed-form bounds or asymptotic distribution
 
-This approach provides both *statistical rigor* and *biological interpretability*.
+This approach provides both *statistical rigor* and *biological interpretability*^[
+Thes words are not supported by much empirical evidence.]
 
 ---
 
@@ -329,18 +341,21 @@ This approach provides both *statistical rigor* and *biological interpretability
 
 ---
 
-## For Bioinformaticians: Technical Benefits <span style="color:green;">$^1$</span>
+## For Bioinformaticians: Technical Benefits 
 
 - **Computational efficiency**
   - Avoids computationally expensive alignment
   - Scales to large datasets
 
-- **Statistical Benefits**
-  - OASIS provides finite-sample valid statistics<span style="color:green;">$^1$</span>:
+- **Statistical Benefits**<span style="color:green;">$^1$</span>:
+  - OASIS provides finite-sample valid statistics
   - Closed-form P-value calculations avoid permutation testing
   - Controls for multiple testing
 
-> <span style="color:green;">1</span>:  I'm not sure I beleve this.
+--- 
+
+-  <span style="color:green;">1</span>:  I'm not sure I beleve this
+and it doesn't matter.
 All we need is that the statistics provide a useful index which
 can be used to identify interesting targets.
 
@@ -482,7 +497,7 @@ which reflect meaningful endpoints
 
 ---
 
-## Quality - Quality - Quality
+## Variability - Variability - Variability
 
 - The full range of data quality which may be present
 in successful RNASeq data sets must be accounted for.
@@ -496,14 +511,15 @@ the extent and impact of unwanted variability in RNA-Seq data,
 and ways to remove it.
 
 <!--
+- I expect unwanted variability to be a more formidable threat
+to validity in a reference-free context as the mapping of sequences 
+to a reference already filter a lot of the bad stuff.
+-->
+
 ## TO DO
 
 - Everything that this study glossed over -
 variability regimes which come with the omic territory
-
-- PNAS paper has 100 pages of theory
-
--->
 
 
 

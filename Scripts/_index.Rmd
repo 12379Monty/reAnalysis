@@ -31,4 +31,5 @@ title: Training and Data Re-Analysis
 <li><a href="_M3B-SPLASH-OASIS-presentation_slides.html">_M3B-SPLASH-OASIS-presentation_slides.html</a></li>
 <li><a href="_M3B-SPLASH-OASIS-splash_oasis_presentation.html">_M3B-SPLASH-OASIS-splash_oasis_presentation.html</a></li>
 <li><a href="_prof_dev_plan.html">_prof_dev_plan.html</a></li>
-<li><a href="splash_oasis_presentation.html">splash_oasis_presentation.html</a></li>
+<li><a href="_splash_oasis_presentation.html">_splash_oasis_presentation.html</a></li>
+<li><a href="index_1.html">index_1.html</a></li>

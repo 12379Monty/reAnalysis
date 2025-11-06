@@ -505,8 +505,14 @@ be statistical or mathematical to work well.</p></li>
 one-size-fits-all peri-omic solution common to microniches of
 biology?</p></li>
 <li><p><span style="color:green;">4</span>: The alignment of reads to a
-known sequence provides a powerful QC/QA element. In the absence of this
-element what supplemental QC/QA measures are included.</p></li>
+known sequence provides a powerful QC/QA element.</p>
+<ul>
+<li><p>The lack of discussion of data quality and how quality will
+impact the results produced by the proposed algotihtm is a significant
+omission from the report.</p></li>
+<li><p>The shallowness of the evaluation does not inform on this
+critical point.</p></li>
+</ul></li>
 </ul>
 </section>
 <section class="slide level1">
@@ -528,7 +534,16 @@ Reference-Free Approach</h2>
 <li>Limit discovery of novel biology</li>
 </ul></li>
 <li><strong>The SPLASH solution</strong>: Direct <em>statistical
-analysis</em> of raw sequence data using anchor-target structure</li>
+analysis</em><span style="color:green;"><span class="math inline">\(^1\)</span></span> of raw sequence data using
+anchor-target structure</li>
+</ul>
+</section>
+<section class="slide level1">
+
+<ul>
+<li><span style="color:green;">1</span>: <em>statistical analysis</em>
+here means computing a number for each target and identifying targets
+based on these.</li>
 </ul>
 </section>
 <section class="slide level1">
@@ -573,7 +588,7 @@ organisms</li>
 <li><span style="color:green;">1</span>: A contingency table is a way
 succinctly summarize sample counts which can be cross-classified by 2
 categorical variables. The contingency table summarization does not
-confer any analytical advantages other than providing a natural and
+confer any analytical advantage other than providing a natural and
 sufficient set of summary statistics and a way to compute chi-squared
 statistics.</li>
 </ul>
@@ -632,8 +647,8 @@ features of interest.</li>
 <h2 id="limitations-of-current-statistical-tests">Limitations of Current
 Statistical Tests</h2>
 <ul>
-<li><strong>Pearson’s chi-squared test</strong> requires expected cell
-counts ≥5 for valid inference
+<li><strong>Pearson’s chi-squared test</strong><a href="#/fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a>
+requires expected cell counts ≥5 for valid inference
 <ul>
 <li>Unreliable for sparse tables</li>
 <li>Provides little insight into <em>which</em> rows/columns drive
@@ -767,7 +782,7 @@ Example Computation</h2>
 asymptotic distribution</li>
 </ol>
 <p>This approach provides both <em>statistical rigor</em> and
-<em>biological interpretability</em>.</p>
+<em>biological interpretability</em><a href="#/fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a></p>
 </section>
 <section class="slide level1">
 
@@ -822,26 +837,29 @@ function</li>
 </section>
 <section class="slide level1">
 
-<h2 id="for-bioinformaticians-technical-benefits-1">For
-Bioinformaticians: Technical Benefits <span style="color:green;"><span class="math inline">\(^1\)</span></span></h2>
+<h2 id="for-bioinformaticians-technical-benefits">For Bioinformaticians:
+Technical Benefits</h2>
 <ul>
 <li><strong>Computational efficiency</strong>
 <ul>
 <li>Avoids computationally expensive alignment</li>
 <li>Scales to large datasets</li>
 </ul></li>
-<li><strong>Statistical Benefits</strong>
+<li><strong>Statistical Benefits</strong><span style="color:green;"><span class="math inline">\(^1\)</span></span>:
 <ul>
-<li>OASIS provides finite-sample valid statistics<span style="color:green;"><span class="math inline">\(^1\)</span></span>:</li>
+<li>OASIS provides finite-sample valid statistics</li>
 <li>Closed-form P-value calculations avoid permutation testing</li>
 <li>Controls for multiple testing</li>
 </ul></li>
 </ul>
-<blockquote>
-<p><span style="color:green;">1</span>: I’m not sure I beleve this. All
-we need is that the statistics provide a useful index which can be used
-to identify interesting targets.</p>
-</blockquote>
+</section>
+<section class="slide level1">
+
+<ul>
+<li><span style="color:green;">1</span>: I’m not sure I beleve this and
+it doesn’t matter. All we need is that the statistics provide a useful
+index which can be used to identify interesting targets.</li>
+</ul>
 </section>
 <section class="slide level1">
 
@@ -1049,7 +1067,8 @@ endpoints</li>
 </section>
 <section class="slide level1">
 
-<h2 id="quality---quality---quality">Quality - Quality - Quality</h2>
+<h2 id="variability---variability---variability">Variability -
+Variability - Variability</h2>
 <ul>
 <li><p>The full range of data quality which may be present in successful
 RNASeq data sets must be accounted for.</p></li>
@@ -1059,14 +1078,15 @@ in the design and evaluation steps.</p></li>
 of unwanted variability in RNA-Seq data, and ways to remove it.</p></li>
 </ul>
 <!--
-## TO DO
-
-- Everything that this study glossed over -
-variability regimes which come with the omic territory
-
-- PNAS paper has 100 pages of theory
-
+- I expect unwanted variability to be a more formidable threat
+to validity in a reference-free context as the mapping of sequences 
+to a reference already filter a lot of the bad stuff.
 -->
+<h2 id="to-do">TO DO</h2>
+<ul>
+<li>Everything that this study glossed over - variability regimes which
+come with the omic territory</li>
+</ul>
 </section>
 <section class="slide level1">
 
@@ -1099,6 +1119,14 @@ sequencing data with PRPS. Nature Biotechnology 41, 82–95. Available at:
  nohup Rscript -e "rmarkdown::render('splash_oasis_methodology_presentation_v2.Rmd')" > splash_oasis_methodology_presentation_v2.log  &
   
 -->
+</section>
+<section id="footnotes" class="footnotes footnotes-end-of-document" role="doc-endnotes">
+<hr />
+<ol>
+<li id="fn1"><p>Not state of the art<a href="#/fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn2"><p> Thes words are not supported by much empirical
+evidence.<a href="#/fnref2" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+</ol>
 </section>
     </div>
   </div>
