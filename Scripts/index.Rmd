@@ -17,7 +17,7 @@ output:
     # this has no effect
     number_sections: yes
     # css: ['../_css/pandoc3.css', '../_css/myMargins.css']
-bibliography: [../_bibFiles/_healthy_aging.bib, ../../_bibFiles/_Breiman.bib, ../../_bibFiles/_Freedman.bib, ../../_bibFiles/_Yu.bib, ../../_bibFiles/_RUV.bib, ../../_bibFiles/_RMA.bib, ../../_bibFiles/_scRNAseq_norm.bib]
+bibliography: [../_bibFiles/_ref_free_genom_inf.bib, ../_bibFiles/_healthy_aging.bib, ../../_bibFiles/_Breiman.bib, ../../_bibFiles/_Freedman.bib, ../../_bibFiles/_Yu.bib, ../../_bibFiles/_RUV.bib, ../../_bibFiles/_RMA.bib, ../../_bibFiles/_scRNAseq_norm.bib]
 csl: ../_csl/cell-numeric.csl
 link-citations: true
 ---
@@ -145,7 +145,7 @@ PREFIX <- "index" #- replace by FLOWCELL???
 
 # Reference-Free Genomic Inference with SPLASH and OASIS
 
-## Introduction
+## Executive Summary
 
 
 <p><p/>
@@ -166,17 +166,48 @@ for scientific discovery
 [Code](https://github.com/refresh-bio/SPLASH) [@Baharav:2024aa]
 
 
+
+* The OASIS paper, as an example of mathematical statistics, is a beautiful piece of work.
 The articles provide a proof of concept of the proposed methods.
 
-Primary Criticism:
+* As a reference which data analysts might go to, the articles lack the key peices needed
+for the reader to get a true sense of performance and for the 
 
-* Technical validation ion the omic scale is required to get a sense of the utility of the
+* Technical validation on the omic scale is required to get a sense of the utility of the
 proposed methods.  
 
 * **Technical validation** should be run on typical data and should include both
 measures of algorithm performance and resistance to **input data quality** and
-**unwanted variation**.  See [intro_2_UV](...).
+**unwanted variation**, which are always part of the story when omic scale assays
+are involved.  See [intro_to_UV](...).
 
+
+* The input data are never examined.  **Definition 1 (Null Model)** is actually the
+fundamental assumption that is necessary for everything else to follow, yet that assumption
+is never scrutinized.^[
+This is not uncommon and is rooted in the divide between applied statistics and mathematical
+statistics.  The mathematics require assumptions so it's perfectively reasonable for the
+mathematical statistician to start there.  None of the mathematical results can be relied on
+unless the assumptions are true.  The crux of the work for the applied statistician should be  to
+establish the null model.  In practice, the necessary null model is almost always assumed 
+without any supporting evidence.]
+In practice, the analysis of omic scale data cannot proceed before careful examination
+of the collected data.  The presence of unwanted variability will invalidate the assumed
+null model and all results based on the analysis of the flawed data.
+See [intro_to_UV](...).
+
+<p><p/>
+> OASIS provides a tool toward answering questions 
+> in mechanistic biology that are manual labor
+> intensive or impossible to address with current 
+> statistical approaches.
+
+* To get a better understanding of what OASIS brings, or doesn't bring, to the table,
+we need to repeat the analyses, paying attention to variability in the
+input data quality and not retricting ourselves to to Pearson’s X2
+as comparator.
+
+<!--
 * The claim of the validity of the p-values, one of the selling points of the method,
 is suspect.  When we fit one prototype 
 model to 20K, 50K or 100K feature data subsets we do not believe that the  model
@@ -185,11 +216,14 @@ presence of bad points, or outliers, and we do not put too much credibility on t
 precise values of p-values; we believe that they generally order hypotheses the
 right way.
    - In this particular case there are bigger problems with the p-values -
-their properties are derived based in the assumption that $$f$$ and $$c$$ 
-are fixed values, when they are derived from the data.
+their properties are derived based in the assumption that $f$ and $c$ 
+are fixed values, when in fact they are derived from the data.
+-->
+
+<br/>
 
 
-### On End to End Omic Scale Analysis 
+### On End to End Omic Scale Analysis  {-}
 
 <p><p/>
 * Omic scale data refers to measurements taken in parallel over many features -
@@ -252,24 +286,28 @@ produces the best results as ascertained by omic scale assessments of accuracy.
 -->
 
 
+<br/>
 
-## Presentation
+## Reports/Reviews
 
-* The presentation [linked here](_M3B-SPLASH-OASIS/splash_oasis_methodology_presentation_v2.html)
-provides a high level summary of the SPLASH article in the words of the authors. 
+### [Slide Presentation](_M3B-SPLASH-OASIS/splash_oasis_methodology_presentation_v2.html) {-}
+
+* The slide presentation provides a high level summary of the SPLASH article
+in the words of the authors. 
 
 * Some comments are inserted where there might be gaps or a difference of opinion.
 
 <br/>
 
-## [SPLASH](_M2B-RFGI_SPLASH_v2.html)
+### [SPLASH](_M2B-RFGI_SPLASH_v2.html) Notes {-}
 
-* Contains a literature review  of Reference-Free Genomic Inference prior to SPLASH, as well
-methods developed for RNA-seq which could be used here.
+* Contains
+   - literature review  of Reference-Free Genomic Inference prior to SPLASH, as well as  
+   - methods developed for RNA-seq which could be used here.
 
+<br/>
 
-
-## [OASIS](./_M3A-OASIS.html) 
+### [OASIS](./_M3A-OASIS.html)  Notes {-}
 
 
 * Contains some notes on OASIS ,.
