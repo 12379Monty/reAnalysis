@@ -405,7 +405,7 @@ samples processing:
            - repeats only capture sequencing variability and are rarely of any interest
          - technical replicates are obtained from the full end to end processing of one source material
             - variations of the basic (full) technical replicate can be designed to examine the effects of
-specific parts of the pipeline of variability.
+specific parts of the pipeline on variability.
          - biologoical replicates are obtained from the full end to end processing of different source material
         
          
@@ -722,4 +722,3 @@ $\chi^2(p,q) = 2\sum_i\frac{(p_i - q_i)^2}{p_i + q_i}$.
 ## nohup Rscript -e "rmarkdown::render('_M3A-OASIS.Rmd')" > _M3A-OASIS.log  &
 
 -->
-

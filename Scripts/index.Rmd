@@ -151,38 +151,57 @@ PREFIX <- "index" #- replace by FLOWCELL???
 <p><p/>
 * The [Salzman Lab](https://salzmanlab.stanford.edu/) 
 develop and apply new **statistical algorithms** for **biological inference**
-on fundamental questions in the evolution of genomes.
+on fundamental questions in the evolution of genomes.^[
+Dr. Salzman leads a 
+[purely data science statistical research group](https://youtu.be/nHuc5mlQRQw?si=qRi7bnjZqGwwxHY3&t=31)
+whose mission is to modernize analysis tools to better deal with the current era of data -
+[ultra high throughout precise resolution genomic measurements](https://youtu.be/nHuc5mlQRQw?si=qRi7bnjZqGwwxHY3&t=106) - 
+and to ensure that they are more fully
+[statistical and mathematical in nature](https://youtu.be/nHuc5mlQRQw?si=qRi7bnjZqGwwxHY3&t=115).
+than current practice.]
+
 
 <p><p/> 
 * Here we consider 2 papers from the [Salzman Lab](https://salzmanlab.stanford.edu/):
-   - SPLASH: 
-A statistical, reference-free genomic algorithm unifies biological discover
+   - SPLASH: A statistical, reference-free genomic algorithm unifies biological discover
 [PDF](https://www.cell.com/cell/pdf/S0092-8674(23)01179-0.pdf),
 [Code](https://github.com/refresh-bio/SPLASH) [@Chaung:2023aa]
-   - OASIS: 
-An interpretable, finite-sample valid alternative to Pearson’s X2 
+   - OASIS: An interpretable, finite-sample valid alternative to Pearson’s X2 
 for scientific discovery
 [URL](https://www.pnas.org/doi/10.1073/pnas.2304671121),
 [Code](https://github.com/refresh-bio/SPLASH) [@Baharav:2024aa]
 
 
-
+<p><p/> 
 * The OASIS paper, as an example of mathematical statistics, is a beautiful piece of work.
-The articles provide a proof of concept of the proposed methods.
+The articles provide a proof of concept of the proposed methods in an idealized setting.
+The exposition is mathematical with the p-value playing a pivotal role throughout.
+The nice mathematical dressing comes at a cost of having to rely on unrealistic assumptions,
+starting with the assumption that replicate target count vectors have a multinomial
+distribution with a fixed underlying probability distribution.^[
+Perhaps in Dr. Salzman's lab samples can go through the entire preparation and sequencing
+process without bearing a trace of their passage through the process, but in a typical
+production  setting, as samples navigate  through the processing pipeline, they accumulate
+technical artifacts which impact the batches of reads which are harvested for each sample.
+The sequence specific effect may be suppression or enrichment, large or small,
+unique or shared across many sequences.  The technical artifacts are typically not
+hard to detect and in some cases can only be missed by not looking at the data
+coming off the sequencers before pushing them down the processing pipeline.
+See Section \@ref(trt-unwanted-var) for examples from RNA-Seq.]
 
-* As a reference which data analysts might go to, the articles lack the key peices needed
-for the reader to get a true sense of performance and for the 
 
-* Technical validation on the omic scale is required to get a sense of the utility of the
+
+
+* As a reference which data analysts might go to for guidance, the articles lack the key pieces needed
+for the reader to get a true sense of performance and for the scope of the analysis necessary
+to obtain valid results.
+   - Technical validation on the omic scale is required to get a sense of the utility of the
 proposed methods.  
-
-* **Technical validation** should be run on typical data and should include both
+   - **Technical validation** should be run on typical data and should include both
 measures of algorithm performance and resistance to **input data quality** and
 **unwanted variation**, which are always part of the story when omic scale assays
-are involved.  See [intro_to_UV](...).
-
-
-* The input data are never examined.  **Definition 1 (Null Model)** is actually the
+are involved.  See [Introduction to the Treatment of Unwanted Variability](_M4A-RUV/intro_treat_UV.html).
+   -  The input data are never examined.  **Definition 1 (Null Model)** is actually the
 fundamental assumption that is necessary for everything else to follow, yet that assumption
 is never scrutinized.^[
 This is not uncommon and is rooted in the divide between applied statistics and mathematical
@@ -190,11 +209,11 @@ statistics.  The mathematics require assumptions so it's perfectively reasonable
 mathematical statistician to start there.  None of the mathematical results can be relied on
 unless the assumptions are true.  The crux of the work for the applied statistician should be  to
 establish the null model.  In practice, the necessary null model is almost always assumed 
-without any supporting evidence.]
+without substantial supporting evidence.]
 In practice, the analysis of omic scale data cannot proceed before careful examination
 of the collected data.  The presence of unwanted variability will invalidate the assumed
 null model and all results based on the analysis of the flawed data.
-See [intro_to_UV](...).
+See [Introduction to the Treatment of Unwanted Variability](_M4A-RUV/intro_treat_UV.html).
 
 <p><p/>
 > OASIS provides a tool toward answering questions 
@@ -204,7 +223,7 @@ See [intro_to_UV](...).
 
 * To get a better understanding of what OASIS brings, or doesn't bring, to the table,
 we need to repeat the analyses, paying attention to variability in the
-input data quality and not retricting ourselves to to Pearson’s X2
+input data quality and not restricting ourselves to to Pearson’s X2
 as comparator.
 
 <!--
@@ -237,21 +256,11 @@ and follow the sample set through all of the processing steps including QC asses
 and filtering (if any), sample pre-processing  (further filtering and normalization),
 data analysis (compute the desired results and report the findings).
 
-* The article provided the information needed to
+* The SPLASH article provided the information needed to
 show that the technology works in principle, but to appreciate
 how well the technology will work in practice, it has to be evaluated 
-in a way that fully reflects the  expected usage.
+in a way that fully reflects the  expected analysis pipeline. 
 
-<!--
-* Having good comparator analysis methods is helpful, if not crucial.  I'm not sure that
-the chi-square test provides a good comparator.  I don't recall ever coming 
-across the chi-square test in the course of RNA-Seq related analyses, but
-my experience is limited to comparing gene expression levels across samples.
-There are a number of R packages which treat compositional data analysis
-which is analogous to the problem addressed in SPLASH.  Many options 
-are listed in Section \@ref(rna-seq-wi-samp); it should be possible to customize one or more
-to provide a comparator for SPLASH+OASIS.
--->
 
 * Having a good dataset for assessment
 is also critical and could include control features, control samples,
@@ -262,6 +271,76 @@ which will be processed in production.
 
 <br/>
 
+
+## Reports/Reviews
+
+<p><p/>
+* [Slide Presentation](_M3B-SPLASH-OASIS/splash_oasis_methodology_presentation_v2.html) {-}
+   - The slide presentation provides a high level summary of the SPLASH article
+in the words of the authors. 
+   - Some comments are inserted where there might be gaps or a difference of opinion.
+
+
+<p><p/>
+* [SPLASH](_M2B-RFGI_SPLASH_v2.html) Notes {-}
+   - Contains
+      - literature review  of Reference-Free Genomic Inference prior to SPLASH, as well as  
+      - methods developed for RNA-seq which could be used here.
+
+
+<p><p/>
+* [OASIS](./_M3A-OASIS.html)  Notes {-}
+   - Contains some notes on OASIS.
+
+
+
+### Postscript: More SPLASH {-}
+
+Three follow-up publications provide more information on the application of
+SPLASH2, a fast, scalable implementation of SPLASH:
+
+```{r index-write-bib, results="asis", include=F}
+ # https://stackoverflow.com/questions/26851952/is-it-possible-to-insert-the-full-reference-of-an-article-in-the-middle-of-a-rma
+
+  SPLASH2x3_refs_lst <- bibtex::read.bib("../_bibFiles/_SPLASH2x3.bib")
+
+ for(ii in seq_along(SPLASH2x3_refs_lst)) {
+  cat('\n* ')
+  print(SPLASH2x3_refs_lst[[ii]])
+ }
+
+```
+
+<br/>
+
+# The Treatment of Unwanted Variability {#trt-unwanted-var}
+
+* All collected experimental data are liable to contain some
+unwanted variability - variability in the measurements made on
+the experimental units which is unrelated to the question of interest.
+
+*
+
+<br/>
+
+# References {-}
+
+<div id="refs"></div>
+
+<br/>
+
+# Appendix  {-}
+
+
+<br/>
+
+```{r, echo=FALSE}
+  knitr::knit_exit()
+```
+
+################################################
+## ARCHIVE
+################################################
 <!--
 ## On inferential frameworks   {-}
 
@@ -285,56 +364,16 @@ will often dominate the total variability.
 produces the best results as ascertained by omic scale assessments of accuracy.
 -->
 
-
 <br/>
 
-## Reports/Reviews
 
-### [Slide Presentation](_M3B-SPLASH-OASIS/splash_oasis_methodology_presentation_v2.html) {-}
-
-* The slide presentation provides a high level summary of the SPLASH article
-in the words of the authors. 
-
-* Some comments are inserted where there might be gaps or a difference of opinion.
-
-<br/>
-
-### [SPLASH](_M2B-RFGI_SPLASH_v2.html) Notes {-}
-
-* Contains
-   - literature review  of Reference-Free Genomic Inference prior to SPLASH, as well as  
-   - methods developed for RNA-seq which could be used here.
-
-<br/>
-
-### [OASIS](./_M3A-OASIS.html)  Notes {-}
-
-
-* Contains some notes on OASIS ,.
-
-
-<br/>
-
-# The Identification and Removal of Unwanted Variability
-
-* RUV might be the most imoortat missibf oiece for SPLASH
-
-<br/>
-
-# References
-<div id="refs"></div>
-
-<br/>
-
-# Appendix: 
-
-
-
-```{r, echo=FALSE}
-  knitr::knit_exit()
-```
-
-################################################
-## ARCHIVE
-################################################
-
+<!--
+* Having good comparator analysis methods is helpful, if not crucial.  I'm not sure that
+the chi-square test provides a good comparator.  I don't recall ever coming 
+across the chi-square test in the course of RNA-Seq related analyses, but
+my experience is limited to comparing gene expression levels across samples.
+There are a number of R packages which treat compositional data analysis
+which is analogous to the problem addressed in SPLASH.  Many options 
+are listed in Section \@ref(rna-seq-wi-samp); it should be possible to customize one or more
+to provide a comparator for SPLASH+OASIS.
+-->
