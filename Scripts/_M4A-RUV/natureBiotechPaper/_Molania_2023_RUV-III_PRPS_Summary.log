@@ -1,0 +1,27 @@
+
+
+processing file: _Molania_2023_RUV-III_PRPS_Summary.Rmd
+1/19                             
+2/19 [sidenote]                  
+3/19                             
+4/19 [setup]                     
+5/19                             
+6/19 [molania-2023-GlobalOptions]
+7/19                             
+8/19 [molania-2023-Prelims]      
+9/19                             
+10/19 [molania-2023-write-bib]    
+11/19                             
+12/19 [unnamed-chunk-1]           
+13/19                             
+14/19 [nat-biotech-fig-002]       
+15/19                             
+16/19 [unnamed-chunk-2]           
+17/19                             
+18/19 [nat-biotech-fig-006]       
+19/19                             
+output file: _Molania_2023_RUV-III_PRPS_Summary.knit.md
+
+/usr/local/bin/pandoc +RTS -K512m -RTS _Molania_2023_RUV-III_PRPS_Summary.knit.md --to html4 --from markdown+autolink_bare_uris+tex_math_single_backslash --output _Molania_2023_RUV-III_PRPS_Summary.html --lua-filter /Library/Frameworks/R.framework/Versions/4.4-x86_64/Resources/library/bookdown/rmarkdown/lua/custom-environment.lua --lua-filter /Users/fcollin/Library/R/x86_64/4.4/library/rmarkdown/rmarkdown/lua/pagebreak.lua --lua-filter /Users/fcollin/Library/R/x86_64/4.4/library/rmarkdown/rmarkdown/lua/latex-div.lua --lua-filter /Users/fcollin/Library/R/x86_64/4.4/library/rmarkdown/rmarkdown/lua/table-classes.lua --embed-resources --standalone --wrap preserve --variable bs3=TRUE --section-divs --table-of-contents --toc-depth 2 --template /Users/fcollin/Library/R/x86_64/4.4/library/rmarkdown/rmd/h/default.html --no-highlight --variable highlightjs=1 --number-sections --variable theme=bootstrap --mathjax --variable 'mathjax-url=https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML' --include-in-header /var/folders/jk/d24lm6n944q5y650lph85m7w0000gp/T//RtmpJvAj6F/rmarkdown-str156eb36c698d3.html --variable code_folding=hide --variable source_embed=_Molania_2023_RUV-III_PRPS_Summary.Rmd --include-after-body /var/folders/jk/d24lm6n944q5y650lph85m7w0000gp/T//RtmpJvAj6F/file156eb285b60bd.html --variable code_menu=1 
+
+Output created: _Molania_2023_RUV-III_PRPS_Summary.html

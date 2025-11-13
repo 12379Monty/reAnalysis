@@ -20,8 +20,8 @@ Rscript -e   \
 
  #########################################
 md_folder=.
-md_file=Molania_2023_RUV-III_PRPS_Summary
-rmd_file=Molania_2023_RUV-III_PRPS_Summary
+md_file=Molania_2023_RUV-III_PRPS_Summary_2
+rmd_file=Molania_2023_RUV-III_PRPS_Summary_2
 
 md_file_path=$md_folder/$md_file
 rmd_file_path=$md_folder/$rmd_file
@@ -40,7 +40,7 @@ Rscript -e   \
 
  #########################################
 md_folder=.
-md_file=AI_Enhanced_RUV_Proposal
+md_file=AI_ML_Applications_RNA_seq_Tasks
 
 md_file_path=$md_folder/$md_file
 
@@ -57,7 +57,7 @@ Rscript -e   \
 
  #########################################
 md_folder=.
-md_file=AI_Enhanced_RUV_Part1_current_state
+md_file=Part1_Current_State_AI_ML_RUV
 
 md_file_path=$md_folder/$md_file
 
@@ -74,7 +74,7 @@ Rscript -e   \
 
  #########################################
 md_folder=.
-md_file=AI_Enhanced_RUV_Part2_Research_Proposal
+md_file=Part2_Research_Proposal_AI_Enhanced_RUV
 
 md_file_path=$md_folder/$md_file
 

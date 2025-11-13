@@ -1,8 +1,166 @@
-# Summary: Removing Unwanted Variation from Large-Scale RNA Sequencing Data with PRPS
-
-**Citation:** Molania, R., Foroutan, M., Gagnon-Bartsch, J.A., Gandolfo, L.C., Jain, A., Sinha, A., Olshansky, G., Dobrovic, A., Papenfuss, A.T., and Speed, T.P. (2023). Removing unwanted variation from large-scale RNA sequencing data with PRPS. *Nature Biotechnology* 41, 82–95. https://doi.org/10.1038/s41587-022-01440-w
-
 ---
+title: Removing Unwanted Variation from Large-Scale RNA Sequencing Data with PRPS
+author: "claude Sonnet 4.5 prompted by [Francois Collin](https://www.linkedin.com/in/francoisz/)"
+date: "`r format(Sys.time(), '%B %d, %Y')`"
+always_allow_html: yes
+output:
+  #html_document:
+  # for use of .tabset
+  bookdown::html_document2:
+    code_folding: hide
+    code_download: true
+    toc: true
+    toc_depth: 2
+    # does this have an effect
+    fig_caption: yes
+    # this has no effect
+    number_sections: yes
+    # css: ['../_css/pandoc3.css', '../_css/myMargins.css']
+#bibliography: [../_bibFiles/_ref_free_genom_inf.bib, ../_bibFiles/_healthy_aging.bib, ../../_bibFiles/_Breiman.bib, ../../_bibFiles/_Freedman.bib, ../../_bibFiles/_Yu.bib, ../../_bibFiles/_RUV.bib, ../../_bibFiles/_RMA.bib, ../../_bibFiles/_scRNAseq_norm.bib]
+#csl: ../_csl/cell-numeric.csl
+#link-citations: true
+---
+
+```{css sidenote, echo = FALSE}
+
+.main-container {
+    margin-left: 250px;
+}
+.sidenote, .marginnote { 
+  float: right;
+  clear: right;
+  margin-right: -40%;
+  width: 37%;         # best between 50% and 60%
+  margin-top: 0;
+  margin-bottom: 0;
+  font-size: 1.1rem;
+  line-height: 1.3;
+  vertical-align: baseline;
+  position: relative;
+  }
+```
+
+
+<style>
+@import url('https://fonts.googleapis.com/css?family=Raleway');
+@import url('https://fonts.googleapis.com/css?family=Oxygen');
+@import url('https://fonts.googleapis.com/css?family=Raleway:bold');
+@import url('https://fonts.googleapis.com/css?family=Oxygen:bold');
+
+.main-container {
+  max-width: 1400px !important;
+}
+
+body{
+  font-family: 'Oxygen', sans-serif;
+  font-size: 16px;
+  line-height: 24px;
+}
+
+h1,h2,h3,h4 {
+  font-family: 'Raleway', sans-serif;
+}
+
+.container { width: 1400px; }
+
+caption {
+  font-size: 20px;
+  caption-side: top;
+  text-indent: 30px;
+  background-color: lightgrey;
+  color: black;
+  margin-top: 5px;
+}
+
+g-table-intro h4 {
+  text-indent: 0px;
+}
+</style>
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(echo = TRUE,
+                      comment = NA,
+                      warning = FALSE,
+                      error = FALSE,
+                      message = FALSE,
+                      cache = FALSE,
+                      fig.width = 8,
+                      fig.height = 4)
+```
+
+```{r molania-2023-GlobalOptions, results="hide", include=FALSE, cache=FALSE}
+
+knitr::opts_knit$set(stop_on_error = 2L) #really make it stop
+options(knitr.table.format = 'html')
+
+options(stringsAsFactors=F)
+
+ #knitr::dep_auto()
+
+```
+<!-- ######################################################################## -->
+
+
+```{r molania-2023-Prelims,  include=FALSE, echo=FALSE, results='hide', message=FALSE} 
+
+
+FN <- "_Molania_2023_RUV-III_PRPS_Summary"
+if(sum(grepl(FN, list.files()))==0) stop("Check FN")
+
+PREFIX <- "_Molania_2023_RUV-III_PRPS_Summary" #- replace by FLOWCELL???
+
+ suppressMessages(require(rmarkdown))
+ suppressMessages(require(knitr))
+
+ suppressPackageStartupMessages(require(methods))
+ suppressPackageStartupMessages(require(bookdown))
+
+ suppressPackageStartupMessages(require(magrittr))
+
+ # Shotcuts for knitting and rendering while in R session (Invoke interactive R from R/Scripts folder)
+ kk <- function(n='') knitr::knit2html(paste("t", n, sep=''), envir=globalenv(),
+       output=paste(FN,".html", sep=''))
+
+ rr <- function(n='') rmarkdown::render(paste("t", n, sep=''), envir=globalenv(),
+       output_file=paste(FN,".html", sep='')) ##, output_dir='Scripts')
+
+ bb <- function(n='') browseURL(paste(FN,".html", sep=''))
+
+ # The usual shortcuts
+ zz <- function(n='') source(paste("t", n, sep=''))
+
+
+```
+<!-- ######################################################################## -->
+
+<br/>
+
+# Introduction
+
+This document summarizes in great detail the article by Molina
+et al. (2023) in which it is shown that many TCGA datasets are
+affected by unwanted variation which can affetct the resutsts
+of an analysis.  It is also shown through numerous examples
+how these effects can be removed.  Two case are shown in
+Section \@ref(detail-res).
+
+
+## Citation
+
+```{r molania-2023-write-bib, results="asis", echo=F}
+ # https://stackoverflow.com/questions/26851952/is-it-possible-to-insert-the-full-reference-of-an-article-in-the-middle-of-a-rma
+
+  RUV_refs_lst <- bibtex::read.bib("../../../../_bibFiles/_RUV.bib")
+
+ for(ID in c("Molania:2023aa")) {
+  cat('\n* ')
+  print(RUV_refs_lst[[ID]])
+ }
+
+```
+
+<br/>
+
 
 ## Executive Summary
 
@@ -31,7 +189,7 @@ Standard normalizations like FPKM and FPKM-UQ failed to adequately remove these 
 
 ## Main Findings
 
-### 1. Sources of Unwanted Variation in TCGA Data
+1. Sources of Unwanted Variation in TCGA Data
 
 The authors systematically characterized unwanted variation across TCGA RNA-seq datasets (~11,000 samples from 33 cancer types):
 
@@ -41,7 +199,7 @@ The authors systematically characterized unwanted variation across TCGA RNA-seq 
 
 - **Plate/batch effects:** Vector correlation and ANOVA revealed plate effects persisted in raw counts, FPKM, and FPKM-UQ normalized datasets.
 
-### 2. Critical Gene-Level Discovery
+2. Critical Gene-Level Discovery
 
 **A key finding:** Gene-level counts are not uniformly proportional to library size. The authors identified four groups of genes with different relationships to global scaling factors:
 
@@ -52,7 +210,7 @@ The authors systematically characterized unwanted variation across TCGA RNA-seq 
 
 This heterogeneity explains why single scaling factor normalizations fail for many genes.
 
-### 3. RUV-III with PRPS Solution
+3. RUV-III with PRPS Solution
 
 **How PRPS works:**
 - Creates in silico "pseudo-samples" from small groups of biologically similar samples that differ in unwanted variation
@@ -67,14 +225,15 @@ This heterogeneity explains why single scaling factor normalizations fail for ma
 
 ---
 
-## Detailed Results by Dataset
+# Detailed Results by Dataset {#detail-res}
 
-### TCGA READ (Rectum Adenocarcinoma) RNA-seq Study
+## TCGA READ (Rectum Adenocarcinoma) RNA-seq Study
 
-**Study characteristics:**
-- 176 samples across 14 plates over 4 years
-- Major library size variation between 2010 samples vs. 2011-2014 samples
-- Biological populations: 4 consensus molecular subtypes (CMS)
+**Study characteristics:**  
+
+* 176 samples across 14 plates over 4 years 
+* Major library size variation between 2010 samples vs. 2011-2014 samples 
+* Biological populations: 4 consensus molecular subtypes (CMS) 
 
 **Key improvements with RUV-III:**
 
@@ -120,13 +279,14 @@ CAPTION <-  paste(
 
 ---
 
-### TCGA BRCA (Breast Cancer) RNA-seq Study
+## TCGA BRCA (Breast Cancer) RNA-seq Study
 
 **Study characteristics:**
-- 1,180 samples from 40 tissue source sites across 38 plates over 5 years (2010-2014)
-- Samples processed using two different flow cell chemistries
-- 94 adjacent normal samples, 7 paired primary-metastatic samples
-- Biological populations: 5 PAM50 subtypes (HER2-enriched, basal-like, luminal A, luminal B, normal-like)
+
+* 1,180 samples from 40 tissue source sites across 38 plates over 5 years (2010-2014)  
+* Samples processed using two different flow cell chemistries  
+* 94 adjacent normal samples, 7 paired primary-metastatic samples  
+* Biological populations: 5 PAM50 subtypes (HER2-enriched, basal-like, luminal A, luminal B, normal-like)  
 
 **Key improvements with RUV-III:**
 
@@ -186,9 +346,9 @@ CAPTION <-  paste(
 
 ---
 
-## Removing Unwanted Variation from Unknown Sources
+# Removing Unwanted Variation from Unknown Sources
 
-### RUV-III's Design for Unknown Factors
+## RUV-III's Design for Unknown Factors
 
 The RUV-III method is a linear model through which the presence and impact of **both known and unknown** unwanted factors can be inferred via technical replicates (or pseudo-replicates) and negative control genes.
 
@@ -202,7 +362,7 @@ The most compelling example of handling unknown variation comes from the BRCA da
 - These groups were **not visible** in RUV-III normalized data, indicating successful removal
 - A surprising number of genes showed high correlations with batch scores in FPKM-UQ, whereas these correlations were much lower in RUV-III
 
-### General Strategy Using RLE Medians
+## General Strategy Using RLE Medians
 
 **RLE (Relative Log Expression) medians** serve as a tool for identifying unknown sources of unwanted variation:
 - In the absence of unwanted variation, RLE medians should be centered around zero
@@ -210,7 +370,7 @@ The most compelling example of handling unknown variation comes from the BRCA da
 - The authors used RLE medians to identify unknown batches within studies where batch information wasn't explicitly documented
 - For multi-study normalization, RLE medians were clustered into groups to define batches
 
-### Key Principle
+## Key Principle
 
 The power of RUV-III lies in its ability to **estimate unwanted variation empirically** from the data structure itself, without requiring complete prior knowledge of all sources. It captures residual variation patterns through:
 - Pseudo-replicates (capturing differences between similar biological groups)
@@ -221,9 +381,9 @@ This makes RUV-III effective against both known and unknown technical artifacts.
 
 ---
 
-## Robustness Testing
+# Robustness Testing
 
-### Performance with Poorly Chosen PRPS
+## Performance with Poorly Chosen PRPS
 
 The authors tested robustness by randomly shuffling 20%, 40%, 60%, and 80% of biological labels:
 
@@ -239,7 +399,7 @@ The authors tested robustness by randomly shuffling 20%, 40%, 60%, and 80% of bi
 - Slightly lower PAM50 separation with 60% and 80% shuffled labels
 - Gene-gene correlations and survival associations still well-maintained
 
-### Performance with Partially Known Biology
+## Performance with Partially Known Biology
 
 Testing with only subset of biological subtypes to create PRPS:
 
@@ -257,7 +417,7 @@ Testing with only subset of biological subtypes to create PRPS:
 
 ---
 
-## Multi-Study Integration
+# Multi-Study Integration
 
 RUV-III with PRPS successfully normalized three large breast cancer RNA-seq datasets:
 - TCGA BRCA
@@ -405,24 +565,24 @@ From the Discussion section:
 
 ---
 
-## Software and Data Availability
+# Software and Data Availability
 
-### Code
+## Code
 - GitHub repository: https://github.com/RMolania/TCGA_PanCancer_UnwantedVariation
 - RShiny application for exploring unwanted variation
 - tcgaCleaneR R package
 - Comprehensive vignettes for READ and BRCA processing
 
-### Data
+## Data
 - RUV-III normalized READ, COAD, and BRCA data: Zenodo (record 6459560)
 - TCGA summarized experiment objects: Zenodo (record 6326542)
 - Original TCGA data: Available through TCGAbiolinks R package
 
 ---
 
-## Clinical and Biological Impact
+# Clinical and Biological Impact
 
-### Consequences of Inadequate Normalization
+## Consequences of Inadequate Normalization
 
 **Gene co-expression networks:**
 - Spurious correlations can suggest false biological relationships
@@ -478,9 +638,9 @@ Comprehensive workflow diagram for identifying unwanted variation and applying R
 
 ---
 
-## Conclusions
+# Conclusions
 
-### Main Contributions
+## Main Contributions
 
 1. **Methodological:** PRPS approach enables RUV-III to work without technical replicates and to remove tumor purity variation
 
@@ -492,14 +652,14 @@ Comprehensive workflow diagram for identifying unwanted variation and applying R
 
 5. **Practical:** Robust method that works with approximate biological labels and can handle unknown sources of variation
 
-### Impact
+## Impact
 
 - Provides principled approach for normalizing large, complex RNA-seq studies
 - Can improve cancer subtype identification, biomarker discovery, and survival analyses
 - Applicable beyond TCGA to any large transcriptomic studies
 - Software and data made publicly available for reproducibility
 
-### Future Directions
+## Future Directions
 
 The methods can be extended to:  
 - Single-cell RNA-seq normalization  
@@ -509,9 +669,9 @@ The methods can be extended to:
 
 ---
 
-## Critical Assessment
+# Critical Assessment
 
-### Strengths
+## Strengths
 
 1. Comprehensive evaluation across multiple cancer types
 2. Multiple independent validation strategies
@@ -520,7 +680,7 @@ The methods can be extended to:
 5. Handles unknown sources of variation
 6. Makes no assumptions about biology-batch orthogonality
 
-### Considerations
+## Considerations
 
 1. Requires biological subpopulation identification (though rough approximation sufficient)
 2. Computationally more intensive than simple scaling methods
@@ -528,7 +688,7 @@ The methods can be extended to:
 4. K parameter selection needs evaluation
 5. Performance depends somewhat on study design (batch-biology distribution)
 
-### Comparison to Alternatives  
+## Comparison to Alternatives  
 
 Paper explicitly excludes some methods from comparison:  
 - SVAseq, ComBat-seq, RUVg: Designed for batch correction when unwanted variation orthogonal to biology (rarely known in advance)  
@@ -542,9 +702,9 @@ RUV-III with PRPS fills gap for scenarios where:
 
 ---
 
-## Supplementary Notes
+# Supplementary Notes
 
-### Gene Examples Mentioned
+## Gene Examples Mentioned
 
 **Validated positive controls (known cancer roles):**  
 - BCLAF1: Pro-tumorigenic in colon cancer  
@@ -560,7 +720,7 @@ RUV-III with PRPS fills gap for scenarios where:
 - Genes with low F-statistics for biological factors  
 - Genes uncorrelated with biology but correlated with technical factors  
   
-### Statistical Methods Used  
+## Statistical Methods Used  
 
 - Principal Component Analysis (PCA)
 - Linear regression / R²
@@ -573,7 +733,7 @@ RUV-III with PRPS fills gap for scenarios where:
 - Kaplan-Meier survival analysis
 - Gene Set Enrichment Analysis (GSEA)
 
-### R Packages Utilized
+## R Packages Utilized
 
 - TCGAbiolinks: TCGA data download
 - CMScaller: Colorectal cancer CMS identification
@@ -586,7 +746,7 @@ RUV-III with PRPS fills gap for scenarios where:
 
 ---
 
-## Glossary of Terms
+# Glossary of Terms
 
 **PRPS:** Pseudo-Replicates of Pseudo-Samples - in silico samples created by averaging expression from biologically similar samples
 
@@ -614,3 +774,15 @@ RUV-III with PRPS fills gap for scenarios where:
 
 *Report generated: 2025*
 *Summary compiled from published article in Nature Biotechnology*
+
+
+
+<!-- To run
+## nohup Rscript -e "knitr::knit2html('_Molania_2023_RUV-III_PRPS_Summary.Rmd')" > _Molania_2023_RUV-III_PRPS_Summary.log  &
+
+## Or
+## nohup Rscript -e "rmarkdown::render('_Molania_2023_RUV-III_PRPS_Summary.Rmd')" > _Molania_2023_RUV-III_PRPS_Summary.log  &
+
+-->
+
+

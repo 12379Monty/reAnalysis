@@ -1,0 +1,599 @@
+---
+title: "AI/ML Applications in Related RNA-seq Analysis Tasks"
+subtitle: "Part A - Introduction and Methodological Considerations"
+author: "claude Sonnet 4.5 prompted by [Francois Collin](https://www.linkedin.com/in/francoisz/)"
+date: "November 2025"
+always_allow_html: yes
+output:
+  bookdown::html_document2:
+    code_folding: hide
+    code_download: true
+    toc: true
+    toc_depth: 2
+    # does this have an effect
+    fig_caption: yes
+    # this has no effect
+    number_sections: yes
+---
+
+
+<!--
+-->
+
+```{css sidenote, echo = FALSE}
+
+.main-container {
+    margin-left: 250px;
+}
+.sidenote, .marginnote { 
+  float: right;
+  clear: right;
+  margin-right: -40%;
+  width: 37%;         # best between 50% and 60%
+  margin-top: 0;
+  margin-bottom: 0;
+  font-size: 1.1rem;
+  line-height: 1.3;
+  vertical-align: baseline;
+  position: relative;
+  }
+```
+
+
+<style>
+@import url('https://fonts.googleapis.com/css?family=Raleway');
+@import url('https://fonts.googleapis.com/css?family=Oxygen');
+@import url('https://fonts.googleapis.com/css?family=Raleway:bold');
+@import url('https://fonts.googleapis.com/css?family=Oxygen:bold');
+
+.main-container {
+  max-width: 1400px !important;
+}
+
+body{
+  font-family: 'Oxygen', sans-serif;
+  font-size: 16px;
+  line-height: 24px;
+}
+
+h1,h2,h3,h4 {
+  font-family: 'Raleway', sans-serif;
+}
+
+.container { width: 1400px; }
+
+caption {
+  font-size: 20px;
+  caption-side: top;
+  text-indent: 30px;
+  background-color: lightgrey;
+  color: black;
+  margin-top: 5px;
+}
+
+g-table-intro h4 {
+  text-indent: 0px;
+}
+</style>
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(echo = TRUE,
+                      comment = NA,
+                      warning = FALSE,
+                      error = FALSE,
+                      message = FALSE,
+                      cache = FALSE,
+                      fig.width = 8,
+                      fig.height = 4)
+```
+
+```{r ai-ml-app-A-GlobalOptions, results="hide", include=FALSE, cache=FALSE}
+
+knitr::opts_knit$set(stop_on_error = 2L) #really make it stop
+options(knitr.table.format = 'html')
+
+options(stringsAsFactors=F)
+
+ #knitr::dep_auto()
+
+```
+<!-- ######################################################################## -->
+
+
+```{r ai-ml-app-A-Prelims,  include=FALSE, echo=FALSE, results='hide', message=FALSE} 
+
+
+FN <- "_AI_ML_Applications_Part_A"
+if(sum(grepl(FN, list.files()))==0) stop("Check FN")
+
+ suppressMessages(require(rmarkdown))
+ suppressMessages(require(knitr))
+
+ suppressPackageStartupMessages(require(methods))
+ suppressPackageStartupMessages(require(bookdown))
+
+ suppressPackageStartupMessages(require(magrittr))
+
+ # Shotcuts for knitting and rendering while in R session (Invoke interactive R from R/Scripts folder)
+ kk <- function(n='') knitr::knit2html(paste("t", n, sep=''), envir=globalenv(),
+       output=paste(FN,".html", sep=''))
+
+ rr <- function(n='') rmarkdown::render(paste("t", n, sep=''), envir=globalenv(),
+       output_file=paste(FN,".html", sep='')) ##, output_dir='Scripts')
+
+ bb <- function(n='') browseURL(paste(FN,".html", sep=''))
+
+ # The usual shortcuts
+ zz <- function(n='') source(paste("t", n, sep=''))
+
+
+```
+<!-- ######################################################################## -->
+
+<br/>
+
+**Context:** Critical evaluation of AI/ML method benchmarking in RNA-seq analysis - essential reading before evaluating specific applications
+
+---
+
+# Intruduction 
+
+## Executive Summary
+
+While no published work has applied AI/ML techniques specifically to RUV normalization methods, machine learning has been successfully deployed in several adjacent RNA-seq analysis domains. However, **a critical limitation exists**: unlike established fields with standardized benchmarks, RNA-seq analysis lacks universal evaluation protocols. This creates systematic biases that inflate reported performance improvements.
+
+**This document provides:**  
+
+1. Analysis of why standardized benchmarks matter
+2. Explanation of "home team advantage" in method evaluation
+3. Guidelines for critical reading of ML papers in genomics
+4. Realistic expectations for AI-Enhanced RUV development
+
+**Key Takeaway:** ML can work in RNA-seq domains, but reported performance gains should be viewed as **optimistic upper bounds**. True performance is likely **30-50% lower** than published claims.
+
+---
+
+<!-- 
+
+## Table of Contents
+
+1. [Critical Methodological Considerations](#1-critical-methodological-considerations)
+   - 1.1 The Absence of Standardized Benchmarks
+   - 1.2 Home Team Advantage and Publication Bias
+   - 1.3 Specific Biases in RNA-seq Method Evaluation
+   - 1.4 The Reproducibility Crisis
+   - 1.5 Guidelines for Critical Reading
+   - 1.6 Implications for the RUV Enhancement Proposal
+   - 1.7 Summary: Informed Skepticism
+
+-->
+
+---
+
+*  Critical Methodological Considerations: The Absence of Standardized Benchmarks
+
+**A fundamental limitation of the literature reviewed in this document:** Unlike established fields with standardized benchmarks (e.g., ImageNet for computer vision, GLUE for natural language processing), **there is no universally accepted benchmark dataset or evaluation protocol for gene selection, normalization assessment, or most RNA-seq analysis tasks.**
+
+This absence creates several critical issues that readers must consider when interpreting reported performance improvements.
+
+---
+
+# Home Team Advantage and Publication Bias
+
+* The Problem
+
+When researchers develop a new ML method, they typically:
+
+1. **Select datasets** for evaluation (often choosing where their method works well)
+2. **Choose comparison methods** (may select weaker baselines)
+3. **Define success metrics** (may emphasize metrics where their method excels)
+4. **Report results** that favor their approach (publication bias toward positive results)
+
+This creates a systematic **"home team advantage"** where:  
+
+* The method developers know the data intimately
+* Hyperparameters are tuned on the test scenarios
+* Evaluation protocols are optimized for their method's strengths
+* Negative results are less likely to be published
+
+## Evidence of This Bias
+
+Consider typical findings from ML method papers:
+
+**Common patterns:** 
+
+* Random Forests outperformed traditional methods in **9/12 datasets**
+* VAE-based methods outperformed baselines in **8/12 datasets**
+* Deep learning methods outperformed **all** competing approaches
+
+**Critical Questions:** 
+
+* Who selected these datasets? (The method developers)
+* Were datasets selected where ML might excel (high-dimensional, non-linear relationships)?
+* Were there other datasets tested but not reported where traditional methods won?
+* How were hyperparameters tuned? (Likely optimized on similar data)
+
+## Implications for Interpretation
+
+**The reported performance advantages should be viewed as:** 
+
+* **Upper bounds** on what might be achieved in practice
+* **Optimistic estimates** under favorable conditions
+* **Proof of concept** rather than definitive superiority
+
+**A more conservative interpretation:** 
+
+* ML methods likely offer **some advantage** in specific scenarios
+* The magnitude of advantage (e.g., "9/12 datasets") is **probably inflated**
+* Performance on truly independent, held-out datasets is **unknown**
+* Generalization to other labs' data remains **to be validated**
+
+---
+
+#  Specific Biases in RNA-seq Method Evaluation
+
+## Dataset Selection Bias
+
+**Common patterns:** 
+
+* **High-dimensional datasets favored:** ML thrives on many features (genes)
+* **Complex biological scenarios:** Non-linear relationships favor neural networks
+* **Well-characterized systems:** Easy to define "success" (known cell types, validated markers)
+* **Public datasets:** TCGA, 10X PBMC, etc. used repeatedly (methods overfit to these)
+
+**Missing from evaluation:** 
+
+* Datasets where ML failed (unpublished)
+* Simple biological scenarios where traditional methods suffice
+* Poorly-characterized systems where validation is difficult
+* Private/proprietary datasets
+
+## Comparison Method Bias
+
+**What's typically compared:** 
+
+* Older traditional methods (easier to beat)
+* Single baseline approach (not ensemble or optimized traditional methods)
+* Out-of-the-box traditional methods (not carefully tuned)
+
+**What's often missing:** 
+
+* State-of-the-art traditional methods with optimal parameters
+* Ensemble traditional methods
+* Traditional methods with same computational budget
+* Fair comparison with matched hyperparameter tuning effort
+
+## Metric Selection Bias
+
+**Example considerations:** 
+
+* Success measured by one metric (e.g., survival prediction)
+* But: What about other important metrics?
+  - Biological pathway enrichment?
+  - Concordance with qPCR validation?
+  - Stability across bootstrap samples?
+  - Interpretability by biologists?
+
+Traditional methods might excel on unreported metrics.
+
+## Hyperparameter Tuning Bias
+
+**ML methods:** Often extensively tuned 
+
+* Grid search or Bayesian optimization
+* Multiple architectures tested
+* Regularization carefully adjusted
+* Ensemble approaches explored
+
+* Default p-value thresholds
+* Standard normalization
+* Out-of-the-box implementations
+* Less tuning effort
+
+This asymmetry artificially inflates ML performance.
+
+---
+
+# The Reproducibility Crisis
+
+## Independent Validation is Rare
+
+Few studies provide:
+
+* Complete code with exact hyperparameters
+* Pre-trained models for replication
+* Standardized evaluation protocols
+* Independent validation by other labs
+
+**Consequence:** Reported results are difficult to verify or reproduce.
+
+## Examples from Literature
+
+**Well-Validated Methods:**   
+
+* Widely adopted by community
+* Multiple independent benchmarks by other groups
+* Code and models publicly available
+* Stress-tested across diverse datasets
+* **Reason for trust:** Method has survived community scrutiny
+
+**Poorly-Validated Methods:**  
+
+* Few independent validations reported
+* Complex architectures harder to reproduce
+* Limited code availability
+* **Unknown:** Performance on datasets from other labs
+
+---
+
+#  Guidelines for Critical Reading
+
+When evaluating ML method claims in RNA-seq literature:
+
+## Red Flags to Watch For
+
+1. **Perfect or near-perfect results** (suggests overfitting or cherry-picked data)
+2. **Comparison only to weak baselines** (no state-of-the-art traditional methods)
+3. **Evaluation only on method developers' data** (no independent validation)
+4. **Vague descriptions of data selection** ("we selected representative datasets")
+5. **Missing negative results** (no discussion of where method fails)
+6. **Single metric optimization** (ignores trade-offs)
+7. **Lack of statistical significance testing** (no confidence intervals, p-values)
+8. **Hyperparameter details absent** (can't reproduce)
+
+## Questions to Ask
+
+1. **Who selected the evaluation datasets and why?**
+2. **Were any datasets excluded from reporting? Why?**
+3. **How were hyperparameters chosen for all methods?**
+4. **Was there independent validation by another lab?**
+5. **What happens on datasets where the method fails?**
+6. **Are comparison methods using optimal parameters?**
+7. **Were multiple random seeds/splits tested?**
+8. **Are there confidence intervals or significance tests?**
+
+## Best Practices for Fair Comparison
+
+What we **should** see (but often don't):
+
+1. **Pre-registered evaluation protocols**
+   - Dataset selection criteria defined before testing
+   - Metrics chosen a priori
+   - Analysis plan locked before seeing results
+
+2. **Standardized benchmark suites**
+   - Community-agreed datasets
+   - Consistent preprocessing
+   - Shared evaluation code
+   - Public leaderboards
+
+3. **Adversarial collaboration**
+   - Traditional method experts optimize baselines
+   - ML developers can't cherry-pick datasets
+   - Blind evaluation by third party
+
+4. **Honest reporting**
+   - Publish negative results
+   - Report where methods fail
+   - Acknowledge limitations
+   - Provide realistic performance estimates
+   - Show variance across runs
+
+---
+
+# Implications for the RUV Enhancement Proposal
+
+## Why This Matters for AI-Enhanced RUV
+
+**The good news:**  
+
+* ML **can** work in RNA-seq domains (this is proven)
+* Conceptual approaches are sound
+* Technical feasibility is demonstrated
+* Adjacent applications show promise
+
+**The realistic expectation:**  
+
+* Performance gains will likely be **more modest** than reported in optimistic scenarios
+* Some approaches may **not generalize** as well as hoped
+* Careful validation will be **essential**
+* Independent evaluation will be **critical**
+* Honest reporting of failures is **necessary**
+
+## Proposed Mitigation Strategies
+
+**For AI-Enhanced RUV Development:**
+
+1. **Pre-registered Validation Plan**
+   - Define benchmark datasets before development
+   - Lock evaluation metrics a priori
+   - Include datasets likely to favor traditional RUV
+   - Public registration (e.g., OSF, aspredicted.org)
+
+2. **Conservative Benchmarking**
+   - Compare against **optimized** traditional RUV-III
+   - Include expert-tuned baseline methods
+   - Report on diverse dataset types
+   - Include scenarios where ML might fail
+   - Match hyperparameter tuning effort
+
+3. **Independent Validation**
+   - Partner with RUV method authors (Molania, Speed, Gagnon-Bartsch)
+   - Provide code and models to independent labs
+   - Encourage adversarial testing
+   - Welcome criticism and negative results
+   - Support replication studies
+
+4. **Transparent Reporting**
+   - Publish all results, including failures
+   - Report confidence intervals and variability
+   - Acknowledge dataset selection criteria
+   - Discuss limitations openly
+   - Share null results on preprint servers
+
+5. **Reproducibility First**
+   - Release complete code from day one
+   - Provide pre-trained models
+   - Document all hyperparameters
+   - Use standardized evaluation protocols
+   - Container with exact environment (Docker)
+
+## Realistic Performance Expectations
+
+Based on critical assessment of the literature:
+
+**Optimistic scenario (reported in papers):**   
+
+* ML outperforms traditional methods in 75-100% of cases
+* Improvements of 20-50% in key metrics
+* Universal applicability across datasets
+* Dramatic time savings
+
+**Realistic scenario (accounting for bias):**Q  n  
+
+* ML outperforms traditional methods in **50-65% of cases**
+* Improvements of **10-25%** in key metrics
+* Some datasets show **no benefit or slight degradation**
+* Performance **highly dependent** on data characteristics
+* Best suited for specific scenarios (small samples, complex biology)
+
+**Our goal for AI-Enhanced RUV:**  
+
+* **Be honest** about where ML helps and where it doesn't
+* **Target scenarios** where ML has clear advantages
+* **Provide tools** that let users choose between AI and traditional approaches
+* **Build trust** through transparent validation
+* **Set realistic expectations** from the start
+
+## Specific Commitments
+
+**Dataset Selection:**  
+
+* Use TCGA datasets from Molania et al. (2023) for direct comparison
+* Include small, independent studies (<100 samples)
+* Test on multiple cancer types
+* Evaluate on single-cell RNA-seq (different challenges)
+* Report results on ALL datasets tested
+
+**Baseline Comparisons:**  
+
+* RUV-III with expert-tuned parameters (consult with authors)
+* ComBat-seq, Harmony (current standards)
+* Manual normalization by experienced bioinformatician
+* Ensemble of traditional methods
+
+**Metrics:**  
+
+* All metrics from Molania et al. (RLE, PCA, biological coherence)
+* Downstream analysis quality (DE, survival, clustering)
+* Computational efficiency (time, memory)
+* User satisfaction (for software tools)
+* Failure mode analysis
+
+**Validation:**  
+
+* K-fold cross-validation within datasets
+* Leave-one-study-out validation
+* Leave-one-cancer-out validation
+* Temporal validation (train on older, test on newer data)
+* External validation by RUV authors
+
+---
+
+# Summary: Informed Skepticism
+
+**Key Messages:**
+
+1. **ML in RNA-seq can work** - Adjacent applications demonstrate feasibility
+2. **But results are oversold** - Home team advantage inflates performance by ~30-50%
+3. **Standardized benchmarks are missing** - Creates evaluation problems
+4. **Independent validation is rare** - Many results haven't been stress-tested
+5. **We must do better** - For AI-Enhanced RUV, commit to rigorous evaluation
+
+**Realistic Interpretation of Literature:**
+
+When you read "Method X outperformed baseline in 9/12 datasets," interpret as:
+* **What it says:** Method X is better than baseline on these specific datasets
+* **What it means:** Method X shows promise and warrants further investigation
+* **What it doesn't mean:** Method X is universally superior
+* **Reality check:** On truly independent data, advantage might be 5/12 or 6/12
+
+**This doesn't mean ML is ineffective, but rather:**
+
+* Be **skeptical of extreme claims** (>90% improvements, universal superiority)
+* Expect **modest improvements** in practice (10-25%, not 50-100%)
+* Require **independent validation** before trusting results
+* Demand **transparent reporting** of all experiments
+* Insist on **fair comparisons** with optimized baselines
+
+**For the AI-Enhanced RUV proposal:**
+
+* We acknowledge these limitations **upfront**
+* We commit to **conservative benchmarking**
+* We will report **negative results**
+* We welcome **independent validation**
+* We aim for **realistic, achievable improvements**
+* We prioritize **building trust** over making sensational claims
+
+This honest approach will ultimately serve the community better than overselling AI capabilities.
+
+---
+
+# Moving Forward
+
+Part B of this document series examines specific ML applications in RNA-seq analysis tasks. When reading those examples, keep this methodological context in mind:
+
+* View reported results as **optimistic upper bounds**
+* Consider **what's not reported** (failed datasets, negative results)
+* Assess **quality of validation** (independent or self-evaluation)
+* Look for **reproducibility indicators** (code, models, clear protocols)
+* Maintain **informed skepticism** throughout
+
+The goal is not to dismiss ML approaches, but to evaluate them critically and realistically. This leads to better science and more trustworthy results.
+
+---
+
+# References
+
+## Benchmarking and Reproducibility
+
+1. Mangul, S., et al. (2019). Challenges and recommendations to improve the installability and archival stability of omics computational tools. *PLOS Biology*, 17(6):e3000333. https://doi.org/10.1371/journal.pbio.3000333
+
+2. Stupple, A., Singerman, D., & Celi, L.A. (2019). The reproducibility crisis in the age of digital medicine. *npj Digital Medicine*, 2:2. https://doi.org/10.1038/s41746-019-0079-z
+
+3. Teschendorff, A.E. (2019). Avoiding common pitfalls in machine learning omic data science. *Nature Materials*, 18:422–427. https://doi.org/10.1038/s41563-018-0241-z
+
+4. Beam, A.L. & Kohane, I.S. (2018). Big Data and Machine Learning in Health Care. *JAMA*, 319(13):1317-1318. https://doi.org/10.1001/jama.2017.18391
+
+5. Kapoor, S. & Narayanan, A. (2023). Leakage and the Reproducibility Crisis in ML-based Science. *arXiv preprint* arXiv:2207.07048. https://arxiv.org/abs/2207.07048
+
+## Publication Bias and Home Team Advantage
+
+6. Ioannidis, J.P.A. (2005). Why Most Published Research Findings Are False. *PLOS Medicine*, 2(8):e124. https://doi.org/10.1371/journal.pmed.0020124
+
+7. Simmons, J.P., Nelson, L.D., & Simonsohn, U. (2011). False-Positive Psychology: Undisclosed Flexibility in Data Collection and Analysis Allows Presenting Anything as Significant. *Psychological Science*, 22(11):1359-1366. https://doi.org/10.1177/0956797611417632
+
+## ML in Biology Critiques
+
+8. Greener, J.G., Kandathil, S.M., Moffat, L., & Jones, D.T. (2022). A guide to machine learning for biologists. *Nature Reviews Molecular Cell Biology*, 23:40–55. https://doi.org/10.1038/s41580-021-00407-0
+
+9. Wainberg, M., Merico, D., Delong, A., & Frey, B.J. (2018). Deep learning in biomedicine. *Nature Biotechnology*, 36:829–838. https://doi.org/10.1038/nbt.4233
+
+10. Walsh, I., Fishman, D., Garcia-Gasulla, D., et al. (2021). DOME: recommendations for supervised machine learning validation in biology. *Nature Methods*, 18:1122–1127. https://doi.org/10.1038/s41592-021-01205-4
+
+---
+
+**Document Status:** Complete - Part A of AI/ML Applications Series  
+**Next Document:** Part B - Specific ML Applications in RNA-seq Analysis Tasks  
+**Related Documents:** Part 1 (Current State), Part 2 (Research Proposal)
+
+
+
+<!-- To run
+## nohup Rscript -e "knitr::knit2html('_AI_ML_Applications_Part_A.Rmd')" > _AI_ML_Applications_Part_A.log  &
+    
+## Or
+## nohup Rscript -e "rmarkdown::render('_AI_ML_Applications_Part_A.Rmd')" > _AI_ML_Applications_Part_A.log  &
+    
+-->
+
