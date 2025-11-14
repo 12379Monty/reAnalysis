@@ -228,155 +228,8 @@ It might be good to compare the two directly.
 the paper.
 -->
 
-# General Remarks 
-
-The article provides a proof of concept of the proposed methods.
-
-Primary Criticism:
-
-* Technical validation ion the omic scale is required to get a sense of the utility of the
-proposed methods.  
-
-* **Technical validation** should be run on typical data and should include both
-measures of algorithm performance and resistance to **input data quality** and
-**unwanted variation**.  See [intro_2_UV](...).
-
-* The claim of the validity of the p-values, one of the selling points of the method,
-is suspect.  When we fit one prototype 
-model to 20K, 50K or 100K feature data subsets we do not believe that the  model
-fits adequately in every case: we may robustify the fit to allow for the 
-presence of bad points, or outliers, and we do not put too much credibility on the
-precise values of p-values; we believe that they generally order hypotheses the
-right way.
-   - In this particular case there are bigger problems with the p-values -
-their properties are derived based in the assumption that $$f$$ and $$c$$ 
-are fixed values, when they are derived from the data.
-
-
-## On End to End Omic Scale Analysis 
-
-<p><p/>
-* Omic scale data refers to measurements taken in parallel over many features -
-from thousands of genes to millions of proteins.  Even though the result of
-interest, gene scores for example, may be obtained from analyzing
-features one at a time, the success of the design and analysis methods
-can only be assessed by taking a holistic look at the study data and results.
-
-* To have a holistic picture, the assessment must start with the input material
-and follow the sample set through all of the processing steps including QC assessment
-and filtering (if any), sample pre-processing  (further filtering and normalization),
-data analysis (compute the desired results and report the findings).
-
-* The article provided the information needed to
-show that the technology works in principle, but to appreciate
-how well the technology will work in practice, it has to be evaluated 
-in a way that fully reflects the  expected usage.
-
-<!--
-* Having good comparator analysis methods is helpful, if not crucial.  I'm not sure that
-the chi-square test provides a good comparator.  I don't recall ever coming 
-across the chi-square test in the course of RNA-Seq related analyses, but
-my experience is limited to comparing gene expression levels across samples.
-There are a number of R packages which treat compositional data analysis
-which is analogous to the problem addressed in SPLASH.  Many options 
-are listed in Section \@ref(rna-seq-wi-samp); it should be possible to customize one or more
-to provide a comparator for SPLASH+OASIS.
--->
-
-* Having a good dataset for assessment
-is also critical and could include control features, control samples,
-and samples providing engineered or designed truth.
-In addition to having built-in truth, the samples used to assess
-performance must also be representative of the actual samples
-which will be processed in production.
-
-<br/>
-
-<!--
-## On inferential frameworks   {-}
-
-* An important feature of the SPLASH+OASIS data analyses pipeline is the
-finite sample valid statistical inference that it makes possible whereas other
-methods rely on asymptotically valid estimates. The value that this feature confers to 
-the method should be verified empirically with a proper omic level assessment.  Note that RNA-Seq
-methods rely heavily in these asymptotically valid estimates which have not been found
-to be problematic for small sample sizes  as the site-specific estimates are typically
-stabilized by shrinkage.
-
-
-* From a personal perspective I feel that the write-up of the papers puts a lot of stock
-in p- and q-values.  The statistical standard errors of measurement, or the sampling errors,
-are only one source of variability in data collected in a high throughput, massively
-parallel fashion. Other sources of variability such as reagent lots, instruments,
-operators, days (ie. day to day variability is variability that is not otherwise specified)
-will often dominate the total variability.  
-
-* In practice we select the analysis method which
-produces the best results as ascertained by omic scale assessments of accuracy.
--->
-
-<br/>
-
-## Outline  {-}
-
-<p><p/>
-* The [Salzman Lab](https://salzmanlab.stanford.edu/) 
-develop and apply new **statistical algorithms** for **biological inference**
-on fundamental questions in the evolution of genomes.
-
-<p><p/> 
-* Here we consider 2 papers from the [Salzman Lab](https://salzmanlab.stanford.edu/):
-   - SPLASH: 
-A statistical, reference-free genomic algorithm unifies biological discover
-[PDF](https://www.cell.com/cell/pdf/S0092-8674(23)01179-0.pdf),
-[Code](https://github.com/refresh-bio/SPLASH) [@Chaung:2023aa]
-   - OASIS: 
-An interpretable, finite-sample valid alternative to Pearson’s X2 
-for scientific discovery
-[URL](https://www.pnas.org/doi/10.1073/pnas.2304671121),
-[Code](https://github.com/refresh-bio/SPLASH) [@Baharav:2024aa]
-
-<p><p/>
-In the first section, we use Consensus to compile a 
-literature review of papers treating reference-free genomic inference
-prior to SPLASH.
-
-<p><p/>
-* In the next section RNA-Seq methods for analyzing
-the variability of  w/i Sample Rel Abundance
-across samples are listed for reference.
-   - would these be good options to use as comparators 
-to OASIS on a genomic scale assessment?
-
-<p><p/>
-* In the first section RNA-Seq methods for analyzing
-* In the next two sections  go over the data and analyses described in
-the  SPLASH and OASIS papers
-
-<p><p/>
-* The rest of the report explores the use of various  GPT tools to produce literature reviews
-relevant to Reference-Free Genomic Inference and Tests for Contingency Tables.
-
-
-<!--
-<p><p/>
-* In the following sections we survey the scientific literature in order to
-situate the two papers SPLASH and OASIS
-
-<p><p/>
-* The latte part of the report is divided into two parts, one focusing
-on each paper: SPLASH, OASIS
-
-* Each part is further separated into 
-3  sections:
-   -  a review of the relevant literature prior
-to the paper, 
-   - a review of the paper itself, and
-   - a review of  relevant literature following the publications of the 
-paper (SPLASH only as OASIS is too new).
-
--->
-
+<!--  This section moved to the hosting page index.Rmd -->
+ 
 <br/>
 <br/>
 
@@ -757,7 +610,7 @@ SPLASH quantifies biological effect size based on the group assignments that yie
 
 <font color="darkgreen">
 
-* The effect size in Equation \@ref(#eq:effect-size) is expressed as a differenc of ratios.  If the two groups have different sample sizes, the difference is not a good way to combine the 
+* The effect size in Equation \@ref(#eq:effect-size) is expressed as a difference of ratios.  If the two groups have different sample sizes, the difference is not a good way to combine the 
 two.
 
 </font>
@@ -3036,6 +2889,155 @@ If you have a specific reason for choosing your original formula, please clarify
 #######################################################################
 ## ARCHIVAL
 #######################################################################
+
+# General Remarks 
+
+The article provides a proof of concept of the proposed methods.
+
+Primary Criticism:
+
+* Technical validation ion the omic scale is required to get a sense of the utility of the
+proposed methods.  
+
+* **Technical validation** should be run on typical data and should include both
+measures of algorithm performance and resistance to **input data quality** and
+**unwanted variation**.  See [intro_2_UV](...).
+
+* The claim of the validity of the p-values, one of the selling points of the method,
+is suspect.  When we fit one prototype 
+model to 20K, 50K or 100K feature data subsets we do not believe that the  model
+fits adequately in every case: we may robustify the fit to allow for the 
+presence of bad points, or outliers, and we do not put too much credibility on the
+precise values of p-values; we believe that they generally order hypotheses the
+right way.
+   - In this particular case there are bigger problems with the p-values -
+their properties are derived based in the assumption that $$f$$ and $$c$$ 
+are fixed values, when they are derived from the data.
+
+
+## On End to End Omic Scale Analysis 
+
+<p><p/>
+* Omic scale data refers to measurements taken in parallel over many features -
+from thousands of genes to millions of proteins.  Even though the result of
+interest, gene scores for example, may be obtained from analyzing
+features one at a time, the success of the design and analysis methods
+can only be assessed by taking a holistic look at the study data and results.
+
+* To have a holistic picture, the assessment must start with the input material
+and follow the sample set through all of the processing steps including QC assessment
+and filtering (if any), sample pre-processing  (further filtering and normalization),
+data analysis (compute the desired results and report the findings).
+
+* The article provided the information needed to
+show that the technology works in principle, but to appreciate
+how well the technology will work in practice, it has to be evaluated 
+in a way that fully reflects the  expected usage.
+
+<!--
+* Having good comparator analysis methods is helpful, if not crucial.  I'm not sure that
+the chi-square test provides a good comparator.  I don't recall ever coming 
+across the chi-square test in the course of RNA-Seq related analyses, but
+my experience is limited to comparing gene expression levels across samples.
+There are a number of R packages which treat compositional data analysis
+which is analogous to the problem addressed in SPLASH.  Many options 
+are listed in Section \@ref(rna-seq-wi-samp); it should be possible to customize one or more
+to provide a comparator for SPLASH+OASIS.
+-->
+
+* Having a good dataset for assessment
+is also critical and could include control features, control samples,
+and samples providing engineered or designed truth.
+In addition to having built-in truth, the samples used to assess
+performance must also be representative of the actual samples
+which will be processed in production.
+
+<br/>
+
+<!--
+## On inferential frameworks   {-}
+
+* An important feature of the SPLASH+OASIS data analyses pipeline is the
+finite sample valid statistical inference that it makes possible whereas other
+methods rely on asymptotically valid estimates. The value that this feature confers to 
+the method should be verified empirically with a proper omic level assessment.  Note that RNA-Seq
+methods rely heavily in these asymptotically valid estimates which have not been found
+to be problematic for small sample sizes  as the site-specific estimates are typically
+stabilized by shrinkage.
+
+
+* From a personal perspective I feel that the write-up of the papers puts a lot of stock
+in p- and q-values.  The statistical standard errors of measurement, or the sampling errors,
+are only one source of variability in data collected in a high throughput, massively
+parallel fashion. Other sources of variability such as reagent lots, instruments,
+operators, days (ie. day to day variability is variability that is not otherwise specified)
+will often dominate the total variability.  
+
+* In practice we select the analysis method which
+produces the best results as ascertained by omic scale assessments of accuracy.
+-->
+
+<br/>
+
+## Outline  {-}
+
+<p><p/>
+* The [Salzman Lab](https://salzmanlab.stanford.edu/) 
+develop and apply new **statistical algorithms** for **biological inference**
+on fundamental questions in the evolution of genomes.
+
+<p><p/> 
+* Here we consider 2 papers from the [Salzman Lab](https://salzmanlab.stanford.edu/):
+   - SPLASH: 
+A statistical, reference-free genomic algorithm unifies biological discover
+[PDF](https://www.cell.com/cell/pdf/S0092-8674(23)01179-0.pdf),
+[Code](https://github.com/refresh-bio/SPLASH) [@Chaung:2023aa]
+   - OASIS: 
+An interpretable, finite-sample valid alternative to Pearson’s X2 
+for scientific discovery
+[URL](https://www.pnas.org/doi/10.1073/pnas.2304671121),
+[Code](https://github.com/refresh-bio/SPLASH) [@Baharav:2024aa]
+
+<p><p/>
+In the first section, we use Consensus to compile a 
+literature review of papers treating reference-free genomic inference
+prior to SPLASH.
+
+<p><p/>
+* In the next section RNA-Seq methods for analyzing
+the variability of  w/i Sample Rel Abundance
+across samples are listed for reference.
+   - would these be good options to use as comparators 
+to OASIS on a genomic scale assessment?
+
+<p><p/>
+* In the first section RNA-Seq methods for analyzing
+* In the next two sections  go over the data and analyses described in
+the  SPLASH and OASIS papers
+
+<p><p/>
+* The rest of the report explores the use of various  GPT tools to produce literature reviews
+relevant to Reference-Free Genomic Inference and Tests for Contingency Tables.
+
+
+<!--
+<p><p/>
+* In the following sections we survey the scientific literature in order to
+situate the two papers SPLASH and OASIS
+
+<p><p/>
+* The latte part of the report is divided into two parts, one focusing
+on each paper: SPLASH, OASIS
+
+* Each part is further separated into 
+3  sections:
+   -  a review of the relevant literature prior
+to the paper, 
+   - a review of the paper itself, and
+   - a review of  relevant literature following the publications of the 
+paper (SPLASH only as OASIS is too new).
+
+-->
 
 ### Concensus 
 
