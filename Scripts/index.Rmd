@@ -187,7 +187,7 @@ The sequence specific effect may be suppression or enrichment, large or small,
 unique or shared across many sequences.  The technical artifacts are typically not
 hard to detect and in some cases can only be missed by not looking at the data
 coming off the sequencers before pushing them down the processing pipeline.
-
+]
 
 
 
