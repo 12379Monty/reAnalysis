@@ -17,7 +17,7 @@ output:
     # this has no effect
     number_sections: yes
     # css: ['../_css/pandoc3.css', '../_css/myMargins.css']
-bibliography: [../../_bibFiles/_Normalization.bib, ../_bibFiles/_ref_free_genom_inf.bib, ../_bibFiles/_healthy_aging.bib, ../../_bibFiles/_Breiman.bib, ../../_bibFiles/_Freedman.bib, ../../_bibFiles/_Yu.bib, ../../_bibFiles/_RUV.bib, ../../_bibFiles/_RMA.bib, ../../_bibFiles/_scRNAseq_norm.bib]
+bibliography: [../_bibFiles/_AI_ML.bib, ../_bibFiles/_RUV.bib, ../_bibFiles/_scRNAseq_norm.bib, ../_bibFiles/_ref_free_genom_inf.bib, ../_bibFiles/_healthy_aging.bib, ../../_bibFiles/_Normalization.bib, ../../_bibFiles/_Breiman.bib, ../../_bibFiles/_Freedman.bib, ../../_bibFiles/_Yu.bib,  ../../_bibFiles/_RMA.bib]
 csl: ../_csl/cell-numeric.csl
 link-citations: true
 ---
@@ -273,9 +273,10 @@ in the words of the authors.
 
 <p><p/>
 * [SPLASH](_M2B-RFGI_SPLASH_v2.html) Notes 
-   - Contains
+   - Contains two introductory sections to position SPLASH+OASIS in the
+context of contemporary analysus methods:
       - literature review  of Reference-Free Genomic Inference prior to SPLASH, as well as  
-      - methods developed for RNA-seq which could be used here.
+      - a survey of methods developed for RNA-seq which could be used here.
 
 
 <p><p/>
@@ -465,7 +466,7 @@ date.
 
 <p><p/>
 * [Part A - Introduction and Methodological Considerations](./_M4A-RUV/natureBiotechPaper/_AI_ML_Applications_Part_A.html)
-   - discussion of issues around performance assessnent  when truth is rare and stamdards missing.
+   - discussion of issues around performance assessnent  when truth is rare and standards missing.
 <p><p/>
 * [Part B - Specific Applications and Evidence](./_M4A-RUV/natureBiotechPaper/_AI_ML_Applications_Part_B.html)
    - case studies of the application of AI and ML in RNA-Seq analyses.
@@ -477,7 +478,7 @@ Traditional Approach: Differential Expression Analysis
 <p><p/>
 * <font size="7">!</font> Rerun some of the analyses in
 Wenric & Shemirani (2018) [@Wenric:2018aa].
-   - first examube the data to make sure it is accessible.
+   - first examine the data to make sure it is accessible.
 
 
 

@@ -1,0 +1,495 @@
+---
+title: "Statistical Analysis of Data in the Biotech Industry"
+###\nLessons from 20 years of expererience"
+author: "[Francois Collin](https://www.linkedin.com/in/francoisz/)"
+date: "`r format(Sys.time(), '%B %d, %Y')`"
+always_allow_html: yes
+output:
+  #html_document:
+  # for use of .tabset
+  bookdown::html_document2:
+    code_folding: hide
+    code_download: true
+    toc: true
+    toc_depth: 3
+    # does this have an effect
+    fig_caption: yes
+    # this has no effect
+    number_sections: yes
+    # css: ['../_css/pandoc3.css', '../_css/myMargins.css']
+bibliography: [../_bibFiles/_healthy_aging.bib, ../../_bibFiles/_Breiman.bib, ../../_bibFiles/_Freedman.bib, ../../_bibFiles/_Yu.bib, ../../_bibFiles/_RUV.bib, ../../_bibFiles/_RMA.bib, ../../_bibFiles/_scRNAseq_norm.bib]
+csl: ../_csl/cell-numeric.csl
+link-citations: true
+---
+
+```{css sidenote, echo = FALSE}
+
+.main-container {
+    margin-left: 250px;
+}
+.sidenote, .marginnote { 
+  float: right;
+  clear: right;
+  margin-right: -40%;
+  width: 37%;         # best between 50% and 60%
+  margin-top: 0;
+  margin-bottom: 0;
+  font-size: 1.1rem;
+  line-height: 1.3;
+  vertical-align: baseline;
+  position: relative;
+  }
+```
+
+
+<style>
+@import url('https://fonts.googleapis.com/css?family=Raleway');
+@import url('https://fonts.googleapis.com/css?family=Oxygen');
+@import url('https://fonts.googleapis.com/css?family=Raleway:bold');
+@import url('https://fonts.googleapis.com/css?family=Oxygen:bold');
+
+.main-container {
+  max-width: 1400px !important;
+}
+
+body{
+  font-family: 'Oxygen', sans-serif;
+  font-size: 16px;
+  line-height: 24px;
+}
+
+h1,h2,h3,h4 {
+  font-family: 'Raleway', sans-serif;
+}
+
+.container { width: 1400px; }
+
+caption {
+  font-size: 20px;
+  caption-side: top;
+  text-indent: 30px;
+  background-color: lightgrey;
+  color: black;
+  margin-top: 5px;
+}
+
+g-table-intro h4 {
+  text-indent: 0px;
+}
+</style>
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(echo = TRUE,
+                      comment = NA,
+                      warning = FALSE,
+                      error = FALSE,
+                      message = FALSE,
+                      cache = FALSE,
+                      fig.width = 8,
+                      fig.height = 4)
+```
+
+```{r infex-GlobalOptions, results="hide", include=FALSE, cache=FALSE}
+
+knitr::opts_knit$set(stop_on_error = 2L) #really make it stop
+options(knitr.table.format = 'html')
+
+options(stringsAsFactors=F)
+
+ #knitr::dep_auto()
+
+```
+<!-- ######################################################################## -->
+
+
+```{r index-Prelims,  include=FALSE, echo=FALSE, results='hide', message=FALSE} 
+
+
+FN <- "index"
+if(sum(grepl(FN, list.files()))==0) stop("Check FN")
+
+PREFIX <- "index" #- replace by FLOWCELL???
+
+ suppressMessages(require(rmarkdown))
+ suppressMessages(require(knitr))
+
+ suppressPackageStartupMessages(require(methods))
+ suppressPackageStartupMessages(require(bookdown))
+
+ suppressPackageStartupMessages(require(magrittr))
+
+ # Shotcuts for knitting and rendering while in R session (Invoke interactive R from R/Scripts folder)
+ kk <- function(n='') knitr::knit2html(paste("t", n, sep=''), envir=globalenv(),
+       output=paste(FN,".html", sep=''))
+
+ rr <- function(n='') rmarkdown::render(paste("t", n, sep=''), envir=globalenv(),
+       output_file=paste(FN,".html", sep='')) ##, output_dir='Scripts')
+
+ bb <- function(n='') browseURL(paste(FN,".html", sep=''))
+
+ # The usual shortcuts
+ zz <- function(n='') source(paste("t", n, sep=''))
+
+
+```
+<!-- ######################################################################## -->
+
+<br/>
+
+
+<!--
+* Breiman: [@Breiman:1984aa; @Breiman:2001aa]
+* Freedman: [@Freedman:2008aa; @Freedman:2008ad; @Freedman:2008ac; @Freedman:2009ac]
+-->
+
+
+# Preliminaries - Leo Breiman {-}
+
+Before machine learning became a household name for engineers and computer scientists
+interested in making predictions, before AI had any developed applications, and
+before the name "Data Science" was popularized to describe an area of statistical application
+which most statisticians ignored, Leo Breiman [@Breiman:1984aa; @Breiman:2001aa] was calling
+for the field of statistics to modernize or become irrelevant.  
+
+[Breiman, L. (2001). Statistical modeling: The two cultures. Statistical Science 16, 199–215](http://www.jstor.org/stable/2676681)
+is a must-read.
+
+My recent experience working in the context  of specifying and validating an omic pipeline
+used to produce a molecular diagnostic test made it clear that even without AI, DS, and ML,
+statistical methods needed modernizing:  the usual approach of using a  named
+statistical procedure off the shelf will not yield accurate results in most cases -
+the esoteric error distributions which characterize modern datasets must be accounted for
+when analyzing these data.
+See [Where’s the Randomness?](https://breimansworld.netlify.app/) for a
+description of this context.^[
+Why the use of canned procedures persists is easily explained
+in the context of a client who is uncritical of the form of any proposed solution
+while being unflinchingly insistent on the timely
+release of the said solution.]
+
+Inspired and encouraged by Leo Breiman, Bin Yu has modernized the concept of variability in data
+to reflect the character of modern day data collection and analysis.  The PQRS framework
+(Yu and Kumbier, Front Inform Technol Electron Eng 2018 19(1):6-9)) highlight 4 elements of
+statistical practice which remain crucially important for the successful analysis of modern
+day datasets:  population (P), question of interest (Q), representativeness of training data (R),
+and scrutiny of results (S).  These concepts have always been important, but very often
+neglected in practice..  These concepts have always been important, but very often
+neglected in practice.
+
+
+
+
+<br/>
+
+# Statistics Training
+
+<br/>
+
+## Training Program for Statisticians - a collaboration with **claude.ai**
+
+
+As an exercise working with claude.ai, we design a training program for experienced statisticians.
+The professional development training is meant to bring statisticians up to speed with 
+novel statistical methods and techniques which may be outsite of their expertise or
+sector of industry.
+
+* [stats-pd-plan-final-v35.html](./_M1C-stats-pd-plan-final-v35.html) - final version of the
+professional development program.
+
+* [stats-pd-plan-change-log.html](./_M1C-stats-pd-plan-change-log.html)  -
+detailed change log documenting the development process
+
+* [ai-assistant-guide](./_M1C-ai-assistant-guide.html) - outline
+principles which apply broadly to working with AI assistants on complex projects.
+
+ 
+<br/>
+
+## Specific Training Resources 
+
+### Generative AI {-}
+
+Resources - online courses, published papers, books,  slide presentations - to learn
+about the areas of applications and development of AI that are most important to statisticians.
+These should include a basic set of learnings which all professionals interested in
+harnessing the powers of AI should know.  In addition to this basic set, learnings
+that are most relevant for the integration of AI with statistics.
+
+Yu and Kumbier (Front Inform Technol Electron Eng 2018 19(1):6-9) [@Yu:2018aa] 
+provide a framework for integrating statistical ideas in AI work which they
+term the PQRS Workflow.  In this framework,  the statistical concepts of 
+population (P), question of interest (Q), representativeness of training data (R),
+and scrutiny of results (S) remain critically important in the application
+of AI to data analysis.  We should include any training which can help clarify the framework
+to non-statisticians, or help statisticians explain the framework to
+non-statisticians.
+
+If it helps to limit resources or choose among similar options, we can assume
+that the statisticians work with bio-tech companies which market molecular diagnostics
+devices which use omic-wide^[
+transcriptomic, genomic, proteomic, methylomic]
+profiels as input.
+
+* Report: [Comprehensive Introduction to Generative AI Resources](./_M1D-genAI-report-updated.html)
+
+<p><p/>
+* Resources:
+   - [Gen AI - ChangeLog](./_M1D-genAI-changelog.html)
+   - [Gen AI - Instructions](./_M1D-genAI-instructions.html)
+   
+
+
+
+<br/>
+
+### Deep Learning Models {-}
+
+
+Resources - online courses, published papers, books,  slide presentations - to learn
+about the development deep learning theiry ands applications
+that are most important to statisticians.
+These should include a basic set of learnings which all professionals interested in
+harnessing the powers of Deep Leaning should know.  In addition to this basic set, learnings
+that are most relevant for the integration of Deep Learning with statistics.
+
+If it helps to limit resources or choose among similar options, we can assume
+that the statisticians work with bio-tech companies which market molecular diagnostics
+devices which use omic-wide^[
+transcriptomic, genomic, proteomic, methylomic]
+profiels as input.
+    
+* Report: [Comprehensive Resources for Deep Learning in Statistics & Biotech](./_M1E-DL-deep-learning-resources.html)
+
+
+<p><p/>
+* Resources:
+    - [ChangeLog](./_M1E-DL-changelog.html)
+    - [Repository Setup](./_M1E-DL-repository-setup.html)
+    - [Instructions for Rendering Reports and Changelog](./_M1E-DL-rendering-instructions.html)
+    - [Generating HTML Reports from Markdown](./_M1E-DL-report-instructions.html)
+    - [Markdown Template](./_M1E-DL-markdown-template.html)
+
+
+
+
+
+<br/>
+
+# Data (Re-)Analysis by Topic 
+
+
+
+## Reference-Free Genomic Inference with SPLASH and OASIS 
+
+
+<p><p/>
+*  [Presentation](_M3B-SPLASH-OASIS/splash_oasis_methodology_presentation_v2.html)
+   - Summarizes the key points made in the SPLASH and OASIS papers
+   - Includes comments  on alternative approaches or interpretations
+**but no additional analyses**
+
+<p><p/>
+* [SPLASH](./_M2B-RFGI_SPLASH_v2.html) - a detailed look at the SPLASH article.
+
+<p><p/>
+* [OASIS](./_M3A-OASIS.html) - a detailed look at the OASIS article.
+  - INCOMPLETE
+
+<!--
+### SPLASH {-}
+
+* [_M2A-RFGI_SPLASH_v1.html](./_M2A-RFGI_SPLASH_v1.html) -
+* [_M2B-RFGI_SPLASH_v2.html](./_M2B-RFGI_SPLASH_v2.html) -
+* [_M3A-OASIS.html](./_M3A-OASIS.html) -
+
+<br/>
+
+### OASIS {-}
+
+-->
+
+<br/>
+
+
+## scRNAseq UMI count normalization 
+
+* slide deck:  OneDrive folder of Speed Lab Meeting: https://outlook.office365.com/mail/group/wehi.edu.au/speedlabmeeting/files
+
+* Reference: 
+   - Ahlmann-Eltze and Huber (2023) [@Ahlmann-Eltze:2023aa]
+
+
+* Other: 
+   - Melms et. al. (2021) [@Melms:2021aa]
+
+<br/>
+
+## RUV
+
+### Normalization Lit Review {-}
+
+* To Be Completed with an appropriate assistant.
+
+<br/>
+
+### The latest RUV {-}
+
+* Link to Ramyar Molania presentations.
+
+<br/>
+
+### Beyond RUV {-}
+
+Can the methodology which enables the basic RUV analysis be adapted to
+other applications?
+
+<p><p/>
+* IUV - identification of unwanted variability
+   - the automated high throughput processing of samples necessary
+to get the omic based readouts used to diagnose samples is carried out by
+a pipeline which strings together numerous steps (typically hundreds).
+      - eg. Cell-Free DNA Methylation Profiling Analysis
+   - As samples proceed through the pipeline they will be organized in various configurations
+giving rise to various groupings:
+      - plasma isolation
+      - cfDNA extraction 
+      - amplification, conversion, ...
+   - measurements are recorded as samples travel through the pipeline, each
+measurement potentially having its own shared variability or dependency structure 
+   - a real problem is to identify the factors giving rise to excessive variability
+in the downstream read-outs
+
+
+<p><p/>
+* QUV - quantification of unwanted variability
+   - can RUV methodology be adapted to provide quantification of reproducibility?
+
+<br/>
+
+## Miscellanious  
+  - [IUV](./_M4A-intro_IUV.html) 
+  - [Digital Driplet PCR - soon](./_M5A-cf_ddPCR_seq.html)
+  - [Randomness in sample calls - soon](./_M6A-randomness_in_calls.html) 
+  - [interimSampleSizeAnalysis - soon](./_M7A-interimSampleSizeAnalysis.html)
+      - [_M3A_study_design_CB_notes.pdf]
+<p><p/>
+  - [nanopore_talk/microbiome_slides.html](nanopore_talk/microbiome_slides.html)
+      - [nanopore_talk/nanopore_background.html](nanopore_talk/nanopore_background.html)
+      - [nanopore_talk/umap_explained.html](nanopore_talk/umap_explained.html)
+      - [nanopore_talk/pdf_image_extraction.html](nanopore_talk/pdf_image_extraction.html)
+
+
+<br/>
+
+
+# References
+<div id="refs"></div>
+
+<br/>
+
+# Appendix: 
+
+
+## Challenges in Statistical Analysis  {-}
+`
+
+Types of errors:
+
+<p></p>
+* The question is wrong or inadequately posed
+   - this is not that infrequent and is largely caused by
+folks phrasing the question in a form that anticipates the solution.
+eg, client expresses desire to know what a particular estimated regression
+coefficient is
+   - solution is easy: subject matter experts should think hard about the
+question which is then phrased using appropriate subject matter specific language.
+
+
+<p><p/>
+* An inappropriate model is used as the analysis framework to 
+address a  question      
+   - this is either due to common practice or inadequate statistical training 
+   - David Freedman discussed the inappropriate use of
+statistical models in the social sciences
+[@Freedman:2008aa; @Freedman:2008ad; @Freedman:2008ac; @Freedman:2009ac]
+   - Inappropriate modeling is not limited to the social sciences
+      - in biotech, the unchecked use of logistic regression whenever the
+response is binary is ubiquitous.
+         - the results of such analyses could be misleading due to the biases
+illustrated in Freedman (2008) [@Freedman:2008aa]
+   - Leo Breiman pointed to inadequate training as the cause of
+the reliance on **standard textbook methods** which
+have a limited range of applicability - Breiman:
+[@Breiman:1984aa; @Breiman:2001aa]
+   - as regression models are used to answer almost every question
+that come up in the internal analyses conducted by companies in industry,
+many are going to be flawed.  
+      - For a review of how regression models go wrong see
+[@Freedman:2009aa;@Freedman:2010aa;@Freedman:2008ac;@Freedman:2008ad;@Freedman:2004aa;@Freedman:2008aa;@Freedman:2008ab]
+   - clinical validation studies for complex omic Dx instruments that are designed 
+according to FDA guidelines will make use of the classical Neyman-Pearson hypothesis
+testing context which is often invalid:
+      - the samples in the study may not be representative of the target population.
+         - there is rarely any explicit randomness in the selection of the study samples
+so inference to any superset of the study samples is iffy at best.
+      - dependency structure among samples processed in batches is often complex
+         - a run may be treated as a batch with internal structure or sub-batches.
+      - N is often small 
+      - contrived samples may not be interpretable as intended or required
+      - other???
+
+<br/>
+
+Improving in Analysis Results:
+<p><p/>
+* Assessment, Assessment, Assessment
+   - the path to better results through improved methodology must go through
+**valid assessments of performance** - Speed:
+[@Irizarry:2003aa; @Bolstad:2004aa;@Gagnon-Bartsch:2012aa;@Gandolfo:2018aa;@Irizarry:2006aa;@Jacob:2018aa;@Risso:2014aa;@Yuan:2019aa]
+   - *valid* here means that the assessment provides a direct indicator of performance 
+on a meaningful scale or end point.
+      - when normalizing RNASeq gene expression profiles, one can measure the effectiveness of
+the normalization step by examining the similarities among gene expression profiles before
+and after normalization.  Although this is a sensible way to assess the effect of the 
+normalization step, it is not a good metric to assess the impact normalization has on
+the ultimate goal of the analysis - DGE analysis.
+      - when comparing two sequencing instruments in terms of their ability to carry-out
+a reagent QC protocol designed to assess reagent quality:
+         - although the appropriate assessment probably calls for an assessment of
+performance against the truth, and a comparison of these performance parameters between
+instruments, regulatory compliance may call for an equivalency assessment
+            - it should not take much reflecting realize that an equivalency assessment
+creates unnecessary complications and can go wrong in many ways:
+               -  an obvious problem being drift.
+               - down sampling to make the two instruments comparable is another obvious
+problem
+      - using an upstream measurement to predict unconverted fraction
+         -SCALE, SCALE, SCALE
+
+
+<br/>
+
+# Bad Analysis by Example
+
+* predict %unconverted with assistant tech
+
+* DDpcr
+
+<br/>
+
+#
+
+```{r , child=c('_index.Rmd')}
+```
+
+
+<br/>
+
+
+
+
+```{r, echo=FALSE}
+  knitr::knit_exit()
+```
+
+

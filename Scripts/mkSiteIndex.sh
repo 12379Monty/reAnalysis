@@ -12,7 +12,7 @@ TITLE="Training and Data Re-Analysis"
 #DESCRIPTION="Put subtitle here"
 
 echo 'name: "reAnalysis"' > $OUTPUT
-echo 'output_dir: "."' >> $OUTPUT
+echo 'output_dir: "_site"' >> $OUTPUT
 echo 'navbar:' >> $OUTPUT
 echo '  title: '$TITLE >> $OUTPUT
 echo '  left:' >> $OUTPUT
