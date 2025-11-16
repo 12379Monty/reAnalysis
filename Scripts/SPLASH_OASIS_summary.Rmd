@@ -1,0 +1,561 @@
+---
+title: "Reference-Free Genomic Inference with SPLASH and OASIS"
+subtitle: "Executice Summary"
+author: "[Francois Collin](https://www.linkedin.com/in/francoisz/)"
+date: "`r format(Sys.time(), '%B %d, %Y')`"
+always_allow_html: yes
+output:
+  #html_document:
+  # for use of .tabset
+  bookdown::html_document2:
+    code_folding: hide
+    code_download: true
+    toc: true
+    toc_depth: 3
+    # does this have an effect
+    fig_caption: yes
+    # this has no effect
+    number_sections: yes
+    # css: ['../_css/pandoc3.css', '../_css/myMargins.css']
+bibliography: [../_bibFiles/_AI_ML.bib, ../_bibFiles/_RUV.bib, ../_bibFiles/_scRNAseq_norm.bib, ../_bibFiles/_ref_free_genom_inf.bib, ../_bibFiles/_healthy_aging.bib, ../../_bibFiles/_Normalization.bib, ../../_bibFiles/_Breiman.bib, ../../_bibFiles/_Freedman.bib, ../../_bibFiles/_Yu.bib,  ../../_bibFiles/_RMA.bib]
+csl: ../_csl/cell-numeric.csl
+link-citations: true
+---
+
+```{css sidenote, echo = FALSE}
+
+.main-container {
+    margin-left: 250px;
+}
+.sidenote, .marginnote { 
+  float: right;
+  clear: right;
+  margin-right: -40%;
+  width: 37%;         # best between 50% and 60%
+  margin-top: 0;
+  margin-bottom: 0;
+  font-size: 1.1rem;
+  line-height: 1.3;
+  vertical-align: baseline;
+  position: relative;
+  }
+```
+
+
+<style>
+@import url('https://fonts.googleapis.com/css?family=Raleway');
+@import url('https://fonts.googleapis.com/css?family=Oxygen');
+@import url('https://fonts.googleapis.com/css?family=Raleway:bold');
+@import url('https://fonts.googleapis.com/css?family=Oxygen:bold');
+
+.main-container {
+  max-width: 1400px !important;
+}
+
+body{
+  font-family: 'Oxygen', sans-serif;
+  font-size: 16px;
+  line-height: 24px;
+}
+
+h1,h2,h3,h4 {
+  font-family: 'Raleway', sans-serif;
+}
+
+.container { width: 1400px; }
+
+caption {
+  font-size: 20px;
+  caption-side: top;
+  text-indent: 30px;
+  background-color: lightgrey;
+  color: black;
+  margin-top: 5px;
+}
+
+g-table-intro h4 {
+  text-indent: 0px;
+}
+</style>
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(echo = TRUE,
+                      comment = NA,
+                      warning = FALSE,
+                      error = FALSE,
+                      message = FALSE,
+                      cache = FALSE,
+                      fig.width = 8,
+                      fig.height = 4)
+```
+
+```{r infex-GlobalOptions, results="hide", include=FALSE, cache=FALSE}
+
+knitr::opts_knit$set(stop_on_error = 2L) #really make it stop
+options(knitr.table.format = 'html')
+
+options(stringsAsFactors=F)
+
+ #knitr::dep_auto()
+
+```
+<!-- ######################################################################## -->
+
+
+```{r index-Prelims,  include=FALSE, echo=FALSE, results='hide', message=FALSE} 
+
+
+FN <- "SPLASH_OASIS_summary"
+if(sum(grepl(FN, list.files()))==0) stop("Check FN")
+
+PREFIX <- "SPLASH_OASIS_summary" #- replace by FLOWCELL???
+
+ suppressMessages(require(rmarkdown))
+ suppressMessages(require(knitr))
+
+ suppressPackageStartupMessages(require(methods))
+ suppressPackageStartupMessages(require(bookdown))
+
+ suppressPackageStartupMessages(require(magrittr))
+
+ # Shotcuts for knitting and rendering while in R session (Invoke interactive R from R/Scripts folder)
+ kk <- function(n='') knitr::knit2html(paste("t", n, sep=''), envir=globalenv(),
+       output=paste(FN,".html", sep=''))
+
+ rr <- function(n='') rmarkdown::render(paste("t", n, sep=''), envir=globalenv(),
+       output_file=paste(FN,".html", sep='')) ##, output_dir='Scripts')
+
+ bb <- function(n='') browseURL(paste(FN,".html", sep=''))
+
+ # The usual shortcuts
+ zz <- function(n='') source(paste("t", n, sep=''))
+
+
+```
+<!-- ######################################################################## -->
+
+<br/>
+
+
+<!--
+* Breiman: [@Breiman:1984aa; @Breiman:2001aa]
+* Freedman: [@Freedman:2008aa; @Freedman:2008ad; @Freedman:2008ac; @Freedman:2009ac]
+-->
+
+
+<p><p/>
+* The [Salzman Lab](https://salzmanlab.stanford.edu/) 
+develop and apply new **statistical algorithms** for **biological inference**
+on fundamental questions in the evolution of genomes.^[
+Dr. Salzman leads a 
+[purely data science statistical research group](https://youtu.be/nHuc5mlQRQw?si=qRi7bnjZqGwwxHY3&t=31)
+whose mission is to modernize analysis tools to better deal with the current era of data -
+[ultra high throughout precise resolution genomic measurements](https://youtu.be/nHuc5mlQRQw?si=qRi7bnjZqGwwxHY3&t=106) - 
+and to ensure that they are more fully
+[statistical and mathematical in nature](https://youtu.be/nHuc5mlQRQw?si=qRi7bnjZqGwwxHY3&t=115).
+than current practice.]
+
+
+<p><p/> 
+* Here we consider 2 papers from the [Salzman Lab](https://salzmanlab.stanford.edu/):
+   - SPLASH: A statistical, reference-free genomic algorithm unifies biological discover
+[PDF](https://www.cell.com/cell/pdf/S0092-8674(23)01179-0.pdf),
+[Code](https://github.com/refresh-bio/SPLASH) [@Chaung:2023aa]
+   - OASIS: An interpretable, finite-sample valid alternative to Pearson’s X2 
+for scientific discovery
+[URL](https://www.pnas.org/doi/10.1073/pnas.2304671121),
+[Code](https://github.com/refresh-bio/SPLASH) [@Baharav:2024aa]
+
+
+<p><p/> 
+* The OASIS paper, as an example of mathematical statistics, is a beautiful piece of work.
+The articles provide a proof of concept of the proposed methods in an idealized setting.
+The exposition is mathematical with the p-value playing a pivotal role throughout.
+The nice mathematical dressing comes at a cost of having to rely on unrealistic assumptions,
+starting with the assumption that replicate target count vectors have a multinomial
+distribution with a fixed underlying probability distribution.^[
+Perhaps in Dr. Salzman's lab samples can go through the entire preparation and sequencing
+process without bearing a trace of their passage through the process, but in a typical
+production  setting, as samples navigate  through the processing pipeline, they accumulate
+technical artifacts which impact the batches of reads which are harvested for each sample.
+The sequence specific effect may be suppression or enrichment, large or small,
+unique or shared across many sequences.  The technical artifacts are typically not
+hard to detect and in some cases can only be missed by not looking at the data
+coming off the sequencers before pushing them down the processing pipeline.
+]
+
+
+
+<p><p/>
+* As a reference which data analysts might go to for guidance,
+the articles lack the key pieces needed for the reader to get a true sense of 
+performance and for the scope of the analysis necessary to obtain valid results.
+   - Technical validation on the omic scale is required to get a sense of the utility of the
+proposed methods.  
+   - **Technical validation** should be run on typical data and should include both
+measures of algorithm performance and resistance to **input data quality** and
+**unwanted variation**, which are always part of the story when omic scale assays
+are involved.
+See 
+[Removing Unwanted Variation from Large-Scale RNA Sequencing Data with PRPS](./_M4A-RUV/natureBiotechPaper/_Molania_2023_RUV-III_PRPS_Summary.html).
+
+   -  **The input data are never examined**.  **Definition 1 (Null Model)** is actually the
+fundamental assumption that is necessary for everything else to follow, yet that assumption
+is never scrutinized.^[
+This is not uncommon and is rooted in the divide between applied statistics and mathematical
+statistics.  The mathematics require assumptions so it's perfectively reasonable for the
+mathematical statistician to start there.  None of the mathematical results can be relied on
+unless the assumptions are true.  The crux of the work for the applied
+statistician should be  to establish the null model.  In practice, the necessary
+null model is almost always assumed without substantial supporting evidence.]
+In practice, the analysis of omic scale data should not proceed before careful examination
+of the collected data.  The presence of unwanted variability will invalidate the assumed
+null model and all results based on the analysis of the flawed data.
+
+* The claim of the validity of the p-values, one of the selling points of the method,
+is suspect.  When we fit one prototype model to 20K, 50K or 100K feature data
+subsets we do not believe that the  model fits adequately in every case:
+we may robustify the fit to allow for the presence of bad points, or outliers,
+and we do not put too much credibility on the precise values of p-values;
+we believe that they generally order hypotheses the right way.
+   - The p-value may be a good value to discriminate between interesting and
+uninteresting targets, but this should be determined empirically by comparing with
+other candidate discriminants (in addition to Pearson's $X^2$).
+   - If p-values are to be taken at face value, their calibraion should be 
+varidfied.
+   - The p-value distribution can also be examined to check for
+indications of unwanted valiability.  See Molanina et.al. (2019) [@Molania:2019aa].
+
+
+<br/>
+
+
+## On Omic Scale Analysis 
+
+<p><p/>
+* Omic scale data refers to measurements taken in parallel over many features -
+from thousands of genes to millions of proteins.  Even though the result of
+interest, gene scores for example, may be obtained from analyzing
+features one at a time, the success of the design and analysis methods
+can only be assessed by taking a holistic look at the study data and results.
+
+* To have a holistic picture, the assessment must start with the input material
+and follow the sample set through all of the processing steps including QC assessment
+and filtering (if any), sample pre-processing  (further filtering and normalization),
+data analysis (compute the desired results and report the findings).
+
+* The SPLASH article provided the information needed to
+show that the technology works in principle, but to appreciate
+how well the technology will work in practice, it has to be evaluated 
+in a way that fully reflects the  expected full analysis pipeline. 
+
+
+* Having a good dataset for assessment
+is also critical and could include control features, control samples,
+and samples providing engineered or designed truth.
+In addition to having built-in truth, the samples used to assess
+performance must also be representative of the actual samples
+which will be processed in production.
+
+<br/>
+
+## Reports/Reviews
+
+<p><p/>
+* [Slide Presentation](_M3B-SPLASH-OASIS/splash_oasis_methodology_presentation_v2.html) 
+   - The slide presentation provides a high level summary of the SPLASH article
+in the words of the authors. 
+   - Some comments are inserted where there might be gaps or a difference of opinion.
+
+
+<p><p/>
+* [SPLASH](_M2B-RFGI_SPLASH_v2.html) Notes 
+   - Contains two introductory sections to position SPLASH+OASIS in the
+context of contemporary analysus methods:
+      - literature review  of Reference-Free Genomic Inference prior to SPLASH, as well as  
+      - a survey of methods developed for RNA-seq which could be used here.
+
+
+<p><p/>
+* [OASIS](./_M3A-OASIS.html)  Notes 
+   - Contains some notes on OASIS.
+
+<br/>
+
+
+## SPLASH & OASIS Extensions and Applications {.tabset}
+
+Three follow-up publications provide more information on the application of
+SPLASH and OASIS.
+
+```{r SPLASH_OASIS_summary-write-bib, results="asis", echo=F}
+ # https://stackoverflow.com/questions/26851952/is-it-possible-to-insert-the-full-reference-of-an-article-in-the-middle-of-a-rma
+
+  SPLASH2x3_refs_lst <- bibtex::read.bib("../_bibFiles/_SPLASH2x3.bib")
+
+ for(ID in c("Henderson:2024aa", "Dehghannasiri:2024aa", "Kokot:2024aa")) {
+  cat('\n* ')
+  print(SPLASH2x3_refs_lst[[ID]])
+ }
+
+```
+
+### Home {-}
+
+<br/>
+
+### Henderson:2024 {-}
+
+<br/>
+
+### Dehghannasiri:2024 {-}
+
+<br/>
+
+### Kokot:2024 {-}
+
+<br/>
+
+
+## Follow-up
+
+<p><p/>
+> OASIS provides a tool toward answering questions 
+> in mechanistic biology that are manual labor
+> intensive or impossible to address with current 
+> statistical approaches.
+
+* To get a better understanding of what OASIS brings, or doesn't bring, to the table,
+we need to repeat the analyses, with the following guidelines:
+   - pay attention to variability in the input data quality 
+   - use state of the art comparators;  not exclusively Pearson’s X2
+as comparator.
+   - if the dataset structure permits it, apply RUV methodology to
+identify unwanted variability in the target count distributions used for reference free
+biological inference. 
+
+
+<br/>
+
+# The Treatment of Unwanted Variability {#trt-unwanted-var }
+
+* All collected experimental data are liable to contain some
+unwanted variability - variability in the measurements made on
+the experimental units which is unrelated to the question of interest.
+
+
+* Normalization has different meanings in different
+contexts.  Here we can say that normalization is
+*a transformation applied to data produced in a 
+highly parallel system with the objective
+of removing technical sources of variability*^[See slides
+[here](https://incob.apbionet.org/incob14/assets/INCOB2014/Terry-SpeedInCoB2014.pdf)
+for more detail.]
+
+<br/>
+
+## Normalization in RNA-Seq - Overview
+
+
+* Initially RNA-Seq datasets  were small, and the samples processed expertly by
+the best tech in the lab so that there was no indication for the need
+for normalization with RNA-Seq data [@Wang:2009aa; @Cloonan:2008aa].
+
+* It didn't take long for datasets to grow in size and for researchers
+to realize that differences in library sizes were a source
+of technical variability which had to be dealt with before
+biological conclusions could be drawn.  The first generation
+normalizations were a global scaling normalization based on the total
+number of reads per sample [@Robinson:2008aa;@Marioni:2008aa;@Mortazavi:2008aa].
+
+<p><p/>
+* The global scaling normalization soon became disfavored by most as it
+was realized that global scaling could potentially remove biological
+variability, as in the case when a few very highly expressed genes were 
+differentially expressed across groups.   This led to the use
+of scaling factors reflecting differences in the bulk of the data and not
+affected by a small set of highly expressed differentially expressed genes 
+[@Robinson:2010aa;  @Love:2014aa].
+   - As a side note, the scaling just described are not used
+to scale the counts to be used for downstream analysis.  They are
+used instead as part of the model which describes the expected variability
+of the unadjusted counts.  
+
+<p><p/>
+*  The scaling factor normalizations just described are part of the
+analysis workflow of two R packages which are still in common use today:
+EdgeR [@Robinson:2010ab]   and DESeq2 [@Love:2014aa].
+
+
+<p><p/>
+* Other normalization methods came along to deal with special (or not so
+special) circumstances; GC content normalization, for example [@Risso:2011aa]). 
+
+<p><p/>
+* A problem still remains as up to this point there was no way
+to handle complications created when the estimated normalization
+factors were confounded with the biology of interest.
+   - RUV was first introduced in Risso et.al (2014 [@Risso:2014aa]
+to enable normalization in spite of confounding by making use of control
+genes or control samples.
+   - Jacob et al. (2016) [@Jacob:2016aa] extend  RUV to the case when neither
+the source of unwanted variability nor the biology of interest in known
+(subclass discovery is an application in which this can occur, for example). 
+   - A visualization technique for RUV is presented in
+Gandolfo et al. (2018) [@Gandolfo:2018aa].
+   - A variation of RUV, called RUV-III, which makes vital 
+use of technical replicates and suitable control genes is presented in
+Molanina et.al. (2019) [@Molania:2019aa].
+   -  The latest innovation, RUV PRPS  ( pseudo-replicates of pseudo-samples )
+introduced in Molania et al. (2023) [@Molania:2023aa], results  in a
+normalization procedure with general applicability.  The method is illustrated
+with data from The Cancer Genome Atlas (TCGA) in which several sources of 
+unwanted variation are identified and demonstrated to significantly 
+compromise various downstream analyses, including cancer subtype identification,
+association between gene expression and survival outcomes and gene co-expression analysis.
+      - Molania et al. (2023) [@Molania:2023aa] is summarized in the next section.
+
+<!--
+<p><p/>
+* Most of the RUV methodology described in the above mentioned articles
+make up a useful set of tools for effectively dealing with unwanted variability
+with little in terms of theory guiding the usage of various techniques.  
+-->
+
+<!--
+<p><p/>
+* Building on the formulation  of Wang et al. (2017) [@Wang:2017aa],
+Gerard et. al. developed a general framework, RUV*, 
+that encompasses all versions of RUV  (Gerard et. al. (2020, 2021) [@Gerard:2020aa;@Gerard:2021aa].
+This framework is described below.
+
+<p><p/>
+* Jiang, Gagnon-Bartysch and Speed (2023) [@Jiang:2023aa]  present some asymptotic theory for
+RUV-III. 
+
+<p><p/>
+* What is the asymototic theory used for?
+
+-->
+
+<br/>
+
+## RUV in action 
+
+<p><p/>
+* [Removing Unwanted Variation from Large-Scale RNA Sequencing Data with PRPS](./_M4A-RUV/natureBiotechPaper/_Molania_2023_RUV-III_PRPS_Summary.html)
+   - A detailed summary of the Nature Biotechnology paper.  Examinihng the figures of 
+Section 2, Detailed Results by Dataset, is sufficient to get the gist of the issues around
+unwanted variability.
+
+<p><p/>
+* [AI-Enhanced RUV Normalization: Research Proposal](./_M4A-RUV/natureBiotechPaper/_Research_Proposal_AI_Enhanced_RUV.html)
+   - claude Sonnet 4.5's vision of a path towards a next-gen RUV product, one that is AI and ML
+enabled and fully automated.
+
+<br/>
+
+## AI & ML in RNA-Seq Analysis Tools
+
+Prior to moving ahead with the developemnt of the next gen versions of RUV modules,
+it would be good to take stock of the impact AI and ML has had on RNA-Seq analysis to
+date.  
+
+<p><p/>
+* [Part A - Introduction and Methodological Considerations](./_M4A-RUV/natureBiotechPaper/_AI_ML_Applications_Part_A.html)
+   - discussion of issues around performance assessnent  when truth is rare and standards missing.
+<p><p/>
+* [Part B - Specific Applications and Evidence](./_M4A-RUV/natureBiotechPaper/SPLASH_OASIS_summary
+.html)
+   - case studies of the application of AI and ML in RNA-Seq analyses.
+      - weak case for Random Forests for Gene Ranking vs 
+Traditional Approach: Differential Expression Analysis 
+      - see
+[Impact and Reception Analysis: Wenric & Shemirani (2018)](./_M4A-RUV/natureBiotechPaper/_Wenric_Shemirani_2018_Impact_Analysis.html).
+   - it's not clear how the ML methods were selected 
+<p><p/>
+* <font size="7">!</font> Rerun some of the analyses in
+Wenric & Shemirani (2018) [@Wenric:2018aa].
+   - first examine the data to make sure it is accessible.
+
+
+
+
+
+
+
+
+
+
+
+<br/>
+
+
+
+
+# References {-}
+
+<div id="refs"></div>
+
+<br/>
+
+<!--
+# Appendix  {-}
+
+<br/>
+-->
+
+```{r, echo=FALSE}
+  knitr::knit_exit()
+```
+
+################################################
+## ARCHIVE
+################################################
+<!--
+## On inferential frameworks   {-}
+
+* An important feature of the SPLASH+OASIS data analyses pipeline is the:q
+finite sample valid statistical inference that it makes possible whereas other
+methods rely on asymptotically valid estimates. The value that this feature confers to 
+the method should be verified empirically with a proper omic level assessment.  Note that RNA-Seq
+methods rely heavily in these asymptotically valid estimates which have not been found
+to be problematic for small sample sizes  as the site-specific estimates are typically
+stabilized by shrinkage.
+
+
+* From a personal perspective I feel that the write-up of the papers puts a lot of stock
+in p- and q-values.  The statistical standard errors of measurement, or the sampling errors,
+are only one source of variability in data collected in a high throughput, massively
+parallel fashion. Other sources of variability such as reagent lots, instruments,
+operators, days (ie. day to day variability is variability that is not otherwise specified)
+will often dominate the total variability.  
+
+* In practice we select the analysis method which
+produces the best results as ascertained by omic scale assessments of accuracy.
+-->
+
+<br/>
+
+
+<!--
+* Having good comparator analysis methods is helpful, if not crucial.  I'm not sure that
+the chi-square test provides a good comparator.  I don't recall ever coming 
+across the chi-square test in the course of RNA-Seq related analyses, but
+my experience is limited to comparing gene expression levels across samples.
+There are a number of R packages which treat compositional data analysis
+which is analogous to the problem addressed in SPLASH.  Many options 
+are listed in Section \@ref(rna-seq-wi-samp); it should be possible to customize one or more
+to provide a comparator for SPLASH+OASIS.
+-->
+
+
+
+<!-- To run
+## nohup Rscript -e "knitr::knit2html('SPLASH_OASIS_summary.Rmd')" > SPLASH_OASIS_summary.log  &
+  
+## Or
+## nohup Rscript -e "rmarkdown::render('SPLASH_OASIS_summary.Rmd')" > SPLASH_OASIS_summary.log  &
+    
+-->
+
