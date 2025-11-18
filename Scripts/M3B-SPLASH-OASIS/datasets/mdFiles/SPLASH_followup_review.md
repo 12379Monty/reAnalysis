@@ -1,12 +1,15 @@
-# Reference-Free Genomic Discovery: The Paradigm Shift from SPLASH to SPLASH2 and Beyond
+# Reference-Free Genomic Discovery: from SPLASH to SPLASH2 and Beyond
 
 ## Executive Summary
 
-Following the groundbreaking publications of SPLASH (Statistically Primary aLignment Agnostic Sequence Homing) and the OASIS statistical framework, three major follow-up studies have fundamentally transformed the landscape of genomic sequence analysis. These works—focused on microbial discovery, single-cell analysis, and scalable implementation—collectively represent a paradigm shift away from alignment-based genomics toward direct statistical analysis of raw sequencing reads.
+Following the publications of SPLASH (Statistically Primary aLignment Agnostic 
+Sequence Homing) and the OASIS statistical framework, three major follow-up studies 
+were carroied out.  These works focused on microbial discovery, single-cell analysis, 
+and scalable implementation.
 
 ## The Fundamental Paradigm Change
 
-### From Alignment-Dependent to Reference-Free Analysis
+### Alignment-Dependent Vs Reference-Free Analysis
 
 **Traditional Paradigm:**
 
@@ -28,7 +31,13 @@ Following the groundbreaking publications of SPLASH (Statistically Primary aLign
 
 ### Unifying Conceptual Framework
 
-The key insight underlying SPLASH is that many forms of biological regulation—alternative splicing, V(D)J recombination, RNA editing, mobile genetic elements, CRISPR arrays, viral strain variation, and more—share a common statistical signature: **sample-specific target diversity following constant anchor sequences**. Rather than developing separate tools for each mechanism, SPLASH provides a unified statistical approach using k-mer composition analysis.
+The key insight underlying SPLASH is that many forms of biological 
+regulation—alternative splicing, V(D)J recombination, RNA editing,
+mobile genetic elements, CRISPR arrays, viral strain variation, and more—share a 
+common pattern signature: **sample-specific target diversity following
+constant anchor sequences**. Rather than developing separate tools for
+each mechanism, SPLASH provides a unified statistical approach using k-mer
+composition analysis.
 
 ## Study 1: Ultra-Efficient Microbial Discovery (Henderson et al., 2024)
 
@@ -76,7 +85,7 @@ All achieved through a single computational pipeline without custom workflows.
 
 SPLASH2 represents the computational reimplementation that makes the SPLASH paradigm feasible for the largest genomic datasets available today.
 
-**Computational Revolution:**
+**Computational Evolution:**
 
 - ~450× faster than original SPLASH
 - Drastically reduced memory requirements
@@ -328,7 +337,7 @@ Microbial strain typing without reference databases enables:
 
 ## Methodological Innovations
 
-### Statistical Foundation: OASIS
+### Statistical Foundation: OASIS  (this is possibly crap)
 The OASIS framework provides interpretable, finite-sample-valid hypothesis testing that underlies all SPLASH applications. This gives:
 - Rigorous p-values for each anchor
 - Multiple testing correction
@@ -398,13 +407,14 @@ Based on these three studies, future development likely includes:
 
 ## Conclusion
 
-The trio of Henderson et al., Kokot et al., and Dehghannasiri et al. studies collectively establish that reference-free, statistics-first genomic analysis is not only feasible but often superior to traditional alignment-based approaches. By unifying diverse biological discovery tasks under a single computational framework, operating efficiently at scale, and enabling discovery in both model and non-model organisms, these works fundamentally change how genomic sequence analysis can and should be performed.
-
-The paradigm shift is profound: from "align to a reference and look for what you know" to "discover what varies statistically, then determine what it means biologically." This inversion—statistics first, biology second—opens the door to discoveries that would otherwise remain hidden in the dark matter of the genome.
+The trio of Henderson et al., Kokot et al., and Dehghannasiri et al. studies collectively
+establish that reference-free, statistics-first genomic analysis is feasible
+By unifying diverse biological discovery tasks under a single computational framework, 
+operating efficiently at scale, and enabling discovery in both model and non-model
+organisms, these works change how genomic sequence analysis can be performed.
 
 Key achievements:
 - **Henderson et al.:** Unified microbial discovery and statistical assembly
 - **Kokot et al.:** Scalable implementation enabling terabyte-scale analysis
 - **Dehghannasiri et al.:** Single-cell and spatial reference-free discovery
 
-Together, these represent not incremental improvements but a wholesale rethinking of genomic discovery, with profound implications for basic research, clinical diagnostics, and our understanding of biological diversity across the tree of life.
