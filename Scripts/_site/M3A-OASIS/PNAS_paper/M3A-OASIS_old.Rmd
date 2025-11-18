@@ -1,0 +1,724 @@
+---
+title:  "OASIS - Optimized Adaptive Statistic for Inferring Structure"
+#subtitle: "SUBTITLE goes here"
+author: "[Francois Collin](https://www.linkedin.com/in/francoisz/)"
+date: "`r format(Sys.time(), '%B %d, %Y')`"
+always_allow_html: yes
+output:
+  # for use of .tabset
+  bookdown::html_document2:
+  #bookdown::html_book:
+  #html_document:
+    code_folding: hide
+    code_download: true
+    toc: true
+    toc_depth: 2
+    # does this have an effect
+    fig_caption: yes
+    # this has no effect
+    number_sections: yes
+    # css: ['../_css/pandoc3.css', '../_css/myMargins.css']
+bibliography: [../_bibFiles/_healthy_aging.bib, ../_bibFiles/_ref_free_genom_inf.bib, ../../_bibFiles/_Breiman.bib, ../../_bibFiles/_Yu.bib, ../../_bibFiles/_Freedman.bib, ../../_bibFiles/_RUV.bib, ../../_bibFiles/_Yu.bib, ../../_bibFiles/_rand_cause_inf.bib]
+csl: ../_csl/cell-numeric.csl
+link-citations: true
+---
+
+```{css sidenote, echo = FALSE}
+
+.main-container {
+    margin-left: 250px;
+}
+.sidenote, .marginnote { 
+  float: right;
+  clear: right;
+  margin-right: -40%;
+  width: 37%;         # best between 50% and 60%
+  margin-top: 0;
+  margin-bottom: 0;
+  font-size: 1.1rem;
+  line-height: 1.3;
+  vertical-align: baseline;
+  position: relative;
+  }
+```
+
+
+<style>
+@import url('https://fonts.googleapis.com/css?family=Raleway');
+@import url('https://fonts.googleapis.com/css?family=Oxygen');
+@import url('https://fonts.googleapis.com/css?family=Raleway:bold');
+@import url('https://fonts.googleapis.com/css?family=Oxygen:bold');
+
+.main-container {
+  max-width: 1400px !important;
+}
+
+body{
+  font-family: 'Oxygen', sans-serif;
+  font-size: 16px;
+  line-height: 24px;
+}
+
+h1,h2,h3,h4 {
+  font-family: 'Raleway', sans-serif;
+}
+
+.container { width: 1400px; }
+
+caption {
+  font-size: 20px;
+  caption-side: top;
+  text-indent: 30px;
+  background-color: lightgrey;
+  color: black;
+  margin-top: 5px;
+}
+
+g-table-intro h4 {
+  text-indent: 0px;
+}
+</style>
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(echo = TRUE,
+                      comment = NA,
+                      warning = FALSE,
+                      error = FALSE,
+                      message = FALSE,
+                      cache = FALSE,
+                      fig.width = 8,
+                      fig.height = 4)
+```
+
+```{r m3a-GlobalOptions, results="hide", include=FALSE, cache=FALSE}
+
+knitr::opts_knit$set(stop_on_error = 2L) #really make it stop
+options(knitr.table.format = 'html')
+
+options(stringsAsFactors=F)
+
+ #knitr::dep_auto()
+
+```
+<!-- ######################################################################## -->
+
+
+```{r m3a-Prelims,  include=FALSE, echo=FALSE, results='hide', message=FALSE} 
+
+FN <- "_M3A-OASIS"
+if(sum(grepl(FN, list.files()))==0) stop("Check FN")
+
+ suppressMessages(require(rmarkdown))
+ suppressMessages(require(knitr))
+
+ suppressPackageStartupMessages(require(methods))
+ suppressPackageStartupMessages(require(bookdown))
+
+ suppressPackageStartupMessages(require(data.table))
+ options(datatable.fread.datatable=F)
+
+ suppressPackageStartupMessages(require(plyr))
+ suppressPackageStartupMessages(require(dplyr))
+ suppressPackageStartupMessages(require(magrittr))
+
+ # Shotcuts for knitting and rendering while in R session (Invoke interactive R from R/Scripts folder)
+ kk <- function(n='') knitr::knit2html(paste("t", n, sep=''), envir=globalenv(),
+       output=paste(FN,".html", sep=''))
+
+ rr <- function(n='') rmarkdown::render(paste("t", n, sep=''), envir=globalenv(),
+       output_file=paste(FN,".html", sep='')) ##, output_dir='Scripts')
+
+ bb <- function(n='') browseURL(paste(FN,".html", sep=''))
+
+ # The usual shortcuts
+ zz <- function(n='') source(paste("t", n, sep=''))
+
+
+ WRKDIR <- '..'
+ if(!file.exists(WRKDIR)) stop("WRKDIR ERROR", WRKDIR)
+
+ # do once
+
+ # Shotcuts for knitting and rendering while in R session
+ kk <- function(n='') knitr::knit2html(paste("t", n, sep=''), envir=globalenv(),
+       output=paste('',FN,".html", sep=''))
+
+ rr <- function(n='') render(paste("t", n, sep=''), envir=globalenv(),
+       output_file=paste(FN,".html", sep=''), output_dir='Scripts')
+
+ bb <- function(n='') browseURL(paste('',FN,".html", sep=''))
+
+ # The usual shorcuts
+ zz <- function(n='') source(paste('', "t", n, sep=''))
+
+ # file rmarkdown file management options: cache, figures
+ cache_DIR <- file.path(WRKDIR,'Scripts', 'cache/M3A/')
+ suppressMessages(dir.create(cache_DIR, recursive=T))
+ opts_chunk$set(cache.path=cache_DIR)
+
+ figures_DIR <- file.path(WRKDIR,'Scripts', 'figures/M3A/')
+ suppressMessages(dir.create(figures_DIR, recursive=T))
+ opts_chunk$set(fig.path=figures_DIR)
+
+ #tables_DIR <- file.path(WRKDIR,'Scripts', 'tables/M3A/')
+ #suppressMessages(dir.create(table_DIR, recursive=T))
+ #opts_chunk$set(fig.path=table_DIR)
+ 
+ # need a local copy of help_DIR
+ #help_DIR <- file.path(WRKDIR,'Scripts', 'help_files')
+ help_DIR <- file.path('.', 'help_files')
+ suppressMessages(dir.create(help_DIR, recursive=T))
+ 
+ temp_DIR <- file.path(WRKDIR,'Scripts', 'temp_files')
+ suppressMessages(dir.create(temp_DIR, recursive=T))
+
+```
+<!-- ######################################################################## -->
+
+*** 
+
+```{r m3a-utilityFns, echo=FALSE}
+ # Here we define some utility functions
+source('r/utilityFns.r')
+
+```
+
+<!-- ######################################################################## -->
+
+
+<!-- SKIP THIS 
+# Params {#params}
+
+## Input params {-}
+-->
+
+```{r m3a-input-params-all, echo = FALSE, results = "asis", eval=F, echo=F}
+ # print out original input params
+data.frame(
+param_name=names(params),
+param_value=unlist(params),
+param_class=sapply(params, class), row.names=NULL) %>%
+  knitr::kable(caption="Input Parameters")
+```
+
+<!--
+* Breiman: [@Breiman:1984aa; @Breiman:2001aa]
+* Freedman: [@Freedman:2008aa; @Freedman:2008ad; @Freedman:2008ac; @Freedman:2009ac]
+-->
+
+<style>
+    hr {
+        border: none;
+        height: 2px;
+        background: none;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.5);
+    }
+</style>
+
+<br/>
+<br/>
+
+## Outline  {-}
+
+<p><p/>
+* The [Salzman Lab](https://salzmanlab.stanford.edu/) 
+develop and apply new **statistical algorithms** for **biological inference**
+on fundamental questions in the evolution of genomes.
+
+<p><p/> 
+* Here we through the details of 1 paper from the [Salzman Lab](https://salzmanlab.stanford.edu/):
+   - OASIS: 
+An interpretable, finite-sample valid alternative to Pearson’s $X^2$  
+for scientific discovery
+[URL](https://www.pnas.org/doi/10.1073/pnas.2304671121),
+[Code](https://github.com/refresh-bio/SPLASH) [@Baharav:2024aa]
+
+
+<br/>
+<br/>
+
+---
+
+
+# Data Description  {.tabset}
+
+## Main {-}
+
+### Data Files {-}
+
+<p><p/>
+* At the raw data level, samples are represented by separate sequencing data (FASTQ) files.
+
+<p><p/>
+* The goal of SPLASH is to detect sequence variation between the samples of a set.
+   -   The goal is to interrogate the read counts in order
+to distinghish two scenarios:
+      -  1. the reads for all samples were generated by a common source. eg the same biological
+units, or units from the same group.
+      -  2. the reads for the samples  were generated by more than one source.
+
+<font color="darkgreen">
+
+* The sampling scheme deserves consideration, especially if we want to make inference
+from p/q-values.
+
+<p><p/>
+* Without any further information about the samples in the form of meta-data sample description
+we have to assume that the sample set Is the population.
+   - in this case p-values are making inference to **re-sampling reads from the samples in the dataset**.
+   - this is analogous to the Neyman model in which the analysis dataset IS the population
+([@Splawa-Neyman:1990aa; @Lin:2024aa; @Freedman:2008aa].
+
+</font>
+
+<br/>
+
+### Raw Data {-}
+
+<p><p/>
+* To detect variation (in the sense of genomic sequence differences between samples)
+a set of **anchors** - k-mers which appear among the reads - are identified
+and combined into a set.
+
+<p><p/>
+* A set of **targets** - k-mers which appear among the reads at locations a few loci
+down from the anchors - is also compiled.
+
+<p><p/>
+* The anchors and targets associated with each sample will be considered the raw data.
+
+
+<br/>
+<br/>
+
+## Notation {-}
+
+| Symbol-Notation| Definition |
+|-----------------|------------|
+| \( \|\cdot\| \) | denotes the vector ℓ₂ norm or spectral norm for matrices, unless otherwise specified. |
+| \( \|A\|_F \)   | denotes the Frobenius norm of a matrix \(A\). |
+| \( v_{\max}(A) \) | denotes a principal eigenvector of a symmetric matrix \(A\) (any unit eigenvector with maximal eigenvalue). |
+| \( \text{diag}(\cdot) \) | maps a length \( n \) vector \( v \) to an \( n \times n \) matrix \( A \), where all off-diagonal entries of \( A \) are 0 and \( A_{ii} = v_i \) for \( i \in [n] \). |
+| \( A^{(j)} \) | denotes the \( j \)-th column of a matrix. |
+| \( \mathbf{1} \) (\( \mathbf{0} \)) | denotes the all-ones (zeros) vector of appropriate dimension. |
+| \( \Phi \) and \( \xrightarrow{D} \) | \( \Phi \) denotes the CDF of a standard Gaussian random variable, and \( \xrightarrow{D} \) denotes convergence in distribution. |
+| Total variation distance | For distributions \( p,q \) over \([I]\), \( \ell_{TV}(p,q)=\frac{1}{2}\|p-q\|_1 \). |
+| Symmetric chi-squared distance | For distributions \( p,q \) over \([I]\), \( \chi^2(p,q)=2\sum_i\frac{(p_i - q_i)^2}{p_i + q_i} \). |
+| \( \text{sign}(x) \) | equals 1 if \( x>0 \), 0 if \( x=0 \), and -1 if \( x<0 \). |
+
+
+<br/>
+<br/>
+
+# OASIS: Problem Formulation {#problem-formulation}
+
+<p><p/>
+* There are several ways to address the question of interest -
+are the samples meaningfully different in terms of genomic sequence
+characteristics captured by the anchor & targets patterns.
+
+<p><p/>
+* OASIS chooses to formulate the problem as one of the identification of anchors
+for which the **conditional distributions of target counts given the total number of targets**
+found for each sample anchor are not independent.
+   - total number of targets is treated as **random**.
+
+<p><p/>
+* In this formulation of the problem, a sufficient set of statistics are the target counts
+for each sample anchor and OASIS reduces the data to a contingency table for each anchor:
+the rows are targets, the columns samples, the entries are target counts. 
+
+<p><p/>
+* \( X \in \mathbb{N}^{I \times J}, \: X_{ij} = 
+  \text{Total number of sample j anchor reads with target i} \) 
+
+<!--
+<p><p/>
+* Defining \([m] = \{1, 2, \dots, m\}\), a contingency table is then defined by
+pairs of observations of:
+   - a row (\([I]\)-valued) categorical random variable, and 
+   - a column (\([J]\)-valued) categorical random variable.
+-->
+
+<p><p/>
+* In this work, we focus on the case where the 
+   - **columns correspond to biological samples** (explanatory random variable) and
+   - the **rows correspond to the response variable (targets)**.
+
+<p><p/>
+* Thus, the OASIS formulation of the problem asks whether the 
+columnwise conditional row distribution is the same for each column.
+
+---
+
+<p><p/>
+* Define \( X^{(j)} \) as the \( j \)-th column of \( X \), and 
+<p><p/>
+* \( n_j = \sum_{i=1}^{I} X_{ij} \) as
+the total number of counts in column \( j \). 
+
+<p><p/>
+* Let \( M = \sum_j n_j \) be the total number of counts in the table,
+equivalently obtainable by summing row or column sums.
+
+We consider the following model:
+
+**Definition 1 (Null Model).**  
+(Conditional on |  Given)^[
+"Conditional on" implies that the column totals is a random variate
+whose level depends on the sampled bivariate data.
+Whether this is appropriate or not depends on how the data
+are collected.  If one sample per fastq, then the joint distribution
+is completely separable.]
+the column totals \(\{n_j\}_{j=1}^{J}\),
+each column of the contingency table \(X\) is 
+\[ X^{(j)} \sim \text{multinomial}(n_j, p), \]
+drawn independently for all \(j\), for some common
+vector of (unknown) row probabilities \(p\).
+
+<br/>
+<br/>
+
+<font color="darkgreen">
+
+## Analysis of Random Variability {-}
+
+<p><p/>
+
+* Any model for the data in the analysis dataset must take full account
+of all of the sources of variability.
+   - we repeat a measurement under the same conditions and get different results,
+that's variability
+   - the data of interest in this case are the anchor and target sequences
+which can be read off  of the reads
+   - *all variability in this dataset* come from the **selection of fastq files**
+      - fastq sample 
+   - each fastq contains a set of reads which can be considered a simple random
+sample from a **population of reads**.
+      - the **population of reads** can be thought of as being the observed reads set in the
+case of unlimited sequencing depth.
+   - when we compare the data from 2 fastq files, we are comparing two samples from two
+populations
+      - the difference between any two populations is a function of the differences in
+samples processing:
+         - repeats are resequencing runs of a unique library or prepared samples
+           - repeats only capture sequencing variability and are rarely of any interest
+         - technical replicates are obtained from the full end to end processing of one source material
+            - variations of the basic (full) technical replicate can be designed to examine the effects of
+specific parts of the pipeline on variability.
+         - biologoical replicates are obtained from the full end to end processing of different source material
+        
+         
+
+<br/>
+<br/>
+
+
+### Contingency Tables and The Multinomial Distribution {-}
+
+The following describes the variability in counts when these
+result from counting occuresnces based on a simple random sample 
+taken with replacement, or without replacement when the populations
+are very large.
+
+<p><p/>
+* (Two dimentional) Contingency tables are simply a way to display counts of samples
+which can be classified by two (or more) categorical variables.
+   -  the distributional properties of the table entries, $T_{r,c}$,
+ie. the number of observations with factor A in category $a_r$
+and factor B  in category $b_c$, are determined by the randomness
+in the dataset. 
+   - for categorical variates it can often be reasonable
+to assume that there is no measurement error so that 
+all of the variability in the data comes from the
+randomness in the selection process.
+   - If the sample selection is done by simple random sampling with replacement:
+      - if $nA = \{\sum_{k=1}^m (A_k == a_r), r = 1, ..., I\} = \{na_1, na_2, ..., na_I\}$
+         - $nA \sim Multinommial(m, p_A)$   
+where $p_A =  \{pa_1, pa_2, ..., pa_I\}$ are the population proportions of samples with $A == a_i$
+
+      - Similarly $nB \sim Multinommial(m, p_B)$   
+where $p_B =  \{pb_1, pb_2, ..., pb_I\}$ are the population proportions of samples with $B == b_j$
+
+      - if $nAB = \{\sum_{k=1}^m (A_k == a_r, B_k == b_c), r = 1, ..., I, c = 1=, ..., J\} =  
+   \{nab_{1,1} nab_{1,2}, ..., nab_{I,J}\}$
+         - $nAB \sim Multinommial(m, p_{AB})$    
+where $p_{AB} =  \{pab_{1,1}, pab_{1,2}, ..., pab_{I,J}\}$ are the population
+proportions of samples with $(A == a_r), (B == b_c)$
+
+   - The distributional results - the distribution of the bi-factor counts and the uni-factor, or marginal
+distributions being multinomial - are direct results of simple random sampling.
+   - In theory SRS is simple:  put the population IDs in a large urn, after stirring 
+horoughly, pick a ball,
+note the sample ID.  Repeat.
+   - In practice it may be very challenging to execute such a sampling scheme^[
+and too often the relationship between population and sample set is left unexamined.]
+   - In the case of processed samples interrogated on an Omic scale, 
+ahe population can be taken to be a very large set of reads from a
+a very deeply sequenced instance  of the source material.
+
+
+
+**Example:**
+
+|                | Disease | No Disease | **Total** |
+|----------------|---------|------------|-----------|
+| **Smoker**     | 24      | 86         | **110**   |
+| **Heavy     ** | 26      | 84         | **110**   |
+| **Non-Smoker** | 20      | 180        | **200**   |
+| **Total**      | **70**  | **350**    | **420**   |
+
+
+
+* Is the multinomial correct?
+* What are alternatives to the conditional multinomial?
+
+
+</font>
+
+
+<br/>
+<br/>
+
+# OASIS Test Statistic {#oasis-test-stat}
+
+<font color="darkgreen">
+
+* The counts for each sample are "normalized" or scaled by the total counts for the sample.
+It was seen in RNA-Seq that this scaling was often the wrong thing to do.
+   - this scaling assumes a single multiplicative factor accounts for all differences
+between samples.
+
+</font>
+
+
+* The OASIS test statistic provides a linear algebraic approach for testing deviations in contingency tables.
+
+<p><p/>
+* It evaluates whether the observed data can be significantly partitioned according to 
+embedding vectors \( f \in \mathbb{R}^I \) (rows) and \( c \in \mathbb{R}^J \) (columns). 
+   - These embeddings can be chosen randomly, through optimization, or using metadata.
+
+Given an observed contingency table \( X \in \mathbb{N}^{I \times J} \), define:
+
+- The **expected matrix** \( E \in \mathbb{R}^{I \times J} \):
+\[
+E = \frac{1}{M}X \mathbf{1}\mathbf{1}^\top X,
+\]
+
+- The **centered and normalized table** \( \tilde{X} \in \mathbb{R}^{I \times J} \):
+\[
+\tilde{X} = (X - E)\,\text{diag}\left(1 \,/\, \sqrt{X^\top \mathbf{1}}\right),
+\]
+
+- The **OASIS test statistic** \( S \):
+\[
+S = S(f,c) = f^\top \tilde{X} c.
+\]
+
+* The normalization in \( \tilde{X} \) ensures constant variance across columns under
+the null hypothesis, enabling finite-sample valid P-value bounds for fixed embeddings \( f, c \).
+
+* In previous work, random vectors were used (referred to as OASIS-rand).
+In this paper, embeddings \( f, c \) are optimized explicitly to improve statistical power.
+
+## Comparison with Pearson's \(X^2\)  {-}
+
+* **Why is this the comparator?**
+
+* Pearson's chi-squared (\(X^2\)) statistic is defined by summing normalized squared residuals:
+\[
+X^2 = \sum_{i,j}\frac{(X_{ij}-E_{ij})^2}{E_{ij}} = M\|X_{\text{corr}}\|_F^2,
+\]
+
+where the standardized residual matrix \(X_{\text{corr}}\) is:
+\[
+X_{\text{corr}} = \text{diag}\left(1 \,/\, \sqrt{X\mathbf{1}}\right)(X - E)\, \text{diag}\left(1 \,/\, \sqrt{X^\top\mathbf{1}}\right).
+\]
+
+Key differences between OASIS and Pearson’s \(X^2\):
+
+1. **Normalization approach**: OASIS normalizes only by column totals given by the model, while \(X^2\) normalizes using both row and column totals, emphasizing deviations in low-count rows.
+2. **Residual aggregation**: OASIS computes a bilinear form, allowing unstructured deviations to average out, whereas \(X^2\) sums squared residuals, making it sensitive to minor deviations in large tables.
+
+Additionally, while the \(X^2\) test provides limited interpretability of rejections, OASIS naturally generates interpretable embeddings, providing direct insight into why the null hypothesis is rejected.
+
+<br/>
+<br/>
+
+## Details {-}
+
+The term \(\sqrt{X^\top 1}\) is a vector that arises from the contingency table \(X\). To unpack it clearly:
+
+<p><p/>
+- Recall that \(X \in \mathbb{N}^{I \times J}\) is a counts matrix where:
+  - Rows index response categories.
+  - Columns index samples (or explanatory categories).
+
+- Define \(1\) as the all-ones vector of length \(I\). Then:
+  \[
+  X^\top 1
+  \]
+  is a \(J\)-dimensional vector whose entries are the sums of columns of the matrix \(X\). Specifically, it is:
+  \[
+  X^\top 1 = 
+  \begin{bmatrix}
+  \sum_{i=1}^{I} X_{i1} \\
+  \sum_{i=1}^{I} X_{i2} \\
+  \vdots \\
+  \sum_{i=1}^{I} X_{iJ}
+  \end{bmatrix}
+  =
+  \begin{bmatrix}
+  n_1 \\
+  n_2 \\
+  \vdots \\
+  n_J
+  \end{bmatrix}.
+  \]
+
+  Thus, each entry of \(X^\top 1\) is simply the total counts in the corresponding column (or equivalently, in each sample).
+
+- Taking the square root \(\sqrt{X^\top 1}\) means applying the square root operation entry-wise. Thus:
+  \[
+  \sqrt{X^\top 1} = 
+  \begin{bmatrix}
+  \sqrt{n_1} \\
+  \sqrt{n_2} \\
+  \vdots \\
+  \sqrt{n_J}
+  \end{bmatrix}.
+  \]
+
+This operation captures the scale of each column (sample) in the counts table. Specifically, the normalization by \(\sqrt{X^\top 1}\) ensures each column contributes equally to the test statistic, controlling for variations in sample sizes.
+
+---
+
+## Detailed Expansion of \(\tilde{X}\):  {-}
+
+The definition given previously was:
+
+\[
+\tilde{X} = (X - E) \; \text{diag}\left(\frac{1}{\sqrt{X^\top 1}}\right)
+\]
+
+Expanding it explicitly step-by-step, we have:
+
+- First, recall that the **expected matrix** \(E\) is:
+\[
+E = \frac{1}{M} X 1 1^\top X.
+\]
+
+  To make this even clearer, note that:
+  - \(X 1\) is a vector of row-sums: each entry is the sum over columns for that row.
+  - \(1^\top X\) is a vector of column-sums (\(n_j\)) transposed, i.e., row vector of column-sums.
+  - Thus explicitly:
+  \begin{aligned}
+  E_{ij} & = \frac{\left(\sum_{j'} X_{ij'}\right)\left(\sum_{i'} X_{i'j}\right)}{M} \\
+         & = \frac{n_{i.} \cdot n_{.j}}{M} 
+  \end{aligned}
+
+- The centered matrix is:
+\[
+X - E,
+\]
+explicitly:
+\begin{aligned}
+(X - E)_{ij} & = X_{ij} - \frac{\left(\sum_{j'} X_{ij'}\right)\left(\sum_{i'} X_{i'j}\right)}{M} \\
+             & = X_{ij} - \frac{n_{i.} \cdot n_{.j}}{M} 
+\end{aligned}
+
+- Then, the normalized matrix \(\tilde{X}\) is obtained by right-multiplying by the diagonal matrix of \(1/\sqrt{X^\top 1}\):
+
+\begin{aligned}
+\tilde{X}_{ij} 
+ & = \frac{(X - E)_{ij}}{\sqrt{n_j}} 
+= \frac{X_{ij} - \frac{\left(\sum_{j'} X_{ij'}\right)\left(\sum_{i'} X_{i'j}\right)}{M}}{\sqrt{\sum_{i'} X_{i'j}}} \\
+ & =  \frac{X_{ij} - \frac{n_{.j} \cdot n_{i.})}{M}}{\sqrt{n_{.j}}} 
+\end{aligned}
+
+This fully expanded form shows clearly that \(\tilde{X}\) is the matrix obtained by centering the observed counts by their expectation under the null hypothesis (assuming independence), and then normalizing each column by the square root of the total counts in that column. 
+
+---
+
+In short:
+
+- \(\sqrt{X^\top 1}\) is the element-wise square root of column totals, serving to standardize or normalize the counts.
+- \(\tilde{X}\) explicitly is the **centered** (by subtracting the expected values under the null) and **column-wise normalized** version of the observed counts matrix.
+
+
+---
+
+# Analysis of OASIS  
+
+***
+
+## References {-} 
+<div id="refs"></div>
+    
+<br/>
+
+<!-- 
+### Parameter settings {-}
+  * WRKDIR = `r normalizePath(WRKDIR)`
+  * FN = `r FN`
+  * Scripts = Scripts
+  * RUN DATE = `r date()`
+
+```{r m3a-session-info, echo=T, eval=F}
+ sessionInfo()
+```
+-->
+
+```{r, echo=FALSE}
+  knit_exit()
+```
+
+#######################################################################
+## ARCHIVAL
+#######################################################################
+
+<p><p/>
+* In the OASIS formulation, the analysis dataset consists of a set of contingency tables,
+one for each anchor:
+   - The columns of the table correspond to samples
+   - The rows of the table correspond to targets
+   - The entries in the tables are the number of anchor reads
+with the target for each sample.
+
+
+Notationally:
+- \(\|\cdot\|\) denotes the vector \(\ell_2\)^[
+also known as the Euclidean norm for vectors measures the square root of the sum of squared values]
+norm or spectral^[
+the square root of the largest eigenvalue of A]
+norm for matrices, unless otherwise specified.
+- \(\|A\|_F\) denotes the Frobenius^[
+The Frobenius norm of a matrix is a way to measure its "size" or "magnitude," calculated as the square root of the sum of the squares of all its elements.]
+norm of a matrix \(A\).
+- \(v_{\text{max}}(A)\) denotes a principal eigenvector of a symmetric matrix
+\(A\) (any unit eigenvector with maximal eigenvalue).
+- The operation \(\text{diag}(\cdot)\) maps a length \(n\) vector \(v\)
+to an \(n \times n\) matrix \(A\), where all off-diagonal entries of \(A\) are 0 and \(A_{ii} = v_i\) for \(i \in [n]\).
+- \(A^{(j)}\) denotes the \(j\)-th column of a matrix.
+- When applied to a vector, scalar operators (such as \(\sqrt{\cdot}\) or \(1/\cdot\)) are applied entrywise.
+- \(1\) (\(0\)) is the all-ones (zeros) vector of appropriate dimension.
+- \(\Phi\) denotes the CDF of a standard Gaussian random variable, and we use \(\xrightarrow{D}\) to denote convergence in distribution.
+- For two probability distributions \(p, q\) over \([I]\),   define
+the total variation distance between the two
+$\ell_{\text{TV}}(p, q) = \frac{1}{2}\|p - q\|_1$ 
+and the symmetric chi-squared distance
+$\chi^2(p,q) = 2\sum_i\frac{(p_i - q_i)^2}{p_i + q_i}$.
+
+<p><p/>
+- \(\text{sign}(x)\) is 1 if \(x > 0\), 0 if \(x = 0\), and \(-1\) if \(x < 0\).
+
+
+
+<!-- To run
+## nohup Rscript -e "knitr::knit2html('_M3A-OASIS.Rmd')" > _M3A-OASIS.log  &
+
+## Or
+## nohup Rscript -e "rmarkdown::render('_M3A-OASIS.Rmd')" > _M3A-OASIS.log  &
+
+-->

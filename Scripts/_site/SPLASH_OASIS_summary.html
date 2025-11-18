@@ -1,0 +1,908 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+<meta name="author" content="Francois Collin" />
+
+<meta name="date" content="2025-11-17" />
+
+<title>Reference-Free Genomic Inference with SPLASH and OASIS</title>
+
+<script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/bootstrap.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<style>h1 {font-size: 34px;}
+       h1.title {font-size: 38px;}
+       h2 {font-size: 30px;}
+       h3 {font-size: 24px;}
+       h4 {font-size: 18px;}
+       h5 {font-size: 16px;}
+       h6 {font-size: 12px;}
+       code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
+       pre:not([class]) { background-color: white }</style>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<script src="site_libs/navigation-1.1/codefolding.js"></script>
+<script src="site_libs/navigation-1.1/sourceembed.js"></script>
+<link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+<style type="text/css">code{white-space: pre;}</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+
+<style type="text/css">
+#rmd-source-code {
+  display: none;
+}
+</style>
+
+<style type="text/css">
+/* for pandoc --citeproc since 2.11 */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+}
+.hanging div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}
+</style>
+
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+details > summary > p:only-child {
+  display: inline;
+}
+pre code {
+  padding: 0;
+}
+</style>
+
+
+<style type="text/css">
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #adb5bd;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script type="text/javascript">
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark the anchor link active (and if it's in a dropdown, also mark that active)
+  var dropdown = menuAnchor.closest('li.dropdown');
+  if (window.bootstrap) { // Bootstrap 4+
+    menuAnchor.addClass('active');
+    dropdown.find('> .dropdown-toggle').addClass('active');
+  } else { // Bootstrap 3
+    menuAnchor.parent().addClass('active');
+    dropdown.addClass('active');
+  }
+
+  // Navbar adjustments
+  var navHeight = $(".navbar").first().height() + 15;
+  var style = document.createElement('style');
+  var pt = "padding-top: " + navHeight + "px; ";
+  var mt = "margin-top: -" + navHeight + "px; ";
+  var css = "";
+  // offset scroll position for anchor links (for fixed navbar)
+  for (var i = 1; i <= 6; i++) {
+    css += ".section h" + i + "{ " + pt + mt + "}\n";
+  }
+  style.innerHTML = "body {" + pt + "padding-bottom: 40px; }\n" + css;
+  document.head.appendChild(style);
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before, .tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "\e259";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "\e258";
+  font-family: 'Glyphicons Halflings';
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+<style type="text/css">
+.code-folding-btn { margin-bottom: 4px; }
+</style>
+
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-bs-toggle="collapse" data-target="#navbar" data-bs-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">Training and Data Re-Analysis</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">Home</a>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div id="header">
+
+<div class="btn-group pull-right float-right">
+<button type="button" class="btn btn-default btn-xs btn-secondary btn-sm dropdown-toggle" data-toggle="dropdown" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span>Code</span> <span class="caret"></span></button>
+<ul class="dropdown-menu dropdown-menu-right" style="min-width: 50px;">
+<li><a id="rmd-show-all-code" href="#">Show All Code</a></li>
+<li><a id="rmd-hide-all-code" href="#">Hide All Code</a></li>
+<li role="separator" class="divider"></li>
+<li><a id="rmd-download-source" href="#">Download Rmd</a></li>
+</ul>
+</div>
+
+
+
+<h1 class="title toc-ignore">Reference-Free Genomic Inference with SPLASH and OASIS</h1>
+<h3 class="subtitle">Executice Summary</h3>
+<h4 class="author"><a href="https://www.linkedin.com/in/francoisz/">Francois Collin</a></h4>
+<h4 class="date">November 17, 2025</h4>
+
+</div>
+
+<div id="TOC">
+<ul>
+<li><a href="#on-omic-scale-analysis" id="toc-on-omic-scale-analysis"><span class="toc-section-number">0.1</span> On Omic Scale Analysis</a></li>
+<li><a href="#reportsreviews" id="toc-reportsreviews"><span class="toc-section-number">0.2</span> Reports/Reviews</a></li>
+<li><a href="#splash-oasis-extensions-and-applications" id="toc-splash-oasis-extensions-and-applications"><span class="toc-section-number">0.3</span> SPLASH &amp; OASIS Extensions and Applications</a>
+<ul>
+<li><a href="#home" id="toc-home">Home</a></li>
+<li><a href="#henderson2024" id="toc-henderson2024">Henderson:2024</a></li>
+<li><a href="#dehghannasiri2024" id="toc-dehghannasiri2024">Dehghannasiri:2024</a></li>
+<li><a href="#kokot2024" id="toc-kokot2024">Kokot:2024</a></li>
+</ul></li>
+<li><a href="#follow-up" id="toc-follow-up"><span class="toc-section-number">0.4</span> Follow-up</a></li>
+<li><a href="#trt-unwanted-var" id="toc-trt-unwanted-var"><span class="toc-section-number">1</span> The Treatment of Unwanted Variability</a>
+<ul>
+<li><a href="#normalization-in-rna-seq---overview" id="toc-normalization-in-rna-seq---overview"><span class="toc-section-number">1.1</span> Normalization in RNA-Seq - Overview</a></li>
+<li><a href="#ruv-in-action" id="toc-ruv-in-action"><span class="toc-section-number">1.2</span> RUV in action</a></li>
+<li><a href="#ai-ml-in-rna-seq-analysis-tools" id="toc-ai-ml-in-rna-seq-analysis-tools"><span class="toc-section-number">1.3</span> AI &amp; ML in RNA-Seq Analysis Tools</a></li>
+</ul></li>
+<li><a href="#references" id="toc-references">References</a></li>
+</ul>
+</div>
+
+<style type="text/css">
+
+.main-container {
+    margin-left: 250px;
+}
+.sidenote, .marginnote { 
+  float: right;
+  clear: right;
+  margin-right: -40%;
+  width: 37%;         # best between 50% and 60%
+  margin-top: 0;
+  margin-bottom: 0;
+  font-size: 1.1rem;
+  line-height: 1.3;
+  vertical-align: baseline;
+  position: relative;
+  }
+</style>
+<style>
+@import url('https://fonts.googleapis.com/css?family=Raleway');
+@import url('https://fonts.googleapis.com/css?family=Oxygen');
+@import url('https://fonts.googleapis.com/css?family=Raleway:bold');
+@import url('https://fonts.googleapis.com/css?family=Oxygen:bold');
+
+.main-container {
+  max-width: 1400px !important;
+}
+
+body{
+  font-family: 'Oxygen', sans-serif;
+  font-size: 16px;
+  line-height: 24px;
+}
+
+h1,h2,h3,h4 {
+  font-family: 'Raleway', sans-serif;
+}
+
+.container { width: 1400px; }
+
+caption {
+  font-size: 20px;
+  caption-side: top;
+  text-indent: 30px;
+  background-color: lightgrey;
+  color: black;
+  margin-top: 5px;
+}
+
+g-table-intro h4 {
+  text-indent: 0px;
+}
+</style>
+<!-- ######################################################################## -->
+<!-- ######################################################################## -->
+<p><br/></p>
+<!--
+* Breiman: [@Breiman:1984aa; @Breiman:2001aa]
+* Freedman: [@Freedman:2008aa; @Freedman:2008ad; @Freedman:2008ac; @Freedman:2009ac]
+-->
+<p>
+<p/>
+<ul>
+<li>The <a href="https://salzmanlab.stanford.edu/">Salzman Lab</a>
+develop and apply new <strong>statistical algorithms</strong> for <strong>biological inference</strong>
+on fundamental questions in the evolution of genomes.<a href="#fn1" class="footnote-ref" id="fnref1"><sup>1</sup></a></li>
+</ul>
+<p>
+<p/>
+<ul>
+<li>Here we consider 2 papers from the <a href="https://salzmanlab.stanford.edu/">Salzman Lab</a>:
+<ul>
+<li>SPLASH: A statistical, reference-free genomic algorithm unifies biological discover
+<a href="https://www.cell.com/cell/pdf/S0092-8674(23)01179-0.pdf">PDF</a>,
+<a href="https://github.com/refresh-bio/SPLASH">Code</a> <span class="citation">[<a href="#ref-Chaung:2023aa">1</a>]</span></li>
+<li>OASIS: An interpretable, finite-sample valid alternative to Pearson’s X2
+for scientific discovery
+<a href="https://www.pnas.org/doi/10.1073/pnas.2304671121">URL</a>,
+<a href="https://github.com/refresh-bio/SPLASH">Code</a> <span class="citation">[<a href="#ref-Baharav:2024aa">2</a>]</span></li>
+</ul></li>
+</ul>
+<p>
+<p/>
+<ul>
+<li>The OASIS paper, as an example of mathematical statistics, is a beautiful piece of work.
+The articles provide a proof of concept of the proposed methods in an idealized setting.
+The exposition is mathematical with the p-value playing a pivotal role throughout.
+The nice mathematical dressing comes at a cost of having to rely on unrealistic assumptions,
+starting with the assumption that replicate target count vectors have a multinomial
+distribution with a fixed underlying probability distribution.<a href="#fn2" class="footnote-ref" id="fnref2"><sup>2</sup></a></li>
+</ul>
+<p>
+<p/>
+<ul>
+<li>As a reference which data analysts might go to for guidance,
+the articles lack the key pieces needed for the reader to get a true sense of
+performance and for the scope of the analysis necessary to obtain valid results.
+<ul>
+<li><p>Technical validation on the omic scale is required to get a sense of the utility of the
+proposed methods.<br />
+</p></li>
+<li><p><strong>Technical validation</strong> should be run on typical data and should include both
+measures of algorithm performance and resistance to <strong>input data quality</strong> and
+<strong>unwanted variation</strong>, which are always part of the story when omic scale assays
+are involved.
+See
+<a href="./_M4A-RUV/natureBiotechPaper/_Molania_2023_RUV-III_PRPS_Summary.html">Removing Unwanted Variation from Large-Scale RNA Sequencing Data with PRPS</a>.</p></li>
+<li><p><strong>The input data are never examined</strong>. <strong>Definition 1 (Null Model)</strong> is actually the
+fundamental assumption that is necessary for everything else to follow, yet that assumption
+is never scrutinized.<a href="#fn3" class="footnote-ref" id="fnref3"><sup>3</sup></a>
+In practice, the analysis of omic scale data should not proceed before careful examination
+of the collected data. The presence of unwanted variability will invalidate the assumed
+null model and all results based on the analysis of the flawed data.</p></li>
+</ul></li>
+<li>The claim of the validity of the p-values, one of the selling points of the method,
+is suspect. When we fit one prototype model to 20K, 50K or 100K feature data
+subsets we do not believe that the model fits adequately in every case:
+we may robustify the fit to allow for the presence of bad points, or outliers,
+and we do not put too much credibility on the precise values of p-values;
+we believe that they generally order hypotheses the right way.
+<ul>
+<li>The p-value may be a good value to discriminate between interesting and
+uninteresting targets, but this should be determined empirically by comparing with
+other candidate discriminants (in addition to Pearson’s <span class="math inline">\(X^2\)</span>).</li>
+<li>If p-values are to be taken at face value, their calibraion should be
+varidfied.</li>
+<li>The p-value distribution an should also be examined to check for
+indications of unwanted valiability. See Molanina et.al. (2019) <span class="citation">[<a href="#ref-Molania:2019aa">3</a>]</span>.</li>
+</ul></li>
+</ul>
+<p><br/></p>
+<div id="on-omic-scale-analysis" class="section level2" number="0.1">
+<h2><span class="header-section-number">0.1</span> On Omic Scale Analysis</h2>
+<p>
+<p/>
+<ul>
+<li><p>Omic scale data refers to measurements taken in parallel over many features -
+from thousands of genes to millions of proteins. Even though the result of
+interest, gene scores for example, may be obtained from analyzing
+features one at a time, the success of the design and analysis methods
+can only be assessed by taking a holistic look at the study data and results.</p></li>
+<li><p>To have a holistic picture, the assessment must start with the input material
+and follow the sample set through all of the processing steps including QC assessment
+and filtering (if any), sample pre-processing (further filtering and normalization),
+data analysis (compute the desired results and report the findings).</p></li>
+<li><p>The SPLASH article provided the information needed to
+show that the technology works in principle, but to appreciate
+how well the technology will work in practice, it has to be evaluated
+in a way that fully reflects the expected full analysis pipeline.</p></li>
+<li><p>Having a good dataset for assessment
+is also critical and could include control features, control samples,
+and samples providing engineered or designed truth.
+In addition to having built-in truth, the samples used to assess
+performance must also be representative of the actual samples
+which will be processed in production.</p></li>
+</ul>
+<p><br/></p>
+</div>
+<div id="reportsreviews" class="section level2" number="0.2">
+<h2><span class="header-section-number">0.2</span> Reports/Reviews</h2>
+<p>
+<p/>
+<ul>
+<li><a href="_M3B-SPLASH-OASIS/splash_oasis_methodology_presentation_v2.html">Slide Presentation</a>
+<ul>
+<li>The slide presentation provides a high level summary of the SPLASH article
+in the words of the authors.</li>
+<li>Some comments are inserted where there might be gaps or a difference of opinion.</li>
+</ul></li>
+</ul>
+<p>
+<p/>
+<ul>
+<li><a href="_M2B-RFGI_SPLASH_v2.html">SPLASH</a> Notes
+<ul>
+<li>Contains two introductory sections to position SPLASH+OASIS in the
+context of contemporary analysus methods:
+<ul>
+<li>literature review of Reference-Free Genomic Inference prior to SPLASH, as well as<br />
+</li>
+<li>a survey of methods developed for RNA-seq which could be used here.</li>
+</ul></li>
+</ul></li>
+</ul>
+<p>
+<p/>
+<ul>
+<li><a href="./_M3A-OASIS.html">OASIS</a> Notes
+<ul>
+<li>Contains some notes on OASIS.</li>
+</ul></li>
+</ul>
+<p><br/></p>
+</div>
+<div id="splash-oasis-extensions-and-applications" class="section level2 tabset" number="0.3">
+<h2><span class="header-section-number">0.3</span> SPLASH &amp; OASIS Extensions and Applications</h2>
+<p>Three follow-up publications provide more information on the application of
+SPLASH and OASIS.</p>
+<ul>
+<li><p>Henderson G, Gudys A, Baharav T, Sundaramurthy P, Kokot M, Wang PL,
+Deorowicz S, Carey AF, Salzman J (2024). “Ultra-efficient, unified
+discovery from microbial sequencing with SPLASH and precise statistical
+assembly.” <em>bioRxiv</em>. <a href="doi:10.1101/2024.01.18.576133" class="uri">doi:10.1101/2024.01.18.576133</a>
+<a href="https://doi.org/10.1101/2024.01.18.576133" class="uri">https://doi.org/10.1101/2024.01.18.576133</a>,
+<a href="https://www.biorxiv.org/content/early/2024/01/22/2024.01.18.576133.full.pdf" class="uri">https://www.biorxiv.org/content/early/2024/01/22/2024.01.18.576133.full.pdf</a>,
+<a href="https://www.biorxiv.org/content/early/2024/01/22/2024.01.18.576133" class="uri">https://www.biorxiv.org/content/early/2024/01/22/2024.01.18.576133</a>.</p></li>
+<li><p>Dehghannasiri R, Kokot M, Starr AL, Maziarz J, Gordon T, Tan SY, Wang
+PL, Voskoboynik A, Musser JM, Deorowicz S, Salzman J (2024). “sc-SPLASH
+provides ultra-efficient reference-free discovery in barcoded
+single-cell sequencing.” <em>bioRxiv</em>, 2024.12.24.630263.
+<a href="doi:10.1101/2024.12.24.630263" class="uri">doi:10.1101/2024.12.24.630263</a>
+<a href="https://doi.org/10.1101/2024.12.24.630263" class="uri">https://doi.org/10.1101/2024.12.24.630263</a>,
+<a href="http://biorxiv.org/content/early/2024/12/24/2024.12.24.630263.abstract" class="uri">http://biorxiv.org/content/early/2024/12/24/2024.12.24.630263.abstract</a>.</p></li>
+<li><p>Kokot M, Dehghannasiri R, Baharav T, Salzman J, Deorowicz S (2024).
+“Scalable and unsupervised discovery from raw sequencing reads using
+SPLASH2.” <em>Nat Biotechnol</em>. ISSN 1546-1696 (Electronic); 1087-0156
+(Linking), <a href="doi:10.1038/s41587-024-02381-2" class="uri">doi:10.1038/s41587-024-02381-2</a>
+<a href="https://doi.org/10.1038/s41587-024-02381-2" class="uri">https://doi.org/10.1038/s41587-024-02381-2</a>.</p></li>
+</ul>
+<div id="home" class="section level3 unnumbered">
+<h3>Home</h3>
+<p><br/></p>
+</div>
+<div id="henderson2024" class="section level3 unnumbered">
+<h3>Henderson:2024</h3>
+<p><br/></p>
+</div>
+<div id="dehghannasiri2024" class="section level3 unnumbered">
+<h3>Dehghannasiri:2024</h3>
+<p><br/></p>
+</div>
+<div id="kokot2024" class="section level3 unnumbered">
+<h3>Kokot:2024</h3>
+<p><br/></p>
+</div>
+</div>
+<div id="follow-up" class="section level2" number="0.4">
+<h2><span class="header-section-number">0.4</span> Follow-up</h2>
+<p>
+<p/>
+<blockquote>
+<p>OASIS provides a tool toward answering questions
+in mechanistic biology that are manual labor
+intensive or impossible to address with current
+statistical approaches.</p>
+</blockquote>
+<ul>
+<li>To get a better understanding of what OASIS brings, or doesn’t bring, to the table,
+we need to repeat the analyses, with the following guidelines:
+<ul>
+<li>pay attention to variability in the input data quality</li>
+<li>use state of the art comparators; not exclusively Pearson’s X2
+as comparator.</li>
+<li>if the dataset structure permits it, apply RUV methodology to
+identify unwanted variability in the target count distributions used for reference free
+biological inference.</li>
+</ul></li>
+</ul>
+<p><br/></p>
+</div>
+<div id="trt-unwanted-var" class="section level1" number="1">
+<h1><span class="header-section-number">1</span> The Treatment of Unwanted Variability</h1>
+<ul>
+<li><p>All collected experimental data are liable to contain some
+unwanted variability - variability in the measurements made on
+the experimental units which is unrelated to the question of interest.</p></li>
+<li><p>Normalization has different meanings in different
+contexts. Here we can say that normalization is
+<em>a transformation applied to data produced in a
+highly parallel system with the objective
+of removing technical sources of variability</em><a href="#fn4" class="footnote-ref" id="fnref4"><sup>4</sup></a></p></li>
+</ul>
+<p><br/></p>
+<div id="normalization-in-rna-seq---overview" class="section level2" number="1.1">
+<h2><span class="header-section-number">1.1</span> Normalization in RNA-Seq - Overview</h2>
+<ul>
+<li><p>Initially RNA-Seq datasets were small, and the samples processed expertly by
+the best tech in the lab so that there was no indication for the need
+for normalization with RNA-Seq data <span class="citation">[<a href="#ref-Wang:2009aa">4</a>,<a href="#ref-Cloonan:2008aa">5</a>]</span>.</p></li>
+<li><p>It didn’t take long for datasets to grow in size and for researchers
+to realize that differences in library sizes were a source
+of technical variability which had to be dealt with before
+biological conclusions could be drawn. The first generation
+normalizations were a global scaling normalization based on the total
+number of reads per sample <span class="citation">[<a href="#ref-Robinson:2008aa">6</a>–<a href="#ref-Mortazavi:2008aa">8</a>]</span>.</p></li>
+</ul>
+<p>
+<p/>
+<ul>
+<li>The global scaling normalization soon became disfavored by most as it
+was realized that global scaling could potentially remove biological
+variability, as in the case when a few very highly expressed genes were
+differentially expressed across groups. This led to the use
+of scaling factors reflecting differences in the bulk of the data and not
+affected by a small set of highly expressed differentially expressed genes
+<span class="citation">[<a href="#ref-Robinson:2010aa">9</a>,<a href="#ref-Love:2014aa">10</a>]</span>.
+<ul>
+<li>As a side note, the scaling just described are not used
+to scale the counts to be used for downstream analysis. They are
+used instead as part of the model which describes the expected variability
+of the unadjusted counts.</li>
+</ul></li>
+</ul>
+<p>
+<p/>
+<ul>
+<li>The scaling factor normalizations just described are part of the
+analysis workflow of two R packages which are still in common use today:
+EdgeR <span class="citation">[<a href="#ref-Robinson:2010ab">11</a>]</span> and DESeq2 <span class="citation">[<a href="#ref-Love:2014aa">10</a>]</span>.</li>
+</ul>
+<p>
+<p/>
+<ul>
+<li>Other normalization methods came along to deal with special (or not so
+special) circumstances; GC content normalization, for example <span class="citation">[<a href="#ref-Risso:2011aa">12</a>]</span>).</li>
+</ul>
+<p>
+<p/>
+<ul>
+<li>A problem still remains as up to this point there was no way
+to handle complications created when the estimated normalization
+factors were confounded with the biology of interest.
+<ul>
+<li>RUV was first introduced in Risso et.al (2014 <span class="citation">[<a href="#ref-Risso:2014aa">13</a>]</span>
+to enable normalization in spite of confounding by making use of control
+genes or control samples.</li>
+<li>Jacob et al. (2016) <span class="citation">[<a href="#ref-Jacob:2016aa">14</a>]</span> extend RUV to the case when neither
+the source of unwanted variability nor the biology of interest in known
+(subclass discovery is an application in which this can occur, for example).</li>
+<li>A visualization technique for RUV is presented in
+Gandolfo et al. (2018) <span class="citation">[<a href="#ref-Gandolfo:2018aa">15</a>]</span>.</li>
+<li>A variation of RUV, called RUV-III, which makes vital
+use of technical replicates and suitable control genes is presented in
+Molanina et.al. (2019) <span class="citation">[<a href="#ref-Molania:2019aa">3</a>]</span>.</li>
+<li>The latest innovation, RUV PRPS ( pseudo-replicates of pseudo-samples )
+introduced in Molania et al. (2023) <span class="citation">[<a href="#ref-Molania:2023aa">16</a>]</span>, results in a
+normalization procedure with general applicability. The method is illustrated
+with data from The Cancer Genome Atlas (TCGA) in which several sources of
+unwanted variation are identified and demonstrated to significantly
+compromise various downstream analyses, including cancer subtype identification,
+association between gene expression and survival outcomes and gene co-expression analysis.
+<ul>
+<li>Molania et al. (2023) <span class="citation">[<a href="#ref-Molania:2023aa">16</a>]</span> is summarized in the next section.</li>
+</ul></li>
+</ul></li>
+</ul>
+<!--
+<p><p/>
+* Most of the RUV methodology described in the above mentioned articles
+make up a useful set of tools for effectively dealing with unwanted variability
+with little in terms of theory guiding the usage of various techniques.  
+-->
+<!--
+<p><p/>
+* Building on the formulation  of Wang et al. (2017) [@Wang:2017aa],
+Gerard et. al. developed a general framework, RUV*, 
+that encompasses all versions of RUV  (Gerard et. al. (2020, 2021) [@Gerard:2020aa;@Gerard:2021aa].
+This framework is described below.
+
+<p><p/>
+* Jiang, Gagnon-Bartysch and Speed (2023) [@Jiang:2023aa]  present some asymptotic theory for
+RUV-III. 
+
+<p><p/>
+* What is the asymototic theory used for?
+
+-->
+<p><br/></p>
+</div>
+<div id="ruv-in-action" class="section level2" number="1.2">
+<h2><span class="header-section-number">1.2</span> RUV in action</h2>
+<p>
+<p/>
+<ul>
+<li><a href="./_M4A-RUV/natureBiotechPaper/_Molania_2023_RUV-III_PRPS_Summary.html">Removing Unwanted Variation from Large-Scale RNA Sequencing Data with PRPS</a>
+<ul>
+<li>A detailed summary of the Nature Biotechnology paper. Examinihng the figures of
+Section 2, Detailed Results by Dataset, is sufficient to get the gist of the issues around
+unwanted variability.</li>
+</ul></li>
+</ul>
+<p>
+<p/>
+<ul>
+<li><a href="./_M4A-RUV/natureBiotechPaper/_Research_Proposal_AI_Enhanced_RUV.html">AI-Enhanced RUV Normalization: Research Proposal</a>
+<ul>
+<li>claude Sonnet 4.5’s vision of a path towards a next-gen RUV product, one that is AI and ML
+enabled and fully automated.</li>
+</ul></li>
+</ul>
+<p><br/></p>
+</div>
+<div id="ai-ml-in-rna-seq-analysis-tools" class="section level2" number="1.3">
+<h2><span class="header-section-number">1.3</span> AI &amp; ML in RNA-Seq Analysis Tools</h2>
+<p>Prior to moving ahead with the developemnt of the next gen versions of RUV modules,
+it would be good to take stock of the impact AI and ML has had on RNA-Seq analysis to
+date.</p>
+<p>
+<p/>
+<ul>
+<li><a href="./_M4A-RUV/natureBiotechPaper/_AI_ML_Applications_Part_A.html">Part A - Introduction and Methodological Considerations</a>
+<ul>
+<li>discussion of issues around performance assessnent when truth is rare and standards missing.
+<p>
+<p/></li>
+</ul></li>
+<li><a href="./_M4A-RUV/natureBiotechPaper/SPLASH_OASIS_summary%20.html">Part B - Specific Applications and Evidence</a>
+<ul>
+<li>case studies of the application of AI and ML in RNA-Seq analyses.
+<ul>
+<li>weak case for Random Forests for Gene Ranking vs
+Traditional Approach: Differential Expression Analysis</li>
+<li>see
+<a href="./_M4A-RUV/natureBiotechPaper/_Wenric_Shemirani_2018_Impact_Analysis.html">Impact and Reception Analysis: Wenric &amp; Shemirani (2018)</a>.</li>
+</ul></li>
+<li>it’s not clear how the ML methods were selected
+<p>
+<p/></li>
+</ul></li>
+<li><font size="7">!</font> Rerun some of the analyses in
+Wenric &amp; Shemirani (2018) <span class="citation">[<a href="#ref-Wenric:2018aa">17</a>]</span>.
+<ul>
+<li>first examine the data to make sure it is accessible.</li>
+</ul></li>
+</ul>
+<p><br/></p>
+</div>
+</div>
+<div id="references" class="section level1 unnumbered">
+<h1>References</h1>
+<div id="refs" class="references csl-bib-body">
+<div id="ref-Chaung:2023aa" class="csl-entry">
+<div class="csl-left-margin">1. </div><div class="csl-right-inline">Chaung, K., Baharav, T.Z., Henderson, G., Zheludev, I.N., Wang, P.L., and Salzman, J. (2023). <a href="https://doi.org/10.1016/j.cell.2023.10.028">SPLASH: A statistical, reference-free genomic algorithm unifies biological discovery.</a> Cell <em>186</em>, 5440–5456.</div>
+</div>
+<div id="ref-Baharav:2024aa" class="csl-entry">
+<div class="csl-left-margin">2. </div><div class="csl-right-inline">Baharav, T.Z., Tse, D., and Salzman, J. (2024). <a href="https://doi.org/10.1073/pnas.2304671121">OASIS: An interpretable, finite-sample valid alternative to pearson’s x(2) for scientific discovery.</a> Proc Natl Acad Sci U S A <em>121</em>, e2304671121.</div>
+</div>
+<div id="ref-Molania:2019aa" class="csl-entry">
+<div class="csl-left-margin">3. </div><div class="csl-right-inline">Molania, R., Gagnon-Bartsch, J.A., Dobrovic, A., and Speed, T.P. (2019). A new normalization for nanostring nCounter gene expression data. Nucleic Acids Research <em>47</em>, 6073–6083. Available at: <a href="https://doi.org/10.1093/nar/gkz433">https://doi.org/10.1093/nar/gkz433</a>.</div>
+</div>
+<div id="ref-Wang:2009aa" class="csl-entry">
+<div class="csl-left-margin">4. </div><div class="csl-right-inline">Wang, Z., Gerstein, M., and Snyder, M. (2009). <a href="https://doi.org/10.1038/nrg2484">RNA-seq: A revolutionary tool for transcriptomics.</a> Nat Rev Genet <em>10</em>, 57–63.</div>
+</div>
+<div id="ref-Cloonan:2008aa" class="csl-entry">
+<div class="csl-left-margin">5. </div><div class="csl-right-inline">Cloonan, N., Forrest, A.R.R., Kolle, G., Gardiner, B.B.A., Faulkner, G.J., Brown, M.K., Taylor, D.F., Steptoe, A.L., Wani, S., Bethel, G., <em>et al.</em> (2008). Stem cell transcriptome profiling via massive-scale mRNA sequencing. Nature Methods <em>5</em>, 613–619. Available at: <a href="https://doi.org/10.1038/nmeth.1223">https://doi.org/10.1038/nmeth.1223</a>.</div>
+</div>
+<div id="ref-Robinson:2008aa" class="csl-entry">
+<div class="csl-left-margin">6. </div><div class="csl-right-inline">Robinson, M.D., and Smyth, G.K. (2008). <a href="https://doi.org/10.1093/biostatistics/kxm030">Small-sample estimation of negative binomial dispersion, with applications to SAGE data.</a> Biostatistics <em>9</em>, 321–332.</div>
+</div>
+<div id="ref-Marioni:2008aa" class="csl-entry">
+<div class="csl-left-margin">7. </div><div class="csl-right-inline">Marioni, J.C., Mason, C.E., Mane, S.M., Stephens, M., and Gilad, Y. (2008). <a href="https://doi.org/10.1101/gr.079558.108">RNA-seq: An assessment of technical reproducibility and comparison with gene expression arrays.</a> Genome Res <em>18</em>, 1509–1517.</div>
+</div>
+<div id="ref-Mortazavi:2008aa" class="csl-entry">
+<div class="csl-left-margin">8. </div><div class="csl-right-inline">Mortazavi, A., Williams, B.A., McCue, K., Schaeffer, L., and Wold, B. (2008). <a href="https://doi.org/10.1038/nmeth.1226">Mapping and quantifying mammalian transcriptomes by RNA-seq.</a> Nat Methods <em>5</em>, 621–628.</div>
+</div>
+<div id="ref-Robinson:2010aa" class="csl-entry">
+<div class="csl-left-margin">9. </div><div class="csl-right-inline">Robinson, M.D., and Oshlack, A. (2010). A scaling normalization method for differential expression analysis of RNA-seq data. Genome Biology <em>11</em>, R25–R25. Available at: <a href="http://www.ncbi.nlm.nih.gov/pmc/articles/PMC2864565/">http://www.ncbi.nlm.nih.gov/pmc/articles/PMC2864565/</a>.</div>
+</div>
+<div id="ref-Love:2014aa" class="csl-entry">
+<div class="csl-left-margin">10. </div><div class="csl-right-inline">Love, M.I., Huber, W., and Anders, S. (2014). Moderated estimation of fold change and dispersion for RNA-seq data with DESeq2. Genome Biology <em>15</em>, 550. Available at: <a href="https://doi.org/10.1186/s13059-014-0550-8">https://doi.org/10.1186/s13059-014-0550-8</a>.</div>
+</div>
+<div id="ref-Robinson:2010ab" class="csl-entry">
+<div class="csl-left-margin">11. </div><div class="csl-right-inline">Robinson, M.D., McCarthy, D.J., and Smyth, G.K. (2010). <a href="https://doi.org/10.1093/bioinformatics/btp616">edgeR: A bioconductor package for differential expression analysis of digital gene expression data.</a> Bioinformatics <em>26</em>, 139–140.</div>
+</div>
+<div id="ref-Risso:2011aa" class="csl-entry">
+<div class="csl-left-margin">12. </div><div class="csl-right-inline">Risso, D., Schwartz, K., Sherlock, G., and Dudoit, S. (2011). GC-content normalization for RNA-seq data. BMC Bioinformatics <em>12</em>, 480–480. Available at: <a href="http://www.ncbi.nlm.nih.gov/pmc/articles/PMC3315510/">http://www.ncbi.nlm.nih.gov/pmc/articles/PMC3315510/</a>.</div>
+</div>
+<div id="ref-Risso:2014aa" class="csl-entry">
+<div class="csl-left-margin">13. </div><div class="csl-right-inline">Risso, D., Ngai, J., Speed, T.P., and Dudoit, S. (2014). Normalization of RNA-seq data using factor analysis of control genes or samples. Nature Biotechnology <em>32</em>, 896–902. Available at: <a href="https://doi.org/10.1038/nbt.2931">https://doi.org/10.1038/nbt.2931</a>.</div>
+</div>
+<div id="ref-Jacob:2016aa" class="csl-entry">
+<div class="csl-left-margin">14. </div><div class="csl-right-inline">Jacob, L., Gagnon-Bartsch, J.A., and Speed, T.P. (2016). Correcting gene expression data when neither the unwanted variation nor the factor of interest are observed. Biostatistics <em>17</em>, 16–28. Available at: <a href="https://doi.org/10.1093/biostatistics/kxv026">https://doi.org/10.1093/biostatistics/kxv026</a>.</div>
+</div>
+<div id="ref-Gandolfo:2018aa" class="csl-entry">
+<div class="csl-left-margin">15. </div><div class="csl-right-inline">Gandolfo, L.C., and Speed, T.P. (2018). RLE plots: Visualizing unwanted variation in high dimensional data. PloS one <em>13</em>, e0191629–e0191629. Available at: <a href="https://pubmed.ncbi.nlm.nih.gov/29401521">https://pubmed.ncbi.nlm.nih.gov/29401521</a>.</div>
+</div>
+<div id="ref-Molania:2023aa" class="csl-entry">
+<div class="csl-left-margin">16. </div><div class="csl-right-inline">Molania, R., Foroutan, M., Gagnon-Bartsch, J.A., Gandolfo, L.C., Jain, A., Sinha, A., Olshansky, G., Dobrovic, A., Papenfuss, A.T., and Speed, T.P. (2023). Removing unwanted variation from large-scale RNA sequencing data with PRPS. Nature Biotechnology <em>41</em>, 82–95. Available at: <a href="https://doi.org/10.1038/s41587-022-01440-w">https://doi.org/10.1038/s41587-022-01440-w</a>.</div>
+</div>
+<div id="ref-Wenric:2018aa" class="csl-entry">
+<div class="csl-left-margin">17. </div><div class="csl-right-inline">Wenric, S., and Shemirani, R. (2018). <a href="https://doi.org/10.3389/fgene.2018.00297">Using supervised learning methods for gene selection in RNA-seq case-control studies.</a> Front Genet <em>9</em>, 297.</div>
+</div>
+</div>
+<p><br/></p>
+<!--
+# Appendix  {-}
+
+<br/>
+-->
+</div>
+<div class="footnotes footnotes-end-of-document">
+<hr />
+<ol>
+<li id="fn1"><p>
+Dr. Salzman leads a
+<a href="https://youtu.be/nHuc5mlQRQw?si=qRi7bnjZqGwwxHY3&amp;t=31">purely data science statistical research group</a>
+whose mission is to modernize analysis tools to better deal with the current era of data -
+<a href="https://youtu.be/nHuc5mlQRQw?si=qRi7bnjZqGwwxHY3&amp;t=106">ultra high throughout precise resolution genomic measurements</a> -
+and to ensure that they are more fully
+<a href="https://youtu.be/nHuc5mlQRQw?si=qRi7bnjZqGwwxHY3&amp;t=115">statistical and mathematical in nature</a>.
+than current practice.<a href="#fnref1" class="footnote-back">↩︎</a></p></li>
+<li id="fn2"><p>
+Perhaps in Dr. Salzman’s lab samples can go through the entire preparation and sequencing
+process without bearing a trace of their passage through the process, but in a typical
+production setting, as samples navigate through the processing pipeline, they accumulate
+technical artifacts which impact the batches of reads which are harvested for each sample.
+The sequence specific effect may be suppression or enrichment, large or small,
+unique or shared across many sequences. The technical artifacts are typically not
+hard to detect and in some cases can only be missed by not looking at the data
+coming off the sequencers before pushing them down the processing pipeline.<a href="#fnref2" class="footnote-back">↩︎</a></p></li>
+<li id="fn3"><p>
+This is not uncommon and is rooted in the divide between applied statistics and mathematical
+statistics. The mathematics require assumptions so it’s perfectively reasonable for the
+mathematical statistician to start there. None of the mathematical results can be relied on
+unless the assumptions are true. The crux of the work for the applied
+statistician should be to establish the null model. In practice, the necessary
+null model is almost always assumed without substantial supporting evidence.<a href="#fnref3" class="footnote-back">↩︎</a></p></li>
+<li id="fn4"><p>See slides
+<a href="https://incob.apbionet.org/incob14/assets/INCOB2014/Terry-SpeedInCoB2014.pdf">here</a>
+for more detail.<a href="#fnref4" class="footnote-back">↩︎</a></p></li>
+</ol>
+</div>
+
+<div id="rmd-source-code">LS0tCnRpdGxlOiAiUmVmZXJlbmNlLUZyZWUgR2Vub21pYyBJbmZlcmVuY2Ugd2l0aCBTUExBU0ggYW5kIE9BU0lTIgpzdWJ0aXRsZTogIkV4ZWN1dGljZSBTdW1tYXJ5IgphdXRob3I6ICJbRnJhbmNvaXMgQ29sbGluXShodHRwczovL3d3dy5saW5rZWRpbi5jb20vaW4vZnJhbmNvaXN6LykiCmRhdGU6ICJgciBmb3JtYXQoU3lzLnRpbWUoKSwgJyVCICVkLCAlWScpYCIKYWx3YXlzX2FsbG93X2h0bWw6IHllcwpvdXRwdXQ6CiAgI2h0bWxfZG9jdW1lbnQ6CiAgIyBmb3IgdXNlIG9mIC50YWJzZXQKICBib29rZG93bjo6aHRtbF9kb2N1bWVudDI6CiAgICBjb2RlX2ZvbGRpbmc6IGhpZGUKICAgIGNvZGVfZG93bmxvYWQ6IHRydWUKICAgIHRvYzogdHJ1ZQogICAgdG9jX2RlcHRoOiAzCiAgICAjIGRvZXMgdGhpcyBoYXZlIGFuIGVmZmVjdAogICAgZmlnX2NhcHRpb246IHllcwogICAgIyB0aGlzIGhhcyBubyBlZmZlY3QKICAgIG51bWJlcl9zZWN0aW9uczogeWVzCiAgICAjIGNzczogWycuLi9fY3NzL3BhbmRvYzMuY3NzJywgJy4uL19jc3MvbXlNYXJnaW5zLmNzcyddCmJpYmxpb2dyYXBoeTogWy4uL19iaWJGaWxlcy9fQUlfTUwuYmliLCAuLi9fYmliRmlsZXMvX1JVVi5iaWIsIC4uL19iaWJGaWxlcy9fc2NSTkFzZXFfbm9ybS5iaWIsIC4uL19iaWJGaWxlcy9fcmVmX2ZyZWVfZ2Vub21faW5mLmJpYiwgLi4vX2JpYkZpbGVzL19oZWFsdGh5X2FnaW5nLmJpYiwgLi4vLi4vX2JpYkZpbGVzL19Ob3JtYWxpemF0aW9uLmJpYiwgLi4vLi4vX2JpYkZpbGVzL19CcmVpbWFuLmJpYiwgLi4vLi4vX2JpYkZpbGVzL19GcmVlZG1hbi5iaWIsIC4uLy4uL19iaWJGaWxlcy9fWXUuYmliLCAgLi4vLi4vX2JpYkZpbGVzL19STUEuYmliXQpjc2w6IC4uL19jc2wvY2VsbC1udW1lcmljLmNzbApsaW5rLWNpdGF0aW9uczogdHJ1ZQotLS0KCmBgYHtjc3Mgc2lkZW5vdGUsIGVjaG8gPSBGQUxTRX0KCi5tYWluLWNvbnRhaW5lciB7CiAgICBtYXJnaW4tbGVmdDogMjUwcHg7Cn0KLnNpZGVub3RlLCAubWFyZ2lubm90ZSB7IAogIGZsb2F0OiByaWdodDsKICBjbGVhcjogcmlnaHQ7CiAgbWFyZ2luLXJpZ2h0OiAtNDAlOwogIHdpZHRoOiAzNyU7ICAgICAgICAgIyBiZXN0IGJldHdlZW4gNTAlIGFuZCA2MCUKICBtYXJnaW4tdG9wOiAwOwogIG1hcmdpbi1ib3R0b206IDA7CiAgZm9udC1zaXplOiAxLjFyZW07CiAgbGluZS1oZWlnaHQ6IDEuMzsKICB2ZXJ0aWNhbC1hbGlnbjogYmFzZWxpbmU7CiAgcG9zaXRpb246IHJlbGF0aXZlOwogIH0KYGBgCgoKPHN0eWxlPgpAaW1wb3J0IHVybCgnaHR0cHM6Ly9mb250cy5nb29nbGVhcGlzLmNvbS9jc3M/ZmFtaWx5PVJhbGV3YXknKTsKQGltcG9ydCB1cmwoJ2h0dHBzOi8vZm9udHMuZ29vZ2xlYXBpcy5jb20vY3NzP2ZhbWlseT1PeHlnZW4nKTsKQGltcG9ydCB1cmwoJ2h0dHBzOi8vZm9udHMuZ29vZ2xlYXBpcy5jb20vY3NzP2ZhbWlseT1SYWxld2F5OmJvbGQnKTsKQGltcG9ydCB1cmwoJ2h0dHBzOi8vZm9udHMuZ29vZ2xlYXBpcy5jb20vY3NzP2ZhbWlseT1PeHlnZW46Ym9sZCcpOwoKLm1haW4tY29udGFpbmVyIHsKICBtYXgtd2lkdGg6IDE0MDBweCAhaW1wb3J0YW50Owp9Cgpib2R5ewogIGZvbnQtZmFtaWx5OiAnT3h5Z2VuJywgc2Fucy1zZXJpZjsKICBmb250LXNpemU6IDE2cHg7CiAgbGluZS1oZWlnaHQ6IDI0cHg7Cn0KCmgxLGgyLGgzLGg0IHsKICBmb250LWZhbWlseTogJ1JhbGV3YXknLCBzYW5zLXNlcmlmOwp9CgouY29udGFpbmVyIHsgd2lkdGg6IDE0MDBweDsgfQoKY2FwdGlvbiB7CiAgZm9udC1zaXplOiAyMHB4OwogIGNhcHRpb24tc2lkZTogdG9wOwogIHRleHQtaW5kZW50OiAzMHB4OwogIGJhY2tncm91bmQtY29sb3I6IGxpZ2h0Z3JleTsKICBjb2xvcjogYmxhY2s7CiAgbWFyZ2luLXRvcDogNXB4Owp9CgpnLXRhYmxlLWludHJvIGg0IHsKICB0ZXh0LWluZGVudDogMHB4Owp9Cjwvc3R5bGU+CgpgYGB7ciBzZXR1cCwgaW5jbHVkZSA9IEZBTFNFfQprbml0cjo6b3B0c19jaHVuayRzZXQoZWNobyA9IFRSVUUsCiAgICAgICAgICAgICAgICAgICAgICBjb21tZW50ID0gTkEsCiAgICAgICAgICAgICAgICAgICAgICB3YXJuaW5nID0gRkFMU0UsCiAgICAgICAgICAgICAgICAgICAgICBlcnJvciA9IEZBTFNFLAogICAgICAgICAgICAgICAgICAgICAgbWVzc2FnZSA9IEZBTFNFLAogICAgICAgICAgICAgICAgICAgICAgY2FjaGUgPSBGQUxTRSwKICAgICAgICAgICAgICAgICAgICAgIGZpZy53aWR0aCA9IDgsCiAgICAgICAgICAgICAgICAgICAgICBmaWcuaGVpZ2h0ID0gNCkKYGBgCgpgYGB7ciBpbmZleC1HbG9iYWxPcHRpb25zLCByZXN1bHRzPSJoaWRlIiwgaW5jbHVkZT1GQUxTRSwgY2FjaGU9RkFMU0V9Cgprbml0cjo6b3B0c19rbml0JHNldChzdG9wX29uX2Vycm9yID0gMkwpICNyZWFsbHkgbWFrZSBpdCBzdG9wCm9wdGlvbnMoa25pdHIudGFibGUuZm9ybWF0ID0gJ2h0bWwnKQoKb3B0aW9ucyhzdHJpbmdzQXNGYWN0b3JzPUYpCgogI2tuaXRyOjpkZXBfYXV0bygpCgpgYGAKPCEtLSAjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMgLS0+CgoKYGBge3IgaW5kZXgtUHJlbGltcywgIGluY2x1ZGU9RkFMU0UsIGVjaG89RkFMU0UsIHJlc3VsdHM9J2hpZGUnLCBtZXNzYWdlPUZBTFNFfSAKCgpGTiA8LSAiU1BMQVNIX09BU0lTX3N1bW1hcnkiCmlmKHN1bShncmVwbChGTiwgbGlzdC5maWxlcygpKSk9PTApIHN0b3AoIkNoZWNrIEZOIikKClBSRUZJWCA8LSAiU1BMQVNIX09BU0lTX3N1bW1hcnkiICMtIHJlcGxhY2UgYnkgRkxPV0NFTEw/Pz8KCiBzdXBwcmVzc01lc3NhZ2VzKHJlcXVpcmUocm1hcmtkb3duKSkKIHN1cHByZXNzTWVzc2FnZXMocmVxdWlyZShrbml0cikpCgogc3VwcHJlc3NQYWNrYWdlU3RhcnR1cE1lc3NhZ2VzKHJlcXVpcmUobWV0aG9kcykpCiBzdXBwcmVzc1BhY2thZ2VTdGFydHVwTWVzc2FnZXMocmVxdWlyZShib29rZG93bikpCgogc3VwcHJlc3NQYWNrYWdlU3RhcnR1cE1lc3NhZ2VzKHJlcXVpcmUobWFncml0dHIpKQoKICMgU2hvdGN1dHMgZm9yIGtuaXR0aW5nIGFuZCByZW5kZXJpbmcgd2hpbGUgaW4gUiBzZXNzaW9uIChJbnZva2UgaW50ZXJhY3RpdmUgUiBmcm9tIFIvU2NyaXB0cyBmb2xkZXIpCiBrayA8LSBmdW5jdGlvbihuPScnKSBrbml0cjo6a25pdDJodG1sKHBhc3RlKCJ0Iiwgbiwgc2VwPScnKSwgZW52aXI9Z2xvYmFsZW52KCksCiAgICAgICBvdXRwdXQ9cGFzdGUoRk4sIi5odG1sIiwgc2VwPScnKSkKCiByciA8LSBmdW5jdGlvbihuPScnKSBybWFya2Rvd246OnJlbmRlcihwYXN0ZSgidCIsIG4sIHNlcD0nJyksIGVudmlyPWdsb2JhbGVudigpLAogICAgICAgb3V0cHV0X2ZpbGU9cGFzdGUoRk4sIi5odG1sIiwgc2VwPScnKSkgIyMsIG91dHB1dF9kaXI9J1NjcmlwdHMnKQoKIGJiIDwtIGZ1bmN0aW9uKG49JycpIGJyb3dzZVVSTChwYXN0ZShGTiwiLmh0bWwiLCBzZXA9JycpKQoKICMgVGhlIHVzdWFsIHNob3J0Y3V0cwogenogPC0gZnVuY3Rpb24obj0nJykgc291cmNlKHBhc3RlKCJ0Iiwgbiwgc2VwPScnKSkKCgpgYGAKPCEtLSAjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMgLS0+Cgo8YnIvPgoKCjwhLS0KKiBCcmVpbWFuOiBbQEJyZWltYW46MTk4NGFhOyBAQnJlaW1hbjoyMDAxYWFdCiogRnJlZWRtYW46IFtARnJlZWRtYW46MjAwOGFhOyBARnJlZWRtYW46MjAwOGFkOyBARnJlZWRtYW46MjAwOGFjOyBARnJlZWRtYW46MjAwOWFjXQotLT4KCgo8cD48cC8+CiogVGhlIFtTYWx6bWFuIExhYl0oaHR0cHM6Ly9zYWx6bWFubGFiLnN0YW5mb3JkLmVkdS8pIApkZXZlbG9wIGFuZCBhcHBseSBuZXcgKipzdGF0aXN0aWNhbCBhbGdvcml0aG1zKiogZm9yICoqYmlvbG9naWNhbCBpbmZlcmVuY2UqKgpvbiBmdW5kYW1lbnRhbCBxdWVzdGlvbnMgaW4gdGhlIGV2b2x1dGlvbiBvZiBnZW5vbWVzLl5bCkRyLiBTYWx6bWFuIGxlYWRzIGEgCltwdXJlbHkgZGF0YSBzY2llbmNlIHN0YXRpc3RpY2FsIHJlc2VhcmNoIGdyb3VwXShodHRwczovL3lvdXR1LmJlL25IdWM1bWxRUlF3P3NpPXFSaTdibmpacUd3d3hIWTMmdD0zMSkKd2hvc2UgbWlzc2lvbiBpcyB0byBtb2Rlcm5pemUgYW5hbHlzaXMgdG9vbHMgdG8gYmV0dGVyIGRlYWwgd2l0aCB0aGUgY3VycmVudCBlcmEgb2YgZGF0YSAtClt1bHRyYSBoaWdoIHRocm91Z2hvdXQgcHJlY2lzZSByZXNvbHV0aW9uIGdlbm9taWMgbWVhc3VyZW1lbnRzXShodHRwczovL3lvdXR1LmJlL25IdWM1bWxRUlF3P3NpPXFSaTdibmpacUd3d3hIWTMmdD0xMDYpIC0gCmFuZCB0byBlbnN1cmUgdGhhdCB0aGV5IGFyZSBtb3JlIGZ1bGx5CltzdGF0aXN0aWNhbCBhbmQgbWF0aGVtYXRpY2FsIGluIG5hdHVyZV0oaHR0cHM6Ly95b3V0dS5iZS9uSHVjNW1sUVJRdz9zaT1xUmk3Ym5qWnFHd3d4SFkzJnQ9MTE1KS4KdGhhbiBjdXJyZW50IHByYWN0aWNlLl0KCgo8cD48cC8+IAoqIEhlcmUgd2UgY29uc2lkZXIgMiBwYXBlcnMgZnJvbSB0aGUgW1NhbHptYW4gTGFiXShodHRwczovL3NhbHptYW5sYWIuc3RhbmZvcmQuZWR1Lyk6CiAgIC0gU1BMQVNIOiBBIHN0YXRpc3RpY2FsLCByZWZlcmVuY2UtZnJlZSBnZW5vbWljIGFsZ29yaXRobSB1bmlmaWVzIGJpb2xvZ2ljYWwgZGlzY292ZXIKW1BERl0oaHR0cHM6Ly93d3cuY2VsbC5jb20vY2VsbC9wZGYvUzAwOTItODY3NCgyMykwMTE3OS0wLnBkZiksCltDb2RlXShodHRwczovL2dpdGh1Yi5jb20vcmVmcmVzaC1iaW8vU1BMQVNIKSBbQENoYXVuZzoyMDIzYWFdCiAgIC0gT0FTSVM6IEFuIGludGVycHJldGFibGUsIGZpbml0ZS1zYW1wbGUgdmFsaWQgYWx0ZXJuYXRpdmUgdG8gUGVhcnNvbuKAmXMgWDIgCmZvciBzY2llbnRpZmljIGRpc2NvdmVyeQpbVVJMXShodHRwczovL3d3dy5wbmFzLm9yZy9kb2kvMTAuMTA3My9wbmFzLjIzMDQ2NzExMjEpLApbQ29kZV0oaHR0cHM6Ly9naXRodWIuY29tL3JlZnJlc2gtYmlvL1NQTEFTSCkgW0BCYWhhcmF2OjIwMjRhYV0KCgo8cD48cC8+IAoqIFRoZSBPQVNJUyBwYXBlciwgYXMgYW4gZXhhbXBsZSBvZiBtYXRoZW1hdGljYWwgc3RhdGlzdGljcywgaXMgYSBiZWF1dGlmdWwgcGllY2Ugb2Ygd29yay4KVGhlIGFydGljbGVzIHByb3ZpZGUgYSBwcm9vZiBvZiBjb25jZXB0IG9mIHRoZSBwcm9wb3NlZCBtZXRob2RzIGluIGFuIGlkZWFsaXplZCBzZXR0aW5nLgpUaGUgZXhwb3NpdGlvbiBpcyBtYXRoZW1hdGljYWwgd2l0aCB0aGUgcC12YWx1ZSBwbGF5aW5nIGEgcGl2b3RhbCByb2xlIHRocm91Z2hvdXQuClRoZSBuaWNlIG1hdGhlbWF0aWNhbCBkcmVzc2luZyBjb21lcyBhdCBhIGNvc3Qgb2YgaGF2aW5nIHRvIHJlbHkgb24gdW5yZWFsaXN0aWMgYXNzdW1wdGlvbnMsCnN0YXJ0aW5nIHdpdGggdGhlIGFzc3VtcHRpb24gdGhhdCByZXBsaWNhdGUgdGFyZ2V0IGNvdW50IHZlY3RvcnMgaGF2ZSBhIG11bHRpbm9taWFsCmRpc3RyaWJ1dGlvbiB3aXRoIGEgZml4ZWQgdW5kZXJseWluZyBwcm9iYWJpbGl0eSBkaXN0cmlidXRpb24uXlsKUGVyaGFwcyBpbiBEci4gU2Fsem1hbidzIGxhYiBzYW1wbGVzIGNhbiBnbyB0aHJvdWdoIHRoZSBlbnRpcmUgcHJlcGFyYXRpb24gYW5kIHNlcXVlbmNpbmcKcHJvY2VzcyB3aXRob3V0IGJlYXJpbmcgYSB0cmFjZSBvZiB0aGVpciBwYXNzYWdlIHRocm91Z2ggdGhlIHByb2Nlc3MsIGJ1dCBpbiBhIHR5cGljYWwKcHJvZHVjdGlvbiAgc2V0dGluZywgYXMgc2FtcGxlcyBuYXZpZ2F0ZSAgdGhyb3VnaCB0aGUgcHJvY2Vzc2luZyBwaXBlbGluZSwgdGhleSBhY2N1bXVsYXRlCnRlY2huaWNhbCBhcnRpZmFjdHMgd2hpY2ggaW1wYWN0IHRoZSBiYXRjaGVzIG9mIHJlYWRzIHdoaWNoIGFyZSBoYXJ2ZXN0ZWQgZm9yIGVhY2ggc2FtcGxlLgpUaGUgc2VxdWVuY2Ugc3BlY2lmaWMgZWZmZWN0IG1heSBiZSBzdXBwcmVzc2lvbiBvciBlbnJpY2htZW50LCBsYXJnZSBvciBzbWFsbCwKdW5pcXVlIG9yIHNoYXJlZCBhY3Jvc3MgbWFueSBzZXF1ZW5jZXMuICBUaGUgdGVjaG5pY2FsIGFydGlmYWN0cyBhcmUgdHlwaWNhbGx5IG5vdApoYXJkIHRvIGRldGVjdCBhbmQgaW4gc29tZSBjYXNlcyBjYW4gb25seSBiZSBtaXNzZWQgYnkgbm90IGxvb2tpbmcgYXQgdGhlIGRhdGEKY29taW5nIG9mZiB0aGUgc2VxdWVuY2VycyBiZWZvcmUgcHVzaGluZyB0aGVtIGRvd24gdGhlIHByb2Nlc3NpbmcgcGlwZWxpbmUuCl0KCgoKPHA+PHAvPgoqIEFzIGEgcmVmZXJlbmNlIHdoaWNoIGRhdGEgYW5hbHlzdHMgbWlnaHQgZ28gdG8gZm9yIGd1aWRhbmNlLAp0aGUgYXJ0aWNsZXMgbGFjayB0aGUga2V5IHBpZWNlcyBuZWVkZWQgZm9yIHRoZSByZWFkZXIgdG8gZ2V0IGEgdHJ1ZSBzZW5zZSBvZiAKcGVyZm9ybWFuY2UgYW5kIGZvciB0aGUgc2NvcGUgb2YgdGhlIGFuYWx5c2lzIG5lY2Vzc2FyeSB0byBvYnRhaW4gdmFsaWQgcmVzdWx0cy4KICAgLSBUZWNobmljYWwgdmFsaWRhdGlvbiBvbiB0aGUgb21pYyBzY2FsZSBpcyByZXF1aXJlZCB0byBnZXQgYSBzZW5zZSBvZiB0aGUgdXRpbGl0eSBvZiB0aGUKcHJvcG9zZWQgbWV0aG9kcy4gIAogICAtICoqVGVjaG5pY2FsIHZhbGlkYXRpb24qKiBzaG91bGQgYmUgcnVuIG9uIHR5cGljYWwgZGF0YSBhbmQgc2hvdWxkIGluY2x1ZGUgYm90aAptZWFzdXJlcyBvZiBhbGdvcml0aG0gcGVyZm9ybWFuY2UgYW5kIHJlc2lzdGFuY2UgdG8gKippbnB1dCBkYXRhIHF1YWxpdHkqKiBhbmQKKip1bndhbnRlZCB2YXJpYXRpb24qKiwgd2hpY2ggYXJlIGFsd2F5cyBwYXJ0IG9mIHRoZSBzdG9yeSB3aGVuIG9taWMgc2NhbGUgYXNzYXlzCmFyZSBpbnZvbHZlZC4KU2VlIApbUmVtb3ZpbmcgVW53YW50ZWQgVmFyaWF0aW9uIGZyb20gTGFyZ2UtU2NhbGUgUk5BIFNlcXVlbmNpbmcgRGF0YSB3aXRoIFBSUFNdKC4vX000QS1SVVYvbmF0dXJlQmlvdGVjaFBhcGVyL19Nb2xhbmlhXzIwMjNfUlVWLUlJSV9QUlBTX1N1bW1hcnkuaHRtbCkuCgogICAtICAqKlRoZSBpbnB1dCBkYXRhIGFyZSBuZXZlciBleGFtaW5lZCoqLiAgKipEZWZpbml0aW9uIDEgKE51bGwgTW9kZWwpKiogaXMgYWN0dWFsbHkgdGhlCmZ1bmRhbWVudGFsIGFzc3VtcHRpb24gdGhhdCBpcyBuZWNlc3NhcnkgZm9yIGV2ZXJ5dGhpbmcgZWxzZSB0byBmb2xsb3csIHlldCB0aGF0IGFzc3VtcHRpb24KaXMgbmV2ZXIgc2NydXRpbml6ZWQuXlsKVGhpcyBpcyBub3QgdW5jb21tb24gYW5kIGlzIHJvb3RlZCBpbiB0aGUgZGl2aWRlIGJldHdlZW4gYXBwbGllZCBzdGF0aXN0aWNzIGFuZCBtYXRoZW1hdGljYWwKc3RhdGlzdGljcy4gIFRoZSBtYXRoZW1hdGljcyByZXF1aXJlIGFzc3VtcHRpb25zIHNvIGl0J3MgcGVyZmVjdGl2ZWx5IHJlYXNvbmFibGUgZm9yIHRoZQptYXRoZW1hdGljYWwgc3RhdGlzdGljaWFuIHRvIHN0YXJ0IHRoZXJlLiAgTm9uZSBvZiB0aGUgbWF0aGVtYXRpY2FsIHJlc3VsdHMgY2FuIGJlIHJlbGllZCBvbgp1bmxlc3MgdGhlIGFzc3VtcHRpb25zIGFyZSB0cnVlLiAgVGhlIGNydXggb2YgdGhlIHdvcmsgZm9yIHRoZSBhcHBsaWVkCnN0YXRpc3RpY2lhbiBzaG91bGQgYmUgIHRvIGVzdGFibGlzaCB0aGUgbnVsbCBtb2RlbC4gIEluIHByYWN0aWNlLCB0aGUgbmVjZXNzYXJ5Cm51bGwgbW9kZWwgaXMgYWxtb3N0IGFsd2F5cyBhc3N1bWVkIHdpdGhvdXQgc3Vic3RhbnRpYWwgc3VwcG9ydGluZyBldmlkZW5jZS5dCkluIHByYWN0aWNlLCB0aGUgYW5hbHlzaXMgb2Ygb21pYyBzY2FsZSBkYXRhIHNob3VsZCBub3QgcHJvY2VlZCBiZWZvcmUgY2FyZWZ1bCBleGFtaW5hdGlvbgpvZiB0aGUgY29sbGVjdGVkIGRhdGEuICBUaGUgcHJlc2VuY2Ugb2YgdW53YW50ZWQgdmFyaWFiaWxpdHkgd2lsbCBpbnZhbGlkYXRlIHRoZSBhc3N1bWVkCm51bGwgbW9kZWwgYW5kIGFsbCByZXN1bHRzIGJhc2VkIG9uIHRoZSBhbmFseXNpcyBvZiB0aGUgZmxhd2VkIGRhdGEuCgoqIFRoZSBjbGFpbSBvZiB0aGUgdmFsaWRpdHkgb2YgdGhlIHAtdmFsdWVzLCBvbmUgb2YgdGhlIHNlbGxpbmcgcG9pbnRzIG9mIHRoZSBtZXRob2QsCmlzIHN1c3BlY3QuICBXaGVuIHdlIGZpdCBvbmUgcHJvdG90eXBlIG1vZGVsIHRvIDIwSywgNTBLIG9yIDEwMEsgZmVhdHVyZSBkYXRhCnN1YnNldHMgd2UgZG8gbm90IGJlbGlldmUgdGhhdCB0aGUgIG1vZGVsIGZpdHMgYWRlcXVhdGVseSBpbiBldmVyeSBjYXNlOgp3ZSBtYXkgcm9idXN0aWZ5IHRoZSBmaXQgdG8gYWxsb3cgZm9yIHRoZSBwcmVzZW5jZSBvZiBiYWQgcG9pbnRzLCBvciBvdXRsaWVycywKYW5kIHdlIGRvIG5vdCBwdXQgdG9vIG11Y2ggY3JlZGliaWxpdHkgb24gdGhlIHByZWNpc2UgdmFsdWVzIG9mIHAtdmFsdWVzOwp3ZSBiZWxpZXZlIHRoYXQgdGhleSBnZW5lcmFsbHkgb3JkZXIgaHlwb3RoZXNlcyB0aGUgcmlnaHQgd2F5LgogICAtIFRoZSBwLXZhbHVlIG1heSBiZSBhIGdvb2QgdmFsdWUgdG8gZGlzY3JpbWluYXRlIGJldHdlZW4gaW50ZXJlc3RpbmcgYW5kCnVuaW50ZXJlc3RpbmcgdGFyZ2V0cywgYnV0IHRoaXMgc2hvdWxkIGJlIGRldGVybWluZWQgZW1waXJpY2FsbHkgYnkgY29tcGFyaW5nIHdpdGgKb3RoZXIgY2FuZGlkYXRlIGRpc2NyaW1pbmFudHMgKGluIGFkZGl0aW9uIHRvIFBlYXJzb24ncyAkWF4yJCkuCiAgIC0gSWYgcC12YWx1ZXMgYXJlIHRvIGJlIHRha2VuIGF0IGZhY2UgdmFsdWUsIHRoZWlyIGNhbGlicmFpb24gc2hvdWxkIGJlIAp2YXJpZGZpZWQuCiAgIC0gVGhlIHAtdmFsdWUgZGlzdHJpYnV0aW9uIGFuIHNob3VsZCBhbHNvIGJlIGV4YW1pbmVkIHRvIGNoZWNrIGZvcgppbmRpY2F0aW9ucyBvZiB1bndhbnRlZCB2YWxpYWJpbGl0eS4gIFNlZSBNb2xhbmluYSBldC5hbC4gKDIwMTkpIFtATW9sYW5pYToyMDE5YWFdLgoKCjxici8+CgoKIyMgT24gT21pYyBTY2FsZSBBbmFseXNpcyAKCjxwPjxwLz4KKiBPbWljIHNjYWxlIGRhdGEgcmVmZXJzIHRvIG1lYXN1cmVtZW50cyB0YWtlbiBpbiBwYXJhbGxlbCBvdmVyIG1hbnkgZmVhdHVyZXMgLQpmcm9tIHRob3VzYW5kcyBvZiBnZW5lcyB0byBtaWxsaW9ucyBvZiBwcm90ZWlucy4gIEV2ZW4gdGhvdWdoIHRoZSByZXN1bHQgb2YKaW50ZXJlc3QsIGdlbmUgc2NvcmVzIGZvciBleGFtcGxlLCBtYXkgYmUgb2J0YWluZWQgZnJvbSBhbmFseXppbmcKZmVhdHVyZXMgb25lIGF0IGEgdGltZSwgdGhlIHN1Y2Nlc3Mgb2YgdGhlIGRlc2lnbiBhbmQgYW5hbHlzaXMgbWV0aG9kcwpjYW4gb25seSBiZSBhc3Nlc3NlZCBieSB0YWtpbmcgYSBob2xpc3RpYyBsb29rIGF0IHRoZSBzdHVkeSBkYXRhIGFuZCByZXN1bHRzLgoKKiBUbyBoYXZlIGEgaG9saXN0aWMgcGljdHVyZSwgdGhlIGFzc2Vzc21lbnQgbXVzdCBzdGFydCB3aXRoIHRoZSBpbnB1dCBtYXRlcmlhbAphbmQgZm9sbG93IHRoZSBzYW1wbGUgc2V0IHRocm91Z2ggYWxsIG9mIHRoZSBwcm9jZXNzaW5nIHN0ZXBzIGluY2x1ZGluZyBRQyBhc3Nlc3NtZW50CmFuZCBmaWx0ZXJpbmcgKGlmIGFueSksIHNhbXBsZSBwcmUtcHJvY2Vzc2luZyAgKGZ1cnRoZXIgZmlsdGVyaW5nIGFuZCBub3JtYWxpemF0aW9uKSwKZGF0YSBhbmFseXNpcyAoY29tcHV0ZSB0aGUgZGVzaXJlZCByZXN1bHRzIGFuZCByZXBvcnQgdGhlIGZpbmRpbmdzKS4KCiogVGhlIFNQTEFTSCBhcnRpY2xlIHByb3ZpZGVkIHRoZSBpbmZvcm1hdGlvbiBuZWVkZWQgdG8Kc2hvdyB0aGF0IHRoZSB0ZWNobm9sb2d5IHdvcmtzIGluIHByaW5jaXBsZSwgYnV0IHRvIGFwcHJlY2lhdGUKaG93IHdlbGwgdGhlIHRlY2hub2xvZ3kgd2lsbCB3b3JrIGluIHByYWN0aWNlLCBpdCBoYXMgdG8gYmUgZXZhbHVhdGVkIAppbiBhIHdheSB0aGF0IGZ1bGx5IHJlZmxlY3RzIHRoZSAgZXhwZWN0ZWQgZnVsbCBhbmFseXNpcyBwaXBlbGluZS4gCgoKKiBIYXZpbmcgYSBnb29kIGRhdGFzZXQgZm9yIGFzc2Vzc21lbnQKaXMgYWxzbyBjcml0aWNhbCBhbmQgY291bGQgaW5jbHVkZSBjb250cm9sIGZlYXR1cmVzLCBjb250cm9sIHNhbXBsZXMsCmFuZCBzYW1wbGVzIHByb3ZpZGluZyBlbmdpbmVlcmVkIG9yIGRlc2lnbmVkIHRydXRoLgpJbiBhZGRpdGlvbiB0byBoYXZpbmcgYnVpbHQtaW4gdHJ1dGgsIHRoZSBzYW1wbGVzIHVzZWQgdG8gYXNzZXNzCnBlcmZvcm1hbmNlIG11c3QgYWxzbyBiZSByZXByZXNlbnRhdGl2ZSBvZiB0aGUgYWN0dWFsIHNhbXBsZXMKd2hpY2ggd2lsbCBiZSBwcm9jZXNzZWQgaW4gcHJvZHVjdGlvbi4KCjxici8+CgojIyBSZXBvcnRzL1Jldmlld3MKCjxwPjxwLz4KKiBbU2xpZGUgUHJlc2VudGF0aW9uXShfTTNCLVNQTEFTSC1PQVNJUy9zcGxhc2hfb2FzaXNfbWV0aG9kb2xvZ3lfcHJlc2VudGF0aW9uX3YyLmh0bWwpIAogICAtIFRoZSBzbGlkZSBwcmVzZW50YXRpb24gcHJvdmlkZXMgYSBoaWdoIGxldmVsIHN1bW1hcnkgb2YgdGhlIFNQTEFTSCBhcnRpY2xlCmluIHRoZSB3b3JkcyBvZiB0aGUgYXV0aG9ycy4gCiAgIC0gU29tZSBjb21tZW50cyBhcmUgaW5zZXJ0ZWQgd2hlcmUgdGhlcmUgbWlnaHQgYmUgZ2FwcyBvciBhIGRpZmZlcmVuY2Ugb2Ygb3Bpbmlvbi4KCgo8cD48cC8+CiogW1NQTEFTSF0oX00yQi1SRkdJX1NQTEFTSF92Mi5odG1sKSBOb3RlcyAKICAgLSBDb250YWlucyB0d28gaW50cm9kdWN0b3J5IHNlY3Rpb25zIHRvIHBvc2l0aW9uIFNQTEFTSCtPQVNJUyBpbiB0aGUKY29udGV4dCBvZiBjb250ZW1wb3JhcnkgYW5hbHlzdXMgbWV0aG9kczoKICAgICAgLSBsaXRlcmF0dXJlIHJldmlldyAgb2YgUmVmZXJlbmNlLUZyZWUgR2Vub21pYyBJbmZlcmVuY2UgcHJpb3IgdG8gU1BMQVNILCBhcyB3ZWxsIGFzICAKICAgICAgLSBhIHN1cnZleSBvZiBtZXRob2RzIGRldmVsb3BlZCBmb3IgUk5BLXNlcSB3aGljaCBjb3VsZCBiZSB1c2VkIGhlcmUuCgoKPHA+PHAvPgoqIFtPQVNJU10oLi9fTTNBLU9BU0lTLmh0bWwpICBOb3RlcyAKICAgLSBDb250YWlucyBzb21lIG5vdGVzIG9uIE9BU0lTLgoKPGJyLz4KCgojIyBTUExBU0ggJiBPQVNJUyBFeHRlbnNpb25zIGFuZCBBcHBsaWNhdGlvbnMgey50YWJzZXR9CgpUaHJlZSBmb2xsb3ctdXAgcHVibGljYXRpb25zIHByb3ZpZGUgbW9yZSBpbmZvcm1hdGlvbiBvbiB0aGUgYXBwbGljYXRpb24gb2YKU1BMQVNIIGFuZCBPQVNJUy4KCmBgYHtyIFNQTEFTSF9PQVNJU19zdW1tYXJ5LXdyaXRlLWJpYiwgcmVzdWx0cz0iYXNpcyIsIGVjaG89Rn0KICMgaHR0cHM6Ly9zdGFja292ZXJmbG93LmNvbS9xdWVzdGlvbnMvMjY4NTE5NTIvaXMtaXQtcG9zc2libGUtdG8taW5zZXJ0LXRoZS1mdWxsLXJlZmVyZW5jZS1vZi1hbi1hcnRpY2xlLWluLXRoZS1taWRkbGUtb2YtYS1ybWEKCiAgU1BMQVNIMngzX3JlZnNfbHN0IDwtIGJpYnRleDo6cmVhZC5iaWIoIi4uL19iaWJGaWxlcy9fU1BMQVNIMngzLmJpYiIpCgogZm9yKElEIGluIGMoIkhlbmRlcnNvbjoyMDI0YWEiLCAiRGVoZ2hhbm5hc2lyaToyMDI0YWEiLCAiS29rb3Q6MjAyNGFhIikpIHsKICBjYXQoJ1xuKiAnKQogIHByaW50KFNQTEFTSDJ4M19yZWZzX2xzdFtbSURdXSkKIH0KCmBgYAoKIyMjIEhvbWUgey19Cgo8YnIvPgoKIyMjIEhlbmRlcnNvbjoyMDI0IHstfQoKPGJyLz4KCiMjIyBEZWhnaGFubmFzaXJpOjIwMjQgey19Cgo8YnIvPgoKIyMjIEtva290OjIwMjQgey19Cgo8YnIvPgoKCiMjIEZvbGxvdy11cAoKPHA+PHAvPgo+IE9BU0lTIHByb3ZpZGVzIGEgdG9vbCB0b3dhcmQgYW5zd2VyaW5nIHF1ZXN0aW9ucyAKPiBpbiBtZWNoYW5pc3RpYyBiaW9sb2d5IHRoYXQgYXJlIG1hbnVhbCBsYWJvcgo+IGludGVuc2l2ZSBvciBpbXBvc3NpYmxlIHRvIGFkZHJlc3Mgd2l0aCBjdXJyZW50IAo+IHN0YXRpc3RpY2FsIGFwcHJvYWNoZXMuCgoqIFRvIGdldCBhIGJldHRlciB1bmRlcnN0YW5kaW5nIG9mIHdoYXQgT0FTSVMgYnJpbmdzLCBvciBkb2Vzbid0IGJyaW5nLCB0byB0aGUgdGFibGUsCndlIG5lZWQgdG8gcmVwZWF0IHRoZSBhbmFseXNlcywgd2l0aCB0aGUgZm9sbG93aW5nIGd1aWRlbGluZXM6CiAgIC0gcGF5IGF0dGVudGlvbiB0byB2YXJpYWJpbGl0eSBpbiB0aGUgaW5wdXQgZGF0YSBxdWFsaXR5IAogICAtIHVzZSBzdGF0ZSBvZiB0aGUgYXJ0IGNvbXBhcmF0b3JzOyAgbm90IGV4Y2x1c2l2ZWx5IFBlYXJzb27igJlzIFgyCmFzIGNvbXBhcmF0b3IuCiAgIC0gaWYgdGhlIGRhdGFzZXQgc3RydWN0dXJlIHBlcm1pdHMgaXQsIGFwcGx5IFJVViBtZXRob2RvbG9neSB0bwppZGVudGlmeSB1bndhbnRlZCB2YXJpYWJpbGl0eSBpbiB0aGUgdGFyZ2V0IGNvdW50IGRpc3RyaWJ1dGlvbnMgdXNlZCBmb3IgcmVmZXJlbmNlIGZyZWUKYmlvbG9naWNhbCBpbmZlcmVuY2UuIAoKCjxici8+CgojIFRoZSBUcmVhdG1lbnQgb2YgVW53YW50ZWQgVmFyaWFiaWxpdHkgeyN0cnQtdW53YW50ZWQtdmFyIH0KCiogQWxsIGNvbGxlY3RlZCBleHBlcmltZW50YWwgZGF0YSBhcmUgbGlhYmxlIHRvIGNvbnRhaW4gc29tZQp1bndhbnRlZCB2YXJpYWJpbGl0eSAtIHZhcmlhYmlsaXR5IGluIHRoZSBtZWFzdXJlbWVudHMgbWFkZSBvbgp0aGUgZXhwZXJpbWVudGFsIHVuaXRzIHdoaWNoIGlzIHVucmVsYXRlZCB0byB0aGUgcXVlc3Rpb24gb2YgaW50ZXJlc3QuCgoKKiBOb3JtYWxpemF0aW9uIGhhcyBkaWZmZXJlbnQgbWVhbmluZ3MgaW4gZGlmZmVyZW50CmNvbnRleHRzLiAgSGVyZSB3ZSBjYW4gc2F5IHRoYXQgbm9ybWFsaXphdGlvbiBpcwoqYSB0cmFuc2Zvcm1hdGlvbiBhcHBsaWVkIHRvIGRhdGEgcHJvZHVjZWQgaW4gYSAKaGlnaGx5IHBhcmFsbGVsIHN5c3RlbSB3aXRoIHRoZSBvYmplY3RpdmUKb2YgcmVtb3ZpbmcgdGVjaG5pY2FsIHNvdXJjZXMgb2YgdmFyaWFiaWxpdHkqXltTZWUgc2xpZGVzCltoZXJlXShodHRwczovL2luY29iLmFwYmlvbmV0Lm9yZy9pbmNvYjE0L2Fzc2V0cy9JTkNPQjIwMTQvVGVycnktU3BlZWRJbkNvQjIwMTQucGRmKQpmb3IgbW9yZSBkZXRhaWwuXQoKPGJyLz4KCiMjIE5vcm1hbGl6YXRpb24gaW4gUk5BLVNlcSAtIE92ZXJ2aWV3CgoKKiBJbml0aWFsbHkgUk5BLVNlcSBkYXRhc2V0cyAgd2VyZSBzbWFsbCwgYW5kIHRoZSBzYW1wbGVzIHByb2Nlc3NlZCBleHBlcnRseSBieQp0aGUgYmVzdCB0ZWNoIGluIHRoZSBsYWIgc28gdGhhdCB0aGVyZSB3YXMgbm8gaW5kaWNhdGlvbiBmb3IgdGhlIG5lZWQKZm9yIG5vcm1hbGl6YXRpb24gd2l0aCBSTkEtU2VxIGRhdGEgW0BXYW5nOjIwMDlhYTsgQENsb29uYW46MjAwOGFhXS4KCiogSXQgZGlkbid0IHRha2UgbG9uZyBmb3IgZGF0YXNldHMgdG8gZ3JvdyBpbiBzaXplIGFuZCBmb3IgcmVzZWFyY2hlcnMKdG8gcmVhbGl6ZSB0aGF0IGRpZmZlcmVuY2VzIGluIGxpYnJhcnkgc2l6ZXMgd2VyZSBhIHNvdXJjZQpvZiB0ZWNobmljYWwgdmFyaWFiaWxpdHkgd2hpY2ggaGFkIHRvIGJlIGRlYWx0IHdpdGggYmVmb3JlCmJpb2xvZ2ljYWwgY29uY2x1c2lvbnMgY291bGQgYmUgZHJhd24uICBUaGUgZmlyc3QgZ2VuZXJhdGlvbgpub3JtYWxpemF0aW9ucyB3ZXJlIGEgZ2xvYmFsIHNjYWxpbmcgbm9ybWFsaXphdGlvbiBiYXNlZCBvbiB0aGUgdG90YWwKbnVtYmVyIG9mIHJlYWRzIHBlciBzYW1wbGUgW0BSb2JpbnNvbjoyMDA4YWE7QE1hcmlvbmk6MjAwOGFhO0BNb3J0YXphdmk6MjAwOGFhXS4KCjxwPjxwLz4KKiBUaGUgZ2xvYmFsIHNjYWxpbmcgbm9ybWFsaXphdGlvbiBzb29uIGJlY2FtZSBkaXNmYXZvcmVkIGJ5IG1vc3QgYXMgaXQKd2FzIHJlYWxpemVkIHRoYXQgZ2xvYmFsIHNjYWxpbmcgY291bGQgcG90ZW50aWFsbHkgcmVtb3ZlIGJpb2xvZ2ljYWwKdmFyaWFiaWxpdHksIGFzIGluIHRoZSBjYXNlIHdoZW4gYSBmZXcgdmVyeSBoaWdobHkgZXhwcmVzc2VkIGdlbmVzIHdlcmUgCmRpZmZlcmVudGlhbGx5IGV4cHJlc3NlZCBhY3Jvc3MgZ3JvdXBzLiAgIFRoaXMgbGVkIHRvIHRoZSB1c2UKb2Ygc2NhbGluZyBmYWN0b3JzIHJlZmxlY3RpbmcgZGlmZmVyZW5jZXMgaW4gdGhlIGJ1bGsgb2YgdGhlIGRhdGEgYW5kIG5vdAphZmZlY3RlZCBieSBhIHNtYWxsIHNldCBvZiBoaWdobHkgZXhwcmVzc2VkIGRpZmZlcmVudGlhbGx5IGV4cHJlc3NlZCBnZW5lcyAKW0BSb2JpbnNvbjoyMDEwYWE7ICBATG92ZToyMDE0YWFdLgogICAtIEFzIGEgc2lkZSBub3RlLCB0aGUgc2NhbGluZyBqdXN0IGRlc2NyaWJlZCBhcmUgbm90IHVzZWQKdG8gc2NhbGUgdGhlIGNvdW50cyB0byBiZSB1c2VkIGZvciBkb3duc3RyZWFtIGFuYWx5c2lzLiAgVGhleSBhcmUKdXNlZCBpbnN0ZWFkIGFzIHBhcnQgb2YgdGhlIG1vZGVsIHdoaWNoIGRlc2NyaWJlcyB0aGUgZXhwZWN0ZWQgdmFyaWFiaWxpdHkKb2YgdGhlIHVuYWRqdXN0ZWQgY291bnRzLiAgCgo8cD48cC8+CiogIFRoZSBzY2FsaW5nIGZhY3RvciBub3JtYWxpemF0aW9ucyBqdXN0IGRlc2NyaWJlZCBhcmUgcGFydCBvZiB0aGUKYW5hbHlzaXMgd29ya2Zsb3cgb2YgdHdvIFIgcGFja2FnZXMgd2hpY2ggYXJlIHN0aWxsIGluIGNvbW1vbiB1c2UgdG9kYXk6CkVkZ2VSIFtAUm9iaW5zb246MjAxMGFiXSAgIGFuZCBERVNlcTIgW0BMb3ZlOjIwMTRhYV0uCgoKPHA+PHAvPgoqIE90aGVyIG5vcm1hbGl6YXRpb24gbWV0aG9kcyBjYW1lIGFsb25nIHRvIGRlYWwgd2l0aCBzcGVjaWFsIChvciBub3Qgc28Kc3BlY2lhbCkgY2lyY3Vtc3RhbmNlczsgR0MgY29udGVudCBub3JtYWxpemF0aW9uLCBmb3IgZXhhbXBsZSBbQFJpc3NvOjIwMTFhYV0pLiAKCjxwPjxwLz4KKiBBIHByb2JsZW0gc3RpbGwgcmVtYWlucyBhcyB1cCB0byB0aGlzIHBvaW50IHRoZXJlIHdhcyBubyB3YXkKdG8gaGFuZGxlIGNvbXBsaWNhdGlvbnMgY3JlYXRlZCB3aGVuIHRoZSBlc3RpbWF0ZWQgbm9ybWFsaXphdGlvbgpmYWN0b3JzIHdlcmUgY29uZm91bmRlZCB3aXRoIHRoZSBiaW9sb2d5IG9mIGludGVyZXN0LgogICAtIFJVViB3YXMgZmlyc3QgaW50cm9kdWNlZCBpbiBSaXNzbyBldC5hbCAoMjAxNCBbQFJpc3NvOjIwMTRhYV0KdG8gZW5hYmxlIG5vcm1hbGl6YXRpb24gaW4gc3BpdGUgb2YgY29uZm91bmRpbmcgYnkgbWFraW5nIHVzZSBvZiBjb250cm9sCmdlbmVzIG9yIGNvbnRyb2wgc2FtcGxlcy4KICAgLSBKYWNvYiBldCBhbC4gKDIwMTYpIFtASmFjb2I6MjAxNmFhXSBleHRlbmQgIFJVViB0byB0aGUgY2FzZSB3aGVuIG5laXRoZXIKdGhlIHNvdXJjZSBvZiB1bndhbnRlZCB2YXJpYWJpbGl0eSBub3IgdGhlIGJpb2xvZ3kgb2YgaW50ZXJlc3QgaW4ga25vd24KKHN1YmNsYXNzIGRpc2NvdmVyeSBpcyBhbiBhcHBsaWNhdGlvbiBpbiB3aGljaCB0aGlzIGNhbiBvY2N1ciwgZm9yIGV4YW1wbGUpLiAKICAgLSBBIHZpc3VhbGl6YXRpb24gdGVjaG5pcXVlIGZvciBSVVYgaXMgcHJlc2VudGVkIGluCkdhbmRvbGZvIGV0IGFsLiAoMjAxOCkgW0BHYW5kb2xmbzoyMDE4YWFdLgogICAtIEEgdmFyaWF0aW9uIG9mIFJVViwgY2FsbGVkIFJVVi1JSUksIHdoaWNoIG1ha2VzIHZpdGFsIAp1c2Ugb2YgdGVjaG5pY2FsIHJlcGxpY2F0ZXMgYW5kIHN1aXRhYmxlIGNvbnRyb2wgZ2VuZXMgaXMgcHJlc2VudGVkIGluCk1vbGFuaW5hIGV0LmFsLiAoMjAxOSkgW0BNb2xhbmlhOjIwMTlhYV0uCiAgIC0gIFRoZSBsYXRlc3QgaW5ub3ZhdGlvbiwgUlVWIFBSUFMgICggcHNldWRvLXJlcGxpY2F0ZXMgb2YgcHNldWRvLXNhbXBsZXMgKQppbnRyb2R1Y2VkIGluIE1vbGFuaWEgZXQgYWwuICgyMDIzKSBbQE1vbGFuaWE6MjAyM2FhXSwgcmVzdWx0cyAgaW4gYQpub3JtYWxpemF0aW9uIHByb2NlZHVyZSB3aXRoIGdlbmVyYWwgYXBwbGljYWJpbGl0eS4gIFRoZSBtZXRob2QgaXMgaWxsdXN0cmF0ZWQKd2l0aCBkYXRhIGZyb20gVGhlIENhbmNlciBHZW5vbWUgQXRsYXMgKFRDR0EpIGluIHdoaWNoIHNldmVyYWwgc291cmNlcyBvZiAKdW53YW50ZWQgdmFyaWF0aW9uIGFyZSBpZGVudGlmaWVkIGFuZCBkZW1vbnN0cmF0ZWQgdG8gc2lnbmlmaWNhbnRseSAKY29tcHJvbWlzZSB2YXJpb3VzIGRvd25zdHJlYW0gYW5hbHlzZXMsIGluY2x1ZGluZyBjYW5jZXIgc3VidHlwZSBpZGVudGlmaWNhdGlvbiwKYXNzb2NpYXRpb24gYmV0d2VlbiBnZW5lIGV4cHJlc3Npb24gYW5kIHN1cnZpdmFsIG91dGNvbWVzIGFuZCBnZW5lIGNvLWV4cHJlc3Npb24gYW5hbHlzaXMuCiAgICAgIC0gTW9sYW5pYSBldCBhbC4gKDIwMjMpIFtATW9sYW5pYToyMDIzYWFdIGlzIHN1bW1hcml6ZWQgaW4gdGhlIG5leHQgc2VjdGlvbi4KCjwhLS0KPHA+PHAvPgoqIE1vc3Qgb2YgdGhlIFJVViBtZXRob2RvbG9neSBkZXNjcmliZWQgaW4gdGhlIGFib3ZlIG1lbnRpb25lZCBhcnRpY2xlcwptYWtlIHVwIGEgdXNlZnVsIHNldCBvZiB0b29scyBmb3IgZWZmZWN0aXZlbHkgZGVhbGluZyB3aXRoIHVud2FudGVkIHZhcmlhYmlsaXR5CndpdGggbGl0dGxlIGluIHRlcm1zIG9mIHRoZW9yeSBndWlkaW5nIHRoZSB1c2FnZSBvZiB2YXJpb3VzIHRlY2huaXF1ZXMuICAKLS0+Cgo8IS0tCjxwPjxwLz4KKiBCdWlsZGluZyBvbiB0aGUgZm9ybXVsYXRpb24gIG9mIFdhbmcgZXQgYWwuICgyMDE3KSBbQFdhbmc6MjAxN2FhXSwKR2VyYXJkIGV0LiBhbC4gZGV2ZWxvcGVkIGEgZ2VuZXJhbCBmcmFtZXdvcmssIFJVViosIAp0aGF0IGVuY29tcGFzc2VzIGFsbCB2ZXJzaW9ucyBvZiBSVVYgIChHZXJhcmQgZXQuIGFsLiAoMjAyMCwgMjAyMSkgW0BHZXJhcmQ6MjAyMGFhO0BHZXJhcmQ6MjAyMWFhXS4KVGhpcyBmcmFtZXdvcmsgaXMgZGVzY3JpYmVkIGJlbG93LgoKPHA+PHAvPgoqIEppYW5nLCBHYWdub24tQmFydHlzY2ggYW5kIFNwZWVkICgyMDIzKSBbQEppYW5nOjIwMjNhYV0gIHByZXNlbnQgc29tZSBhc3ltcHRvdGljIHRoZW9yeSBmb3IKUlVWLUlJSS4gCgo8cD48cC8+CiogV2hhdCBpcyB0aGUgYXN5bW90b3RpYyB0aGVvcnkgdXNlZCBmb3I/CgotLT4KCjxici8+CgojIyBSVVYgaW4gYWN0aW9uIAoKPHA+PHAvPgoqIFtSZW1vdmluZyBVbndhbnRlZCBWYXJpYXRpb24gZnJvbSBMYXJnZS1TY2FsZSBSTkEgU2VxdWVuY2luZyBEYXRhIHdpdGggUFJQU10oLi9fTTRBLVJVVi9uYXR1cmVCaW90ZWNoUGFwZXIvX01vbGFuaWFfMjAyM19SVVYtSUlJX1BSUFNfU3VtbWFyeS5odG1sKQogICAtIEEgZGV0YWlsZWQgc3VtbWFyeSBvZiB0aGUgTmF0dXJlIEJpb3RlY2hub2xvZ3kgcGFwZXIuICBFeGFtaW5paG5nIHRoZSBmaWd1cmVzIG9mIApTZWN0aW9uIDIsIERldGFpbGVkIFJlc3VsdHMgYnkgRGF0YXNldCwgaXMgc3VmZmljaWVudCB0byBnZXQgdGhlIGdpc3Qgb2YgdGhlIGlzc3VlcyBhcm91bmQKdW53YW50ZWQgdmFyaWFiaWxpdHkuCgo8cD48cC8+CiogW0FJLUVuaGFuY2VkIFJVViBOb3JtYWxpemF0aW9uOiBSZXNlYXJjaCBQcm9wb3NhbF0oLi9fTTRBLVJVVi9uYXR1cmVCaW90ZWNoUGFwZXIvX1Jlc2VhcmNoX1Byb3Bvc2FsX0FJX0VuaGFuY2VkX1JVVi5odG1sKQogICAtIGNsYXVkZSBTb25uZXQgNC41J3MgdmlzaW9uIG9mIGEgcGF0aCB0b3dhcmRzIGEgbmV4dC1nZW4gUlVWIHByb2R1Y3QsIG9uZSB0aGF0IGlzIEFJIGFuZCBNTAplbmFibGVkIGFuZCBmdWxseSBhdXRvbWF0ZWQuCgo8YnIvPgoKIyMgQUkgJiBNTCBpbiBSTkEtU2VxIEFuYWx5c2lzIFRvb2xzCgpQcmlvciB0byBtb3ZpbmcgYWhlYWQgd2l0aCB0aGUgZGV2ZWxvcGVtbnQgb2YgdGhlIG5leHQgZ2VuIHZlcnNpb25zIG9mIFJVViBtb2R1bGVzLAppdCB3b3VsZCBiZSBnb29kIHRvIHRha2Ugc3RvY2sgb2YgdGhlIGltcGFjdCBBSSBhbmQgTUwgaGFzIGhhZCBvbiBSTkEtU2VxIGFuYWx5c2lzIHRvCmRhdGUuICAKCjxwPjxwLz4KKiBbUGFydCBBIC0gSW50cm9kdWN0aW9uIGFuZCBNZXRob2RvbG9naWNhbCBDb25zaWRlcmF0aW9uc10oLi9fTTRBLVJVVi9uYXR1cmVCaW90ZWNoUGFwZXIvX0FJX01MX0FwcGxpY2F0aW9uc19QYXJ0X0EuaHRtbCkKICAgLSBkaXNjdXNzaW9uIG9mIGlzc3VlcyBhcm91bmQgcGVyZm9ybWFuY2UgYXNzZXNzbmVudCAgd2hlbiB0cnV0aCBpcyByYXJlIGFuZCBzdGFuZGFyZHMgbWlzc2luZy4KPHA+PHAvPgoqIFtQYXJ0IEIgLSBTcGVjaWZpYyBBcHBsaWNhdGlvbnMgYW5kIEV2aWRlbmNlXSguL19NNEEtUlVWL25hdHVyZUJpb3RlY2hQYXBlci9TUExBU0hfT0FTSVNfc3VtbWFyeQouaHRtbCkKICAgLSBjYXNlIHN0dWRpZXMgb2YgdGhlIGFwcGxpY2F0aW9uIG9mIEFJIGFuZCBNTCBpbiBSTkEtU2VxIGFuYWx5c2VzLgogICAgICAtIHdlYWsgY2FzZSBmb3IgUmFuZG9tIEZvcmVzdHMgZm9yIEdlbmUgUmFua2luZyB2cyAKVHJhZGl0aW9uYWwgQXBwcm9hY2g6IERpZmZlcmVudGlhbCBFeHByZXNzaW9uIEFuYWx5c2lzIAogICAgICAtIHNlZQpbSW1wYWN0IGFuZCBSZWNlcHRpb24gQW5hbHlzaXM6IFdlbnJpYyAmIFNoZW1pcmFuaSAoMjAxOCldKC4vX000QS1SVVYvbmF0dXJlQmlvdGVjaFBhcGVyL19XZW5yaWNfU2hlbWlyYW5pXzIwMThfSW1wYWN0X0FuYWx5c2lzLmh0bWwpLgogICAtIGl0J3Mgbm90IGNsZWFyIGhvdyB0aGUgTUwgbWV0aG9kcyB3ZXJlIHNlbGVjdGVkIAo8cD48cC8+CiogPGZvbnQgc2l6ZT0iNyI+ITwvZm9udD4gUmVydW4gc29tZSBvZiB0aGUgYW5hbHlzZXMgaW4KV2VucmljICYgU2hlbWlyYW5pICgyMDE4KSBbQFdlbnJpYzoyMDE4YWFdLgogICAtIGZpcnN0IGV4YW1pbmUgdGhlIGRhdGEgdG8gbWFrZSBzdXJlIGl0IGlzIGFjY2Vzc2libGUuCgoKCgoKCgoKCgoKPGJyLz4KCgoKCiMgUmVmZXJlbmNlcyB7LX0KCjxkaXYgaWQ9InJlZnMiPjwvZGl2PgoKPGJyLz4KCjwhLS0KIyBBcHBlbmRpeCAgey19Cgo8YnIvPgotLT4KCmBgYHtyLCBlY2hvPUZBTFNFfQogIGtuaXRyOjprbml0X2V4aXQoKQpgYGAKCiMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIwojIyBBUkNISVZFCiMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIwo8IS0tCiMjIE9uIGluZmVyZW50aWFsIGZyYW1ld29ya3MgICB7LX0KCiogQW4gaW1wb3J0YW50IGZlYXR1cmUgb2YgdGhlIFNQTEFTSCtPQVNJUyBkYXRhIGFuYWx5c2VzIHBpcGVsaW5lIGlzIHRoZTpxCmZpbml0ZSBzYW1wbGUgdmFsaWQgc3RhdGlzdGljYWwgaW5mZXJlbmNlIHRoYXQgaXQgbWFrZXMgcG9zc2libGUgd2hlcmVhcyBvdGhlcgptZXRob2RzIHJlbHkgb24gYXN5bXB0b3RpY2FsbHkgdmFsaWQgZXN0aW1hdGVzLiBUaGUgdmFsdWUgdGhhdCB0aGlzIGZlYXR1cmUgY29uZmVycyB0byAKdGhlIG1ldGhvZCBzaG91bGQgYmUgdmVyaWZpZWQgZW1waXJpY2FsbHkgd2l0aCBhIHByb3BlciBvbWljIGxldmVsIGFzc2Vzc21lbnQuICBOb3RlIHRoYXQgUk5BLVNlcQptZXRob2RzIHJlbHkgaGVhdmlseSBpbiB0aGVzZSBhc3ltcHRvdGljYWxseSB2YWxpZCBlc3RpbWF0ZXMgd2hpY2ggaGF2ZSBub3QgYmVlbiBmb3VuZAp0byBiZSBwcm9ibGVtYXRpYyBmb3Igc21hbGwgc2FtcGxlIHNpemVzICBhcyB0aGUgc2l0ZS1zcGVjaWZpYyBlc3RpbWF0ZXMgYXJlIHR5cGljYWxseQpzdGFiaWxpemVkIGJ5IHNocmlua2FnZS4KCgoqIEZyb20gYSBwZXJzb25hbCBwZXJzcGVjdGl2ZSBJIGZlZWwgdGhhdCB0aGUgd3JpdGUtdXAgb2YgdGhlIHBhcGVycyBwdXRzIGEgbG90IG9mIHN0b2NrCmluIHAtIGFuZCBxLXZhbHVlcy4gIFRoZSBzdGF0aXN0aWNhbCBzdGFuZGFyZCBlcnJvcnMgb2YgbWVhc3VyZW1lbnQsIG9yIHRoZSBzYW1wbGluZyBlcnJvcnMsCmFyZSBvbmx5IG9uZSBzb3VyY2Ugb2YgdmFyaWFiaWxpdHkgaW4gZGF0YSBjb2xsZWN0ZWQgaW4gYSBoaWdoIHRocm91Z2hwdXQsIG1hc3NpdmVseQpwYXJhbGxlbCBmYXNoaW9uLiBPdGhlciBzb3VyY2VzIG9mIHZhcmlhYmlsaXR5IHN1Y2ggYXMgcmVhZ2VudCBsb3RzLCBpbnN0cnVtZW50cywKb3BlcmF0b3JzLCBkYXlzIChpZS4gZGF5IHRvIGRheSB2YXJpYWJpbGl0eSBpcyB2YXJpYWJpbGl0eSB0aGF0IGlzIG5vdCBvdGhlcndpc2Ugc3BlY2lmaWVkKQp3aWxsIG9mdGVuIGRvbWluYXRlIHRoZSB0b3RhbCB2YXJpYWJpbGl0eS4gIAoKKiBJbiBwcmFjdGljZSB3ZSBzZWxlY3QgdGhlIGFuYWx5c2lzIG1ldGhvZCB3aGljaApwcm9kdWNlcyB0aGUgYmVzdCByZXN1bHRzIGFzIGFzY2VydGFpbmVkIGJ5IG9taWMgc2NhbGUgYXNzZXNzbWVudHMgb2YgYWNjdXJhY3kuCi0tPgoKPGJyLz4KCgo8IS0tCiogSGF2aW5nIGdvb2QgY29tcGFyYXRvciBhbmFseXNpcyBtZXRob2RzIGlzIGhlbHBmdWwsIGlmIG5vdCBjcnVjaWFsLiAgSSdtIG5vdCBzdXJlIHRoYXQKdGhlIGNoaS1zcXVhcmUgdGVzdCBwcm92aWRlcyBhIGdvb2QgY29tcGFyYXRvci4gIEkgZG9uJ3QgcmVjYWxsIGV2ZXIgY29taW5nIAphY3Jvc3MgdGhlIGNoaS1zcXVhcmUgdGVzdCBpbiB0aGUgY291cnNlIG9mIFJOQS1TZXEgcmVsYXRlZCBhbmFseXNlcywgYnV0Cm15IGV4cGVyaWVuY2UgaXMgbGltaXRlZCB0byBjb21wYXJpbmcgZ2VuZSBleHByZXNzaW9uIGxldmVscyBhY3Jvc3Mgc2FtcGxlcy4KVGhlcmUgYXJlIGEgbnVtYmVyIG9mIFIgcGFja2FnZXMgd2hpY2ggdHJlYXQgY29tcG9zaXRpb25hbCBkYXRhIGFuYWx5c2lzCndoaWNoIGlzIGFuYWxvZ291cyB0byB0aGUgcHJvYmxlbSBhZGRyZXNzZWQgaW4gU1BMQVNILiAgTWFueSBvcHRpb25zIAphcmUgbGlzdGVkIGluIFNlY3Rpb24gXEByZWYocm5hLXNlcS13aS1zYW1wKTsgaXQgc2hvdWxkIGJlIHBvc3NpYmxlIHRvIGN1c3RvbWl6ZSBvbmUgb3IgbW9yZQp0byBwcm92aWRlIGEgY29tcGFyYXRvciBmb3IgU1BMQVNIK09BU0lTLgotLT4KCgoKPCEtLSBUbyBydW4KIyMgbm9odXAgUnNjcmlwdCAtZSAia25pdHI6OmtuaXQyaHRtbCgnU1BMQVNIX09BU0lTX3N1bW1hcnkuUm1kJykiID4gU1BMQVNIX09BU0lTX3N1bW1hcnkubG9nICAmCiAgCiMjIE9yCiMjIG5vaHVwIFJzY3JpcHQgLWUgInJtYXJrZG93bjo6cmVuZGVyKCdTUExBU0hfT0FTSVNfc3VtbWFyeS5SbWQnKSIgPiBTUExBU0hfT0FTSVNfc3VtbWFyeS5sb2cgICYKICAgIAotLT4KCg==</div>
+
+
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open');
+  });
+});
+</script>
+
+<!-- code folding -->
+<script>
+$(document).ready(function () {
+  window.initializeSourceEmbed("SPLASH_OASIS_summary.Rmd");
+  window.initializeCodeFolding("hide" === "show");
+});
+</script>
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

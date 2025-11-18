@@ -1,7 +1,0 @@
-name: "reAnalysis"
-output_dir: "_site"
-navbar:
-  title: Training and Data Re-Analysis
-  left:
-    - text: "Home"
-      href: index.html

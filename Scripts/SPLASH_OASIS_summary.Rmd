@@ -223,7 +223,7 @@ uninteresting targets, but this should be determined empirically by comparing wi
 other candidate discriminants (in addition to Pearson's $X^2$).
    - If p-values are to be taken at face value, their calibraion should be 
 varidfied.
-   - The p-value distribution can also be examined to check for
+   - The p-value distribution an should also be examined to check for
 indications of unwanted valiability.  See Molanina et.al. (2019) [@Molania:2019aa].
 
 

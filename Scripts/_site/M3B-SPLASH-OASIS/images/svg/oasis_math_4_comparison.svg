@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="800" height="350" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background - Increased height -->
+  <rect width="800" height="350" fill="#f5f8fa" rx="8" ry="8"/>
+  
+  <!-- Title -->
+  <text x="400" y="40" text-anchor="middle" font-family="Arial" font-size="22" font-weight="bold" fill="#2c3e50">Mathematical Formulation of OASIS: Comparison</text>
+  <text x="400" y="65" text-anchor="middle" font-family="Arial" font-size="16" fill="#7f8c8d">Advantages over Traditional Chi-squared Tests</text>
+  
+  <!-- Comparison to Chi-squared - Made taller -->
+  <g transform="translate(50, 100)">
+    <rect x="0" y="-10" width="700" height="240" rx="8" ry="8" fill="#e8f4f8" stroke="#e0e0e0" stroke-width="1"/>
+    
+    <text x="20" y="20" font-family="Arial" font-size="20" font-weight="bold" fill="#2c3e50">Comparison to Pearson's Chi-squared Test</text>
+    
+    <g transform="translate(20, 10)">
+      <text x="20" y="60" font-family="Arial" font-size="16" fill="#2c3e50">• Chi-squared: χ² = Σ</text>
+      <text x="175" y="56" font-family="Arial" font-size="12" fill="#2c3e50">i,j</text>
+      <text x="185" y="60" font-family="Arial" font-size="16" fill="#2c3e50">[(n</text>
+      <text x="215" y="56" font-family="Arial" font-size="12" fill="#2c3e50">i,j</text>
+      <text x="225" y="60" font-family="Arial" font-size="16" fill="#2c3e50"> - E</text>
+      <text x="245" y="56" font-family="Arial" font-size="12" fill="#2c3e50">i,j</text>
+      <text x="255" y="60" font-family="Arial" font-size="16" fill="#2c3e50">)²/E</text>
+      <text x="285" y="56" font-family="Arial" font-size="12" fill="#2c3e50">i,j</text>
+      <text x="295" y="60" font-family="Arial" font-size="16" fill="#2c3e50">]  requires expected counts > 5</text>
+      
+      <text x="20" y="100" font-family="Arial" font-size="16" fill="#2c3e50">• OASIS: Provides valid inference even for sparse tables and small counts</text>
+      
+      <text x="20" y="140" font-family="Arial" font-size="16" fill="#2c3e50">• Chi-squared: Detects global differences but doesn't provide structured insights</text>
+      
+      <text x="20" y="180" font-family="Arial" font-size="16" fill="#2c3e50">• OASIS: Decomposes variation into interpretable f and c vectors that identify</text>
+      <text x="40" y="210" font-family="Arial" font-size="16" fill="#2c3e50">specific patterns of differentiation across targets and samples</text>
+    </g>
+  </g>
+</svg>

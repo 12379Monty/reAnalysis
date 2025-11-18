@@ -137,12 +137,6 @@ PREFIX <- "index" #- replace by FLOWCELL???
 <br/>
 
 
-<!--
-* Breiman: [@Breiman:1984aa; @Breiman:2001aa]
-* Freedman: [@Freedman:2008aa; @Freedman:2008ad; @Freedman:2008ac; @Freedman:2009ac]
--->
-
-
 # Reference-Free Genomic Inference with SPLASH and OASIS
 
 ## Executive Summary
@@ -173,10 +167,20 @@ for scientific discovery
 
 
 <p><p/> 
-* The OASIS paper, as an example of mathematical statistics, is a beautiful piece of work.
-The articles provide a proof of concept of the proposed methods in an idealized setting.
-The exposition is mathematical with the p-value playing a pivotal role throughout.
-The nice mathematical dressing comes at a cost of having to rely on unrealistic assumptions,
+* OASIS treats the problem of identifying the sequences with interesting variability
+in a dataset as a hypothesis testing problem.  The hypothesis testing framework can
+be confining -  in a key optimization step in the analysis, only half of the data
+are used in the optimization in order to obtain valid p-values.  
+  - Valid here means theoretically valid.  There is no empirical evidence presented 
+to show that the p-values were well calibrated.
+
+<!--
+* The problem could be treated in a machine learning framework whereby the goal of the
+analysis is to find the most interesting sequences. 
+-->
+
+<!--
+ on unrealistic assumptions,
 starting with the assumption that replicate target count vectors have a multinomial
 distribution with a fixed underlying probability distribution.^[
 Perhaps in Dr. Salzman's lab samples can go through the entire preparation and sequencing
@@ -188,47 +192,46 @@ unique or shared across many sequences.  The technical artifacts are typically n
 hard to detect and in some cases can only be missed by not looking at the data
 coming off the sequencers before pushing them down the processing pipeline.
 ]
+-->
 
 
-
-* As a reference which data analysts might go to for guidance, the articles lack the key pieces needed
-for the reader to get a true sense of performance and for the scope of the analysis necessary
-to obtain valid results.
+* Validation of the method comes in the form of anecdotal findings.
+These findings provide no information on technical performance.
    - Technical validation on the omic scale is required to get a sense of the utility of the
 proposed methods.  
    - **Technical validation** should be run on typical data and should include both
 measures of algorithm performance and resistance to **input data quality** and
-**unwanted variation**, which are always part of the story when omic scale assays
-are involved.
-See 
-[Removing Unwanted Variation from Large-Scale RNA Sequencing Data with PRPS](./_M4A-RUV/natureBiotechPaper/_Molania_2023_RUV-III_PRPS_Summary.html).
+**unwanted variation**, which are always part of the story when omic
+scale assays are involved.  See 
+[Removing Unwanted Variation from Large-Scale RNA Sequencing Data with PRPS](./M4A-RUV/natureBiotechPaper/_Molania_2023_RUV-III_PRPS_Summary.html).
 
-   -  **The input data are never examined**.  **Definition 1 (Null Model)** is actually the
+   -  **The input data are not examined**.  **Definition 1 (Null Model)** is actually the
 fundamental assumption that is necessary for everything else to follow, yet that assumption
-is never scrutinized.^[
+is not scrutinized.^[
 This is not uncommon and is rooted in the divide between applied statistics and mathematical
 statistics.  The mathematics require assumptions so it's perfectively reasonable for the
 mathematical statistician to start there.  None of the mathematical results can be relied on
-unless the assumptions are true.  The crux of the work for the applied statistician should be  to
-establish the null model.  In practice, the necessary null model is almost always assumed 
+unless the assumptions are true.  The crux of the work for the 
+applied statistician should be  to establish the null model.
+In practice, the necessary null model is almost always assumed 
 without substantial supporting evidence.]
-In practice, the analysis of omic scale data cannot proceed before careful examination
+In practice, the analysis of omic scale data should not proceed before careful examination
 of the collected data.  The presence of unwanted variability will invalidate the assumed
 null model and all results based on the analysis of the flawed data.
-See [Introduction to the Treatment of Unwanted Variability](_M4A-RUV/intro_treat_UV.html).
 
-<!--
 * The claim of the validity of the p-values, one of the selling points of the method,
-is suspect.  When we fit one prototype 
-model to 20K, 50K or 100K feature data subsets we do not believe that the  model
-fits adequately in every case: we may robustify the fit to allow for the 
-presence of bad points, or outliers, and we do not put too much credibility on the
-precise values of p-values; we believe that they generally order hypotheses the
-right way.
-   - In this particular case there are bigger problems with the p-values -
-their properties are derived based in the assumption that $f$ and $c$ 
-are fixed values, when in fact they are derived from the data.
--->
+is not verified.  When we fit one prototype model to 20K, 50K or 100K feature data
+subsets we do not believe that the  model fits adequately in every case:
+we may robustify the fit to allow for the presence of bad points, or outliers,
+and we do not put too much credibility on the precise values of p-values;
+we believe that they generally order hypotheses the right way.
+   - The p-value may be a good value to discriminate between interesting and
+uninteresting targets, but this should be determined empirically by comparing with
+other candidate discriminants (in addition to Pearson's $X^2$).
+   - If p-values are to be taken at face value, their calibration should be
+verified.
+   - The p-value distribution should also be examined to check for
+indications of unwanted valiability.  See Molanina et.al. (2019) [@Molania:2019aa].
 
 <br/>
 
@@ -265,22 +268,23 @@ which will be processed in production.
 ## Reports/Reviews
 
 <p><p/>
-* [Slide Presentation](_M3B-SPLASH-OASIS/splash_oasis_methodology_presentation_v2.html) 
+* [Slide Presentation](M3B-SPLASH-OASIS/splash_oasis_methodology_presentation_v2.html) 
    - The slide presentation provides a high level summary of the SPLASH article
-in the words of the authors. 
+in the words of the authors.  ie. claims are made based on anecdotal
+findings which are not reported in the full discovery context.
    - Some comments are inserted where there might be gaps or a difference of opinion.
 
 
 <p><p/>
-* [SPLASH](_M2B-RFGI_SPLASH_v2.html) Notes 
+* [SPLASH](M2B-RFGI_SPLASH_v2.html) Notes 
    - Contains two introductory sections to position SPLASH+OASIS in the
-context of contemporary analysus methods:
+context of contemporary analysis methods:
       - literature review  of Reference-Free Genomic Inference prior to SPLASH, as well as  
       - a survey of methods developed for RNA-seq which could be used here.
 
 
 <p><p/>
-* [OASIS](./_M3A-OASIS.html)  Notes 
+* [OASIS](M3A-OASIS/PNAS_paper/M3A-OASIS.html)  Notes 
    - Contains some notes on OASIS.
 
 <br/>
@@ -447,12 +451,12 @@ RUV-III.
 
 <p><p/>
 * [Removing Unwanted Variation from Large-Scale RNA Sequencing Data with PRPS](./_M4A-RUV/natureBiotechPaper/_Molania_2023_RUV-III_PRPS_Summary.html)
-   - A detailed summary of the Nature Biotechnology paper.  Examinihng the figures of 
+    A detailed summary of the Nature Biotechnology paper.  Examinihng the figures of 
 Section 2, Detailed Results by Dataset, is sufficient to get the gist of the issues around
 unwanted variability.
 
 <p><p/>
-* [AI-Enhanced RUV Normalization: Research Proposal](./_M4A-RUV/natureBiotechPaper/_Research_Proposal_AI_Enhanced_RUV.html)
+* [AI-Enhanced RUV Normalization: Research Proposal](./M4A-RUV/natureBiotechPaper/_Research_Proposal_AI_Enhanced_RUV.html)
    - claude Sonnet 4.5's vision of a path towards a next-gen RUV product, one that is AI and ML
 enabled and fully automated.
 
@@ -465,15 +469,15 @@ it would be good to take stock of the impact AI and ML has had on RNA-Seq analys
 date.  
 
 <p><p/>
-* [Part A - Introduction and Methodological Considerations](./_M4A-RUV/natureBiotechPaper/_AI_ML_Applications_Part_A.html)
+* [Part A - Introduction and Methodological Considerations](./M4A-RUV/natureBiotechPaper/_AI_ML_Applications_Part_A.html)
    - discussion of issues around performance assessnent  when truth is rare and standards missing.
 <p><p/>
-* [Part B - Specific Applications and Evidence](./_M4A-RUV/natureBiotechPaper/_AI_ML_Applications_Part_B.html)
+* [Part B - Specific Applications and Evidence](./M4A-RUV/natureBiotechPaper/_AI_ML_Applications_Part_B.html)
    - case studies of the application of AI and ML in RNA-Seq analyses.
       - weak case for Random Forests for Gene Ranking vs 
 Traditional Approach: Differential Expression Analysis 
       - see
-[Impact and Reception Analysis: Wenric & Shemirani (2018)](./_M4A-RUV/natureBiotechPaper/_Wenric_Shemirani_2018_Impact_Analysis.html).
+[Impact and Reception Analysis: Wenric & Shemirani (2018)](./M4A-RUV/natureBiotechPaper/_Wenric_Shemirani_2018_Impact_Analysis.html).
    - it's not clear how the ML methods were selected 
 <p><p/>
 * <font size="7">!</font> Rerun some of the analyses in

@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="800" height="450" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background - Increased height further -->
+  <rect width="800" height="450" fill="#f5f8fa" rx="8" ry="8"/>
+  
+  <!-- Title -->
+  <text x="400" y="40" text-anchor="middle" font-family="Arial" font-size="22" font-weight="bold" fill="#2c3e50">Mathematical Formulation of OASIS: Optimization</text>
+  <text x="400" y="65" text-anchor="middle" font-family="Arial" font-size="16" fill="#7f8c8d">Section 4 from OASIS Paper (Baharav et al., 2024)</text>
+  
+  <!-- Optimization Section - Made taller -->
+  <g transform="translate(50, 100)">
+    <rect x="0" y="-10" width="700" height="350" rx="8" ry="8" fill="white" stroke="#e0e0e0" stroke-width="1"/>
+    
+    <text x="20" y="20" font-family="Arial" font-size="20" font-weight="bold" fill="#2c3e50">Optimization-Based Approach</text>
+    
+    <text x="20" y="60" font-family="Arial" font-size="16" fill="#2c3e50">Finding optimal f and c that maximize T(N):</text>
+    
+    <g transform="translate(20, 10)">
+      <text x="20" y="90" font-family="Arial" font-size="16" fill="#2c3e50">• Uses singular value decomposition (SVD) of (P - P</text>
+      <text x="378" y="86" font-family="Arial" font-size="12" fill="#2c3e50">0</text>
+      <text x="385" y="90" font-family="Arial" font-size="16" fill="#2c3e50">)</text>
+      
+      <text x="20" y="125" font-family="Arial" font-size="16" fill="#2c3e50">• f is the left singular vector of largest singular value</text>
+      
+      <text x="20" y="160" font-family="Arial" font-size="16" fill="#2c3e50">• c is the right singular vector of largest singular value</text>
+    </g>
+    
+    <text x="20" y="210" font-family="Arial" font-size="18" font-weight="bold" fill="#2c3e50">Key Advantages:</text>
+    
+    <g transform="translate(20, 10)">
+      <text x="20" y="230" font-family="Arial" font-size="16" fill="#2c3e50">• Closed-form solution (no iterative methods needed)</text>
+      <text x="20" y="260" font-family="Arial" font-size="16" fill="#2c3e50">• Computational efficiency for large tables</text>
+      <text x="20" y="290" font-family="Arial" font-size="16" fill="#2c3e50">• f and c provide interpretable decomposition of variation</text>
+      <text x="20" y="320" font-family="Arial" font-size="16" fill="#2c3e50">• Provable statistical guarantees</text>
+    </g>
+  </g>
+</svg>

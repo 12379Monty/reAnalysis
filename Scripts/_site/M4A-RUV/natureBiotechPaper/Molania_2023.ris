@@ -1,0 +1,25 @@
+TY  - JOUR
+AU  - Molania, Ramyar
+AU  - Foroutan, Momeneh
+AU  - Gagnon-Bartsch, Johann A.
+AU  - Gandolfo, Luke C.
+AU  - Jain, Aryan
+AU  - Sinha, Abhishek
+AU  - Olshansky, Gavriel
+AU  - Dobrovic, Alexander
+AU  - Papenfuss, Anthony T.
+AU  - Speed, Terence P.
+PY  - 2023
+DA  - 2023/01/01
+TI  - Removing unwanted variation from large-scale RNA sequencing data with PRPS
+JO  - Nature Biotechnology
+SP  - 82
+EP  - 95
+VL  - 41
+IS  - 1
+AB  - Accurate identification and effective removal of unwanted variation is essential to derive meaningful biological results from RNA sequencing (RNA-seq) data, especially when the data come from large and complex studies. Using RNA-seq data from The Cancer Genome Atlas (TCGA), we examined several sources of unwanted variation and demonstrate here how these can significantly compromise various downstream analyses, including cancer subtype identification, association between gene expression and survival outcomes and gene co-expression analysis. We propose a strategy, called pseudo-replicates of pseudo-samples (PRPS), for deploying our recently developed normalization method, called removing unwanted variation III (RUV-III), to remove the variation caused by library size, tumor purity and batch effects in TCGA RNA-seq data. We illustrate the value of our approach by comparing it to the standard TCGA normalizations on several TCGA RNA-seq datasets. RUV-III with PRPS can be used to integrate and normalize other large transcriptomic datasets coming from multiple laboratories or platforms.
+SN  - 1546-1696
+UR  - https://doi.org/10.1038/s41587-022-01440-w
+DO  - 10.1038/s41587-022-01440-w
+ID  - Molania2023
+ER  - 
