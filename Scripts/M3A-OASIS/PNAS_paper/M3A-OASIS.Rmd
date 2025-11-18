@@ -250,7 +250,7 @@ characteristics captured by the anchor & targets patterns.
 * OASIS chooses to formulate the problem as one of the identification of anchors
 for which the **conditional distributions of target counts given the total number of targets**
 found for each sample anchor are not independent.
-   - total number of targets is treated as **random**.
+   <!-- - total number of targets is treated as **random**. -->
 
 <p><p/>
 * In this formulation of the problem, a sufficient set of statistics are the target counts
@@ -344,10 +344,11 @@ E = \frac{1}{M}X \mathbf{1}\mathbf{1}^\top X,
 S = S(f,c) = f^\top \tilde{X} c.
 \]
 
+<!--
 <p><p/>
 * The normalization in \( \tilde{X} \) ensures constant variance across columns under
 the null hypothesis, enabling finite-sample valid P-value bounds for fixed embeddings \( f, c \).
-
+-->
 
 <p><p/>
 * In previous work, random vectors were used (referred to as OASIS-rand).

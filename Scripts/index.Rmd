@@ -219,6 +219,7 @@ In practice, the analysis of omic scale data should not proceed before careful e
 of the collected data.  The presence of unwanted variability will invalidate the assumed
 null model and all results based on the analysis of the flawed data.
 
+<!--
 * The claim of the validity of the p-values, one of the selling points of the method,
 is not verified.  When we fit one prototype model to 20K, 50K or 100K feature data
 subsets we do not believe that the  model fits adequately in every case:
@@ -232,6 +233,7 @@ other candidate discriminants (in addition to Pearson's $X^2$).
 verified.
    - The p-value distribution should also be examined to check for
 indications of unwanted valiability.  See Molanina et.al. (2019) [@Molania:2019aa].
+-->
 
 <br/>
 
