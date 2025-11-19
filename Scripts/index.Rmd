@@ -239,7 +239,7 @@ indications of unwanted valiability.  See Molanina et.al. (2019) [@Molania:2019a
 <br/>
 
 
-## On Omic Scale Analysis 
+## Omic Scale Evaluation and Validation 
 
 <p><p/>
 * Omic scale data refers to measurements taken in parallel over many features -
