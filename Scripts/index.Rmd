@@ -289,6 +289,9 @@ context of contemporary analysis methods:
 <p><p/>
 * [OASIS](M3A-OASIS/PNAS_paper/M3A-OASIS.html)  Notes 
    - The computation of the test statistic is illustrated.
+   - The OASIS test statistic optimization objective is compared
+with the SVD objective.
+      - the non-unique solution make the valid p-value claims questionable.
 
 <br/>
 
