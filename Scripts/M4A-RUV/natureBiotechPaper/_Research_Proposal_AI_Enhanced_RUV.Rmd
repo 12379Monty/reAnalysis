@@ -131,9 +131,8 @@ if(sum(grepl(FN, list.files()))==0) stop("Check FN")
 <br/>
 
 **Context:** Detailed examination of ML/AI methods successfully applied to RNA-seq analysis tasks. Each application documents the traditional approach, ML innovation, success assessment, and supporting references.
-## Project Title
 
-**"AIR-Seq: Artificial Intelligence-Enhanced Removing Unwanted Variation for RNA Sequencing Data"**
+**Project Title**: **"AIR-Seq: Artificial Intelligence-Enhanced Removing Unwanted Variation for RNA Sequencing Data"**
 
 **Alternative titles:**  
 

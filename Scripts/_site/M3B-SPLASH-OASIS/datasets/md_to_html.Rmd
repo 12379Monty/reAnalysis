@@ -28,7 +28,7 @@ folder_in <- "mdFiles"
 folder_out <- "."
 
 
-for(FF in list.files(folder_in)) {
+for(FF in list.files(folder_in)) if(FF == "SPLASH_followup_review.md") {
   cat("\n\nProcessing",  F,  "\n")
   rmarkdown::render(file.path(folder_in, FF, fsep = '/'),
   output_format = rmarkdown::html_document(toc=T, toc_depth=2),

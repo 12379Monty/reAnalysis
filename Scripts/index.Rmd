@@ -171,8 +171,9 @@ for scientific discovery
 in a dataset as a hypothesis testing problem.  The hypothesis testing framework can
 be confining -  in a key optimization step in the analysis, only half of the data
 are used in the optimization in order to obtain valid p-values.  
-  - Valid here means theoretically valid.  There is no empirical evidence presented 
-to show that the p-values were well calibrated.
+  - Valid here means theoretically valid.  
+  - **There is no empirical evidence presented to show that the 
+p-values were well calibrated**.
 
 <!--
 * The problem could be treated in a machine learning framework whereby the goal of the
@@ -273,7 +274,7 @@ which will be processed in production.
 * [Slide Presentation](M3B-SPLASH-OASIS/splash_oasis_methodology_presentation_v2.html) 
    - The slide presentation provides a high level summary of the SPLASH article
 in the words of the authors.  ie. claims are made based on anecdotal
-findings which are not reported in the full discovery context.
+findings which are not reported in a full discovery context.
    - Some comments are inserted where there might be gaps or a difference of opinion.
 
 
@@ -287,12 +288,12 @@ context of contemporary analysis methods:
 
 <p><p/>
 * [OASIS](M3A-OASIS/PNAS_paper/M3A-OASIS.html)  Notes 
-   - Contains some notes on OASIS.
+   - The computation of the test statistic is illustrated.
 
 <br/>
 
 
-## SPLASH & OASIS Extensions and Applications {.tabset}
+## SPLASH & OASIS Extensions and Applications 
 
 Three follow-up publications provide more information on the application of
 SPLASH and OASIS.
@@ -309,22 +310,10 @@ SPLASH and OASIS.
 
 ```
 
-### Home {-}
+* [SPLASH & OASIS Follow-ups](M3B-SPLASH-OASIS/Datasets/SPLASH_followup_review.html)
+
 
 <br/>
-
-### Henderson:2024 {-}
-
-<br/>
-
-### Dehghannasiri:2024 {-}
-
-<br/>
-
-### Kokot:2024 {-}
-
-<br/>
-
 
 ## Follow-up
 
@@ -334,15 +323,18 @@ SPLASH and OASIS.
 > intensive or impossible to address with current 
 > statistical approaches.
 
+<p><p/>
 * To get a better understanding of what OASIS brings, or doesn't bring, to the table,
 we need to repeat the analyses, with the following guidelines:
-   - pay attention to variability in the input data quality 
-   - use state of the art comparators;  not exclusively Pearson’s X2
-as comparator.
-   - if the dataset structure permits it, apply RUV methodology to
-identify unwanted variability in the target count distributions used for reference free
-biological inference. 
+   - pay attention to variability in the input data quality
+       - carry out thorough QC
 
+<p><p/>
+   - if the dataset structure permits it, apply RUV methodology to
+identify unwanted variability in the target count distributions 
+
+<p><p/>
+   - use state of the art comparators;  not exclusively Pearson’s X2
 
 <br/>
 
@@ -452,8 +444,8 @@ RUV-III.
 ## RUV in action 
 
 <p><p/>
-* [Removing Unwanted Variation from Large-Scale RNA Sequencing Data with PRPS](./_M4A-RUV/natureBiotechPaper/_Molania_2023_RUV-III_PRPS_Summary.html)
-    A detailed summary of the Nature Biotechnology paper.  Examinihng the figures of 
+* [Removing Unwanted Variation from Large-Scale RNA Sequencing Data with PRPS](./M4A-RUV/natureBiotechPaper/_Molania_2023_RUV-III_PRPS_Summary.html)
+    A detailed summary of the Nature Biotechnology paper.  Examining the figures of 
 Section 2, Detailed Results by Dataset, is sufficient to get the gist of the issues around
 unwanted variability.
 
@@ -481,24 +473,18 @@ Traditional Approach: Differential Expression Analysis
       - see
 [Impact and Reception Analysis: Wenric & Shemirani (2018)](./M4A-RUV/natureBiotechPaper/_Wenric_Shemirani_2018_Impact_Analysis.html).
    - it's not clear how the ML methods were selected 
+
+<!--
+
 <p><p/>
 * <font size="7">!</font> Rerun some of the analyses in
 Wenric & Shemirani (2018) [@Wenric:2018aa].
    - first examine the data to make sure it is accessible.
 
-
-
-
-
-
-
-
-
+-->
 
 
 <br/>
-
-
 
 
 # References {-}

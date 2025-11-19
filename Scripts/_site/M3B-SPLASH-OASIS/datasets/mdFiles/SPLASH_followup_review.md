@@ -1,15 +1,14 @@
-# Reference-Free Genomic Discovery: from SPLASH to SPLASH2 and Beyond
+# Reference-Free Genomic Discovery: SPLASH & OASIS Follow-ups.
 
 ## Executive Summary
 
 Following the publications of SPLASH (Statistically Primary aLignment Agnostic 
 Sequence Homing) and the OASIS statistical framework, three major follow-up studies 
-were carroied out.  These works focused on microbial discovery, single-cell analysis, 
+were carried out.  These works focused on microbial discovery, single-cell analysis, 
 and scalable implementation.
 
-## The Fundamental Paradigm Change
 
-### Alignment-Dependent Vs Reference-Free Analysis
+## Alignment-Dependent Vs Reference-Free Analysis
 
 **Traditional Paradigm:**
 
@@ -29,7 +28,7 @@ and scalable implementation.
 - Ultra-efficient computational performance
 - Discovers unannotated and novel biology
 
-### Unifying Conceptual Framework
+## Unifying Conceptual Framework
 
 The key insight underlying SPLASH is that many forms of biological 
 regulation—alternative splicing, V(D)J recombination, RNA editing,
@@ -39,9 +38,9 @@ constant anchor sequences**. Rather than developing separate tools for
 each mechanism, SPLASH provides a unified statistical approach using k-mer
 composition analysis.
 
-## Study 1: Ultra-Efficient Microbial Discovery (Henderson et al., 2024)
+# Study 1: Ultra-Efficient Microbial Discovery (Henderson et al., 2024)
 
-### Paradigm Impact: Unifying Microbial Genomics
+## Paradigm Impact: Unifying Microbial Genomics
 
 This study extends SPLASH to microbial genomics, demonstrating that a single algorithm can:
 - Discover novel mobile genetic elements
@@ -57,7 +56,7 @@ This study extends SPLASH to microbial genomics, demonstrating that a single alg
 - Rapid Mycobacterium tuberculosis strain differentiation (83% accuracy) without prior knowledge of strain references
 - Discovery of genetic features absent from existing reference assemblies
 
-### Datasets Analyzed
+## Datasets Analyzed
 
 **1. Mycobacterium tuberculosis Clinical Isolates**
 
@@ -79,9 +78,9 @@ This study extends SPLASH to microbial genomics, demonstrating that a single alg
 
 All achieved through a single computational pipeline without custom workflows.
 
-## Study 2: SPLASH2 - Scalable Implementation (Kokot et al., 2024)
+# Study 2: SPLASH2 - Scalable Implementation (Kokot et al., 2024)
 
-### Paradigm Impact: Making Reference-Free Analysis Practical at Scale
+## Paradigm Impact: Making Reference-Free Analysis Practical at Scale
 
 SPLASH2 represents the computational reimplementation that makes the SPLASH paradigm feasible for the largest genomic datasets available today.
 
@@ -94,7 +93,7 @@ SPLASH2 represents the computational reimplementation that makes the SPLASH para
 
 **Key Innovation:** Leveraging KMC (k-mer counter) for ultra-efficient anchor-target tuple counting, replacing the original implementation's bottleneck step with a highly optimized k-mer counting engine.
 
-### Datasets Analyzed
+## Datasets Analyzed
 
 **1. Cancer Cell Line Encyclopedia (CCLE) - 671 Cell Lines**
 
@@ -144,9 +143,9 @@ SPLASH2 represents the computational reimplementation that makes the SPLASH para
 
 **Key Finding:** 521 differentially represented circRNAs detected with statistical significance, showing larger circular-to-linear ratios in RNase R treatment compared to non-significant anchors.
 
-## Study 3: sc-SPLASH - Single-Cell Discovery (Dehghannasiri et al., 2024)
+# Study 3: sc-SPLASH - Single-Cell Discovery (Dehghannasiri et al., 2024)
 
-### Paradigm Impact: Extending Reference-Free Discovery to Barcoded Single-Cell Data
+## Paradigm Impact: Extending Reference-Free Discovery to Barcoded Single-Cell Data
 
 sc-SPLASH adapts the SPLASH framework to handle the unique challenges of high-throughput barcoded single-cell RNA-seq (10x Chromium) and spatial transcriptomics (10x Visium).
 
@@ -157,7 +156,7 @@ sc-SPLASH adapts the SPLASH framework to handle the unique challenges of high-th
 
 **Novel Biological Insight:** sc-SPLASH enables discovery of transcriptomic complexity beyond gene expression at single-cell resolution, revealing regulatory mechanisms invisible to standard alignment-based approaches.
 
-### Datasets Analyzed
+## Datasets Analyzed
 
 **1. Tabula Sapiens (Human) - Multiple Tissues**
 
@@ -240,9 +239,9 @@ sc-SPLASH adapts the SPLASH framework to handle the unique challenges of high-th
 
 **Evolutionary Context:** These discoveries in early-diverging metazoans (sponges) and our closest invertebrate relatives (tunicates) reveal conserved principles of immune gene structure (secreted repeat proteins) while highlighting the limitations of reference genomes.
 
-## Comparative Analysis Across Studies
+# Comparative Analysis Across Studies
 
-### Computational Performance Evolution
+## Computational Performance Evolution
 
 | Metric | Original SPLASH | SPLASH2 | sc-SPLASH |
 |--------|----------------|---------|-----------|
@@ -251,7 +250,7 @@ sc-SPLASH adapts the SPLASH framework to handle the unique challenges of high-th
 | Memory optimization | Limited | KMC-based | Sparse matrices |
 | Scale capability | Small datasets | Terabytes | Millions of cells |
 
-### Biological Discoveries Unified
+## Biological Discoveries Unified
 
 All three studies demonstrate that diverse biological mechanisms can be discovered through a single statistical framework:
 
@@ -277,9 +276,9 @@ All three studies demonstrate that diverse biological mechanisms can be discover
 - Novel repeat proteins in non-model organisms
 - Somatic mutations (spatial)
 
-## Impact on Genomic Analysis Workflows
+# Impact on Genomic Analysis Workflows
 
-### Before SPLASH
+## Before SPLASH
 ```
 Raw Reads → Quality Control → Alignment to Reference → 
 Application-Specific Tools (separate for each phenomenon) → 
@@ -293,7 +292,7 @@ Challenges:
 - Misses unannotated features
 - Biased by reference quality
 
-### After SPLASH/SPLASH2/sc-SPLASH
+## After SPLASH/SPLASH2/sc-SPLASH
 ```
 Raw Reads → SPLASH Pipeline (single command) → 
 Statistical Significance Testing → 
@@ -309,103 +308,103 @@ Advantages:
 - Works for model and non-model organisms
 - Applicable to bulk and single-cell data
 
-## Novel Capabilities Enabled
+# Novel Capabilities Enabled
 
-### 1. Non-Model Organism Discovery
+## 1. Non-Model Organism Discovery
 The Spongilla and Ciona analyses demonstrate that meaningful biological discovery is possible even with:
 - Incomplete reference genomes
 - Limited prior annotation
 - Understudied phylogenetic groups
 
-### 2. Cancer Genomics Without Alignment Bias
+## 2. Cancer Genomics Without Alignment Bias
 CCLE analysis shows that:
 - Highly mutated tumor genomes don't impede discovery
 - Cryptic splicing from spliceosome mutations can be detected
 - Structural variants and complex rearrangements are accessible
 
-### 3. Single-Cell Resolution Discovery
+## 3. Single-Cell Resolution Discovery
 sc-SPLASH enables:
 - Cell-type-specific regulatory mechanism discovery
 - Spatial patterns of sequence variation
 - Detection of rare cells with unique biology (HIV+ heart cells)
 
-### 4. Rapid Clinical Application
+## 4. Rapid Clinical Application
 Microbial strain typing without reference databases enables:
 - Point-of-care diagnostics potential
 - Real-time outbreak tracking
 - Discovery of novel pathogen variants
 
-## Methodological Innovations
+# Methodological Innovations
 
-### Statistical Foundation: OASIS  (this is possibly crap)
+## Statistical Foundation: OASIS  (this is possibly crap)
 The OASIS framework provides interpretable, finite-sample-valid hypothesis testing that underlies all SPLASH applications. This gives:
 - Rigorous p-values for each anchor
 - Multiple testing correction
 - No need for arbitrary thresholds
 
-### Compactors: Statistical Assembly
+## Compactors: Statistical Assembly
 Henderson et al.'s compactors provide:
 - Longer sequence context from short reads
 - Probabilistic assembly without full genome reconstruction
 - Seed-based extension maintaining statistical rigor
 
-### BKC: Barcoded K-mer Counting
+## BKC: Barcoded K-mer Counting
 Dehghannasiri et al.'s BKC module handles:
 - UMI deduplication
 - Cell barcode extraction and correction
 - Dramatically faster preprocessing for single-cell data
 
-## Broader Implications
+# Broader Implications
 
-### 1. Democratization of Genomics
+## 1. Democratization of Genomics
 By removing the requirement for high-quality references, SPLASH makes genomic discovery accessible for:
 - Non-model organisms
 - Understudied populations
 - Resource-limited settings
 - Rapidly evolving pathogens
 
-### 2. Discovery Over Confirmation
+## 2. Discovery Over Confirmation
 SPLASH shifts the focus from confirming known biology (alignment to known references) to discovering novel biology through unsupervised, statistics-first analysis.
 
-### 3. Unified Bioinformatics
+## 3. Unified Bioinformatics
 Rather than maintaining dozens of specialized tools, researchers can use a single framework for diverse biological questions, reducing:
 - Technical barriers to entry
 - Computational infrastructure requirements
 - Analysis complexity and potential for errors
 
-### 4. Clinical Translation Potential
+## 4. Clinical Translation Potential
 The speed and accuracy demonstrated (especially in microbial applications) suggest near-term clinical utility for:
 - Infectious disease diagnostics
 - Cancer mutation profiling
 - Rare disease variant discovery
 - Transplant compatibility assessment (V(D)J)
 
-## Future Directions
+# Future Directions
 
 Based on these three studies, future development likely includes:
 
-### 1. Additional Sequencing Modalities
+## 1. Additional Sequencing Modalities
 - DNA sequencing for genomic variation
 - Hi-C for chromatin interaction
 - Spatial multi-omics
 - Long-read sequencing integration
 
-### 2. Enhanced Assembly Methods
+## 2. Enhanced Assembly Methods
 - Improved compactors for even longer sequences
 - Integration with long-read data for complete gene structures
 - Reference-guided options for hybrid approaches
 
-### 3. Clinical Validation
+## 3. Clinical Validation
 - Prospective clinical trials for microbial diagnostics
 - Cancer biomarker validation studies
 - Integration with electronic health records
 
-### 4. Machine Learning Integration
+## 4. Machine Learning Integration
 - Automated biological classification
 - Pattern recognition across anchors
 - Predictive modeling for phenotypes
 
-## Conclusion
+# Conclusion
 
 The trio of Henderson et al., Kokot et al., and Dehghannasiri et al. studies collectively
 establish that reference-free, statistics-first genomic analysis is feasible

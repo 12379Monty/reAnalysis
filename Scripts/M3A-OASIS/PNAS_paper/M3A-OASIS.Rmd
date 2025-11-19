@@ -369,7 +369,7 @@ $$\argmax_{c, f} \frac{f^{\top} \tilde{X} c}{\|f\|_2 \|c\|_2}$$
       - In practice: Use greedy algorithms (alternating maximization) 
       - Result: You get a local optimum, not the global optimum
 
-   - Implication: The “exact p-value” is for the 𝑓 you found, not the optimal 𝑓. 
+   - Implication: **The “exact p-value” is for the 𝑓 you found**, not the optimal 𝑓. 
 
 
 
@@ -380,7 +380,7 @@ $$\argmax_{c, f} \frac{f^{\top} \tilde{X} c}{\|f\|_2 \|c\|_2}$$
 “train” and “test” datasets, constructs $f$ and $c$ that optimize
 the P-value (bound) on the training data, and computes a statistically 
 valid P-value (bound) on the held-out test data.
-   - this must hurt and is by no means necessary
+   - **this must hurt** and is by no means necessary
    - this manoeuvre's only purpose is to keep the valid p-value dream alive.
 
     
