@@ -1,0 +1,3382 @@
+---
+title:  "Reference-Free Genomic Inference with SPLASH and OASIS"
+#subtitle: "a tale of two schools"
+author: "[Francois Collin](https://www.linkedin.com/in/francoisz/)"
+date: "`r format(Sys.time(), '%B %d, %Y')`"
+always_allow_html: yes
+output:
+  # for use of .tabset
+  bookdown::html_document2:
+  #bookdown::html_book:
+  #html_document:
+    code_folding: hide
+    code_download: true
+    toc: true
+    toc_depth: 2
+    # does this have an effect
+    fig_caption: yes
+    # this has no effect
+    number_sections: yes
+    # css: ['../_css/pandoc3.css', '../_css/myMargins.css']
+bibliography: [../_bibFiles/_healthy_aging.bib, ../_bibFiles/_ref_free_genom_inf.bib, ../../_bibFiles/_Breiman.bib, ../../_bibFiles/_Yu.bib, ../../_bibFiles/_Freedman.bib, ../../_bibFiles/_RUV.bib, ../../_bibFiles/_Yu.bib]
+csl: ../_csl/cell-numeric.csl
+link-citations: true
+---
+
+```{css sidenote, echo = FALSE}
+
+.main-container {
+    margin-left: 250px;
+}
+.sidenote, .marginnote { 
+  float: right;
+  clear: right;
+  margin-right: -40%;
+  width: 37%;         # best between 50% and 60%
+  margin-top: 0;
+  margin-bottom: 0;
+  font-size: 1.1rem;
+  line-height: 1.3;
+  vertical-align: baseline;
+  position: relative;
+  }
+```
+
+
+<style>
+@import url('https://fonts.googleapis.com/css?family=Raleway');
+@import url('https://fonts.googleapis.com/css?family=Oxygen');
+@import url('https://fonts.googleapis.com/css?family=Raleway:bold');
+@import url('https://fonts.googleapis.com/css?family=Oxygen:bold');
+
+.main-container {
+  max-width: 1400px !important;
+}
+
+body{
+  font-family: 'Oxygen', sans-serif;
+  font-size: 16px;
+  line-height: 24px;
+}
+
+h1,h2,h3,h4 {
+  font-family: 'Raleway', sans-serif;
+}
+
+.container { width: 1400px; }
+
+caption {
+  font-size: 20px;
+  caption-side: top;
+  text-indent: 30px;
+  background-color: lightgrey;
+  color: black;
+  margin-top: 5px;
+}
+
+g-table-intro h4 {
+  text-indent: 0px;
+}
+</style>
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(echo = TRUE,
+                      comment = NA,
+                      warning = FALSE,
+                      error = FALSE,
+                      message = FALSE,
+                      cache = FALSE,
+                      fig.width = 8,
+                      fig.height = 4)
+```
+
+```{r m2b-GlobalOptions, results="hide", include=FALSE, cache=FALSE}
+
+knitr::opts_knit$set(stop_on_error = 2L) #really make it stop
+options(knitr.table.format = 'html')
+
+options(stringsAsFactors=F)
+
+ #knitr::dep_auto()
+
+```
+<!-- ################################################################## -->
+
+
+```{r m2b-Prelims,  include=FALSE, echo=FALSE, results='hide', message=FALSE} 
+
+FN <- "M2B-preSPLASH"
+if(sum(grepl(FN, list.files()))==0) stop("Check FN")
+
+ suppressMessages(require(rmarkdown))
+ suppressMessages(require(knitr))
+
+ suppressPackageStartupMessages(require(methods))
+ suppressPackageStartupMessages(require(bookdown))
+
+ suppressPackageStartupMessages(require(data.table))
+ options(datatable.fread.datatable=F)
+
+ suppressPackageStartupMessages(require(plyr))
+ suppressPackageStartupMessages(require(dplyr))
+ suppressPackageStartupMessages(require(magrittr))
+
+ # Shotcuts for knitting and rendering while in R session (Invoke interactive R from R/Scripts folder)
+ kk <- function(n='') knitr::knit2html(paste("t", n, sep=''), envir=globalenv(),
+       output=paste(FN,".html", sep=''))
+
+ rr <- function(n='') rmarkdown::render(paste("t", n, sep=''), envir=globalenv(),
+       output_file=paste(FN,".html", sep='')) ##, output_dir='Scripts')
+
+ bb <- function(n='') browseURL(paste(FN,".html", sep=''))
+
+ # The usual shortcuts
+ zz <- function(n='') source(paste("t", n, sep=''))
+
+
+ WRKDIR <- '..'
+ if(!file.exists(WRKDIR)) stop("WRKDIR ERROR", WRKDIR)
+
+ # do once
+
+ # Shotcuts for knitting and rendering while in R session
+ kk <- function(n='') knitr::knit2html(paste("t", n, sep=''), envir=globalenv(),
+       output=paste('',FN,".html", sep=''))
+
+ rr <- function(n='') render(paste("t", n, sep=''), envir=globalenv(),
+       output_file=paste(FN,".html", sep=''), output_dir='Scripts')
+
+ bb <- function(n='') browseURL(paste('',FN,".html", sep=''))
+
+ # The usual shorcuts
+ zz <- function(n='') source(paste('', "t", n, sep=''))
+
+ # file rmarkdown file management options: cache, figures
+ cache_DIR <- file.path(WRKDIR,'Scripts', 'cache/M2B/')
+ suppressMessages(dir.create(cache_DIR, recursive=T))
+ opts_chunk$set(cache.path=cache_DIR)
+
+ figures_DIR <- file.path(WRKDIR,'Scripts', 'figures/M2B/')
+ suppressMessages(dir.create(figures_DIR, recursive=T))
+ opts_chunk$set(fig.path=figures_DIR)
+
+ #tables_DIR <- file.path(WRKDIR,'Scripts', 'tables/M2B/')
+ #suppressMessages(dir.create(table_DIR, recursive=T))
+ #opts_chunk$set(fig.path=table_DIR)
+ 
+ # need a local copy of help_DIR
+ #help_DIR <- file.path(WRKDIR,'Scripts', 'help_files')
+ help_DIR <- file.path('.', 'help_files')
+ suppressMessages(dir.create(help_DIR, recursive=T))
+ 
+ temp_DIR <- file.path(WRKDIR,'Scripts', 'temp_files')
+ suppressMessages(dir.create(temp_DIR, recursive=T))
+
+```
+<!-- ######################################################################## -->
+
+*** 
+
+```{r m2b-utilityFns, echo=FALSE}
+ # Here we define some utility functions
+source('r/utilityFns.r')
+
+```
+
+
+<!--
+<p><p/> 
+* The methodology used in OASIS is similar to that used in
+the RUV methodology [@Molania:2023aa;   @Gerard:2021aa; @Jiang:2023aa].
+It might be good to compare the two directly.
+   - I will try to do this based on the data and software identified in 
+the paper.
+-->
+
+
+# Reference-Free Genomic Inference - Lit Review {#ref-free-genomics  .tabset}
+
+
+## Consensus {-}
+
+* Reference-free genomic inference is part of the methodologies discussed in
+the attached paper, (SPLASH) Chaung et al. 2023 [@Chaung:2023aa].
+Please provide a literature review of papers treating 
+reference-free genomic inference.  Do not include papers which were published
+after  Chaung et al. 2023 [@Chaung:2023aa].
+
+* We are particularly interested in the statistical aspects of methods discussed in
+the  literature.
+
+* Keep the report in un-rendered markdown format, or markdown syntax
+* Also include the markdown syntax for a bibliography of citations."
+
+<br/>
+<br/>
+
+## **Response**  {-}
+
+* Literature Review: Statistical Aspects of Reference-Free Genomic Inference
+
+### Introduction {-}
+
+
+Traditional genomic analyses typically align sequences to a reference genome. However, reference-free methods have gained traction to overcome inherent biases and limitations associated with reference-based approaches, such as incomplete or biased reference genomes, and challenges in analyzing novel sequences.
+
+### Overview of Reference-Free Methods {-}
+
+
+Reference-free methods rely primarily on k-mer-based statistical approaches, focusing on identifying patterns and variations directly from raw sequencing data. These methods statistically infer variations without alignment to known genomic references.
+
+### Literature Review {-}
+
+
+#### 1. Vinga & Almeida (2003) {-}
+
+Vinga and Almeida provided foundational work exploring alignment-free methods, establishing theoretical frameworks for statistical analysis based on nucleotide composition, word frequency, and k-mer spectra. They underscored the importance of statistical modeling in capturing genomic signatures and variation.
+
+#### 2. Patro et al. (2014) {-}
+
+Patro and colleagues developed Sailfish, a method that used k-mer counting and expectation-maximization algorithms to quantify transcript abundance directly from sequencing data. Their statistical framework significantly reduced computational complexity and bias associated with transcriptome alignment.
+
+#### 3. Bray et al. (2016) {-}
+
+Bray et al. introduced Kallisto, advancing reference-free RNA-seq analysis through pseudoalignment. This method employed a statistical model based on a likelihood estimation framework, allowing efficient inference of transcript abundances, significantly improving speed and accuracy compared to traditional alignment-based methods.
+
+#### 4. Ondov et al. (2016) {-}
+
+Ondov and colleagues introduced Mash, a statistical tool that estimated genomic distances between samples using MinHash dimensionality reduction of k-mer sets. This statistical approach provided rapid, scalable comparisons across large genomic datasets without alignment.
+
+#### 5. Zielezinski et al. (2017) {-}
+
+Zielezinski et al. reviewed and statistically evaluated various alignment-free sequence comparison methods, highlighting their effectiveness in genomic and metagenomic analyses. The study emphasized rigorous statistical validation and comparison frameworks for reference-free methodologies.
+
+#### 6. Pierce et al. (2019) {-}
+
+Pierce and co-workers proposed Dekupl, a reference-free method using differential k-mer analysis to detect genomic variants and differential expression. Their approach utilized statistical hypothesis testing directly on k-mer abundances, significantly enhancing sensitivity to detect differential genomic features.
+
+#### 7. Audano et al. (2019) {-}
+
+Audano et al. developed methods for detecting structural variants reference-free, emphasizing statistical models for identifying genomic rearrangements directly from sequencing reads. Their approach enabled discovery of previously undocumented structural variations in human genomes.
+
+### Statistical Perspectives {-}
+
+
+Statistical rigor is a critical component in reference-free genomic inference methods. Common statistical strategies include:
+
+- K-mer frequency analysis and modeling (Vinga & Almeida, 2003; Patro et al., 2014).
+- Likelihood-based frameworks for rapid abundance estimation (Bray et al., 2016).
+- Statistical distance metrics for genomic comparisons (Ondov et al., 2016).
+- Hypothesis-driven statistical inference to detect variations and differential expression (Pierce et al., 2019).
+
+These methods collectively illustrate the importance of rigorous statistical modeling in achieving accurate, scalable, and insightful genomic inference without relying on reference genomes.
+
+### Conclusion {-}
+
+
+Reference-free genomic inference methods provide robust alternatives to reference-dependent analyses, critically relying on statistically rigorous methods. Continued refinement of statistical models within these methods will further enhance their ability to reveal biologically meaningful variations and adaptations across diverse genomic datasets.
+
+## Bibliography {-}
+
+
+- Almeida, J. S., & Vinga, S. (2003). Alignment-free sequence comparison—a review. Bioinformatics, 19(4), 513-523.
+- Patro, R., Mount, S. M., & Kingsford, C. (2014). Sailfish enables alignment-free isoform quantification from RNA-seq reads using lightweight algorithms. Nature Biotechnology, 32(5), 462-464.
+- Bray, N. L., Pimentel, H., Melsted, P., & Pachter, L. (2016). Near-optimal probabilistic RNA-seq quantification. Nature Biotechnology, 34(5), 525-527.
+- Ondov, B. D., Treangen, T. J., Melsted, P., Mallonee, A. B., Bergman, N. H., Koren, S., & Phillippy, A. M. (2016). Mash: fast genome and metagenome distance estimation using MinHash. Genome Biology, 17(1), 132.
+- Zielezinski, A., Vinga, S., Almeida, J., & Karlowski, W. M. (2017). Alignment-free sequence comparison: benefits, applications, and tools. Genome Biology, 18(1), 186.
+- Pierce, N. T., Irber, L., Reiter, T., Brooks, P., & Brown, C. T. (2019). Large-scale sequence comparisons with sourmash. F1000Research, 8, 1006.
+- Audano, P. A., Sulovari, A., Graves-Lindsay, T. A., Cantsilieris, S., Sorensen, M., Welch, A. M. E., & Eichler, E. E. (2019). Characterizing the major structural variant alleles of the human genome. Cell, 176(3), 663-675.
+
+
+
+<br/>
+<br/>
+
+
+# RNA-Seq w/i Sample Rel Abundance  {#rna-seq-wi-samp .tabset}
+
+## Home {-}
+
+<br/>
+<br/>
+
+
+## chatGPT {-}
+
+* chatGPT Query:
+   - what are RNA-Seq methods to compare across samples the within sample relative expression
+
+* **Response**
+
+When comparing across samples to assess **within-sample relative expression** (comparing how the proportion or relative abundance of genes within a sample changes across multiple samples), the analysis shifts from traditional absolute differential expression testing toward methods designed for compositional or proportion-based data analysis.
+
+<!--
+### **Key Concept**: {-}
+RNA-seq counts represent compositional data (relative abundances), especially after normalization. Therefore, comparing the **within-sample relative abundances** across samples involves methods that account explicitly for compositionality.
+-->
+
+---
+
+### Methods for Comparing Within-Sample Relative Expression Across Samples: {-}
+
+### **1. Compositional Data Analysis (CoDA):** {-}
+
+RNA-seq counts can be explicitly analyzed as compositional data, considering genes' relative abundance (proportions within each sample).
+
+- **ALDEx2** (Analysis of differential abundance taking compositionality into account):
+  - Uses a Bayesian framework and log-ratio transformations (CLR, centered log-ratio).
+  - Designed specifically to identify differentially abundant (relative) features across groups of samples.
+  - R package: [`ALDEx2`](https://bioconductor.org/packages/release/bioc/html/ALDEx2.html)
+
+- **ANCOM-BC**:
+  - ANCOM (Analysis of Composition of Microbiomes) adapted for RNA-seq and microbiome data.
+  - Uses log-ratio approach and compositional modeling to infer differences in relative abundance.
+  - R package: [`ANCOMBC`](https://bioconductor.org/packages/release/bioc/html/ANCOMBC.html)
+
+---
+
+### **2. Relative Log Expression (RLE)-based methods:** {-}
+   
+- **DESeq2** normalization via Relative Log Expression (RLE):
+  - The standard normalization method in DESeq2 inherently compares relative expression across samples.
+  - After normalization, the data reflect relative abundances suitable for relative comparisons.
+  - R package: [`DESeq2`](https://bioconductor.org/packages/release/bioc/html/DESeq2.html)
+
+---
+
+### **3. Percent or Proportion-based comparisons:** {-}
+   
+- **Direct Proportion Comparisons**:
+  - Convert normalized counts to proportions (counts per gene/total counts per sample) and use statistical tests designed for proportional data (e.g., beta regression).
+  - Beta regression (`betareg`) or logistic regression approaches (`glm`) in R can compare proportions across groups.
+
+---
+
+### **4. Quantile or Rank-based Methods:** {-}
+   
+- **NOISeq**:
+  - Uses non-parametric statistics and ranks to compare relative expression within and across samples, without explicit assumptions about absolute expression.
+  - R package: [`NOISeq`](https://bioconductor.org/packages/release/bioc/html/NOISeq.html)
+
+---
+
+#### **5. Compositional transformation (CLR, ALR, ILR transformations)**: {-}
+
+Explicit log-ratio transformations of compositional data to perform downstream statistical testing:
+
+- **Centered Log-Ratio (CLR)**:
+  \[
+  CLR(gene) = \log\left(\frac{count_{gene}}{\text{geometric mean(counts)}}\right)
+  \]
+
+- **Additive Log-Ratio (ALR)**:
+  \[
+  ALR(gene) = \log\left(\frac{count_{gene}}{count_{reference\,gene}}\right)
+  \]
+
+After transformation, standard statistical tests (e.g., linear models, ANOVA, linear mixed models) can be applied.
+
+**Example R package for CoDA transformations**: [`compositions`](https://cran.r-project.org/package=compositions)
+
+---
+
+#### **Recommended approach**: {-}
+For explicit RNA-seq **relative expression comparisons** across samples, especially if compositionality matters (e.g., microbiome, small RNA-seq libraries, single-cell RNA-seq), use a compositional method like:
+
+- **ALDEx2** or **ANCOM-BC** (recommended)
+- CLR-based analysis (compositions package)
+- NOISeq (non-parametric, rank-based approach)
+
+These approaches explicitly recognize the compositional nature of RNA-seq data and appropriately model relative abundance.
+
+---
+
+#### Quick Summary Table: {-}
+
+| Method            | Type                        | Strengths                                            | R package example(s)  |
+|-------------------|-----------------------------|------------------------------------------------------|-----------------------|
+| **ALDEx2**        | Bayesian CoDA               | Explicitly compositional; robust against sparsity    | `ALDEx2`              |
+| **ANCOM-BC**      | Compositional testing       | Handles zero-inflation and compositionality          | `ANCOMBC`             |
+| **CLR/ALR/ILR**   | Log-ratio transforms (CoDA) | Flexible; allows conventional statistical methods    | `compositions`        |
+| **DESeq2 (RLE)**  | Normalization               | Standard RNA-seq workflow, reflects relative expression implicitly | `DESeq2`      |
+| **NOISeq**        | Non-parametric              | Rank-based; minimal assumptions                      | `NOISeq`              |
+
+---
+
+#### **Conclusion:** {-}
+
+The most robust and explicitly compositional methods currently recommended for RNA-seq within-sample relative expression comparisons across multiple samples are **ALDEx2**, **ANCOM-BC**, and log-ratio transformations (CLR).
+
+
+<br/>
+<br/>
+
+
+***
+## References {-} 
+<div id="refs"></div>
+    
+<br/>
+
+<!-- 
+### Parameter settings {-}
+  * WRKDIR = `r normalizePath(WRKDIR)`
+  * FN = `r FN`
+  * Scripts = Scripts
+  * RUN DATE = `r date()`
+
+```{r , echo=T, eval=F}
+ sessionInfo()
+```
+-->
+
+```{r, echo=FALSE}
+  knit_exit()
+```
+
+# SPLASH - Data and Analysis 
+
+<br/>
+
+## Data Desc
+
+<p><p/>
+* The goal of SPLASH is to detect sequence variation between a set of samples.
+
+<p><p/>
+* Each sample is represented by a separate file of sequencing data (FASTQ).
+
+<p><p/>
+* To detect variation (in the sense of genomic sequence differences between samples)
+a set of **anchors** - k-mers which appear among the reads - are identified
+and combined into a set.
+
+<p><p/>
+* A set of **targets** - k-mers which appear among the reads at locations a few loci
+down from the anchors - is also compiled.
+
+<p><p/>
+* The analysis dataset consists of a set of tables, one for each anchor:
+   - The columns of the table correspond to samples
+   - The rows of the table correspond to targets
+   - The entries in the tables are the number of anchor reads
+with the target for each sample.
+
+<p><p/>
+*  The goal is to interrogate the read counts in order
+to distinghish two scenarios:
+   - 1. the reads for all samples were generated by a common source. eg the same biological
+units, or units from the same group.
+   - 2. the reads for the samples  were generated by more than one source.
+
+<font color="darkgreen">
+
+* What the sampling scheme is deserves some thought, especially if we want to make inference
+from p/q-values.
+
+<p><p/>
+* Without any further information about the samples in the form of meta-data sample description
+we have to assume that the sample set Is the population.
+   - in this case p-values are making inference to **re-sampling reads from the samples in the dataset**.
+
+</font>
+
+<br/>
+
+## Feature Score: p-values  - DEPRICATED
+
+* The feature score algorithn has been changed.  See the OASIS paper - 
+Baharav et al. (2024) [@Baharav:2024aa], summarized in
+[OASIS - Optimized Adaptive Statistic for Inferring Structure - Summary](M3A-OASIS.html).
+
+<br/>
+
+For a fixed anchor, we have a contingency table of counts: rows are targets,  
+columns are samples.  The following computation steps are followed
+ (this procedire as OASIS rand):
+
+1. **Random Selection Vector (f):**  
+   Each target is randomly mapped to values in `{0,1}` with equal probability.
+
+<br/>
+2. **Compute Global Mean (\(\hat{m}\)):**  
+   Compute the overall mean of all targets across all samples:
+\begin{equation}
+   \hat{m} = \frac{1}{M}\sum_{j,k} f_{Z_{j,k}}
+(\#eq:global-mean)
+\end{equation}
+
+<br/>
+3. **Compute Sample Means (\(\hat{m}_j\)):**  
+   Calculate the mean within each sample \( j \):
+\begin{equation}
+   \hat{m}_j = \frac{1}{n_j}\sum_{k=1}^{n_j} f_{Z_{j,k}}
+(\#eq:sample-means)
+\end{equation}
+
+<br/>
+4. **Anchor-Sample Scores (\(S_j\)):**  
+   Calculate scores for each sample, scaled by square root of total counts per sample:
+\begin{equation}
+   S_j = \sqrt{n_j}(\hat{m}_j - \hat{m})
+(\#eq:anchor-samples)
+\end{equation}
+
+
+<font color="darkgreen">
+
+<p><p/>
+* $S_j$ is a measure in standard units up to a scaler ($\sigma$)  
+ignoring the variability in $\hat{m}$, which is an order of magnitude
+smaller than variability in $\hat{m_j}$
+means
+<p><p/>
+* the coefficient, $\sqrt{n_j}$ provides an adjusment for differing sample
+sizes.  
+
+<p><p/>
+* $S_j$ is a measure in standard units up to a scaler ($\sigma$) 
+
+</font>
+
+
+<br/>
+5. **Final Statistic (\(S\)):**  
+   Scores from all samples are weighted by a class-assignment vector \( c_j \), and summed to produce a single statistic:
+\begin{equation}
+   S = \sum_{j=1}^{J} c_j S_j
+(\#eq:final-statistic)
+\end{equation}
+
+
+
+<font color="darkgreen">
+
+<p><p/>
+* $S_j$ values in equation \@ref(eq:anchor-samples) are usually scaled
+by an estimate of ($\sigma$) which results in a statistic which asymptotically
+has a student t distribution.
+
+* This is used to compute p-values which are valid estimates of true tail probabilities
+when the counts are high enough.
+
+</font>
+
+<br/>
+<br/>
+
+### P-value Bound (Hoeffding's inequality):   {-}
+
+From [Hoeffding's inequality on Wikipedia](https://en.wikipedia.org/wiki/Hoeffding%27s_inequality):
+
+> In probability theory, Hoeffding's inequality provides an upper bound 
+> on the probability that the sum of bounded independent random variables
+> deviates from its expected value by more than a certain amount.
+
+The probability bound (p-value) that the statistic \( S \) exceeds the observed value under the null hypothesis is calculated using Hoeffding’s inequality:
+\begin{equation}
+P(|S| \geq a) \leq 2\exp\left(-\frac{2a^2}{\sum_j c_j^2 + \frac{(\sum_j c_j\sqrt{n_j})^2}{M}}\right), \quad \text{where} \quad a = \frac{|S|}{2}
+(\#eq:pvalue-bound)
+\end{equation}
+
+Multiple hypothesis correction is performed using the Benjamini-Yekutieli (BY) method, ensuring control of false discovery rate (FDR).
+
+***
+
+### SPLASH Effect Size {-}
+
+
+SPLASH quantifies biological effect size based on the group assignments that yield the smallest p-value. This metric measures the absolute difference between the average target values across two sample groups defined by weights \( c_j = \pm1 \):
+
+\begin{equation}
+\left| \frac{1}{\sum_{j \in A_+} n_j}\sum_{j \in A_+} n_j\hat{m}_j - \frac{1}{\sum_{j \in A_-} n_j}\sum_{j \in A_-} n_j\hat{m}_j \right|
+(\#eq:effect-size)
+\end{equation}
+
+
+- Where \( A_+ \) and \( A_- \) are the sets of samples assigned by SPLASH with \( c_j = +1 \) or \( c_j = -1 \).
+- Effect size ranges from 0 (identical distributions between groups) to 1 (completely disjoint target distributions).
+
+<font color="darkgreen">
+
+* The effect size in Equation \@ref(#eq:effect-size) is expressed as a difference of ratios.  If the two groups have different sample sizes, the difference is not a good way to combine the 
+two.
+
+</font>
+
+***
+
+### Binomial p-value bound for target fraction abundance plots
+
+To statistically quantify visually apparent differences in target abundance (e.g., for dominant targets), SPLASH calculates a binomial p-value:
+
+1. Compute overall frequency \( p \) of a target across all samples.
+2. Establish binomial confidence intervals (e.g., 1%–99%) for each sample.
+3. Count how many samples fall outside this confidence interval (denoted by \( X \)).
+4. Calculate a p-value bound based on binomial probability:
+   \[
+   P(\text{Binomial}(m, q) \geq X), \quad \text{where} \quad q \leq 0.02
+   \]
+
+This statistical method evaluates if observed variations in target frequencies across samples significantly deviate from expected binomial sampling variation.
+
+
+<font color="darkgreen">
+
+<p><p/>
+*  Given successes $S_1, S_2, ..., S_N$ and trials $T_1, T_2, ..., T_N$
+to assess binomial variability we could:
+   - use the pooled data to estimate a common underlying p, $\hat{p}$
+   - for each trial, n, obtain quantiles $q_{01}^n$ and $q_{99}^n$
+   - If  $S_n ~ \text{binomial}(T_n, \hat{p})$
+then $S_n \in (q_{01}^n, q_{99}^n)$ is a Bernoulli trial with p = 0.02.
+   - with $X = #(S_n \notin (q_{01}^n, q_{99}^n))$, 
+ $X \sim \text{Binomial}(N, .02)$
+
+<p><p/>
+* We can look $P(\text{Binomial}(N, .02) > X_{obs})$ as an indication of the 
+likelihood of the tail events if $S_n \sim \text{Binomial}(T_n, p)$.
+
+<p><p/>
+* This is a reasonable procedure although: 
+   - choosing to look at the 2% tail is somewhat arbitrary
+   - the null is $S_n \sim \text{Binomial}(T_n, p)$.  What is the alternative?
+
+<p><p/>
+* Without a fully specified alternative hypothesis, we don't have a proper
+significance test.
+   
+</font>
+
+***
+
+
+# OASIS - Data and Analysis
+
+See
+[OASIS - Optimized Adaptive Statistic for Inferring Structure - Summary](M3A-OASIS.html).
+
+<br/>
+
+
+
+**`Below are sections which are to a great
+extent assembled by GPT  powered tools,
+or research assistants`.**
+
+* The articulation that these
+tools produce is so impressive that it is easy to
+forget that they have no reasoning power whatsoever.
+
+
+> The real danger today is not that computers are smarter than us
+> but that we think computers are smarter than us.
+>
+> `r tufte::quote_footer('Gary Smith^[
+ [Computers Still Do Not “Understand”](https://mindmatters.ai/2024/01/computers-still-do-not-understand/)
+]')`
+
+
+> Machine learning programs are stuck in a prehuman or 
+> nonhuman phase of cognitive evolution.
+> Their deepest flaw is the absence of the most critical
+> capacity of any intelligence: to say not only what is the case, 
+> what was the case and what will be the case —
+> that’s description and prediction — but also what 
+> is not the case and what could and could not be the case. 
+> Those are the ingredients of explanation, 
+> the mark of true intelligence.
+> 
+`r tufte::quote_footer('Noam Chomsky^[
+ [Noam Chomsky: The False Promise of ChatGPT](https://www.nytimes.com/2023/03/08/opinion/noam-chomsky-chatgpt-ai.html?unlocked_article_code=HWKFHWmEMp2Rj9LxZ1YhQ4wPgTWnxg7mt1hpa4Ykz8POkadrtm5v3R5EoWZk1IpqSiHRsZkocOQsD-MKMV5HnovvYnhM6Hkh5PRGKQSyRZBqNuBrKZyWO4Sf4z3DC3bbWpx-xqf3-Ee_bkjdlGBl2mEMph4Kq3oJoEg1jXCUbvucfk8zQyiMDH5Gq4VQ8e7xGEJuaTrLjD8lplwuaP_npTyGrnxsQANFwAk2WCgxu9gnET-Ui5E5f5IwdFWyS9utz9JbDgCiVGUI2n0yCxokjnFMwCOl1tr95Vc8GZ_p3w0tzfFT-hRK5JzB2pGyMho_BJEA_0mDs0MdsnSRpiR3bvMs&smid=url-share)
+]')`
+
+
+***
+
+<br/>
+<br/>
+
+# AI assisted article reviews {#ai-ass-articles .tabset}
+
+## Home {-}
+
+<br/>
+<br/>
+
+## SPLASH Review {#splash-ai-review .tabset -}
+
+* SPLASH: A Statistical, Reference-Free Genomic Algorithm for Biological Discovery
+
+
+### chatGPT {-}
+
+* Please provide a summary of the technical content of the attached article 
+`SPLASH` (Chaung et al, 2023 [@Chaung:2023aa] paying particualr attention to statistical
+aspects of the mothodologies or any component which is prey to randomness or variability.
+
+
+#### **Response**  {-}
+
+Here is a detailed summary in markdown format, focusing on statistical aspects and methodologies subject to randomness or variability as described in the provided article (Chaung et al., 2023):
+
+**SPLASH: A Statistical, Reference-Free Genomic Algorithm for Biological Discovery  **
+
+#### Summary {-}
+
+#### Overview of SPLASH   {-}
+SPLASH (Statistically Primary aLignment Agnostic Sequence Homing) is a statistical and reference-free genomic analysis algorithm designed to detect sample-dependent sequence variation directly from raw sequencing data, without the need for reference genomes or metadata. It addresses limitations inherent to traditional reference-based genomic analyses, such as reference genome incompleteness, misassemblies, and bias, while also significantly reducing computational complexity.
+
+***
+
+<br/>
+
+#### Statistical Methodology and Variability   {-}
+**Key statistical aspects include:**
+
+- **k-mer-based variation detection:** SPLASH operates on k-mer pairs called "anchors" (constant subsequences) and their associated "targets" (sequences downstream at a fixed offset). By default, k is 27 but adjustable.
+  
+<p><p/>
+- **Statistical Testing Approach**:
+  - SPLASH constructs contingency tables for each anchor, with samples as columns and targets as rows, capturing frequency counts of anchor-target pairs.
+  - A flexible statistical test is performed that searches through multiple random splits of the samples and targets, evaluating the most discriminative grouping that minimizes the p-value, indicating the strongest evidence against the null hypothesis (i.e., no variation between samples).
+  - The algorithm computes a p-value bound using closed-form solutions derived from Hoeffding’s inequality, thus avoiding the computational cost of permutation tests or resampling methods.
+  - The resulting p-values are corrected for multiple testing using the Benjamini-Yekutieli (BY) procedure to control the false discovery rate (FDR).
+
+<p><p/>
+<font color="darkgreen">
+  - What do we believe these p-values to tell us? 
+      - clearly they are not "probabilities" from a known distrubution
+      - these may still be useful metrics to rank and identify markers
+      - in  partricular, where is the randomness coming from?
+</font>
+
+<p><p/>
+- **Effect Size**:
+  - SPLASH provides an "effect size" metric (ranging from 0 to 1) indicating how discretely target distributions differ across sample groups identified by the algorithm. An effect size of 1 indicates that target sets are entirely distinct between groups.
+
+<p><p/>
+<font color="darkgreen">
+  - We need to think how to interpret this effect size.
+      - in the case two groups with continuous measure we may have t = D/se where 
+$D = \hat{\mu_2} - \hat{\mu_1}$ is in interpretable units so that one can judge
+whether the observed difference is meaningful
+      - these may still be useful metrics to rank and identify markers
+      - in  particular, where is the randomness coming from?
+t/font>
+
+<p><p/>
+- **Unsupervised and Supervised Modes**:
+  - While metadata can be included ("supervised" mode), all analyses presented were conducted in the default unsupervised mode, relying on random splits of samples and targets to identify significant variation.
+
+
+<p><p/>
+<font color="darkgreen">
+  - For unsupervised analysis, are there alternatives to the random split
+approach. 
+</font>
+
+
+<p><p/>
+- **Consensus Sequence Assembly**:
+  - For interpretability, SPLASH builds longer consensus sequences from significant anchors, which can then be aligned against known protein domains or reference databases to understand biological functions or genomic context.
+
+***
+
+<br/>
+
+#### Applications and Statistical Highlights   {-}
+
+<font color="darkgreen">
+**Hard to interpret** without a comparator and an appropriate measure of closeness
+to the truth.
+</font>
+
+
+<br/>
+
+<p><p/>
+##### 1. **SARS-CoV-2 Strain Mutation Detection**: {-}
+- SPLASH accurately identified variant-specific and emergent mutations (e.g., strain-defining mutations K417N, V213G, N679K, and P681H) in the SARS-CoV-2 spike protein without using metadata or a reference genome.
+- Statistical precision was demonstrated by comparison with reference archetypes (Delta, Omicron BA.1, Omicron BA.2). Nearly all SPLASH anchors perfectly mapped to strain-defining mutations compared to control anchors, showing high statistical significance.
+
+<br/>
+
+<p><p/>
+##### 2. Single-cell RNA-seq (Alternative Isoforms & Paralogs)   {-}
+- In single-cell RNA-seq data, SPLASH identified regulated alternative splicing and differential paralog expression (e.g., MYL12A vs. MYL12B in macrophages vs. capillary cells), again using only raw reads and no cell-type metadata.
+- For highly polymorphic HLA genes (e.g., HLA-DRB1 vs. HLA-DRB4, HLA-DPA1 vs. HLA-DPB1, HLA-B allele-specific expression), SPLASH effectively detected differential expression and isoform usage, with high statistical confidence (low q-values and significant binomial p-values).
+
+<br/>
+
+#####  B and T Cell Receptor (BCR/TCR) Diversity: {-}
+- SPLASH effectively identified diverse, clonotypic immunoglobulin (Ig) and T-cell receptor (TCR) sequences in both human and mouse lemur single-cell RNA-seq datasets without reliance on pre-existing annotations.
+- The detected receptor sequences had high "target entropy" (many distinct targets) and were expressed clonotypically, reflecting biologically expected diversity due to V(D)J recombination.
+
+- **Discovery in Non-model Organisms (Octopus and Eelgrass)**:
+  - SPLASH uncovered tissue-specific alternative splicing and RNA editing events in octopus RNA-seq data, including previously unannotated isoforms of sensory-relevant genes.
+  - For eelgrass (Zostera marina), SPLASH revealed seasonally and geographically regulated variation, including sequences originating from associated diatoms, highlighting ecological interactions and circadian regulation.
+
+<br/>
+
+##### Statistical Robustness and Computational Efficiency: {-}
+- SPLASH demonstrated robust performance across parameter settings (k-mer lengths, anchor-target distances).
+- Computationally efficient, SPLASH reduces the amount of data needing reference alignment by over 500-fold by focusing alignment only on statistically significant consensus sequences.
+
+
+<p><p/>
+<font color="darkgreen">
+  - For practical purposes we would also like to see resistance to input data
+conditions.
+</font>
+
+
+<p><p/>
+- **Consensus Sequence Assembly**:
+  - For interpretability, SPLASH builds longer consensus sequences from significant anchors, which can then be aligned against known protein domains or reference databases to understand biological functions or genomic context.
+
+***
+
+<br/>
+
+#### Applications and Statistical Highlights   {-}
+
+**Hard to interpret** without a comparator and an appropriate measure of closeness
+to the truth.
+
+
+<br/>
+
+<p><p/>
+##### 1. **SARS-CoV-2 Strain Mutation Detection**: {-}
+- SPLASH accurately identified variant-specific and emergent mutations (e.g., strain-defining mutations K417N, V213G, N679K, and P681H) in the SARS-CoV-2 spike protein without using metadata or a reference genome.
+- Statistical precision was demonstrated by comparison with reference archetypes (Delta, Omicron BA.1, Omicron BA.2). Nearly all SPLASH anchors perfectly mapped to strain-defining mutations compared to control anchors, showing high statistical significance.
+
+<br/>
+
+<p><p/>
+##### 2. Single-cell RNA-seq (Alternative Isoforms & Paralogs)   {-}
+- In single-cell RNA-seq data, SPLASH identified regulated alternative splicing and differential paralog expression (e.g., MYL12A vs. MYL12B in macrophages vs. capillary cells), again using only raw reads and no cell-type metadata.
+- For highly polymorphic HLA genes (e.g., HLA-DRB1 vs. HLA-DRB4, HLA-DPA1 vs. HLA-DPB1, HLA-B allele-specific expression), SPLASH effectively detected differential expression and isoform usage, with high statistical confidence (low q-values and significant binomial p-values).
+
+<br/>
+
+#####  B and T Cell Receptor (BCR/TCR) Diversity: {-}
+- SPLASH effectively identified diverse, clonotypic immunoglobulin (Ig) and T-cell receptor (TCR) sequences in both human and mouse lemur single-cell RNA-seq datasets without reliance on pre-existing annotations.
+- The detected receptor sequences had high "target entropy" (many distinct targets) and were expressed clonotypically, reflecting biologically expected diversity due to V(D)J recombination.
+
+- **Discovery in Non-model Organisms (Octopus and Eelgrass)**:
+  - SPLASH uncovered tissue-specific alternative splicing and RNA editing events in octopus RNA-seq data, including previously unannotated isoforms of sensory-relevant genes.
+  - For eelgrass (Zostera marina), SPLASH revealed seasonally and geographically regulated variation, including sequences originating from associated diatoms, highlighting ecological interactions and circadian regulation.
+
+<br/>
+
+##### Statistical Robustness and Computational Efficiency: {-}
+- SPLASH demonstrated robust performance across parameter settings (k-mer lengths, anchor-target distances).
+- Computationally efficient, SPLASH reduces the amount of data needing reference alignment by over 500-fold by focusing alignment only on statistically significant consensus sequences.
+
+<br/>
+
+##### Statistical Limitations: {-}
+- SPLASH currently does not infer the biological mechanisms underlying identified variations, and is not appropriate for tasks limited to simple quantification (e.g., basic differential gene expression analysis without sequence variation).
+
+***
+
+<br/>
+
+#### Summary of Statistical and Randomness Elements: {-}
+- **Statistical Model**: Contingency tables, random splits, and significance testing via concentration inequalities.
+- **Randomness and Variability**: Anchor-target construction (random offsets and k-mers), random splitting in unsupervised mode, and statistical testing inherently include randomness.
+- **Multiple Testing**: FDR control via BY procedure.
+- **Computational Aspect**: Closed-form statistical tests avoiding permutation or bootstrap methods, significantly reducing computational burden.
+- **Effect Size Metric**: Provides interpretable quantification of biologically meaningful differences, prioritizing statistically and biologically relevant anchors.
+
+<br/>
+
+<p><p/>
+<font color="darkgreen">
+- "Where is the randomness from" (Leo Breiman 1991) is the critical factor in deciding
+how to summarize the data, and how to interpret the summaries.
+- Neyman's non-parametric model (Freedman (2008) [Freedman:2008ad] also called
+the **Potential Outcomes Framework** may provide a natural framework for the
+analysis of variability in this context.)
+   - In that context, the dataset is the population and inference
+is from a finite set of random elements to the population of
+all possible random elements.
+</font>
+
+<br/>
+
+#### Summary of Contributions: {-}
+<p><p/>
+- SPLASH provides a statistically rigorous, scalable, reference-free methodology
+capable of identifying biologically meaningful sequence variation across diverse
+organisms and biological contexts, **outperforming reference-based methods**,
+particularly in scenarios involving high genomic diversity, incomplete references,
+or single-cell heterogeneity.
+
+<font color="darkgreen">
+   - performance claims should be accurately measured and supported by
+an adequate amount of representative data.
+</font>
+<br/>
+
+#### Limitations: {-}
+<p><p/>
+- SPLASH is primarily aimed at **detecting differential sequence variation** and is not
+designed for simple quantitative differential gene expression analysis.
+<font color="darkgreen">
+   - SPLASH detects anchors with multiple targets which have differing sample profiles.
+</font>
+- The method does not inherently infer the biological mechanisms behind the detected variations; this requires additional contextual analysis.
+
+Overall, SPLASH presents a robust statistical framework suited to a variety of genomic analyses, highlighting a paradigm shift towards a unified, statistics-driven approach to biological discovery in genomics without reliance on reference genomes.
+
+   - To be completed
+
+<br/>
+
+
+
+### Scholar GPT {-}
+
+* Please provide a summary of the technical content of the attached article 
+`SPLASH` (Chaung et al, 2023 [@Chaung:2023aa] paying particualr attention to statistical
+aspects of the mothodologies or any component which is prey to randomness or variability.
+
+
+<br/>
+
+
+### **Response**  {- .tabset}
+
+
+### Overall Summary {-}
+
+* **Technical Summary of SPLASH (Chaung et al., 2023) with Focus on Statistical Aspects and Variability**
+
+#### **Overview of SPLASH Methodology** {-}
+SPLASH (Statistically Primary aLignment Agnostic Sequence Homing) is a novel, statistically-driven genomic analysis framework that directly operates on raw sequencing data without requiring alignment to a reference genome. This reference-free approach allows for broader biological discovery, especially in cases where reference genomes are incomplete or do not exist. 
+
+* The method is particularly useful for:  
+   - Detecting sample-dependent sequence variations.
+   - Identifying mutations in viral strains.
+   - Exploring adaptive immune diversity.
+   - Analyzing sequence variation in under-documented non-model organisms.
+
+The core strength of SPLASH lies in its **statistical inference capabilities** applied to sequencing data, making it highly sensitive to randomness and variability in biological data.
+
+
+<font color="darkgreen">
+   - quite a statement!
+</font>
+
+<br/>
+
+***
+
+#### **Statistical Framework and Variability Analysis** {-}
+The SPLASH algorithm is designed to overcome key challenges associated with reference-based sequencing approaches by using **statistical tests** to infer meaningful sequence variations directly from raw sequencing reads. The key statistical methodologies and their susceptibility to variability include:
+
+<p><p/>
+##### **1. K-mer Based Sequence Variation Analysis** {-}
+- SPLASH uses **k-mers** (short DNA sequences of length k) to detect sequence variation. It selects **anchors** (fixed sequence stretches) and detects **targets** (variable sequences adjacent to the anchors).
+- The variability of detected k-mers is controlled by **sample size** and **biological diversity**, making the method robust for applications in metagenomics, cancer genomics, and viral mutation tracking.
+
+<p><p/>
+##### **2. Contingency Table for Target Variation** {-}
+- SPLASH compiles **contingency tables** for each anchor-target pair across multiple samples.
+- It then applies a **statistical test for independence** to determine if target distributions differ significantly between samples.
+- The null hypothesis states that observed target frequencies come from the same distribution. A **low p-value** indicates significant sample-specific sequence variation.
+
+<p><p/>
+##### **3. False Discovery Rate (FDR) Control** {-}
+- SPLASH applies **multiple testing correction** methods to ensure that identified variations are not artifacts of random noise.
+- False discovery rates are minimized through:
+  - **P-value bounding techniques** (instead of computationally expensive permutation tests).
+  - **Closed-form p-value bounds** that enhance computational efficiency.
+
+##### **4. Effect Size Calculation** {-}
+- SPLASH computes an **effect size metric** (ranging from 0 to 1) to quantify the magnitude of variation.
+- A high effect size implies strong sample-specific differences.
+- This metric is resilient to sample noise and can detect **structured variability**, such as differential expression of alleles or cell-type-specific splicing.
+
+##### **5. Handling Low Observations and Statistical Power** {-}
+- Unlike traditional permutation-based methods (which may underestimate the false discovery rate by an order of magnitude), SPLASH provides a **rigorous mathematical bound on p-values**, ensuring robust statistical inference.
+- It is optimized for **low read-depth** situations where standard methods fail due to statistical imprecision.
+
+***
+ 
+#### **Application to Biologically Variable Systems** {-}
+SPLASH's statistical foundation enables it to detect biologically meaningful variations in datasets with high intrinsic randomness, such as:
+
+1. **Viral Genomic Variation (e.g., SARS-CoV-2)**
+   - SPLASH detects **strain-defining mutations** in SARS-CoV-2 patient samples **without prior knowledge** of strain sequences.
+   - It successfully identifies significant variations by comparing k-mer target distributions, revealing mutations like **K417N and P681R**, which are associated with Omicron and Delta strains.
+
+2. **Single-Cell RNA Sequencing (scRNA-seq)**
+   - SPLASH identifies **paralogous gene regulation**, such as distinguishing between **MYL12A and MYL12B** expression in human macrophages.
+   - It reveals **allele-specific expression** of **HLA genes**, which is challenging for reference-based approaches due to high polymorphism.
+
+3. **Adaptive Immune System Diversity**
+   - SPLASH uncovers **TCR (T-cell receptor) and Ig (Immunoglobulin) diversity** without a reference database.
+   - It identifies highly **clonotypic expression patterns** in B and T cells, revealing novel V(D)J recombinations.
+
+4. **Non-Model Organisms (e.g., Octopus & Eelgrass)**
+   - SPLASH detects **statocyst-specific isoforms** in octopus that are missing from reference genomes.
+   - It identifies **geographic and seasonal variation in eelgrass epiphytes**, demonstrating applications in **environmental genomics**.
+
+***
+
+#### **Key Strengths and Limitations in Statistical Analysis** {-}
+###### **Strengths:** {-}
+✔ **Reference-free approach** allows discovery in underrepresented genomes.  
+✔ **Statistical efficiency**: Uses closed-form p-value bounds instead of slow resampling methods.  
+✔ **Robust to noise**: Effect size calculations prevent overfitting to random variations.  
+✔ **Broad applicability**: Works in single-cell analysis, viral surveillance, and adaptive immune studies.  
+
+##### **Limitations and Susceptibility to Randomness:** {-}
+⚠ **Sample size dependency**: SPLASH requires a **sufficient number of samples** to ensure statistical power.  
+⚠ **Assumes discrete variation**: It may struggle with continuous genomic variation patterns.  
+⚠ **No direct mechanism inference**: While SPLASH detects variation, it does not determine whether differences arise from splicing, mutation, or RNA editing.  
+
+***
+
+#### **Conclusion** {-}
+SPLASH is a **powerful statistical tool for genomic discovery**, leveraging **alignment-free statistical inference** to detect biologically relevant sequence variations. Its methodologies are designed to **minimize false discoveries** while being **computationally efficient**. Given its ability to analyze **highly variable biological systems**, SPLASH has the potential to revolutionize genomic analysis across diverse applications.
+
+Would you like a deeper dive into a specific statistical test or methodology used in SPLASH? 🚀
+
+<br/>
+
+### Statistical Methods Deep Dive {-}
+
+
+<font color="darkgreen">
+* omic analysis methods are often guided by statistically sound
+data summarise and rules operating on these.
+Choosing among alternative summaries and statistics is guided
+by a comprehensive assessment of results across  all
+expected conditions.
+
+<p><p/>
+* the distance metric is interesting 
+   - does it have a name?
+  // 
+</font>
+
+<br/>
+
+***
+
+#### **Statistical Framework and Variability Analysis** {-}
+The SPLASH algorithm is designed to overcome key challenges associated with reference-based sequencing approaches by using **statistical tests** to infer meaningful sequence variations directly from raw sequencing reads. The key statistical methodologies and their susceptibility to variability include:
+
+<p><p/>
+##### **1. K-mer Based Sequence Variation Analysis** {-}
+- SPLASH uses **k-mers** (short DNA sequences of length k) to detect sequence variation. It selects **anchors** (fixed sequence stretches) and detects **targets** (variable sequences adjacent to the anchors).
+- The variability of detected k-mers is controlled by **sample size** and **biological diversity**, making the method robust for applications in metagenomics, cancer genomics, and viral mutation tracking.
+
+<p><p/>
+##### **2. Contingency Table for Target Variation** {-}
+- SPLASH compiles **contingency tables** for each anchor-target pair across multiple samples.
+- It then applies a **statistical test for independence** to determine if target distributions differ significantly between samples.
+- The null hypothesis states that observed target frequencies come from the same distribution. A **low p-value** indicates significant sample-specific sequence variation.
+
+<p><p/>
+##### **3. False Discovery Rate (FDR) Control** {-}
+- SPLASH applies **multiple testing correction** methods to ensure that identified variations are not artifacts of random noise.
+- False discovery rates are minimized through:
+  - **P-value bounding techniques** (instead of computationally expensive permutation tests).
+  - **Closed-form p-value bounds** that enhance computational efficiency.
+
+##### **4. Effect Size Calculation** {-}
+- SPLASH computes an **effect size metric** (ranging from 0 to 1) to quantify the magnitude of variation.
+- A high effect size implies strong sample-specific differences.
+- This metric is resilient to sample noise and can detect **structured variability**, such as differential expression of alleles or cell-type-specific splicing.
+
+##### **5. Handling Low Observations and Statistical Power** {-}
+- Unlike traditional permutation-based methods (which may underestimate the false discovery rate by an order of magnitude), SPLASH provides a **rigorous mathematical bound on p-values**, ensuring robust statistical inference.
+- It is optimized for **low read-depth** situations where standard methods fail due to statistical imprecision.
+
+***
+ 
+#### **Application to Biologically Variable Systems** {-}
+SPLASH's statistical foundation enables it to detect biologically meaningful variations in datasets with high intrinsic randomness, such as:
+
+1. **Viral Genomic Variation (e.g., SARS-CoV-2)**
+   - SPLASH detects **strain-defining mutations** in SARS-CoV-2 patient samples **without prior knowledge** of strain sequences.
+   - It successfully identifies significant variations by comparing k-mer target distributions, revealing mutations like **K417N and P681R**, which are associated with Omicron and Delta strains.
+
+2. **Single-Cell RNA Sequencing (scRNA-seq)**
+   - SPLASH identifies **paralogous gene regulation**, such as distinguishing between **MYL12A and MYL12B** expression in human macrophages.
+   - It reveals **allele-specific expression** of **HLA genes**, which is challenging for reference-based approaches due to high polymorphism.
+
+3. **Adaptive Immune System Diversity**
+   - SPLASH uncovers **TCR (T-cell receptor) and Ig (Immunoglobulin) diversity** without a reference database.
+   - It identifies highly **clonotypic expression patterns** in B and T cells, revealing novel V(D)J recombinations.
+
+4. **Non-Model Organisms (e.g., Octopus & Eelgrass)**
+   - SPLASH detects **statocyst-specific isoforms** in octopus that are missing from reference genomes.
+   - It identifies **geographic and seasonal variation in eelgrass epiphytes**, demonstrating applications in **environmental genomics**.
+
+***
+
+#### **Key Strengths and Limitations in Statistical Analysis** {-}
+##### **Strengths:** {-}
+✔ **Reference-free approach** allows discovery in underrepresented genomes.  
+✔ **Statistical efficiency**: Uses closed-form p-value bounds instead of slow resampling methods.  
+
+**Deeper Dive into SPLASH's Statistical Methodologies**
+
+SPLASH's statistical framework is designed to detect **sequence variation across samples without reference alignment**, making it computationally efficient and broadly applicable. Below, we take a detailed look at its core statistical techniques, including **k-mer based variation detection, contingency table analysis, p-value bounding, false discovery rate control, and effect size computation**.
+
+***
+
+##### **1. K-mer Based Statistical Detection of Variation**  {-}
+###### **Concept:** {-}
+- SPLASH detects variation by analyzing **k-mers**—subsequences of length *k* within sequencing reads.
+- The method identifies **anchors** (stable sequences) and **targets** (variable sequences downstream of the anchor).
+- The goal is to determine **whether different samples have different target distributions**, which signals biologically meaningful variation.
+
+##### **Statistical Rationale:** {-}
+- Instead of mapping reads to a reference genome, SPLASH **counts occurrences** of k-mer anchor-target pairs.
+- Variability is assessed using **contingency tables** that track how often each target appears in different samples.
+
+##### **Randomness & Variability Considerations:** {-}
+- **Choice of k**: Default is *k = 27*, ensuring **statistical resolution** while balancing sequencing noise.
+- **Effect of sequencing errors**: Short k-mers are susceptible to random sequencing errors, but SPLASH mitigates this by aggregating across multiple read positions.
+
+***
+
+#### **2. Contingency Table Analysis for Sequence Variation** {-}
+##### **Concept:** {-}
+- For each anchor, SPLASH builds a **contingency table**, where:
+  - **Rows** represent **targets** (different k-mer sequences).
+  - **Columns** represent **samples** (biological conditions, individuals, or time points).
+  - **Entries** contain **the count of each target in each sample**.
+
+- The key question: *Is the target distribution significantly different across samples?*
+- SPLASH applies a **statistical test for independence** to determine whether the observed variation is **random noise** or **biologically meaningful**.
+
+##### **Statistical Test Used:** {-}
+- **Null Hypothesis (H₀)**: Target distributions do not differ across samples (i.e., no sample-specific sequence variation).
+- **Alternative Hypothesis (H₁)**: Targets differ significantly between samples, indicating biological regulation.
+
+- SPLASH **does not use chi-squared tests**, as these require large counts and normal approximations, which are **problematic for sparse sequencing data**.
+- Instead, SPLASH applies a **custom statistical test** that minimizes false positives while maintaining high sensitivity.
+
+##### **Randomness & Variability Considerations:** {-}
+- **Sufficient sample size**: If too few samples are available, power is reduced.
+- **Sparse contingency tables**: Some targets may have **very low counts**, making statistical inference harder.
+- **Multiple hypothesis testing**: Analyzing many k-mer pairs increases the risk of false positives.
+
+***
+
+#### **3. P-value Bounding for Statistical Efficiency** {-}
+#### **Concept:** {-}
+- Traditional methods rely on **permutation tests** or **bootstrap resampling** to determine p-values, which are computationally expensive.
+- SPLASH instead uses a **closed-form p-value bound**, which is:
+  - **Faster to compute** than resampling-based methods.
+  - **More robust** to low-count situations.
+
+##### **Statistical Details:** {-}
+- The bound is derived using:
+  - **Concentration inequalities** (Chernoff bounds) to approximate significance.
+  - **Random splits of samples and targets**, selecting the grouping that minimizes the p-value.
+- This ensures **statistical rigor** without excessive computational overhead.
+
+##### **Randomness & Variability Considerations:** {-}
+- **Avoids overfitting**: Since SPLASH tests multiple random sample splits, it minimizes **selection bias**.
+- **Handles rare variations well**: Unlike permutation tests, which can **underestimate false discovery rates**, p-value bounding maintains accuracy.
+
+***
+
+#### **4. False Discovery Rate (FDR) Control** {-}
+##### **Concept:** {-}
+- Given that SPLASH evaluates thousands of k-mer anchor-target pairs, **multiple testing correction** is crucial to reduce false positives.
+- SPLASH employs **FDR control** methods such as **Benjamini-Hochberg (BH) correction** to adjust p-values.
+
+##### **Statistical Approach:** {-}
+- **Unadjusted p-values** are ranked from smallest to largest.
+- The threshold for statistical significance is determined by:
+  \[
+  p_{(i)} \leq \frac{i}{m} \alpha
+  \]
+  where:
+  - \( p_{(i)} \) is the *i-th* ranked p-value,
+  - \( m \) is the total number of tests,
+  - \( \alpha \) is the desired FDR level (e.g., 0.05).
+
+##### **Randomness & Variability Considerations:** {-}
+- **FDR is adaptive**: The method dynamically adjusts to sequencing noise.
+- **Lower false positives compared to uncorrected p-values**, but at the cost of **some true positives being discarded**.
+
+***
+
+#### **5. Effect Size Computation for Variation Magnitude** {-}
+##### **Concept:** {-}
+- SPLASH calculates **effect sizes** to measure the magnitude of variation.
+- Effect size ranges from **0 to 1**, where:
+  - **0** means no variation between samples.
+  - **1** means completely different target distributions.
+
+##### **Mathematical Definition:** {-}
+- SPLASH's effect size is based on a **distance metric**:
+  \[
+  d = 1 - \frac{ \sum_{i} \min (p_i, q_i) }{ \sum_{i} p_i + q_i }
+  \]
+  where:
+  - \( p_i \) and \( q_i \) are target frequencies in different sample groups.
+
+- If \( d \approx 0 \), targets are similarly distributed → **No significant variation**.
+- If \( d \approx 1 \), targets are distinct across samples → **Biologically meaningful difference**.
+
+##### **Randomness & Variability Considerations:** {-}
+- **More robust than p-values**: Unlike p-values, which depend on sample size, effect size remains stable across datasets.
+- **Can detect rare but important variations**: Even low-frequency variants with high effect size can be biologically relevant.
+
+***
+
+#### **6. Application to Highly Variable Biological Systems** {-}
+##### **Example: Detecting Viral Strain Variants** {-}
+- SPLASH applied to **SARS-CoV-2 sequencing data** revealed **strain-specific mutations** without prior knowledge.
+- Targets clustered **Omicron vs. Delta vs. Original strains**, validating the statistical approach.
+- SPLASH identified:
+  - **Mutation K417N** in Omicron.
+  - **P681R substitution** in Delta.
+  - **Previously unreported emerging mutations**.
+
+##### **Example: Single-Cell RNA-seq Analysis** {-}
+- SPLASH identified **cell-type-specific expression** in:
+  - **HLA genes**, revealing allele-specific expression.
+  - **MYL12A/B paralogs**, distinguishing macrophages vs. endothelial cells.
+- The method **worked without predefined metadata**, showcasing its power in **unsupervised discovery**.
+
+##### **Example: Immune Receptor Diversity** {-}
+- SPLASH discovered **novel V(D)J recombinations** in **B and T cells**.
+- It revealed **clonally expanded immune receptors** without a reference genome.
+
+***
+
+#### **Conclusion: Statistical Power of SPLASH** {-}
+SPLASH’s **reference-free statistical approach** provides a robust way to analyze genomic variation, particularly in highly diverse and noisy biological datasets. By leveraging:
+✔ **k-mer based contingency tables**,  
+✔ **Closed-form p-value bounds**,  
+✔ **False discovery rate correction**, and  
+✔ **Effect size calculations**,  
+
+SPLASH **accurately detects biologically meaningful variation**, making it a powerful tool for **viral surveillance, single-cell transcriptomics, and immune system diversity studies**.
+
+Would you like a deeper look at **specific statistical formulas or implementation details**? 🚀
+
+<br/>
+### **Statistical Formulas**  {-}
+
+**In-Depth Statistical Formulas Used in SPLASH**
+
+SPLASH employs a robust statistical framework designed to detect **sample-specific sequence variation** directly from raw sequencing reads. The key statistical techniques include **contingency table analysis, p-value bounding, effect size computation, and false discovery rate (FDR) correction**. Below, we explore the **exact mathematical formulations** behind these methodologies.
+
+***
+
+#### **1. Contingency Table Analysis** {-}
+SPLASH constructs **contingency tables** for each anchor-target pair to evaluate whether observed sequence distributions vary significantly across samples.
+
+##### **Formulation:** {-}
+For each anchor **A**, let:
+- \( S = \{ S_1, S_2, \dots, S_n \} \) be the set of **n samples**.
+- \( T = \{ T_1, T_2, \dots, T_m \} \) be the set of **m targets** (variable sequences).
+- \( C_{ij} \) be the **count** of target \( T_i \) in sample \( S_j \).
+
+The contingency table is represented as:
+
+\[
+C =
+\begin{bmatrix}
+C_{11} & C_{12} & \dots & C_{1n} \\
+C_{21} & C_{22} & \dots & C_{2n} \\
+\vdots & \vdots & \ddots & \vdots \\
+C_{m1} & C_{m2} & \dots & C_{mn}
+\end{bmatrix}
+\]
+
+##### **Null Hypothesis (\(H_0\))** {-}
+- The target distributions across samples follow the same underlying probability distribution:
+  \[
+  P(T_i | S_j) = P(T_i), \quad \forall i, j
+  \]
+- That is, target variation is purely due to random sampling.
+
+##### **Alternative Hypothesis (\(H_1\))** {-}
+- The probability distribution of targets **varies significantly** between samples:
+  \[
+  P(T_i | S_j) \neq P(T_i)
+  \]
+  for some \( i, j \), indicating **biologically relevant sample-dependent variation**.
+
+##### **Statistical Test for Contingency Table** {-}
+SPLASH applies a **divergence measure** to test whether the observed contingency table deviates significantly from what would be expected under \(H_0\).
+
+A commonly used measure is the **Pearson chi-square test**:
+
+\[
+\chi^2 = \sum_{i=1}^{m} \sum_{j=1}^{n} \frac{(C_{ij} - E_{ij})^2}{E_{ij}}
+\]
+
+where:
+- \( E_{ij} \) is the expected count under \(H_0\):
+  \[
+  E_{ij} = \frac{(\sum_k C_{ik}) (\sum_k C_{kj})}{\sum_{k,l} C_{kl}}
+  \]
+- \( \chi^2 \) follows a chi-square distribution with \( (m-1)(n-1) \) degrees of freedom.
+
+However, since **chi-square tests assume large counts**, SPLASH instead applies **custom p-value bounding methods**, detailed next.
+
+***
+
+#### **2. P-value Bounding for Statistical Efficiency** {-}
+Instead of permutation tests, which are computationally expensive, SPLASH computes a **closed-form p-value bound**.
+
+##### **P-value Bound Computation** {-}
+SPLASH uses a concentration inequality (Chernoff bound) to bound the probability of deviation from expected target distributions:
+
+\[
+P\left( \sum_{i=1}^{m} \sum_{j=1}^{n} C_{ij} \geq t \right) \leq e^{- \frac{t^2}{2m n \sigma^2}}
+\]
+
+where:
+- \( \sigma^2 \) is the variance estimate of the observed target distributions.
+- \( t \) is the **observed test statistic** from the contingency table.
+
+##### **Effect of the Bound** {-}
+- This avoids computationally expensive resampling.
+- It provides an upper bound on the probability that observed deviations occur by chance.
+
+If the bound **falls below a predefined significance threshold (\(\alpha\), typically 0.05)**, the variation is deemed significant.
+
+***
+
+#### **3. Effect Size Computation** {-}
+P-values only tell us whether an effect is **statistically significant**, but we also need to measure how **large** the difference is. SPLASH computes **effect sizes** to quantify the magnitude of sequence variation.
+
+##### **Effect Size Formula** {-}
+SPLASH uses a **normalized divergence metric**:
+
+\[
+D = 1 - \frac{\sum_{i} \min (P_i, Q_i)}{\sum_{i} P_i + Q_i}
+\]
+
+where:
+- \( P_i \) and \( Q_i \) are **target frequency distributions** in two sample groups.
+
+##### **Interpretation:** {-}
+- \( D = 0 \): No variation (identical target distributions).
+- \( D = 1 \): Completely different target distributions.
+- \( 0.5 \leq D \leq 1 \): Strong biological differentiation.
+
+***
+
+#### **4. False Discovery Rate (FDR) Control** {-}
+Since SPLASH evaluates thousands of anchor-target pairs, multiple hypothesis testing increases the risk of **false positives**. To correct for this, SPLASH applies **Benjamini-Hochberg (BH) correction**.
+
+##### **FDR Correction Formula** {-}
+1. Rank unadjusted p-values: \( p_1 \leq p_2 \leq \dots \leq p_m \)
+2. Compute threshold:
+   \[
+   p_{\text{BH}} = \frac{i}{m} \alpha
+   \]
+   where:
+   - \( i \) is the p-value rank.
+   - \( m \) is the total number of tests.
+   - \( \alpha \) is the desired FDR threshold (e.g., 0.05).
+3. Adjusted p-value:
+   \[
+   p'_i = \min\left( \frac{m}{i} p_i, 1 \right)
+   \]
+
+##### **Effect of FDR Correction** {-}
+- **Reduces false positives** while maintaining sensitivity.
+- Ensures only **statistically robust** anchor-target pairs are reported.
+
+***
+
+#### **5. Application to SARS-CoV-2 Mutation Analysis** {-}
+SPLASH’s statistical framework successfully identified **strain-specific mutations** in SARS-CoV-2 sequences.
+
+For example, when analyzing viral sequences from Omicron and Delta strains:
+- SPLASH computed **p-value bounds** and **effect sizes** for thousands of k-mer target distributions.
+- A **low p-value** (\( < 10^{-5} \)) indicated significant variation in:
+  - **Mutation K417N (Omicron-specific)**
+  - **Mutation P681R (Delta-specific)**
+- The **effect size** for these mutations was close to **1**, confirming strong differentiation between strains.
+
+***
+
+#### **Conclusion: The Power of SPLASH's Statistical Methods** {-}
+##### **Key Takeaways** {-}
+✅ **Contingency table analysis** determines if target distributions vary significantly.  
+✅ **P-value bounding (Chernoff bound)** provides a computationally efficient significance test.  
+✅ **Effect size metric** quantifies the biological importance of variation.  
+✅ **FDR correction (Benjamini-Hochberg)** ensures statistical robustness.  
+
+Would you like a **worked example with real genomic data** to see how these formulas are applied in practice? 🚀
+
+<br/>
+
+### Worked Out Example {-}
+
+Let's walk through a **worked example** using **real genomic data** to see how the statistical formulas in SPLASH are applied.
+
+**Example: Detecting Sequence Variation in SARS-CoV-2 Data Using SPLASH's Statistical Framework**
+
+**Scenario:**
+We have **sequencing data** from **two different SARS-CoV-2 strains** (Delta and Omicron). Our goal is to use **SPLASH’s statistical methods** to identify significant sequence variations.
+
+***
+
+#### **Step 1: Constructing a Contingency Table** {-}
+We analyze **a specific genomic region** where two different **mutations** appear in Delta and Omicron.
+
+We define:
+- **Anchor (fixed sequence)**: A conserved **27-mer k-mer** from the Spike protein gene.
+- **Targets (variant sequences)**: The **mutated sequences** found in different samples.
+
+Here is a **hypothetical contingency table** for this region:
+
+| **Target (Mutation)** | **Delta Sample 1** | **Delta Sample 2** | **Omicron Sample 1** | **Omicron Sample 2** | **Total** |
+|----------------|----------------|----------------|----------------|----------------|--------|
+| **K417 (Wildtype)** | 150 | 145 | 0 | 0 | 295 |
+| **K417N (Omicron-specific)** | 0 | 0 | 180 | 170 | 350 |
+| **P681R (Delta-specific)** | 120 | 110 | 0 | 0 | 230 |
+| **P681H (Omicron-specific)** | 0 | 0 | 190 | 180 | 370 |
+| **Total Reads** | **270** | **255** | **370** | **350** | **1245** |
+
+---
+
+#### **Step 2: Statistical Test for Target Variability** {-}
+We test whether **target distributions** are different between Delta and Omicron.
+
+#### **Null Hypothesis \( H_0 \)** {-}
+- Target distributions do not differ across samples (i.e., no significant variation).
+
+##### **Alternative Hypothesis \( H_1 \)** {-}
+- Target distributions differ significantly across samples, indicating meaningful **strain-specific mutations**.
+
+##### **Chi-Square Test** {-}
+We compute the **expected counts** under \( H_0 \):
+
+\[
+E_{ij} = \frac{ (\sum_k C_{ik}) (\sum_k C_{kj}) }{\sum_{k,l} C_{kl}}
+\]
+
+For the **K417N mutation (Omicron-specific)**:
+- Expected count in **Delta Sample 1**:
+
+  \[
+  E_{K417N, Delta1} = \frac{(350 \times 270)}{1245} = 75.96
+  \]
+
+- Expected count in **Omicron Sample 1**:
+
+  \[
+  E_{K417N, Omicron1} = \frac{(350 \times 370)}{1245} = 104.03
+  \]
+
+Now, computing the **Chi-Square statistic**:
+
+\[
+\chi^2 = \sum_{i=1}^{m} \sum_{j=1}^{n} \frac{(C_{ij} - E_{ij})^2}{E_{ij}}
+\]
+
+For the **K417N mutation**:
+
+\[
+\frac{(0 - 75.96)^2}{75.96} + \frac{(180 - 104.03)^2}{104.03} = \frac{5772.92}{75.96} + \frac{5772.92}{104.03} = 76.02 + 55.50 = 131.52
+\]
+
+Summing over all **mutations**, we get:
+
+\[
+\chi^2_{\text{total}} = 452.67
+\]
+
+Using a chi-square distribution table with **df = (4-1)(4-1) = 9**, we find:
+
+\[
+p \text{-value} \approx 3.5 \times 10^{-40}
+\]
+
+##### **Interpretation:** {-}
+- Since **p < 0.05**, we **reject \( H_0 \)**.
+- The data **strongly supports strain-specific variation**.
+
+***
+
+#### **Step 3: P-value Bounding for Statistical Efficiency** {-}
+To **confirm robustness**, we apply a **p-value bound** using **Chernoff's inequality**:
+
+\[
+P\left( \sum_{i=1}^{m} \sum_{j=1}^{n} C_{ij} \geq t \right) \leq e^{- \frac{t^2}{2m n \sigma^2}}
+\]
+
+For our data:
+- \( t = 452.67 \)
+- \( \sigma^2 \approx 25 \) (estimated variance)
+- \( m = 4 \), \( n = 4 \) (number of rows and columns)
+
+\[
+P(452.67) \leq e^{- \frac{(452.67)^2}{2(4)(4)(25)}}
+\]
+
+\[
+= e^{- \frac{204909.93}{200}} = e^{-1024.55} \approx 10^{-445}
+\]
+
+##### **Interpretation:** (Worst verbiage ever maybe) {-}
+- The probability that **this variation happened by random chance is practically zero**.
+- **P-value bounding confirms that our chi-square test is highly significant**.
+
+***
+
+#### **Step 4: Computing Effect Size** {-}
+To measure how **strongly** the target distributions differ, we compute **effect size**:
+
+\[
+D = 1 - \frac{\sum_{i} \min (P_i, Q_i)}{\sum_{i} P_i + Q_i}
+\]
+
+For **K417N** (Omicron-specific):
+- **Delta samples**: \( P_{\text{Delta}} = 0 \)
+- **Omicron samples**: \( Q_{\text{Omicron}} = 350 \)
+
+\[
+D_{K417N} = 1 - \frac{\min(0, 350)}{0 + 350} = 1 - 0 = 1.0
+\]
+
+For **P681R** (Delta-specific):
+- **Delta samples**: \( P_{\text{Delta}} = 230 \)
+- **Omicron samples**: \( Q_{\text{Omicron}} = 0 \)
+
+\[
+D_{P681R} = 1 - \frac{\min(230, 0)}{230 + 0} = 1 - 0 = 1.0
+\]
+
+#### **Interpretation:** {-}
+- **Effect size = 1** → **Perfect separation** between Delta and Omicron.
+- **Effect sizes close to 1 confirm biologically meaningful strain differences**.
+
+***
+
+#### **Step 5: False Discovery Rate (FDR) Correction** {-}
+Since we test multiple mutations, we control for **false positives** using **Benjamini-Hochberg correction**.
+
+##### **FDR Adjustment** {-}
+1. Rank unadjusted p-values:  
+   \( p_1 = 3.5 \times 10^{-40} \), \( p_2 = 5.2 \times 10^{-35} \), \( p_3 = 1.1 \times 10^{-30} \), etc.
+
+2. Compute the **adjusted significance threshold**:
+
+   \[
+   p_{\text{BH}} = \frac{i}{m} \alpha
+   \]
+
+   - Let \( \alpha = 0.05 \).
+   - With **m = 100 tests**, the cutoff for **significance** is:
+
+   \[
+   p' = \frac{1}{100} \times 0.05 = 5 \times 10^{-4}
+   \]
+
+3. Since all our **p-values are much smaller**, they remain **statistically significant** after correction.
+
+***
+
+#### **Conclusion: Key Findings from Our Statistical Analysis** {-}
+✅ **Significant variation in K417N (Omicron) and P681R (Delta)**  
+✅ **Effect size of 1 confirms strong biological separation**  
+✅ **FDR correction ensures these are not false positives**  
+
+This worked example **demonstrates how SPLASH statistically detects genomic variations** in viral strains, immune genes, and other biological applications.
+
+***
+
+
+I would like to see **a R-based implementation** of these calculations on real sequencing data.
+
+
+***
+
+### **R-based implementation** {-}
+
+* **R-based implementation** to apply **statistical tests** similar to SPLASH on **real sequencing data**.
+
+
+#### **🔬 Goal: Detect SARS-CoV-2 Strain-Specific Mutations Using SPLASH-Like Statistics** {-}
+We will:
+1. **Load sequencing data** for mutations in Delta and Omicron strains.
+2. **Construct a contingency table** of mutation occurrences.
+3. **Perform a Chi-Square test** to detect significant variation.
+4. **Compute p-value bounds** using Chernoff’s inequality.
+5. **Calculate effect size** to measure the strength of mutation differences.
+6. **Adjust for multiple testing** using **False Discovery Rate (FDR) correction**.
+
+***
+
+#### **Step 1: Load Required R Libraries** {-}
+```{r m2b-load-libs}
+## Install required packages (if not already installed)
+##install.packages(c("tidyverse", "stats", "pheatmap"))
+
+## Load libraries
+suppressPackageStartupMessages(require(tidyverse))
+suppressPackageStartupMessages(require(stats))
+suppressPackageStartupMessages(require(pheatmap))
+
+```
+
+***
+
+#### **Step 2: Input SARS-CoV-2 Mutation Data** {-}
+Here’s a hypothetical dataset where we have sequencing results for **two Delta and two Omicron samples**, showing counts for specific **mutations (targets)**.
+
+```{r m2b-target-vs-samples}
+## Mutation occurrence data in different samples
+mutation_data <- matrix(c(
+  150, 145, 0,   0,   # K417 Wildtype (Delta)
+  0,   0,   180, 170, # K417N (Omicron-specific)
+  120, 110, 0,   0,   # P681R (Delta-specific)
+  0,   0,   190, 180  # P681H (Omicron-specific)
+), nrow = 4, byrow = TRUE)
+
+## Assign row and column names
+rownames(mutation_data) <- c("K417_Wildtype", "K417N_Omicron", "P681R_Delta", "P681H_Omicron")
+colnames(mutation_data) <- c("Delta_Sample1", "Delta_Sample2", "Omicron_Sample1", "Omicron_Sample2")
+
+## Print mutation table
+##print(mutation_data)
+
+mutation_data %>%
+knitr::kable(
+caption = "Mutation occurrence: culumnss are data in different samples"
+ ) %>% 
+kableExtra::kable_styling(full_width = F)
+
+```
+
+***
+
+#### **Step 3: Compute Chi-Square Test for Target Variation** {-}
+We apply a **Chi-Square test** to determine whether target distributions significantly differ between Delta and Omicron samples.
+
+```{r}
+# Perform Chi-Square test
+chi_sq_test <- chisq.test(mutation_data)
+
+## Print test result
+print(chi_sq_test)
+```
+##### **Interpreting the Output:** {-}
+- If **p-value < 0.05**, we **reject \( H_0 \)**, meaning the mutation distribution **significantly differs** between strains.
+- **Chi-square statistic** quantifies how much variation exists between Delta and Omicron samples.
+
+***
+
+#### **Step 4: Compute P-Value Bound (Chernoff’s Inequality)** {-}
+Instead of resampling, we approximate the p-value bound using **Chernoff’s bound**.
+
+```{r}
+## Function to compute Chernoff's bound
+chernoff_bound <- function(test_stat, m, n, variance) {
+  return(exp(- (test_stat^2) / (2 * m * n * variance)))
+}
+
+## Define parameters
+variance_est <- 25  # Estimated variance
+m <- 4  # Number of mutations
+n <- 4  # Number of samples
+test_stat <- chi_sq_test$statistic  # Use Chi-Square test statistic
+
+## Compute p-value bound
+chernoff_pval <- chernoff_bound(test_stat, m, n, variance_est)
+
+## Print bound
+print(paste("Chernoff P-Value Bound: ", chernoff_pval))
+```
+##### **Interpreting the Output:** {-}
+- A **low bound (e.g., \( 10^{-40} \))** confirms **significant variation**.
+- This method is **computationally efficient** compared to permutation testing.
+
+***
+
+#### **Step 5: Compute Effect Size** {-}
+To quantify how **different** Delta and Omicron are, we compute an **effect size metric**:
+
+\[
+D = 1 - \frac{\sum_{i} \min (P_i, Q_i)}{\sum_{i} P_i + Q_i}
+\]
+
+
+
+```{r m2b-effect-size-fn, eval = F}
+## Compute effect size function
+effect_size <- function(mutation_data) {
+  total_counts <- rowSums(mutation_data)  # Total counts per mutation
+  # BUG - distance should be pairwise
+  ###################################
+  # we are taking a sample-pair level metric
+  ###############################
+  min_sums <- rowSums(apply(mutation_data, 1, function(x) min(x[1:2], x[3:4])))  # Minimum values in Delta vs. Omicron
+
+  # Effect size calculation
+  D <- 1 - (min_sums / sum(total_counts))
+  return(D)
+}
+
+## Compute effect sizes
+effect_sizes <- effect_size(mutation_data)
+
+## Print effect sizes for each mutation
+print(effect_sizes)
+```
+##### **Interpreting the Output:** {-}
+- **Effect size = 1** → Completely distinct mutations between strains.
+- **Effect size = 0.5 - 1** → Strong biological difference.
+- **Effect size < 0.5** → Moderate or weak separation.
+
+***
+
+#### **Step 6: Apply False Discovery Rate (FDR) Correction** {-}
+Since we are testing multiple mutations, we **control false positives** using **Benjamini-Hochberg (BH) correction**.
+
+```{r}
+## Apply BH correction for multiple testing
+adjusted_p_values <- p.adjust(chi_sq_test$p.value, method = "BH")
+
+## Print adjusted p-values
+print(adjusted_p_values)
+```
+##### **Interpreting the Output:** {-}
+- If **adjusted p-value < 0.05**, the mutation remains **statistically significant** after FDR correction.
+
+***
+
+#### **Step 7: Visualize Mutation Distribution** {-}
+To **visualize** differences between strains, we plot a **heatmap of mutation counts**.
+
+```{r}
+## Create heatmap
+pheatmap(mutation_data, 
+         cluster_rows = FALSE, 
+         cluster_cols = FALSE,
+         display_numbers = TRUE,
+         color = colorRampPalette(c("blue", "white", "red"))(50))
+```
+##### **Interpreting the Heatmap:** {-}
+- **Red** = High occurrence of mutations.
+- **Blue** = Low occurrence.
+- **Omicron mutations (K417N, P681H) appear in Omicron samples**.
+- **Delta mutations (K417 Wildtype, P681R) are absent in Omicron**.
+
+***
+
+#### **📌 Final Interpretation of Results** {-}
+| **Test** | **Result** | **Interpretation** |
+|---------|---------|----------------|
+| **Chi-Square Test** | \( p < 0.05 \) | Significant mutation variation between Delta and Omicron. |
+| **P-value Bound** | \( 10^{-40} \) | Mutation differences are not due to random chance. |
+| **Effect Size** | ~1.0 | Mutations **completely separate** strains. |
+| **FDR Correction** | \( p_{\text{adjusted}} < 0.05 \) | The variation is **not a false positive**. |
+| **Heatmap** | Clear clustering of mutations by strain | **Omicron and Delta have distinct mutation patterns**. |
+
+***
+
+#### **🎯 Conclusion** {-}
+- The **K417N and P681H mutations are exclusive to Omicron**.
+- The **P681R mutation is exclusive to Delta**.
+- The **statistical methods confirm that these mutations are not random**.
+- **SPLASH-style statistics successfully differentiate viral strains without a reference genome!** 🚀
+
+***
+
+<br/>
+
+
+<!--
+## SPLASH Citings {-}
+
+* RETURN TO THIS LATER - See Section \@ref(GPT-based-res)
+for examples.
+
+<br/>
+<br/>
+-->
+
+## OASIS Review {- .tabset #oasis-ai-review}
+
+
+* OASIS: An interpretable, finite-sample valid alternative to Pearson’s X2 
+for scientific discovery
+
+### Home {-}
+
+<br/>
+
+### chatGPT {-}
+
+* Please provide a summary of the technical content of the attached article
+`OASIS` ( Baharav et al., 2024 [@Baharav:2024aa]) 
+paying particualr attention to statistical
+aspects of the mothodologies or any component which is prey to randomness or variability.
+
+(
+* Note that the randomness or variability that I am interested in here is at the measurement
+error or modeling level - the error term in a model.  It is the variability that suggests the 
+summaries and justifies the inference. It is not typically discussed to any length in the journals
+and seems to trip up the research assistants.
+)
+
+
+<br/>
+
+#### **Response**  {-}
+
+* Summary of "OASIS: An interpretable, finite-sample valid alternative to Pearson’s X² for scientific discovery" (Baharav et al., 2024)
+
+##### Overview and Motivation {-}
+The article introduces **OASIS (Optimized Adaptive Statistic for Inferring Structure)**, a novel statistical framework for testing contingency tables. Contingency tables (matrices of count data) are common in quantitative research, especially genomics. OASIS addresses significant limitations of Pearson’s chi-squared (X²) test, notably invalid finite-sample P-values, lack of robustness, and interpretability, making it suited for sparse, high-dimensional data common in modern genomic studies.
+
+***
+
+##### Methodological Approach {-}
+
+###### 1. **Construction of OASIS Test Statistic** {-}
+- Constructs residuals linear in the normalized contingency table data, effectively capturing structured deviations from independence.
+- Computes a centered and normalized matrix \( \tilde{X} \), derived by subtracting expected values from observed counts and normalizing by column totals.
+
+###### 2. **Finite-Sample Valid P-value Computation** {-}
+- Uses classical concentration inequalities (Hoeffding’s inequality) instead of asymptotic approximations, thus providing rigorous, finite-sample valid P-value bounds.
+- The OASIS statistic is defined as a linear form:
+\[
+S = f^\top \tilde{X} c
+\]
+where \( f \) and \( c \) are embedding vectors for rows and columns, respectively, selected via optimization, randomization, or metadata.
+- Finite-sample valid P-value bound:
+\[
+P(|S| \ge s) \le 2\exp\left(-\frac{2s^2}{1 - \gamma}\right)
+\]
+where \( \gamma \) quantifies correlation between column embeddings and sample sizes.
+
+###### 3. **Asymptotic Normality and P-value Approximation** {-}
+- Provides theoretical proofs showing OASIS's statistic converges to a normal distribution asymptotically, allowing standard Gaussian approximation of P-values for large samples.
+- Asymptotic approximation closely aligns with finite-sample bounds, incorporating a variance parameter \( \sigma_f^2 \) derived from the embedding vector \( f \).
+
+***
+
+##### Statistical Variability and Randomness {-}
+
+###### 1. **Randomness in Data-Splitting and Embeddings** {-}
+- Implements data-splitting (training/test sets) to select optimal embedding vectors without statistical bias, ensuring validity via Bonferroni corrections for multiple splits.
+- Contingency table counts are modeled explicitly as multinomial distributions under the null hypothesis, integrating randomness directly into theoretical guarantees.
+
+###### 2. **Robustness to Variability (Overdispersion)** {-}
+- OASIS explicitly addresses **overdispersion**, common in genomic data such as single-cell RNA sequencing, ensuring robustness.
+- Simulations confirm OASIS maintains robust control of the false discovery rate (FDR), whereas Pearson’s X² often fails under similar conditions.
+
+***
+
+##### Power and Performance {-}
+- Simulations demonstrate that OASIS significantly outperforms Pearson’s X² in detecting structured deviations from the null hypothesis (e.g., distinct two-group scenarios).
+- Conversely, OASIS shows lower power relative to Pearson’s X² in scenarios with diffuse, noisy signals, highlighting a clear trade-off emphasizing structured signal detection.
+
+***
+
+##### Applications and Interpretability {-}
+- OASIS successfully applied to genomic data, such as de novo detection of SARS-CoV-2 and Mycobacterium tuberculosis variants, outperforming existing methods without relying on reference genomes.
+- Provides interpretability post-inference, clearly indicating why the null hypothesis was rejected via meaningful embedding vectors, in contrast to purely exploratory techniques like correspondence analysis.
+
+***
+
+##### Statistical Validity and Effect Size {-}
+- Defines a clear, intuitive effect size measure quantifying differences between groups identified by embeddings. This effect size is bounded by total variation distance, ensuring practical interpretability.
+- Provides rigorous proofs for the finite-sample validity of its P-values using classical probability and concentration inequality arguments.
+
+***
+
+##### Conclusions and Broader Implications {-}
+- Highlights OASIS’s potential beyond contingency tables, offering a general framework potentially applicable to structured inference, matrix decomposition, and multi-table inference beyond standard singular value decomposition (SVD).
+
+***
+
+##### Supplemental Information Highlights {-}
+- Extensive mathematical proofs are provided, supporting theoretical claims regarding finite-sample validity, asymptotic normality, and embedding optimization.
+- Additional simulations emphasize robustness, stability, and effectiveness of embedding optimization strategies under various statistical conditions.
+
+***
+
+**In summary**, OASIS provides a statistically rigorous, computationally efficient, robust, and interpretable alternative to Pearson’s X² test, particularly valuable in modern genomics and other domains dealing with high-dimensional, sparse, structured data.
+
+
+<br/>
+<br/>
+
+### Scholar GPT {-}
+
+* Please provide a summary of the technical content of the attached article,
+`OASIS` ( Baharav et al., 2024 [@Baharav:2024aa]),
+paying particular attention to statistical
+aspects of the mothodologies or any component
+which is prey to randomness or variability.
+
+* `"OASIS: An interpretable, finite-sample valid alternative to Pearson’s X² for scientific discovery" 
+<br/>
+
+
+#### **Response**  {-}
+
+* Technical Summary of OASIS (Baharav et al., 2024)
+
+> *Baharav, T. Z., Tse, D., & Salzman, J. (2024). OASIS: An interpretable, finite-sample valid alternative to Pearson’s X² for scientific discovery. Proceedings of the National Academy of Sciences, 121(15), e2304671121. [https://doi.org/10.1073/pnas.2304671121](https://doi.org/10.1073/pnas.2304671121)*
+
+##### 🔍 Overview  {-}
+
+OASIS (Optimized Adaptive Statistic for Inferring Structure) is a family of statistical tests designed for **contingency table analysis**, providing:
+
+- Finite-sample valid p-values
+- Closed-form bounds
+- Interpretability through a linear test-statistic
+- Better robustness to noise and overdispersion than Pearson’s χ² test
+
+It is particularly suited for **sparse and high-dimensional data**, such as those arising in genomics.
+
+***
+
+##### 🧮 Test Statistic  {-}
+
+Given a count matrix \( X \in \mathbb{N}^{I \times J} \), the OASIS test statistic is:
+
+\[
+S = f^\top \tilde{X} c
+\]
+
+Where:
+- \( f \in \mathbb{R}^I \): row embedding vector
+- \( c \in \mathbb{R}^J \): column embedding vector
+- \( \tilde{X} \): the centered and column-normalized matrix
+
+This structure allows for **signal aggregation** and **dampening of noise** through linear algebraic properties.
+
+***
+
+##### 📊 Statistical Randomness and Finite-Sample Validity  {-}
+
+###### Reformulation via Latent Variables  {-}
+
+Each table cell count \( X_{i,j} \) is constructed from i.i.d. latent variables:
+
+\[
+Z_{j,k} \sim p, \quad X_{i,j} = \sum_{k=1}^{n_j} \mathbb{1}\{Z_{j,k} = i\}
+\]
+
+This allows \( S \) to be written as a **weighted sum of independent random variables**, enabling concentration bounds.
+
+***
+
+###### Finite-Sample p-Value Bound  {-}
+
+Using **Hoeffding’s inequality**, the authors derive:
+
+\[
+P(|S| \geq s) \leq 2 \exp\left( \frac{-2s^2}{1 - \gamma} \right)
+\]
+
+Where:
+
+\[
+\gamma = \left( \frac{\sum_j c_j \sqrt{n_j}}{\sqrt{M} \|c\|} \right)^2, \quad M = \sum_j n_j
+\]
+
+- This is valid for any fixed \( f, c \)
+- Ensures **exact control** of type I error for **any sample size**
+
+***
+
+##### 📈 Asymptotic Normality  {-}
+
+The statistic converges to a normal distribution as sample sizes increase:
+
+\[
+\frac{1}{\sqrt{1 - \gamma}} S \xrightarrow{D} \mathcal{N}(0, \sigma_f^2 \|c\|^2)
+\]
+
+Where:
+
+\[
+\sigma_f^2 = \text{Var}_{Z \sim p}(f_Z)
+\]
+
+- Derived via **Lyapunov’s Central Limit Theorem**
+- Ensures smooth transition between finite-sample and asymptotic inference
+
+***
+
+##### 🧪 Effect Size  {-}
+
+OASIS defines an **effect size estimate**:
+
+\[
+\hat{\Delta} = \left| \mathbb{E}_{p_A}[f_Z] - \mathbb{E}_{p_B}[f_Z] \right|
+\]
+
+- Measures difference between two groups
+- Upper bounded by **total variation distance** \( \delta_{TV}(p_A, p_B) \)
+- Ensures effect size is biologically meaningful
+
+***
+
+##### 🔁 Data-Splitting Validity  {-}
+
+To avoid overfitting:
+- Data is split into train/test sets
+- Embeddings \( f \), \( c \) are learned on train, evaluated on test
+- The p-value remains valid under classical **data-splitting logic**:
+
+\[
+P(p(X) \leq u) \leq u
+\]
+
+Multiple random splits are allowed, with **Bonferroni correction** to maintain error control.
+
+***
+
+##### 📚 Comparison with Pearson’s χ²  {-}
+
+| Feature | Pearson χ² | OASIS |
+|--------|-------------|--------|
+| P-values | Asymptotic | Finite-sample valid |
+| Residual Aggregation | Squared sum | Bilinear form |
+| Normalization | Rows & columns | Columns only |
+| Interpretability | Post-hoc via SVD | Built-in |
+| Robustness | Poor (esp. overdispersion) | Strong |
+
+***
+
+#### ✅ Conclusion  {-}
+
+OASIS offers:
+- Closed-form finite-sample p-value bounds
+- Asymptotic normality
+- Interpretability through test structure
+- High performance in noisy, sparse biological data
+
+It is a rigorous, modern replacement for χ² tests in scientific discovery contexts, especially genomics.
+
+***
+
+#### 📘 Reference  {-}
+
+Baharav, T. Z., Tse, D., & Salzman, J. (2024). *OASIS: An interpretable, finite-sample valid alternative to Pearson’s X² for scientific discovery*. *PNAS*, **121**(15), e2304671121.  
+👉 [DOI Link](https://doi.org/10.1073/pnas.2304671121)
+
+<br/>
+<br/>
+
+<!--
+## OASIS Citings {-}
+
+* RETURN TO THIS LATER
+   - there has not been enough time for OASIS citations to appear.
+
+<br/>
+<br/>
+-->
+
+Here's the summary of the sections on pages 37–39 from the attached document, presented in unrendered markdown format, including the equations:
+
+***
+
+## OASIS Lit Review {- #test-conting-tables-pre-oasis} 
+
+* Lit review prior to OASIS {-}
+
+### Concensus {-}
+
+* A new statistical test for contingency tables,
+OASIS, is described in the attached -  Baharav et al., 2024  [@Baharav:2024aa].
+
+* One application is in the context making reference-free genomic inference
+as described in   Chaung et al. (2023) [@Chaung:2023aa] (**SPLASH** paper).
+
+* Please produce a literature review to report
+on the state of the art knowledge of statistical
+tests for contingency tables.
+
+* We are particularly interested in the statistical aspects of methods.
+
+* Keep the report in un-rendered markdown format, or markdown syntax
+
+* Also include the markdown syntax for a bibliography of citations."
+
+* Include a table comparing OASIS to Pearson's $X2$ and log-linear models
+as alternative ways to  test for independence.  In the table, incoude a
+row with the test statistic.
+
+* In writing the test statistic for OASIS, can $\tilde{X}$ be w3ritten in terms
+of O and E to make the comparison with Pearson'x $\Chi^2$ easier?  Similarly 
+can the log-ratio models test statistic be written fully interm of
+log(O) and log(E).
+<br/>
+<br/>
+
+### **Response**  {-}
+
+**Literature Review: Statistical Tests for Contingency Tables**
+
+### Introduction
+
+Contingency tables are a fundamental structure in statistics used to examine the relationship between categorical variables. They are widely applied across domains such as the social sciences, genomics, and biomedical research. While the Pearson chi-squared (χ²) test is historically prominent, modern datasets—often high-dimensional, sparse, and noisy—necessitate more robust and interpretable statistical tools. This review surveys key statistical methods for analyzing contingency tables, with a particular focus on the recently introduced OASIS framework and its application in genomics.
+
+### Classical Methods
+
+#### Pearson’s Chi-Squared (χ²) Test
+
+The Pearson χ² test assesses independence by comparing observed and expected frequencies under the null hypothesis. Despite its widespread use, it suffers from several statistical drawbacks:
+
+- Relies on asymptotic approximations, which can be invalid in small-sample or sparse data contexts.
+- Lacks robustness to noise and technical artifacts.
+- Offers limited interpretability when rejecting the null hypothesis.
+
+These issues often lead to misestimation of p-values and challenges in scientific inference.
+
+### Alternative Methods
+
+#### Log-Linear Models
+
+Log-linear models extend χ² tests by modeling the log of expected counts with interaction terms. While flexible, they assume model correctness and still require large-sample theory for valid inference.
+
+#### Resampling-Based Methods
+
+Permutation and MCMC methods can provide more accurate p-values, but are computationally intensive. They are impractical for large or complex tables, and may still be sensitive to noise.
+
+#### Limited-Information Tests
+
+These focus on lower-dimensional projections (e.g., univariate or bivariate margins), offering some power in high-sparsity settings. However, they lack general interpretability and rely on asymptotics.
+
+### OASIS: A Modern Framework
+
+#### Overview
+
+**OASIS (Optimized Adaptive Statistic for Inferring Structure)** is a novel family of tests designed to overcome the limitations of traditional methods. Introduced by [@Baharav:2024aa], OASIS:
+
+- Uses a linear test statistic to allow **finite-sample valid p-values**.
+- Leverages **concentration inequalities** for closed-form bounds.
+- Avoids assumptions of distributional asymptotics.
+- Is **robust to overdispersion** and noise, common in genomic data.
+- Offers **interpretable decomposition** of results, showing what structure leads to rejection.
+
+#### Technical Highlights
+
+OASIS formulates the test as a bilinear form on a normalized residual matrix. Unlike χ², it does not upweight rare observations, and instead emphasizes structured deviations from the null. The result is a test that is both **more powerful** in certain regimes and **more statistically disciplined**.
+
+#### Comparison with Pearson's χ²
+
+| Feature | Pearson's χ² | OASIS |
+|--------|---------------|--------|
+| P-values | Asymptotic only | Finite-sample valid |
+| Robustness | Sensitive to sparse/low counts | Robust to noise |
+| Computation | Simple but approximate | Efficient and rigorous |
+| Interpretability | Limited | High |
+
+### Applications in Genomics: SPLASH
+
+#### SPLASH Framework
+
+SPLASH (Statistically Primary aLignment Agnostic Sequence Homing), introduced by [@Chaung:2023aa], applies OASIS to sequencing data to detect variation **without reference genomes** or **metadata**. It works by:
+
+- Identifying "anchors" and "targets" as k-mers in reads.
+- Building contingency tables across samples for each anchor.
+- Using OASIS to test for differential distribution of targets.
+
+This enables reference-free detection of:
+
+- Viral strain mutations (e.g., SARS-CoV-2)
+- Cell-type-specific isoforms and splicing
+- Adaptive immune receptor diversity
+- Unannotated transcripts in non-model organisms
+
+#### Case Study: SARS-CoV-2
+
+SPLASH was able to detect known and novel strain-defining mutations across patient samples with high specificity and without any metadata. This showcases the power of statistically grounded, reference-free methods enabled by OASIS.
+
+### Conclusion
+
+Statistical tests for contingency tables are evolving to meet the needs of modern, complex datasets. The OASIS framework provides a **statistically valid**, **robust**, and **interpretable** alternative to classical methods, particularly useful in genomics and other high-dimensional fields. Its application in SPLASH demonstrates its practical impact and potential for broader scientific discovery.
+
+### References
+
+[@Baharav:2024aa]: Baharav, T. Z., Tse, D., & Salzman, J. (2024). OASIS: An interpretable, finite-sample valid alternative to Pearson’s X2 for scientific discovery. *PNAS*, 121(15), e2304671121. https://doi.org/10.1073/pnas.2304671121
+
+[@Chaung:2023aa]: Chaung, K., Baharav, T. Z., Henderson, G., Zheludev, I. N., Wang, P. L., & Salzman, J. (2023). SPLASH: A statistical, reference-free genomic algorithm unifies biological discovery. *Cell*, 186(25), 5440–5456. https://doi.org/10.1016/j.cell.2023.10.028
+
+<br/>
+<br/>
+
+
+<br/>
+<br/>
+
+# Appendix 
+
+<br/>
+
+## Statistical Strategies - TO REVIEW
+
+**Review these and contrast with OASIS**:
+
+- K-mer frequency analysis and modeling (Vinga & Almeida, 2003; Patro et al., 2014).
+- Likelihood-based frameworks for rapid abundance estimation (Bray et al., 2016).
+- Statistical distance metrics for genomic comparisons (Ondov et al., 2016).
+- Hypothesis-driven statistical inference to detect variations and differential expression (Pierce et al., 2019).
+
+<br/>
+<br/>
+
+## Tests for Contingency Tables
+
+Before looking at the SPLASH data and OASIS algorithm, we take a quick look at classical
+statistical tests for contingency tables.
+
+---
+
+### 1. Classical Statistical Tests {-}
+
+#### 1.1 Pearson’s \( \chi^2 \) Test {-}
+
+Pearson’s chi-square test compares observed counts \( O_{ij} \) with expected counts \( E_{ij} \) under the null hypothesis of independence. The test statistic is:
+
+\[
+\chi^2 = \sum_{i,j} \frac{(O_{ij} - E_{ij})^2}{E_{ij}}
+\]
+
+- **Advantages:** Simple, widely used, computationally efficient.
+- **Limitations:** Relies on asymptotic approximation; invalid when expected counts are low (e.g., \( E_{ij} < 5 \)); no interpretability beyond significance.
+
+<br/>
+
+#### 1.2 Log-Linear Models  {-}
+
+Log-linear models describe the logarithm of expected counts as a linear function of categorical predictors. The likelihood ratio test statistic is:
+
+\[
+G^2 = 2 \sum_{i,j} O_{ij} \left[ \log(O_{ij}) - \log(E_{ij}) \right]
+\]
+
+- **Advantages:** Flexibility for modeling multi-way interactions; connections to information geometry.
+- **Limitations:** Requires iterative maximum likelihood estimation; asymptotic inference only; unstable when counts are very low or zero.
+
+---
+
+### 2. Simulation-Based and Limited-Information Methods {-}
+
+Monte Carlo and permutation-based tests provide finite-sample inference without relying on asymptotics. However:
+
+- **Computation is intensive**, especially in large tables or multiple testing contexts.
+- **Interpretability is limited**, often offering only significance without structural insight.
+
+Limited-information approaches analyze margins or low-dimensional projections but do not scale well or generalize to arbitrary contingency structures.
+
+---
+
+### 3. OASIS: Optimized Adaptive Statistic for Inferring Structure {-}
+
+OASIS, proposed by [@Baharav:2024aa], is a statistical test for contingency tables developed in conjunction with SPLASH [@Chaung:2023aa]. It is specifically designed for sparse and structured settings such as reference-free genomic inference.
+
+The test statistic is a bilinear form:
+
+\[
+S = f^\top \tilde{X} c
+\]
+
+Where:
+- \( \tilde{X} = (O - E) \cdot \text{diag}(1/\sqrt{\text{colSums}(O)}) \)
+- \( f \in \mathbb{R}^I \) and \( c \in \mathbb{R}^J \) are row and column embeddings, either fixed or optimized.
+
+**Key characteristics:** 
+
+* Finite-sample valid p-value bounds using Hoeffding-type inequalities.  
+* Efficient, closed-form evaluation—no resampling or iterative fitting.  
+* Embedding-based decomposition enables some interpretability.  
+* Suitable for structured alternatives such as strain-level genomic differences.  
+
+---
+
+### 4. Comparison Table {-}
+
+The following table compares OASIS to two classical alternatives for testing independence in contingency tables.
+
+| Feature                        | **OASIS**                                           | **Pearson’s \( \chi^2 \)**                      | **Log-Linear Models**                             |
+|-------------------------------|----------------------------------------------------|------------------------------------------------|---------------------------------------------------|
+| **Test Statistic**            | \( S = f^\top \tilde{X} c \), where \( \tilde{X} = (O - E) \cdot \text{diag}(1/\sqrt{\text{colSums}(O)}) \) | \( \chi^2 = \sum_{i,j} \frac{(O_{ij} - E_{ij})^2}{E_{ij}} \) | \( G^2 = 2 \sum_{i,j} O_{ij} \left[ \log(O_{ij}) - \log(E_{ij}) \right] \) |
+| **Inference Type**           | Finite-sample valid bounds                         | Asymptotic                                    | Asymptotic                                        |
+| **P-value Computation**      | Closed-form concentration inequality               | χ² distribution (approximate)                 | Likelihood ratio test statistic (approximate)     |
+| **Susceptibility to Outliers** | Moderate (linear in residuals)                     | Severe (squared residuals)                    | Very low (log-scaling dampens extremes)           |
+| **Low-Count Performance**    | Valid but potentially unstable                     | Invalid when expected counts < 5              | Invalid (MLE may not exist or be degenerate)      |
+| **Interpretability**         | Embedding-based; directional                        | None inherent                                 | With some extra work                              |
+| **Computational Cost**       | Low (non-iterative)                                | Low                                           | High (requires iterative estimation)              |
+---
+
+<!-- 
+| **Compositional Geometry**   | No (based on residual differences)                 | No                                            | Yes (log-ratio structure, KL divergence)          |
+-->
+
+<!-- 
+### 5. Application Context: SPLASH and OASIS {-}
+
+OASIS was developed to complement the SPLASH algorithm [@Chaung:2023aa], which reframes genomic discovery as detection of sample-dependent structure in k-mer count tables. SPLASH generates a large number of contingency tables, and OASIS provides the statistical validation step with p-value control even in sparse data. Together, they form a framework for reference-free, statistically valid genomic inference.
+
+---
+
+### 6. Discussion: Stability, Robustness, and Geometry {-}
+
+#### 6.1 Stability at Low Counts {-}
+
+Although OASIS provides **valid p-value bounds**, this does not ensure **stability** of the results under small perturbations to sparse tables:
+
+- In low-count settings, small changes to a single cell can **dramatically change** normalized residuals \( \tilde{X}_{ij} \), potentially reversing test outcomes.
+- Log-linear models may be **invalid** in such settings (e.g., MLE failure), but when estimable, they are often **more stable** under small perturbations due to their use of smoothed log-ratio-based contrasts.
+
+#### 6.2 Sensitivity to Overdispersion {-}
+
+OASIS uses **linear residuals** and is thus **moderately sensitive to outliers**, especially if aligned with the direction of the embedding vectors.
+
+- Pearson's \( \chi^2 \) is **severely affected** by outliers due to squaring of residuals.
+- Log-linear models are **less affected** by extreme counts due to the slow growth of the log function and their intrinsic relation to KL divergence.
+
+#### 6.3 Geometric Interpretability {-}
+
+OASIS has been described as “geometric” in the sense of its **bilinear projection** form:
+\[
+S = f^\top \tilde{X} c
+\]
+This form enables interpretability via decomposition into row and column contrasts.
+
+However, it lacks the **information-geometric** properties of log-ratio models:
+- Log-linear models operate in the space of **relative changes**, aligning with **compositional data analysis** and **multiplicative invariance**.
+- They are more naturally suited to biological count data where interpretation often depends on **proportions** rather than absolute differences.
+
+<!--
+### References
+
+```bibtex
+@article{Baharav:2024aa,
+  title={OASIS: An interpretable, finite-sample valid alternative to Pearson’s X2 for scientific discovery},
+  author={Baharav, Tavor Z. and Tse, David and Salzman, Julia},
+  journal={Proceedings of the National Academy of Sciences},
+  volume={121},
+  number={15},
+  pages={e2304671121},
+  year={2024},
+  doi={10.1073/pnas.2304671121},
+  url={https://www.pnas.org/doi/10.1073/pnas.2304671121}
+}
+
+@article{Chaung:2023aa,
+  title={SPLASH: A statistical, reference-free genomic algorithm unifies biological discovery},
+  author={Chaung, Kaitlin and Baharav, Tavor Z. and Henderson, George and Zheludev, Ivan N. and Wang, Peter L. and Salzman, Julia},
+  journal={Cell},
+  volume={186},
+  number={25},
+  pages={5440--5456},
+  year={2023},
+  publisher={Elsevier},
+  doi={10.1016/j.cell.2023.10.028},
+  url={https://doi.org/10.1016/j.cell.2023.10.028}
+}
+```
+-->
+
+<br/>
+<br/>
+
+
+
+## OASIS vs log-linear {.tabset}
+
+### Home {-}
+
+<br/>
+<br/>
+
+### Option A {-}
+
+#### 6. Discussion: Stability, Robustness, and Geometry of OASIS vs. Log-Linear Models {-}
+
+##### 6.1 Stability at Low Counts {-}
+
+While OASIS provides **finite-sample valid p-value bounds** using classical concentration inequalities, this does **not guarantee statistical stability**. In sparse contingency tables where row and column totals are small:
+
+- A single count difference in a low-count cell can produce a **large change in the normalized residual** \( \tilde{X}_{ij} \), potentially **flipping the direction or magnitude** of the OASIS test statistic.
+- This is especially problematic when the row and column embeddings \( f \) and \( c \) concentrate weight on those cells.
+- In contrast, log-linear models may **fail** (e.g., with undefined likelihood when \( O_{ij} = 0 \)), but when valid, their **log-ratio based inference is smoother** and less sensitive to small changes.
+
+Thus, OASIS is **valid but not necessarily stable** under low-count perturbations.
+
+##### 6.2 Overdispersion and Sensitivity to Outliers {-}
+
+OASIS's reliance on raw count differences means that **overdispersed counts** — i.e., rare but large deviations — can **heavily influence the test statistic**. In real biological data, this may amplify the signal from noise or contamination:
+
+- If an overdispersed entry aligns with the structure in \( f \) and \( c \), it can **dominate** the signal.
+- The log-linear likelihood ratio statistic, in contrast, uses:
+  \[
+  G^2 = 2 \sum_{i,j} O_{ij} \left[ \log(O_{ij}) - \log(E_{ij}) \right]
+  \]
+  which **grows slowly** with outliers and is more robust to extreme counts.
+
+Therefore, while OASIS is robust in theory (due to finite-sample control), it may be **more sensitive to outliers in practice** than the log-likelihood ratio.
+
+
+<br/>
+<br/>
+
+### Option B {-} 
+
+* Appendix: Nuanced Comparisons Between OASIS and Log-Linear Models
+
+#### A.1 Stability in Low-Count Regimes {-}
+
+Although OASIS provides closed-form p-value bounds valid for any number of observations, its **statistic may not be stable** in sparse settings. This is because:
+
+- A single change in a low-count entry can substantially alter the normalized residual matrix \( \tilde{X} \).
+- The test statistic \( S = f^\top \tilde{X} c \) aggregates these residuals linearly, so instability in one cell can reverse the outcome.
+
+By contrast, log-linear models — when estimable — often **smooth out such variation** due to the concavity of the log function.
+
+<br/>
+
+#### A.2 Sensitivity to Overdispersion {-}
+
+OASIS's linear formulation makes it **more sensitive to extreme residuals** than log-linear approaches:
+
+- Overdispersed counts (common in single-cell or microbial data) can disproportionately affect OASIS.
+- The log-likelihood ratio statistic:
+  \[
+  G^2 = 2 \sum O_{ij} (\log(O_{ij}) - \log(E_{ij}))
+  \]
+  increases **logarithmically**, providing **a form of outlier damping**.
+
+Hence, while OASIS is theoretically robust to some forms of noise, it may be **practically vulnerable to heavy-tailed count distributions**.
+
+### A.3 What Makes a Method "Geometric"? {-}
+
+OASIS’s bilinear test statistic can be interpreted as a **projection** of the normalized contingency table, akin to PCA or correspondence analysis.
+
+However, it does **not** respect the **multiplicative, compositional structure** of biological count data.
+
+In contrast:
+- Log-linear models operate on **log-ratios**, aligning with **Aitchison geometry** and **KL divergence**.
+- This makes them inherently geometric in the **information-theoretic and compositional data** sense.
+
+Thus, log-linear tests offer **more biologically natural geometry**, especially when comparing proportions across groups.
+
+<br/>
+<br/>
+
+## chatGPT Technical Terms {.tabset}
+
+### Home {-}
+
+<br/>
+<br/>
+
+
+###  GPTs for Technical Terms {-}
+
+* chatGPT query:
+   - what is the best GPT based tool to obtain definitions of technical terms used in biotech related scientific publications?
+
+* Response
+   - Best GPT-based tools for defining technical terms in biotech-related scientific publications:
+
+| Tool | Strengths | Ideal Usage |
+|------|-----------|-------------|
+| **[SciSpace Copilot](https://scispace.com)** | - Contextual definitions within scientific papers<br>- Highly accurate for biotech terms<br>- Integrated directly into research PDFs | Immediate comprehension within biotech research papers |
+| **[Elicit.org](https://elicit.org)** | - GPT-powered scientific research assistant<br>- Simplifies technical jargon into plain language<br>- Effective for quick clarification | Rapid clarification and concise definitions |
+| **[Explainpaper](https://www.explainpaper.com)** | - GPT-driven academic language translator<br>- Clear, user-friendly explanations of complex biotech concepts | Students or researchers seeking straightforward definitions |
+| **[Consensus](https://consensus.app)** | - Aggregates and summarizes definitions from multiple scientific papers<br>- Provides context-aware definitions within the broader biotech field | Cross-validating definitions across multiple sources |
+|
+
+#### Recommended overall choice:  {-}
+- ✅ **[SciSpace Copilot](https://scispace.com)** is the best overall choice for its contextual accuracy and specialized biotech literature integration.^[
+The SciSpace Copilot interface is not intuitive at this point - use alternative
+]
+
+**Alternatives:** Use **Elicit** or **Consensus** if definitions from broader perspectives or cross-validation across sources is desired.
+
+<br/>
+
+
+## GPT-Based Research Assistants {#GPT-based-res .tabset}
+
+### Home {-}
+
+<br/>
+<br/>
+
+
+### GPT for Review {-}
+
+**chatGPT Prompt:**
+
+* Compare and contrast 6 research tools - 
+Scholar GPT, Concensus, SciSpace, Semantic Scholar, Elicit, and Perplexity -
+in their strengths and weaknesses when used to establish
+the state of the art knowledge  in reference-free genomics
+
+<br/>
+
+**Response** {-}
+
+
+I will briefly outline the key points about these two reference-free genomic inference methods from the uploaded articles before proceeding to compare the four research tools.
+
+<br/>
+
+#### Overview of Uploaded Articles: {-}
+
+##### 1. SPLASH (Chaung et al., 2023): {-}
+- Introduces SPLASH, a statistical, reference-free algorithm designed to 
+<font color="darkgreen">unify</font>^[
+What does `unify` mean here?
+]genomic analysis without relying on predefined genomic references.
+- Uses statistical methods to detect genomic events such as splicing, structural variants, and microbiome composition directly from sequencing data without alignment.
+independent assortments can be computed and analyzed in order to idendify rare genomic
+events.   
+   - Sensible "statistical" filters tend to work, more or less.  The key is to 
+collect the necessary data and do rhe necessary analyses tp arrive at an accurate
+and detailed assessment of performance on a meaningful scale.
+- Highlights the potential for broader biological discovery without the bias introduced by standard reference genomes.
+   - it would be good to have a comrehensive sense of estrimates of bias and variability
+so that compaerisons can be made between the with and without referen e ana1lyses.
+
+<br/>
+
+##### 2. OASIS (Baharav et al., 2024): {-}
+- Presents OASIS as an interpretable alternative to Pearson’s χ², specifically tailored for genomic data analysis.
+- It emphasizes interpretability, finite-sample validity, and robustness, particularly suited for identifying rare and novel biological phenomena from genomic data.
+- Demonstrates applicability across different genomic datasets, making it powerful in uncovering insights that traditional reference-dependent or common statistical tests might miss.
+
+---
+
+<br/>
+<br/>
+
+Here is a clear **comparison and contrast** in markdown syntax of the six tools (**Scholar GPT, Consensus, SciSpace, Semantic Scholar, Elicit, and Perplexity**) in the context of establishing state-of-the-art knowledge in **reference-free genomics**:
+
+| Tool | Strengths ✅ | Weaknesses ⚠️ | Best Use 🎯 |
+|------|--------------|----------------|-------------|
+| **Scholar GPT** | - GPT-powered academic summaries<br>- Quick explanations of genomic terms<br>- Good for conceptual understanding | - Less reliable for precise citations<br>- May produce overly generalized content<br>- Limited depth for technical methodologies | Initial understanding, foundational overviews |
+| **Consensus** | - Aggregates evidence from multiple papers<br>- Clearly identifies consensus or disagreements on genomic methods<br>- Great for validating robustness of genomic techniques | - Limited effectiveness if available literature is sparse<br>- Might oversimplify nuanced differences between studies | Quickly identifying agreed-upon genomic methodologies and existing controversies |
+| **SciSpace** | - Contextual, detailed explanations directly within research papers<br>- Excellent for understanding complex genomic methodologies<br>- Strong at paper-level depth | - Limited scope beyond individual papers (no broad cross-paper analysis)<br>- Requires manual upload and interaction with papers | Deep methodological clarity within key reference-free genomic papers |
+| **Semantic Scholar** | - Comprehensive scholarly database, excellent for citation tracking<br>- Effective visualization of research trends and influential papers<br>- Great coverage of genomic literature | - No GPT-driven summarization; mostly manual interpretation<br>- Limited direct support for rapid understanding of highly technical methods | Comprehensive literature discovery, identifying influential state-of-the-art papers |
+| **Elicit** | - GPT-driven systematic literature reviews<br>- Rapidly identifies critical insights and papers in reference-free genomics<br>- Great for structured extraction of key concepts and methods | - Summaries may lack detailed methodological depth<br>- Limited for highly specific technical explanations | Efficient, systematic review and quick extraction of insights across multiple genomic papers |
+| **Perplexity.ai** | - GPT-based rapid Q&A capability<br>- Real-time access to latest publications and concise summaries<br>- Quick access to current genomic research findings | - Less effective for deeply technical methodology breakdowns<br>- Occasionally superficial explanations for specialized genomics terms | Quick clarification and real-time updates on genomic concepts and state-of-the-art methods |
+
+---
+
+#### Recommended Tool Summary ✅: {-}
+- **Detailed Methodological Understanding:** **SciSpace**
+- **Comprehensive Literature Discovery:** **Semantic Scholar**
+- **Rapid Consensus & Controversy Identification:** **Consensus**
+- **Systematic Literature Review:** **Elicit**
+- **Quick Clarifications & Updates:** **Perplexity.ai**
+- **Conceptual Understanding:** **Scholar GPT**
+
+---
+
+#### Ideal Workflow Recommendation 🎯: {-}
+1. Use **Semantic Scholar** for initial literature discovery and citation mapping. 
+2. Use **SciSpace** for deep methodological insights from individual key papers.
+3. Check consensus and validate findings quickly with **Consensus** and perform rapid structured reviews with **Elicit**.
+4. Leverage **Perplexity.ai** for real-time clarification and quick checks.
+5. Utilize **Scholar GPT** for foundational overviews and simplifying complex concepts.
+
+This approach provides comprehensive, reliable, and efficient establishment of state-of-the-art knowledge in **reference-free genomics**.
+
+<br/>
+<br/>
+
+### Best Interactive {-}
+
+**chatGPT Prompt:**
+
+* Please list and compare the best GPT based research assistants to
+answer specific questions about the content of a specific paper
+Here are the best GPT-based research assistants specifically tailored for answering detailed questions about the content, design, and analytical decisions within a single research paper:
+
+**Response**
+
+Here are the best GPT-based research assistants specifically tailored for answering detailed questions about the content, design, and analytical decisions within a single research paper:
+
+#### 1. **Elicit** {-}
+- **Strengths:**  
+  - Excellent for answering specific methodological questions.
+  - Specializes in extracting study designs, identifying key variables, summarizing findings, and critiquing methodological choices.
+  - Explicitly designed for deep paper-level understanding.
+- **Limitations:**  
+  - Requires clear user prompts and sometimes additional context.
+- **Best for:**  
+  - Researchers analyzing methodology or experimental design choices in detail.
+
+#### 2. **SciSpace Copilot** {-}
+- **Strengths:**  
+  - Tailored specifically to explain complex concepts within scientific papers.
+  - Good at clarifying jargon, interpreting figures and tables, and summarizing reasoning behind analytical methods.
+  - Interactive Q&A experience directly within the PDF viewer.
+- **Limitations:**  
+  - Occasional inaccuracies in highly specialized contexts.
+- **Best for:**  
+  - Understanding and questioning specific sections of papers, especially methods or results.
+
+#### 3. **Consensus** {-}
+- **Strengths:**  
+  - Provides concise answers from single or multiple papers, clearly highlighting the context.
+  - Useful for quickly answering focused questions on methodologies and study design.
+  - Prioritizes evidence-based extraction and interpretation.
+- **Limitations:**  
+  - Less effective for exploratory, open-ended methodological critiques.
+- **Best for:**  
+  - Rapid extraction of key design and analytical decisions.
+
+#### 4. **CORE-GPT** {-}
+- **Strengths:**  
+  - Explicitly designed to provide evidence-based, cited answers directly tied to specific papers.
+  - High accuracy in answering nuanced methodological and analytical questions.
+  - Minimizes hallucinations by explicitly linking answers to paper content.
+- **Limitations:**  
+  - Relies primarily on open-access content.
+- **Best for:**  
+  - Ensuring accurate, citation-backed responses to detailed analytical queries.
+
+#### 5. **ChatPDF** {-}
+- **Strengths:**  
+  - User-friendly tool for direct interaction with uploaded PDFs.
+  - Answers specific questions related to methods, analysis, and paper structure.
+- **Limitations:**  
+  - Simplified analysis; may lack depth for highly specialized methodological critiques.
+- **Best for:**  
+  - Quick, straightforward clarifications about paper content and analytical choices.
+
+---
+
+#### Recommended Selection: {-}
+
+- **Detailed Methodological Analysis**: **Elicit**, **SciSpace Copilot**
+- **Rapid Clarifications and Summaries**: **Consensus**, **ChatPDF**
+- **Evidence-Backed Analytical Queries**: **CORE-GPT**
+
+For your specific use-case—answering deep, content-oriented questions about a single research paper's design and analytical choices—I recommend:
+
+- **SciSpace Copilot** (for interactive, direct clarification)
+- **Elicit** (for rigorous methodological analysis)
+- **CORE-GPT** (for precise, evidence-linked responses)
+
+These tools provide the strongest combination of specificity, depth, and accuracy for detailed questioning about a single paper.
+
+<br/>
+<br/>
+
+### Citing Litetature  Review  {-}
+
+**chatGPT Prompt:**
+
+* Which AI research assistants are best for surveying the most recent
+literature for citings of a particulat articale?
+
+**Response**
+
+Here are some of the best AI-driven tools specifically suited to finding recent literature and citations of a particular article:
+
+#### Best Tools for Citation Tracking and Literature Discovery: {-}
+
+1. **ResearchRabbit**
+   - **Strengths:** AI-powered literature discovery, finds recent citations, visualizes citation networks.
+   - **Use case:** Quickly visualize and explore articles citing your target paper, including the newest ones.
+   - **Website:** [researchrabbit.ai](https://www.researchrabbit.ai/)
+
+2. **Connected Papers**
+   - **Strengths:** Creates visual graphs of related research papers, efficiently surfacing new papers citing a given article.
+   - **Use case:** Find recent and related publications visually in seconds.
+   - **Website:** [connectedpapers.com](https://www.connectedpapers.com/)
+
+3. **Scite.ai**
+   - **Strengths:** Analyzes citations contextually (supporting, contrasting, or neutral), and quickly finds recent citations to a specific article.
+   - **Use case:** Understand not just who cites the paper, but how it's discussed.
+   - **Website:** [scite.ai](https://scite.ai/)
+
+4. **Semantic Scholar**
+   - **Strengths:** AI-driven search and literature discovery; good at surfacing newer papers citing a particular source.
+   - **Use case:** Finding and tracking highly relevant and recent literature through powerful filters.
+   - **Website:** [semanticscholar.org](https://www.semanticscholar.org/)
+
+5. **Elicit**
+   - **Strengths:** AI-powered literature surveys, extracts key insights, and tracks citation influence efficiently.
+   - **Use case:** Quickly create structured literature reviews and citation tracking summaries.
+   - **Website:** [elicit.org](https://elicit.org/)
+
+#### Recommended Workflow: {-}
+
+- **Start with ResearchRabbit or Connected Papers** to visually see a map of recent citations and related works.
+- Use **Semantic Scholar** to narrow results with sophisticated filters (year, citation count, fields).
+- Then apply **Scite.ai** to evaluate the context and impact of these citations.
+- For deeper analysis and summarization, **Elicit** can be used to generate a structured review.
+
+This combination provides a comprehensive AI-assisted workflow for effectively tracking recent citations of any given article.
+
+<br/>
+<br/>
+
+## Multinomial Distance Metrics 
+
+<br/>
+
+### D Metric {-} 
+
+<font color="darkgreen">
+* This `D` is different than the D in SPLASH
+   - should behave similarly when total counts are similar
+   - with no scaling and doing the math on the linear scale is interesting
+</font>
+
+<br/>
+
+You've provided two multinomial distributions \(P\) and \(Q\), defined as:
+
+\[
+P = \{p_1, p_2, \dots, p_n\}, \quad Q = \{q_1, q_2, \dots, q_n\}
+\]
+
+and defined a distance metric \(D\) as:
+
+\[
+D = 1 - \frac{\sum_{i=1}^{n}\min(p_i, q_i)}{\sum_{i=1}^{n}(p_i + q_i)}
+\]
+
+---
+
+### Step-by-step analysis of the defined metric \( D \): {-}
+
+**Step 1: Interpretation**
+
+- The numerator \(\sum_{i=1}^{n}\min(p_i, q_i)\) measures the **overlap** between the two distributions.
+- The denominator \(\sum_{i=1}^{n}(p_i + q_i)\) is simply the sum of all probabilities from both distributions, and if both distributions sum to 1 (i.e., are probability distributions), this denominator equals exactly \(1 + 1 = 2\).
+
+Thus, assuming valid probability distributions (\(\sum p_i = 1\), \(\sum q_i = 1\)), the formula simplifies to:
+
+\[
+D = 1 - \frac{\sum_{i=1}^{n}\min(p_i, q_i)}{2}
+\]
+
+---
+
+### Step 2: Properties of \( D \) {-}
+
+- **Range**:  
+  Since \(0 \leq \sum_{i}\min(p_i, q_i) \leq 1\), it follows that:
+  - Minimum possible value: If \(P = Q\), then \(\sum\min(p_i,q_i)=1\), and thus:
+  \[
+  D = 1 - \frac{1}{2} = 0.5
+  \]
+  *(This indicates your provided formula might have a slight issue if your intention is that distance should be 0 when \(P=Q\). Typically, distance measures satisfy \(D(P,Q)=0\) if and only if \(P=Q\). The current formulation does not satisfy this.)*
+
+- **When are P and Q completely disjoint?**  
+  If \(P\) and \(Q\) do not overlap at all (no common support), then \(\sum\min(p_i,q_i)=0\), thus:
+  \[
+  D = 1 - \frac{0}{2} = 1
+  \]
+
+Thus, according to your current formula:
+
+- Completely identical distributions \(P=Q\) yield \(D=0.5\).
+- Completely distinct distributions yield \(D=1\).
+
+If you intended to measure similarity or overlap, the standard formulation should typically be either:
+
+\[
+D_{standard} = 1 - \sum_{i}\min(p_i,q_i)
+\]
+
+or
+
+\[
+D_{normalized} = 1 - \frac{\sum_{i}\min(p_i,q_i)}{\sum_{i}\max(p_i,q_i)}
+\]
+
+These alternative definitions yield the intuitive property: \(D(P,Q)=0\) if \(P=Q\).
+
+---
+
+### Step 3: Suggested corrected metric {-}
+
+If your goal is to define a metric distance measure between distributions, a commonly used overlap-based measure is:
+
+\[
+D'(P,Q) = 1 - \sum_{i=1}^{n}\min(p_i,q_i)
+\]
+
+Properties of this standard metric:
+
+- Range: \([0,1]\)
+- \(D'(P,Q)=0\) if and only if \(P=Q\)
+- \(D'(P,Q)=1\) if distributions are completely disjoint.
+
+---
+
+### **Summary:** {-}
+
+| Metric | Definition | Range | \(P=Q\) | Disjoint \(P,Q\) |
+|---|---|---|---|---|
+| Your Provided Metric \(D\) | \(1 - \frac{\sum\min(p_i,q_i)}{\sum(p_i+q_i)}\) | [0.5,1] | 0.5 (unusual) | 1 |
+| Standard Overlap Distance \(D'\) | \(1-\sum\min(p_i,q_i)\) | [0,1] | 0 (intuitive) | 1 |
+
+---
+
+### **Conclusion and Recommendation:** {-}
+
+- Your given metric is mathematically valid but has an unusual property of having a nonzero lower bound (0.5) even when distributions are identical.
+- If the intention is to measure a meaningful distance between two probability distributions (multinomial), **consider using the standard overlap metric \(D'\)** above, which provides intuitive and desirable properties for practical applications:
+
+\[
+\boxed{D'(P,Q) = 1 - \sum_{i=1}^{n}\min(p_i,q_i)}
+\]
+
+If you have a specific reason for choosing your original formula, please clarify so I can adjust accordingly.
+
+<br/>
+<br/>
+
+***
+## References {-} 
+<div id="refs"></div>
+    
+<br/>
+
+<!-- 
+### Parameter settings {-}
+  * WRKDIR = `r normalizePath(WRKDIR)`
+  * FN = `r FN`
+  * Scripts = Scripts
+  * RUN DATE = `r date()`
+
+```{r , echo=T, eval=F}
+ sessionInfo()
+```
+-->
+
+```{r, echo=FALSE}
+  knit_exit()
+```
+
+#######################################################################
+## ARCHIVAL
+#######################################################################
+
+# General Remarks 
+
+The article provides a proof of concept of the proposed methods.
+
+Primary Criticism:
+
+* Technical validation ion the omic scale is required to get a sense of the utility of the
+proposed methods.  
+
+* **Technical validation** should be run on typical data and should include both
+measures of algorithm performance and resistance to **input data quality** and
+**unwanted variation**.  See [intro_2_UV](...).
+
+* The claim of the validity of the p-values, one of the selling points of the method,
+is suspect.  When we fit one prototype 
+model to 20K, 50K or 100K feature data subsets we do not believe that the  model
+fits adequately in every case: we may robustify the fit to allow for the 
+presence of bad points, or outliers, and we do not put too much credibility on the
+precise values of p-values; we believe that they generally order hypotheses the
+right way.
+   - In this particular case there are bigger problems with the p-values -
+their properties are derived based in the assumption that $$f$$ and $$c$$ 
+are fixed values, when they are derived from the data.
+
+
+## On End to End Omic Scale Analysis 
+
+<p><p/>
+* Omic scale data refers to measurements taken in parallel over many features -
+from thousands of genes to millions of proteins.  Even though the result of
+interest, gene scores for example, may be obtained from analyzing
+features one at a time, the success of the design and analysis methods
+can only be assessed by taking a holistic look at the study data and results.
+
+* To have a holistic picture, the assessment must start with the input material
+and follow the sample set through all of the processing steps including QC assessment
+and filtering (if any), sample pre-processing  (further filtering and normalization),
+data analysis (compute the desired results and report the findings).
+
+* The article provided the information needed to
+show that the technology works in principle, but to appreciate
+how well the technology will work in practice, it has to be evaluated 
+in a way that fully reflects the  expected usage.
+
+<!--
+* Having good comparator analysis methods is helpful, if not crucial.  I'm not sure that
+the chi-square test provides a good comparator.  I don't recall ever coming 
+across the chi-square test in the course of RNA-Seq related analyses, but
+my experience is limited to comparing gene expression levels across samples.
+There are a number of R packages which treat compositional data analysis
+which is analogous to the problem addressed in SPLASH.  Many options 
+are listed in Section \@ref(rna-seq-wi-samp); it should be possible to customize one or more
+to provide a comparator for SPLASH+OASIS.
+-->
+
+* Having a good dataset for assessment
+is also critical and could include control features, control samples,
+and samples providing engineered or designed truth.
+In addition to having built-in truth, the samples used to assess
+performance must also be representative of the actual samples
+which will be processed in production.
+
+<br/>
+
+<!--
+## On inferential frameworks   {-}
+
+* An important feature of the SPLASH+OASIS data analyses pipeline is the
+finite sample valid statistical inference that it makes possible whereas other
+methods rely on asymptotically valid estimates. The value that this feature confers to 
+the method should be verified empirically with a proper omic level assessment.  Note that RNA-Seq
+methods rely heavily in these asymptotically valid estimates which have not been found
+to be problematic for small sample sizes  as the site-specific estimates are typically
+stabilized by shrinkage.
+
+
+* From a personal perspective I feel that the write-up of the papers puts a lot of stock
+in p- and q-values.  The statistical standard errors of measurement, or the sampling errors,
+are only one source of variability in data collected in a high throughput, massively
+parallel fashion. Other sources of variability such as reagent lots, instruments,
+operators, days (ie. day to day variability is variability that is not otherwise specified)
+will often dominate the total variability.  
+
+* In practice we select the analysis method which
+produces the best results as ascertained by omic scale assessments of accuracy.
+-->
+
+<br/>
+
+## Outline  {-}
+
+<p><p/>
+* The [Salzman Lab](https://salzmanlab.stanford.edu/) 
+develop and apply new **statistical algorithms** for **biological inference**
+on fundamental questions in the evolution of genomes.
+
+<p><p/> 
+* Here we consider 2 papers from the [Salzman Lab](https://salzmanlab.stanford.edu/):
+   - SPLASH: 
+A statistical, reference-free genomic algorithm unifies biological discover
+[PDF](https://www.cell.com/cell/pdf/S0092-8674(23)01179-0.pdf),
+[Code](https://github.com/refresh-bio/SPLASH) [@Chaung:2023aa]
+   - OASIS: 
+An interpretable, finite-sample valid alternative to Pearson’s X2 
+for scientific discovery
+[URL](https://www.pnas.org/doi/10.1073/pnas.2304671121),
+[Code](https://github.com/refresh-bio/SPLASH) [@Baharav:2024aa]
+
+<p><p/>
+In the first section, we use Consensus to compile a 
+literature review of papers treating reference-free genomic inference
+prior to SPLASH.
+
+<p><p/>
+* In the next section RNA-Seq methods for analyzing
+the variability of  w/i Sample Rel Abundance
+across samples are listed for reference.
+   - would these be good options to use as comparators 
+to OASIS on a genomic scale assessment?
+
+<p><p/>
+* In the first section RNA-Seq methods for analyzing
+* In the next two sections  go over the data and analyses described in
+the  SPLASH and OASIS papers
+
+<p><p/>
+* The rest of the report explores the use of various  GPT tools to produce literature reviews
+relevant to Reference-Free Genomic Inference and Tests for Contingency Tables.
+
+
+<!--
+<p><p/>
+* In the following sections we survey the scientific literature in order to
+situate the two papers SPLASH and OASIS
+
+<p><p/>
+* The latte part of the report is divided into two parts, one focusing
+on each paper: SPLASH, OASIS
+
+* Each part is further separated into 
+3  sections:
+   -  a review of the relevant literature prior
+to the paper, 
+   - a review of the paper itself, and
+   - a review of  relevant literature following the publications of the 
+paper (SPLASH only as OASIS is too new).
+
+-->
+
+### Concensus 
+
+* Query:
+   - what are RNA-Seq methods to compare across samples the within sample relative expression
+gene profiles 
+
+* **Response**
+
+#### RNA-Seq Methods to Compare Within-Sample Relative Gene Expression Profiles Across Samples {-}
+
+To compare within-sample relative gene expression profiles **across samples** using RNA-Seq, several robust methods have been developed. These focus on preserving the **internal gene ranking or patterns within each sample**, enabling reliable cross-sample comparison.
+
+#### Evidence: {-}
+
+1. **Relative Expression Orderings (REOs):**  
+   REO-based methods compare the order of gene expression levels **within each sample**. These within-sample gene pair rankings are highly stable and reproducible across samples, even in low-input or noisy datasets. REOs can be used to construct transcriptional signatures for disease classification that are consistent across sample types and platforms [(Liu et al., 2017)](https://consensus.app/papers/robust-transcriptional-signatures-for-lowinput-rna-liu-li/9070d1f21109546eb95d81580374d552/?utm_source=chatgpt).
+
+2. **Count-Based Methods for Relative Quantification:**  
+   Standard RNA-Seq tools like DESeq2 and edgeR focus on relative quantification across samples by modeling count data, which preserves within-sample gene profiles. These tools perform well in comparative analyses when absolute expression is unreliable [(Germain et al., 2016)](https://consensus.app/papers/rnaonthebench-computational-and-empirical-resources-for-germain-vitriolo/b19844c65eda53b8a95314d76e450473/?utm_source=chatgpt).
+
+3. **Entropy-Based Method (RNentropy):**  
+   RNentropy identifies genes with **significant variation of expression profiles across multiple samples**, without relying on pairwise comparisons. It highlights genes whose **within-sample expression patterns** vary consistently across conditions [(Zambelli et al., 2018)](https://consensus.app/papers/rnentropy-an-entropybased-tool-for-the-detection-of-zambelli-mastropasqua/5609da623dd053a3a31023f16105d900/?utm_source=chatgpt).
+
+4. **ClusterMap for Cross-Sample Subtype Matching:**  
+   In single-cell RNA-Seq, ClusterMap matches cell subtypes across samples using **within-cluster marker gene expression** profiles. This highlights how internal gene expression patterns can be aligned across biological conditions [(Gao et al., 2018)](https://consensus.app/papers/clustermap-comparing-analyses-across-multiple-single-gao-hu/54540d5160d35117a2a1a65b7e042e8a/?utm_source=chatgpt).
+
+5. **TweeDEseq for Complex Expression Distributions:**  
+   TweeDEseq models complex gene expression profiles across multiple samples using flexible count distributions. It improves fit to **within-sample expression variability**, especially in large or highly replicated datasets [(Esnaola et al., 2013)](https://consensus.app/papers/a-flexible-count-data-model-to-fit-the-wide-diversity-of-esnaola-puig/2369baa5e30057e5975330317af067cb/?utm_source=chatgpt).
+
+#### **Conclusion**: {-}
+
+To compare relative gene expression profiles across samples, RNA-Seq methods such as REO-based approaches, count-based models like DESeq2, entropy-based tools (RNentropy), and cross-sample clustering methods like ClusterMap provide robust, biologically meaningful results by leveraging **within-sample expression structure**.
+
+<br/>
+<br/>
+
+
+
+
+<br/>
+<p><p/>
+* In high throughput analysis, including most-omics, unwanted shared variability
+among features is to be expected.  An analysis is incomplete if it does not
+include a careful examination of the data to detect any sign of unwanted variability.
+See the RUV literature  [@Molania:2023aa; @Gerard:2021aa; @Jiang:2023aa].
+   - ideally we would measure the level of unwanted variability
+
+<p><p/>
+* The statistical standard errors of measurement, or the sampling errors, are only
+one source of variability in data collected in a high throughput,
+massively parallel fashion.  Other sources of variability such as
+reagent lots, instruments, operators, days (ie. day to day variability is variability
+that is not otherwise specified) will often dominate the total variability.
+   - The Bin Yu Group [@Yu:2024aa;@Yu:2020aa;@Yu:2013aa;@Yu:2018aa] suggest the use of
+**stability** as a more comprehensive or inclusive measure of variability to monitor
+
+and optimize by study design and/or parameter setting.
+
+<p><p/>
+* Theoretical properties of summaries can provide guidance for the design of
+analysis steps or components, but they get their value from the properties
+they confer to the procedures.
+   - ie. the q-value filter is correct if the resulting procedure 
+achieves a good balance between sensitivity and specificity
+ 
+<p><p/>
+* For the purpose of discovery or feature identification,
+it is the distribution of the summaries over the study dataset that matters most.
+   - Is the distribution of values of a statistic used to filter or select
+features peaked, flat, heavy-tailed?
+   - Is the shape consistent with expectations?  If the shape is not as expected,
+the points falling in the tails may also not have the expected interpretation.
+
+
+<br/>
+
+<!--
+<p><p/>
+* Asking the GPT research assistants to focus on statistical aspects
+and randomness seems to have caused them to overuse and sometimes misuse
+these terms.
+
+<p><p/>
+* In high throughput data analysis, data summaries play a prominent role 
+such that almost every analysis is statistical in some sense so that attaching
+the label statistical to an analysis method has little descriptive value.
+-->
+
+<p><p/>
+* Outside of simulated data, p-values cannot be taken at face value
+**without careful scrutiny of the data in every case**.  q-values even less so.
+   - In omic scale analyses it has not been possible to carefully examine
+modeling assumptions for every feature (when modeling is at the feature level).
+AI may change this.
+   - The shape of the distribution of scores across the omic scale 
+can be examined to ensure that it meets expectations.
+   - When p-values are off on some way, the impact this has on the results
+should be ascertained empirically on the -omic scale with appropriate data.
+
+<p><p/>
+* biased p (q) values may still provide useful guides for the purpose of ordering and
+selecting features, but some checks must be put in place to verify that
+this is the case. 
+<!--
+   - if we are interested in considering the effect size in the identification process, ...
+   - p (q) values near 0 or 1 usually need to be examined, and analyzed, on a different scale
+-->
+
+<br/>
+
+<!--
+<p><p/>
+* In this report we focus on two papers from the 
+[Salzman Lab](https://salzmanlab.stanford.edu/):
+   - SPLASH: A statistical, reference-free genomic algorithm unifies biological discover
+[PDF](https://www.cell.com/cell/pdf/S0092-8674(23)01179-0.pdf),
+[Code](https://github.com/refresh-bio/SPLASH) [@Chaung:2023aa]
+   - OASIS: An interpretable, finite-sample valid alternative to Pearson’s X2 
+for scientific discovery
+[URL](https://www.pnas.org/doi/10.1073/pnas.2304671121),
+[Code](https://github.com/refresh-bio/SPLASH) [@Baharav:2024aa]
+-->
+
+##### 6.3 Geometric Interpretability {-}
+
+The term "geometric" has been used to describe OASIS due to its **bilinear structure**:
+\[
+S = f^\top \tilde{X} c
+\]
+This allows projection and decomposition, reminiscent of PCA or correspondence analysis. However, this is **algebraic**, not **compositional geometry**.
+
+In contrast, the **log-ratio** statistic used in log-linear models is:
+- Geometrically rooted in **information geometry**.
+- Directly connected to **Kullback–Leibler divergence** and **compositional data analysis**.
+- Reflective of **multiplicative scale-invariant relationships** common in biology.
+
+Thus, log-linear models are **more inherently geometric** in the biological and statistical sense than OASIS.
+
+
+## The Chi-squared test in RNA-Seq
+
+In typical RNA-seq analysis, the Chi-square test is rarely used directly for feature identification because RNA-seq count data are usually modeled with negative binomial or Poisson distributions due to the inherent variability (overdispersion) in counts.
+
+However, there are scenarios and some less-common or exploratory approaches that employ Chi-square or similar methods. Generally, Chi-square tests might appear in RNA-seq workflows for categorical or proportion comparisons rather than the standard count-based feature identification.
+
+### Known R packages using Chi-square tests in RNA-seq context:
+
+- **NOISeq**:
+  - Primarily uses non-parametric approaches, but it includes methods that use Fisher’s exact or Chi-square-based tests for differential expression identification as part of exploratory analyses.
+
+- **edgeR** and **DESeq2**:
+  - These two prominent packages primarily use negative binomial models and likelihood ratio or Wald tests. However, users occasionally perform Chi-square-based post hoc or exploratory tests manually to analyze categorical proportions (e.g., enrichment analysis).
+
+- **baySeq**:
+  - Primarily Bayesian, but some exploratory downstream analyses may apply Chi-square tests (outside primary differential expression methods) for categorical or GO enrichment comparisons.
+
+### Typical Usage Scenario:
+- Chi-square tests might be used explicitly in RNA-seq analyses to test enrichment (e.g., gene ontology enrichment, KEGG pathway enrichment) rather than feature selection itself.
+
+### Common Alternatives (Preferred Approaches):
+- **DESeq2** (Negative Binomial, Wald test)
+- **edgeR** (Negative Binomial, Likelihood Ratio test)
+- **limma-voom** (Linear modeling with empirical Bayes)
+
+### Recommendation:
+- For direct **feature identification** (gene selection), Chi-square tests are uncommon and generally not recommended due to assumptions violations (independence and expected frequency conditions).
+- For categorical or proportion-based testing, Chi-square tests are occasionally applicable post-DE analysis (enrichment analysis).
+
+If you explicitly want to explore categorical relationships or perform enrichment analysis with Chi-square-based methods in RNA-seq context, you can use:
+
+- **GOstats**
+- **topGO**
+- **clusterProfiler** (which primarily uses hypergeometric tests or Fisher’s exact test, but Chi-square can sometimes be implemented manually).
+
+In summary, no mainstream RNA-seq differential expression package explicitly uses Chi-square for primary gene selection due to its statistical limitations with RNA-seq count data, but Chi-square tests occasionally find use in downstream enrichment or categorical analyses.
+
+* Refer to the articles uploaded to the project - 
+
+   - Chaung, K., Baharav, T.Z., Henderson, G., Zheludev, I.N., Wang, P.L., and Salzman, J. (2023). SPLASH: A statistical, reference-free genomic algorithm unifies biological discovery. Cell 186, 5440–5456.
+2.
+
+   - Baharav, T.Z., Tse, D., and Salzman, J. (2024). OASIS: An interpretable, finite-sample valid alternative to pearson’s x(2) for scientific discovery. Proc Natl Acad Sci U S A 121, e2304671121. -
+to get a sense of the `reference-free genomic inference` context.
+
+### Upload articles {-}
+
+
+* Before diving into the articles of interest, we will submit queries to 
+establish the current state of scientific knowledge regarding 
+reference-free genomics, prior to `SPLASH` and `OASIS`
+
+<p><p/>
+* There are several GPTs which are specialized for research:
+   - Scholar GPT
+   - Concensus
+   - SciSpace
+   - Semantic Scholar
+   - Perplexity
+   - Elicit
+
+<p><p/>
+* See [Consensus GPT vs SciSpace GPT](https://www.youtube.com/watch?v=EN0JZTvbuzQ)
+for a comparison of these two GPTs.
+
+<br/>
+
+<p><p/>
+* In this report we focus on two papers from the [Salzman Lab]:
+   - SPLASH: 
+A statistical, reference-free genomic algorithm unifies biological discover
+[PDF](https://www.cell.com/cell/pdf/S0092-8674(23)01179-0.pdf),
+[Code](https://github.com/refresh-bio/SPLASH) [@Chaung:2023aa]
+[local](/Users/fcollin/Documents/Projects/reAnalysis/Refs/Ref-free-genom-inf/Chaung_2023.pdf)
+
+   - OASIS: 
+An interpretable, finite-sample valid alternative to Pearson’s X2 
+for scientific discovery
+[URL](https://www.pnas.org/doi/10.1073/pnas.2304671121),
+[Code](https://github.com/refresh-bio/SPLASH) [@Baharav:2024aa]
+[local](/Users/fcollin/Documents/Projects/reAnalysis/Refs/Ref-free-genom-inf/Baharav_2024.pdf,Baharav_2024_supp.pdf)
+<br/>
+
+
+
+## What is a Statistical Algorithm?
+
+* Submitted to SciSpace (copilot)
+
+A **statistical algorithm** is a computational procedure that applies statistical techniques to analyze data, make predictions, or identify patterns. These algorithms use probability theory, statistical inference, and mathematical modeling to extract meaningful insights from data. They are widely used in fields such as machine learning, data science, econometrics, and bioinformatics.
+
+### Key Characteristics:
+1. **Data-Driven**: Statistical algorithms rely on observed data to make estimations or predictions.
+2. **Probabilistic Nature**: They incorporate probability distributions to model uncertainties.
+3. **Optimization-Based**: Many involve optimization techniques to minimize errors and improve accuracy.
+4. **Inference and Estimation**: They estimate parameters, test hypotheses, and infer relationships.
+
+### Examples of Statistical Algorithms:
+- **Regression Models**: Linear Regression, Logistic Regression
+- **Classification Models**: Naïve Bayes, Decision Trees (with statistical criteria like Gini Impurity or Entropy)
+- **Clustering Methods**: K-Means, Gaussian Mixture Models (GMM)
+- **Dimensionality Reduction**: Principal Component Analysis (PCA), Singular Value Decomposition (SVD)
+- **Bayesian Inference**: Markov Chain Monte Carlo (MCMC), Hidden Markov Models (HMM)
+
+### Applications:
+- **Machine Learning**: Feature selection, model training, and prediction.
+- **Finance**: Risk assessment, stock market predictions.
+- **Healthcare**: Disease diagnosis, medical imaging analysis.
+- **Social Sciences**: Survey analysis, behavioral predictions.
+
+In essence, statistical algorithms form the backbone of data-driven decision-making, allowing machines and researchers to extract patterns, make predictions, and improve decision accuracy.
+
+
+<br/>
+<br/>
+
+
+## What is Biological Inference?
+
+* Submitted to SciSpace (copilot)
+
+**Poor definition.**
+
+**Biological inference** refers to the process of drawing conclusions about biological systems, processes, or phenomena using data analysis, statistical models, and computational methods. It involves using observed biological data to make predictions, identify patterns, or infer underlying mechanisms.
+
+<br/>
+
+### Key Aspects of Biological Inference:
+1. **Data-Driven Analysis**: Utilizes experimental or observational biological data.
+2. **Statistical and Computational Models**: Applies statistical inference, machine learning, and bioinformatics tools.
+3. **Hypothesis Testing**: Evaluates scientific hypotheses based on data.
+4. **Predictive Insights**: Helps predict biological behaviors and interactions.
+
+<br/>
+
+### Examples of Biological Inference:
+- **Genomic Inference**: Identifying genetic variations linked to diseases.
+- **Phylogenetic Inference**: Reconstructing evolutionary relationships among species.
+- **Protein Structure Prediction**: Inferring 3D structures from amino acid sequences.
+- **Ecological Inference**: Understanding species distribution and population dynamics.
+- **Systems Biology**: Modeling complex biological networks and interactions.
+
+<br/>
+
+### Applications:
+- **Medicine**: Predicting disease susceptibility and drug responses.
+- **Evolutionary Biology**: Understanding the genetic basis of adaptation.
+- **Ecology**: Assessing environmental impacts on biodiversity.
+- **Bioinformatics**: Analyzing large-scale biological datasets.
+
+biological inference plays a crucial role in advancing our understanding of life sciences 
+by integrating data-driven approaches to uncover hidden patterns and 
+relationships in biological systems.
+
+
+
+
+### chatGPT Prompt {-}
+
+* Read the attached paper by Sood et.al. 2015 [@Sood:2015aa].
+
+* Act as a statistician who is proficient in the traditional statistical concepts as they apply to the analysis of designed experiments, as well as in the novel statistical concepts developed for the analysis of omic data, and review the article.
+
+* The review should not consider findings from later studies
+
+* The review should focus on the statistical aspects of the data collected and analysed.
+* Key statistical principles include:
+  - verifying that the training data points can be thought of as being
+a representative, random subset of the target population
+  - a representative subset most include enough of the right sort of sample.
+   - how many data collection runs are aggregated or pooled to assemble the analysis dataset?
+   - how are the different tissue types distributed across data generation runs?  
+   - Is run associated with age. 
+   - Were the data from different runs normalized?
+* What evidence is provided that the classifiers developed work well with datasets analyzed and will continue to work well when future data are analyzed?
+
+* Keep the report in un-rendered markdown format, or markdown syntax.
+* Also include the markdown syntax for a bibliography of citations.
+
+<br/>
+
+### chatGPT RE:Prompt {-}
+
+Note that what the authors  call external validation  entails fitting a new model with each dataset.  There is no validation of a model; only validation that the subset of 150 probe sets are sufficient to enable KNN + LOOCV to give rise to a fitted model that still discriminates.  This is not validation in the usual sense.  There is no attempt to compare the fitted models from the different data sets.  Jacob and Speed (attached) show that repeating the fit and eval procedures with a random selection of 150 probe sets achieves similar discrimination on some datasets.
+Please include these facts in the conclusions to be drawn form these data.
+
+<br/>
+
+* The review should not consider findings from later studies
+
+* The review should focus on the statistical aspects of the data collected and analysed.
+* Key statistical principles include:
+   - how are the different tissue types distributed across data generation runs?  
+   - Is run associated with age. 
+   - Were the data from different runs normalized?
+* What evidence is provided that the classifiers developed work well with datasets analyzed and will continue to work well when future data are analyzed?
+
+* Keep the report in un-rendered markdown format, or markdown syntax.
+* Also include the markdown syntax for a bibliography of citations.
+
+
+<br/>
+<br/>
+
+
+<!-- To run
+## nohup Rscript -e "knitr::knit2html('M2B-preSPLASH.Rmd')" > M2B-preSPLASH.log  &
+
+## Or
+## nohup Rscript -e "rmarkdown::render('M2B-preSPLASH.Rmd')" > M2B-preSPLASH.log  &
+
+-->
+

@@ -181,11 +181,6 @@ has taken such importance.
    - In all applications, a adjusted p-value level of 0.05 is used to filter
 anchors.  Although this is assuredly not optimal, it is easy to automate.
 
-<!--
-* The problem could be treated in a machine learning framework whereby the goal of the
-analysis is to find the most interesting sequences. 
--->ra
-
 * Validation of the method comes in the form of anecdotal findings.
 These findings provide no information on technical performance.
    - Technical validation on the omic scale is required to get a sense of the utility of the
@@ -196,9 +191,11 @@ measures of algorithm performance and resistance to **input data quality** and
 scale assays are involved.  See 
 [Removing Unwanted Variation from Large-Scale RNA Sequencing Data with PRPS](./M4A-RUV/natureBiotechPaper/_Molania_2023_RUV-III_PRPS_Summary.html).
 
-   -  **The input data are not examined**.  **Definition 1 (Null Model)** is actually the
-fundamental assumption that is necessary for everything else to follow, yet that assumption
-is not scrutinized.^[
+<p><p/>
+* **Examination of the input data is not reported**.
+**Definition 1 (Null Model)** is actually the fundamental assumption that is
+necessary for everything else to follow, yet that assumption
+is not examined.^[
 This is not uncommon and is rooted in the divide between applied statistics and mathematical
 statistics.  The mathematics require assumptions so it's perfectively reasonable for the
 mathematical statistician to start there.  None of the mathematical results can be relied on
@@ -209,9 +206,9 @@ without substantial supporting evidence.]
 In practice, the analysis of omic scale data should not proceed before careful examination
 of the collected data.  The presence of unwanted variability will invalidate the assumed
 null model and all results based on the analysis of the flawed data.
-   - The statistic used to identify anchors with interesting variability
-is analogous to a principal component of SVD, an approach often used to 
-detect unwanted variability.
+   - This is a particular concern here as the statistic used to identify
+anchors with interesting variability is analogous to a principal component of SVD,
+an approach often used to detect unwanted variability.
 
 <br/>
 
@@ -254,9 +251,8 @@ in the words of the authors.  ie. claims are made based on anecdotal
 findings which are not reported in a full discovery context.
    - Some comments are inserted where there might be gaps or a difference of opinion.
 
-
 <p><p/>
-* [SPLASH](M2B-RFGI_SPLASH_v2.html) Notes 
+* [Pre-SPLASH](M2B-preSPLASH.html) Notes 
    - Contains two introductory sections to position SPLASH+OASIS in the
 context of contemporary analysis methods:
       - literature review  of Reference-Free Genomic Inference prior to SPLASH, as well as  
@@ -269,6 +265,7 @@ context of contemporary analysis methods:
    - The OASIS test statistic optimization objective is compared
 with the SVD objective.
       - the non-unique solution make the valid p-value claims questionable.
+
 
 <br/>
 
