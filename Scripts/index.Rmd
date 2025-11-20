@@ -181,6 +181,7 @@ has taken such importance.
    - In all applications, a adjusted p-value level of 0.05 is used to filter
 anchors.  Although this is assuredly not optimal, it is easy to automate.
 
+<p><p/>
 * Validation of the method comes in the form of anecdotal findings.
 These findings provide no information on technical performance.
    - Technical validation on the omic scale is required to get a sense of the utility of the
