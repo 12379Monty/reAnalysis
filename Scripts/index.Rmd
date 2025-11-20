@@ -288,7 +288,7 @@ SPLASH and OASIS.
 
 ```
 
-* [SPLASH & OASIS Follow-ups](M3B-SPLASH-OASIS/Datasets/SPLASH_followup_review.html)
+* [SPLASH & OASIS Extensions and Applications - Summary](M3B-SPLASH-OASIS/Datasets/SPLASH_followup_review.html)
 
 
 <br/>
