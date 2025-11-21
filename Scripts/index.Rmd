@@ -139,6 +139,20 @@ PREFIX <- "index" #- replace by FLOWCELL???
 
 # Reference-Free Genomic Inference with SPLASH and OASIS
 
+
+> all models are wrong,
+> but some are useful
+
+A far better quotation from the same paper by Box is,
+
+> Since all models are wrong the scientist
+> must be alert to what is importantly wrong.
+> It is inappropriate to be concerned about mice
+> when there are tigers around^[slight modification of quote]
+>
+>`r tufte::quote_footer('--- Phil Stark (2022) [@Stark:2022aa]')`
+
+
 ## Executive Summary
 
 
@@ -318,6 +332,15 @@ identify unwanted variability in the target count distributions
 
 # The Treatment of Unwanted Variability {#trt-unwanted-var }
 
+> Statistical procedure and experimental design are
+> only two different aspects of the same whole,
+> and that whole is the logical requirements of
+> the complete process of adding to natural knowledge
+> by experimentation.
+>
+> `r tufte::quote_footer('---  Ronald Fisher')`
+
+
 * All collected experimental data are liable to contain some
 unwanted variability - variability in the measurements made on
 the experimental units which is unrelated to the question of interest.
@@ -460,6 +483,16 @@ Wenric & Shemirani (2018) [@Wenric:2018aa].
    - first examine the data to make sure it is accessible.
 
 -->
+
+
+<br/>
+
+# FDR - False Discovery Rate 
+
+> The worst thing in statistics had to be the p-value.
+> Then came the q-value.
+>
+>`r tufte::quote_footer('--- Unknown Origin')`
 
 
 <br/>
