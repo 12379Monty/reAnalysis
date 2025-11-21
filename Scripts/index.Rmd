@@ -17,10 +17,16 @@ output:
     # this has no effect
     number_sections: yes
     # css: ['../_css/pandoc3.css', '../_css/myMargins.css']
-bibliography: [../_bibFiles/_AI_ML.bib, ../_bibFiles/_RUV.bib, ../_bibFiles/_scRNAseq_norm.bib, ../_bibFiles/_ref_free_genom_inf.bib, ../_bibFiles/_healthy_aging.bib, ../../_bibFiles/_Normalization.bib, ../../_bibFiles/_Breiman.bib, ../../_bibFiles/_Freedman.bib, ../../_bibFiles/_Yu.bib,  ../../_bibFiles/_RMA.bib]
+bibliography: [../_bibFiles/_misc.bib, ../_bibFiles/_AI_ML.bib, ../_bibFiles/_RUV.bib, ../_bibFiles/_scRNAseq_norm.bib, ../_bibFiles/_ref_free_genom_inf.bib, ../_bibFiles/_healthy_aging.bib, ../../_bibFiles/_Normalization.bib, ../../_bibFiles/_Breiman.bib, ../../_bibFiles/_Freedman.bib, ../../_bibFiles/_Yu.bib,  ../../_bibFiles/_RMA.bib]
 csl: ../_csl/cell-numeric.csl
 link-citations: true
 ---
+
+<p style="background-color: yellow; padding: 5px;">
+  <span style="font-weight: bold;">⚠️ Work in Progress:</span> This content is incomplete.
+</p>
+
+
 
 ```{css sidenote, echo = FALSE}
 
@@ -89,6 +95,7 @@ knitr::opts_chunk$set(echo = TRUE,
                       fig.height = 4)
 ```
 
+
 ```{r infex-GlobalOptions, results="hide", include=FALSE, cache=FALSE}
 
 knitr::opts_knit$set(stop_on_error = 2L) #really make it stop
@@ -139,18 +146,19 @@ PREFIX <- "index" #- replace by FLOWCELL???
 
 # Reference-Free Genomic Inference with SPLASH and OASIS
 
+Phil Stark (2022) [@Stark:2022aa] points out that although
+the most famous quotation attributed to George Box is
 
 > all models are wrong,
 > but some are useful
 
-A far better quotation from the same paper by Box is,
+a far better quotation from the same paper by Box is,
 
 > Since all models are wrong the scientist
 > must be alert to what is importantly wrong.
 > It is inappropriate to be concerned about mice
 > when there are tigers around^[slight modification of quote]
 >
->`r tufte::quote_footer('--- Phil Stark (2022) [@Stark:2022aa]')`
 
 
 ## Executive Summary
@@ -318,15 +326,13 @@ SPLASH and OASIS.
 <p><p/>
 * To get a better understanding of what OASIS brings, or doesn't bring, to the table,
 we need to repeat the analyses, with the following guidelines:
-   - pay attention to variability in the input data quality
-       - carry out thorough QC
-
+   - Pay attention to variability in the input data quality
+       - Carry out thorough QC
 <p><p/>
-   - if the dataset structure permits it, apply RUV methodology to
-identify unwanted variability in the target count distributions 
-
+   - Apply RUV methodology to identify and remove unwanted variability
+in the target count distributions.
 <p><p/>
-   - use state of the art comparators;  not exclusively Pearson’s X2
+   - Use state of the art comparators;  not exclusively Pearson’s X2
 
 <br/>
 
@@ -457,6 +463,22 @@ enabled and fully automated.
 
 <br/>
 
+# FDR - False Discovery Rate 
+
+> The worst thing in statistics had to be the p-value.
+> Then came the q-value.
+>
+>`r tufte::quote_footer('--- Unknown Origin')`
+
+<br/>
+
+## Why are p-values so hard to swallow?
+
+
+<br/>
+
+# Appendix 
+
 ## AI & ML in RNA-Seq Analysis Tools
 
 Prior to moving ahead with the developemnt of the next gen versions of RUV modules,
@@ -468,12 +490,12 @@ date.
    - discussion of issues around performance assessnent  when truth is rare and standards missing.
 <p><p/>
 * [Part B - Specific Applications and Evidence](./M4A-RUV/natureBiotechPaper/_AI_ML_Applications_Part_B.html)
-   - case studies of the application of AI and ML in RNA-Seq analyses.
-      - weak case for Random Forests for Gene Ranking vs 
+   - Case studies of the application of AI and ML in RNA-Seq analyses.
+      - Weak case for Random Forests for Gene Ranking vs 
 Traditional Approach: Differential Expression Analysis 
       - see
 [Impact and Reception Analysis: Wenric & Shemirani (2018)](./M4A-RUV/natureBiotechPaper/_Wenric_Shemirani_2018_Impact_Analysis.html).
-   - it's not clear how the ML methods were selected 
+   - It's not clear how the ML methods were selected 
 
 <!--
 
@@ -486,17 +508,6 @@ Wenric & Shemirani (2018) [@Wenric:2018aa].
 
 
 <br/>
-
-# FDR - False Discovery Rate 
-
-> The worst thing in statistics had to be the p-value.
-> Then came the q-value.
->
->`r tufte::quote_footer('--- Unknown Origin')`
-
-
-<br/>
-
 
 # References {-}
 
